@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Geospatial Portfolio Case Study</title>
+<style>
+    body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: #333;
+        font-size: 10.5pt;
+        line-height: 1.6;
+        max-width: 8.5in;
+        margin: 0 auto;
+        padding: 40px;
+    }
+    .kicker {
+        color: #b32525;
+        font-weight: bold;
+        font-size: 8.5pt;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+    }
+    h1 {
+        font-family: 'Georgia', serif;
+        font-size: 26pt;
+        color: #1a2433;
+        margin-top: 0;
+        margin-bottom: 30px;
+        font-weight: normal;
+        line-height: 1.2;
+    }
+    .main-divider {
+        border: none;
+        border-top: 3px solid #333333;
+        margin-bottom: 30px;
+    }
+    .metadata-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 45px;
+    }
+    .meta-col {
+        width: 30%;
+        padding-right: 20px;
+    }
+    .meta-header {
+        font-size: 8pt;
+        font-weight: bold;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+    .meta-content {
+        font-size: 10pt;
+        margin: 0;
+        line-height: 1.5;
+    }
+    h2 {
+        font-family: 'Georgia', serif;
+        font-size: 17pt;
+        font-weight: normal;
+        color: #1a2433;
+        margin-top: 40px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+    }
+    .sub-heading {
+        font-size: 10.5pt;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    p {
+        text-align: justify;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+    .disclaimer {
+        font-size: 9pt;
+        font-style: italic;
+        margin-bottom: 25px;
+        color: #666;
+        padding: 10px 15px;
+        border-left: 3px solid #b32525;
+        background-color: #fcfcfc;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+    }
+    th {
+        font-size: 8pt;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 1px solid #333;
+        padding: 10px 10px 10px 0;
+        text-align: left;
+        color: #1a2433;
+        letter-spacing: 0.5px;
+    }
+    td {
+        padding: 15px 10px 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: top;
+        font-size: 9.5pt;
+    }
+    .visual-box {
+        border: 1px dashed #b32525;
+        padding: 20px;
+        margin: 30px 0;
+        text-align: center;
+        background-color: #fdfaf9;
+    }
+    .validation-kicker {
+        color: #b32525;
+        font-weight: bold;
+        font-size: 10pt;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 45px;
+        margin-bottom: 15px;
+    }
+    .validation-text {
+        font-family: 'Georgia', serif;
+        font-style: italic;
+        font-size: 12.5pt;
+        line-height: 1.6;
+        color: #1a2433;
+        text-align: justify;
+    }
+
+    /* ADVANCED PRINT ENGINE STYLESHEET */
+    @media print {
+        body {
+            padding: 0.5in;
+            margin: 0 auto;
+            color: #000;
+            background: #fff;
+            font-size: 10pt;
+        }
+        h1, h2, h3, .sub-heading {
+            page-break-after: avoid;
+        }
+        table, .visual-box, .disclaimer, .metadata-container {
+            page-break-inside: avoid;
+        }
+        /* Forces modern browsers to accurately render proxy UI map colors & background fills */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        /* Hides active browser UI elements if needed, keeping layout clean */
+        input[type="checkbox"], input[type="radio"] {
+            border: 1px solid #000;
+        }
+    }
+</style>
+</head>
+<body>
+    <div class="kicker">SYSTEMS ARCHITECTURE & ANALYTICS PORTFOLIO CASE STUDY</div><!-- -->
+    <h1>Competitor Mapping & Regional Elasticity Modeling</h1><!-- -->
+    
+    <hr class="main-divider">
+
+    <div class="metadata-container"><!-- -->
+        <div class="meta-col">
+            <div class="meta-header">PRINCIPAL ENGINEER</div><!-- -->
+            <p class="meta-content"><strong>Austin Sonny Stethem</strong><br>Pricing & MDM Analyst</p><!--[cite: 2] -->
+        </div>
+        <div class="meta-col">
+            <div class="meta-header">CORE COMPETENCIES</div><!--[cite: 2] -->
+            <p class="meta-content">Geospatial Analysis, Competitive Intelligence, Market Mapping, Sales Governance, Legacy System Integration</p><!--[cite: 2] -->
+        </div>
+        <div class="meta-col">
+            <div class="meta-header">TECHNICAL STACK</div><!--[cite: 2] -->
+            <p class="meta-content">Custom Google Apps Script (JavaScript), Relational Coordinate Matrices, Dynamic Distance API Logic, Google Maps UI</p><!--[cite: 2] -->
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        <strong>Data Governance Note:</strong> To strictly comply with NDA and protect proprietary competitive intelligence, all geographic coordinates, financial metrics, and competitor identities in this case study have been anonymized using representative proxy data. The structural logic, system architecture, and spatial methodology remain exact reflections of the production environment.<!--[cite: 2] -->
+    </div>
+
+    <h2>1. Executive Project Summary & Agile Business Context</h2>
+    <p>The enterprise operated on a rigid, legacy pricing framework (Tiers A through E) tied to outdated geographic lines rather than real-time market elasticity. Executing a unified, flat-rate pricing matrix systematically leaves revenue uncaptured. Highly saturated urban corridors require aggressive, elastic pricing architectures to defend market share against direct brick-and-mortar competitors. Conversely, geographically isolated branches maintain highly captive, retention-driven markets capable of sustaining premium gross margin thresholds.<!--[cite: 2] --></p>
+    <p>Faced with immediate revenue bleed in competitive corridors, I bypassed slow IT development cycles and architected a lightweight, high-impact Geospatial UI using custom Google Apps Script and Map integrations. This agile tool overlaid dynamic competitive data directly on top of legacy accounts, transforming a blind administrative process into a verifiable, spatially-aware intelligence engine that maximized EBITDA without requiring a massive software rollout.<!--[cite: 2] --></p>
+
+    <h2>2. The Geospatial Architecture & Data Integration</h2>
+    <p>Blindly automating regional pricing overlooks critical ground-level operational nuances. Therefore, the architecture was intentionally designed as a custom spatial visualization layer to serve as the definitive "source of truth" for the pricing and sales teams.<!--[cite: 2] --></p>
+    
+    <div class="sub-heading">THE CUSTOM SCRIPTING & UI ENGINE</div>
+    <p>I architected a custom Google Apps Script (JavaScript) backend to programmatically parse coordinate data, injection parameters, and custom map layers. This engine renders specific competitor iconography based on custom distance-vector queries, allowing stakeholders to visually toggle 10, 25, 40, and 50-mile competitor density radii with zero technical friction.<!--[cite: 2] --></p>
+    
+    <div class="sub-heading">5-STATE COMPETITIVE INTELLIGENCE HARVEST</div>
+    <p>To ensure absolute data integrity, I spearheaded a multi-month, ground-up data enrichment campaign across five states. This initiative identified, verified, and manually mapped 100% of regional competitors—from major metropolitan hubs down to historically unmapped rural municipalities—creating a definitive, proprietary market footprint secured via role-based cloud access.<!--[cite: 2] --></p>
+
+    <div class="visual-box">
+        <p style="font-weight:bold; color: #b32525; margin-bottom: 15px;">PROXY DATA UI SCREENSHOT</p><!--[cite: 2] -->
+        
+        <!-- PURE INTERACTIVE HTML/CSS PROXY MAP UI -->
+        <div style="display: flex; height: 350px; border: 1px solid #ccc; margin-bottom: 15px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: left;">
+            
+            <!-- Left Sidebar Controls -->
+            <div style="width: 220px; background: #fff; border-right: 1px solid #ccc; padding: 15px; box-sizing: border-box; font-size: 9pt;">
+                <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433;">DATA LAYERS</div>
+                <label style="display: block; margin-bottom: 6px; color: #333;"><input type="checkbox" id="toggle-branches" checked> Internal Branches</label>
+                <label style="display: block; margin-bottom: 6px; color: #333;"><input type="checkbox" id="toggle-alpha" checked> Competitor Alpha</label>
+                <label style="display: block; margin-bottom: 6px; color: #333;"><input type="checkbox" id="toggle-beta" checked> Competitor Beta</label>
+                <label style="display: block; margin-bottom: 20px; color: #333;"><input type="checkbox" id="toggle-jobber" checked> Top 20% Jobbers</label>
+
+                <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433;">RADIUS ANALYSIS</div>
+                <label style="display: block; margin-bottom: 6px; color: #333;"><input type="radio" name="rad" id="rad-10"> 10 Mile Radius</label>
+                <label style="display: block; margin-bottom: 6px; color: #333;"><input type="radio" name="rad" id="rad-25" checked> 25 Mile Radius</label>
+                <label style="display: block; margin-bottom: 6px; color: #333;"><input type="radio" name="rad" id="rad-50"> 50 Mile Radius</label>
+                
+                <div style="margin-top: 30px; padding: 8px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px; font-size: 8pt; text-align: center; font-weight: bold;">
+                    HIGH SATURATION ALERT
+                </div>
+            </div>
+
+            <!-- Map Visual Area -->
+            <div style="flex-grow: 1; background-color: #e5ebd8; position: relative; overflow: hidden;">
+                
+                <!-- Map Grid Lines -->
+                <div style="position: absolute; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px); background-size: 30px 30px;"></div>
+
+                <!-- Highway Lines -->
+                <div style="position: absolute; top: 120px; left: -50px; width: 600px; height: 4px; background-color: #ffffff; transform: rotate(15deg);"></div>
+                <div style="position: absolute; top: -50px; left: 250px; width: 4px; height: 500px; background-color: #ffffff; transform: rotate(-10deg);"></div>
+
+                <!-- The 25-Mile Radius Ring -->
+                <div id="radius-ring" style="position: absolute; top: 60px; left: 160px; width: 200px; height: 200px; border: 2px dashed rgba(0,0,0,0.4); border-radius: 50%; background-color: rgba(255, 255, 255, 0.3); transition: all 0.3s ease;"></div>
+
+                <!-- Internal Store (Center of ring) -->
+                <div class="pin-branch" style="position: absolute; top: 155px; left: 255px; width: 12px; height: 12px; background-color: #f1c40f; border: 2px solid #333; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>
+                
+                <!-- Captive/Isolated Internal Store (Outside ring) -->
+                <div class="pin-branch" style="position: absolute; top: 280px; left: 50px; width: 12px; height: 12px; background-color: #f1c40f; border: 2px solid #333; border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>
+
+                <!-- Competitor Alpha Pins (Red squares) -->
+                <div class="pin-alpha" style="position: absolute; top: 100px; left: 200px; width: 10px; height: 10px; background-color: #e74c3c; border: 1px solid #c0392b;"></div>
+                <div class="pin-alpha" style="position: absolute; top: 210px; left: 220px; width: 10px; height: 10px; background-color: #e74c3c; border: 1px solid #c0392b;"></div>
+                <div class="pin-alpha" style="position: absolute; top: 60px; left: 350px; width: 10px; height: 10px; background-color: #e74c3c; border: 1px solid #c0392b;"></div>
+
+                <!-- Competitor Beta Pins (Blue triangles) -->
+                <div class="pin-beta" style="position: absolute; top: 180px; left: 300px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 12px solid #2980b9;"></div>
+                <div class="pin-beta" style="position: absolute; top: 130px; left: 280px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 12px solid #2980b9;"></div>
+
+                <!-- Jobber Account Stars -->
+                <div class="pin-jobber" style="position: absolute; top: 140px; left: 230px; color: #8e44ad; font-size: 16px;">★</div>
+                <div class="pin-jobber" style="position: absolute; top: 170px; left: 310px; color: #8e44ad; font-size: 16px;">★</div>
+
+                <!-- Fake UI Watermark -->
+                <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(255,255,255,0.8); padding: 3px 8px; font-size: 7pt; color: #666; border: 1px solid #ccc;">
+                    Enterprise Map Engine v2.1 | Proxy Sandbox Mode
+                </div>
+            </div>
+        </div>
+        
+        <p style="font-size: 9.5pt; color: #555; text-align: center; margin-bottom: 0; line-height: 1.8;">
+        <strong>Visual Filter Render:</strong> Competitor Alpha | Competitor Beta | Regional Independent<br>
+        <strong>Dynamic Radius Toggles:</strong> &lt; 5 Miles | &lt; 10 Miles | &lt; 25 Miles | &lt; 50 Miles<br>
+        <strong>Account Overlay:</strong> Toggle top 20% B2B Jobber Accounts against competitor clusters.
+        </p>
+    </div>
+
+    <h2>3. The Three Pillars of the Geospatial Engine</h2>
+    <p>This visual matrix acts as the operational nervous system for three distinct corporate strategies, successfully bridging the gap between legacy operations and modern business intelligence.<!--[cite: 2] --></p>
+
+    <div class="sub-heading">PILLAR I: PRICING OPERATIONS & LEGACY INTEGRATION</div>
+    <p>Rather than relying on anecdotal field reports to assign new accounts, the pricing coordinator utilizes the spatial matrix to mathematically slot branches into the legacy A-E margin brackets.<!--[cite: 2] --></p>
+    
+    <table>
+        <tr>
+            <th>Market Profile</th>
+            <th>Spatial Reality (25-Mile Radius)</th>
+            <th>Legacy Tier Translation</th>
+            <th>Margin Strategy</th>
+        </tr>
+        <tr>
+            <td><strong>Elastic Corridors</strong></td>
+            <td>High saturation (8+ competitors)</td>
+            <td>Tiers A, B, E</td>
+            <td>Aggressive market-share defense.</td>
+        </tr>
+        <tr>
+            <td><strong>Captive Markets</strong></td>
+            <td>High isolation (0-2 competitors)</td>
+            <td>Tiers C, D</td>
+            <td>Premium margin retention.</td>
+        </tr>
+        <tr>
+            <td><strong>Commodity Lines</strong></td>
+            <td>Universal visibility</td>
+            <td>Uniform Tiers</td>
+            <td>Strict parity; mathematically exempt from regional markups.</td>
+        </tr>
+    </table>
+
+    <div class="sub-heading">PILLAR II: SALES GOVERNANCE & KEY ACCOUNT DEFENSE</div>
+    <p>The map functions as a validation engine for sales governance. By integrating behavioral economics with spatial data, margin defense becomes a rigorous process. When a field salesman requests a localized discount on a key account—backing the request by accepting a direct reduction in their own commission—the pricing team utilizes the map to verify competitor density. If the matrix confirms heavy saturation, we authorize targeted, "loss-leader" price cuts on high-visibility commodities to protect the lifetime value of the overall account.<!--[cite: 2] --></p>
+
+    <div class="sub-heading">PILLAR III: CORPORATE EXPANSION & "WHITE SPACE"</div>
+    <p>By isolating internal storefronts against the total market saturation matrix, leadership utilizes the map to identify "White Space." The tool visually highlights rural communities that possess high fleet and demographic potential but lack immediate competitor presence, directly informing real estate and corporate expansion strategies.<!--[cite: 2] --></p>
+
+    <h2>4. Operational Control & Business Outcomes</h2>
+    <p>This hybrid spatial architecture transformed theoretical regional pricing discussions into hard, visually verifiable strategy execution.<!--[cite: 2] --></p>
+
+    <table>
+        <tr>
+            <th>Strategic Vector</th>
+            <th>Ground-Truth Validation</th>
+            <th>Business Intelligence Outcome</th>
+        </tr>
+        <tr>
+            <td><strong>Field Panic Filtration</strong></td>
+            <td>Radius ring verification against lost-sales reports</td>
+            <td>Replaced blind discount authorizations with spatial verification, averting unnecessary margin bleed.</td>
+        </tr>
+        <tr>
+            <td><strong>Time-Inelasticity Defense</strong></td>
+            <td>Isolation mapping of the "Arnold's Extra"</td>
+            <td>Proved isolated B2B clients cannot absorb 48-hour shipping delays, securing premium margins without increasing churn.</td>
+        </tr>
+        <tr>
+            <td><strong>High-Adoption Dashboarding</strong></td>
+            <td>Custom Google Maps UI / UX</td>
+            <td>Delivered a zero-friction tool to non-technical stakeholders, ensuring 100% immediate adoption.</td>
+        </tr>
+    </table>
+
+    <div class="validation-kicker">STRATEGIC CORE COMPETENCY VALIDATION</div><!--[cite: 2] -->
+    <div class="validation-text">
+        This deployment acts as a definitive verification of hybrid business intelligence capabilities: successfully merging raw latitude/longitude coordinate data with qualitative field-level insights to build a functional Decision Support System that directly shapes localized enterprise pricing strategies.<!--[cite: 2] -->
+    </div>
+
+    <!-- CLIENT SIDE INTERACTIVITY SCRIPT -->
+    <script>
+        // Layer Toggle Logic
+        function setupLayerToggle(checkboxId, elementClass) {
+            document.getElementById(checkboxId).addEventListener('change', function(e) {
+                const elements = document.querySelectorAll('.' + elementClass);
+                elements.forEach(el => {
+                    el.style.display = e.target.checked ? 'block' : 'none';
+                });
+            });
+        }
+
+        // Initialize Layer Event Listeners
+        setupLayerToggle('toggle-branches', 'pin-branch');
+        setupLayerToggle('toggle-alpha', 'pin-alpha');
+        setupLayerToggle('toggle-beta', 'pin-beta');
+        setupLayerToggle('toggle-jobber', 'pin-jobber');
+
+        // Dynamic Radius Simulation Engine
+        const radiusRing = document.getElementById('radius-ring');
+        
+        const radiusMetrics = {
+            'rad-10': { width: '100px', height: '100px', top: '110px', left: '210px' },
+            'rad-25': { width: '200px', height: '200px', top: '60px', left: '160px' },
+            'rad-50': { width: '320px', height: '320px', top: '0px', left: '100px' }
+        };
+
+        Object.keys(radiusMetrics).forEach(radioId => {
+            document.getElementById(radioId).addEventListener('change', function(e) {
+                if (e.target.checked) {
+                    const metrics = radiusMetrics[radioId];
+                    radiusRing.style.width = metrics.width;
+                    radiusRing.style.height = metrics.height;
+                    radiusRing.style.top = metrics.top;
+                    radiusRing.style.left = metrics.left;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
