@@ -19,7 +19,7 @@
         text-transform: uppercase;
         letter-spacing: 1.5px;
         margin-bottom: 12px;
-        text-align: center; /* Centered */
+        text-align: center; 
     }
     h1 {
         font-family: 'Georgia', serif;
@@ -29,7 +29,7 @@
         margin-bottom: 30px;
         font-weight: normal;
         line-height: 1.2;
-        text-align: center; /* Centered */
+        text-align: center; 
     }
     .main-divider {
         border: none;
@@ -40,12 +40,13 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 35px;
-        border-bottom: 1px solid #ccc; /* Added gray line */
-        padding-bottom: 25px; /* Added padding so it breathes */
+        border-bottom: 1px solid #ccc; 
+        padding-bottom: 25px; 
     }
     .meta-col {
-        width: 30%;
-        padding-right: 20px;
+        width: 33%;
+        padding: 0 10px;
+        text-align: center; /* This centers your text */
     }
     .meta-header {
         font-size: 8pt;
@@ -182,6 +183,7 @@
         
         <div style="display: flex; height: 600px; border: 1px solid #ccc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: left; background: #fff;">
             
+            <!-- Left Sidebar -->
             <div style="width: 240px; background: #fdfdfd; border-right: 1px solid #ccc; padding: 15px; box-sizing: border-box; font-size: 9pt; overflow-y: auto;">
                 <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ENVIRONMENT</div>
                 <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; local_env (Python 3.10)</div>
@@ -192,8 +194,10 @@
                 <div style="padding-left: 10px; color: #333; background-color: #f1f5f9; border-left: 3px solid #b32525; padding: 6px; font-weight: 600;">monte_carlo_engine.py</div>
             </div>
 
+            <!-- Main Interactive Area -->
             <div style="flex-grow: 1; display: flex; flex-direction: column;">
                 
+                <!-- Code Editor -->
                 <div style="height: 35%; background: #1e293b; color: #f8fafc; padding: 15px; font-family: 'Courier New', monospace; font-size: 9pt; position: relative; overflow-y: auto;">
                     <div style="color: #64748b; margin-bottom: 8px;"># 1. Ingest Messy ERP Data & 2. Run Vectorized Distribution Modeling</div>
                     <span style="color: #c678dd;">import</span> pandas <span style="color: #c678dd;">as</span> pd<br>
@@ -211,12 +215,15 @@
                     <button id="run-py-btn" style="position: absolute; top: 15px; right: 15px; background: #b32525; color: white; border: none; padding: 6px 16px; cursor: pointer; font-weight: bold; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: background 0.2s;">&#9654; Run Full Simulation</button>
                 </div>
                 
+                <!-- Results Output Area -->
                 <div style="height: 65%; background: #fdfdfd; padding: 15px; box-sizing: border-box; border-top: 2px solid #ccc; position: relative;">
                     
                     <div id="standby-text" style="color: #7f8c8d; text-align: center; margin-top: 100px; font-style: italic;">Awaiting Python execution environment...</div>
                     
+                    <!-- Fake Terminal Output -->
                     <div id="terminal-output"></div>
 
+                    <!-- Post-Run Dashboard -->
                     <div id="dashboard-container">
                         <div style="font-size: 8pt; font-weight: bold; color: #666; margin-bottom: 5px;">STEP 1: RAW ERP DATA INGESTION & ANOMALY DETECTION</div>
                         <table class="raw-data-table">
