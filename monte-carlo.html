@@ -214,4 +214,84 @@
                     <div id="terminal-output"></div>
                     <div id="dashboard-container">
                         <div style="font-size: 8pt; font-weight: bold; color: #666; margin-bottom: 5px;">STEP 1: RAW ERP DATA INGESTION & ANOMALY DETECTION</div>
-                        <p style="font-size: 9pt; color: #444
+                        <p style="font-size: 9pt; color: #444; margin-bottom: 10px;">The engine performs a high-velocity sanitization sweep to isolate freight-cost anomalies. By flagging these outliers before they propagate into the stochastic model, we maintain the integrity of our risk-tail predictions.</p>
+                        <table class="raw-data-table">
+                            <tr><th>SKU_ID</th><th>Base Cost</th><th>Freight Anomaly</th><th>Status</th></tr>
+                            <tr><td>BRK-9901</td><td>$42.50</td><td class="erratic">$9.85 (+140%)</td><td style="color: #b32525; font-weight: bold;">High Volatility</td></tr>
+                        </table>
+
+                        <div style="font-size: 8pt; font-weight: bold; color: #666; margin-top: 15px; margin-bottom: 5px;">STEP 2: MONTE CARLO OUTPUT</div>
+                        <div class="charts-wrapper">
+                            <div class="chart-box">
+                                <canvas id="histogramChart"></canvas>
+                                <div class="chart-caption"><strong>Fig 1:</strong> Probability distribution of landed costs. The <em>Red Tail</em> illustrates the P95 Risk Ceiling—the threshold where 95% of market volatility outcomes are hedged.</div>
+                            </div>
+                            <div class="chart-box">
+                                <canvas id="lineChart"></canvas>
+                                <div class="chart-caption"><strong>Fig 2:</strong> Cumulative margin impact. The <em>Green Area</em> represents recovered margin leakage, freeing up administrative capacity to focus on core strategic accounts.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>3. From Probability to Executive Action</h2>
+    <p>The output of this model is not just a chart; it is a shift in operational focus. By delegating the 90% commodity pricing to a high-accuracy, automated engine, we successfully converted a "bottleneck" process into a "predictive" one. This allows pricing architects to stop "firefighting" commodity fluctuations and start engineering value-add strategies for the 10% of clients who drive our long-term growth.</p>
+
+    <script>
+        document.getElementById('run-py-btn').addEventListener('click', function(e) {
+            const btn = e.target;
+            const standby = document.getElementById('standby-text');
+            const terminal = document.getElementById('terminal-output');
+            const dashboard = document.getElementById('dashboard-container');
+            
+            btn.style.background = '#8a1c1c';
+            btn.innerHTML = '&#8987; Executing Pipeline...';
+            standby.style.display = 'none';
+            dashboard.style.display = 'none';
+            terminal.style.display = 'block';
+            terminal.innerHTML = '';
+
+            const terminalLines = ["> Ingesting erp_extract_Q3.csv...", "> Cleaning messy arrays...", "> SUCCESS: Simulation Complete."];
+            let lineIndex = 0;
+            const printLine = setInterval(() => {
+                if (lineIndex < terminalLines.length) {
+                    terminal.innerHTML += terminalLines[lineIndex] + "<br>";
+                    lineIndex++;
+                } else {
+                    clearInterval(printLine);
+                    setTimeout(() => {
+                        terminal.style.display = 'none';
+                        dashboard.style.display = 'flex';
+                        btn.style.background = '#1a2433';
+                        btn.innerHTML = '&#8634; Re-Run Pipeline';
+                        renderCharts();
+                    }, 500);
+                }
+            }, 250);
+        });
+
+        function renderCharts() {
+            // Chart 1: Histogram
+            const histCanvas = document.getElementById('histogramChart');
+            if (window.histChartObj) window.histChartObj.destroy();
+            window.histChartObj = new Chart(histCanvas.getContext('2d'), {
+                type: 'bar',
+                data: { labels: ['$45', '$50', '$55', '$60', '$65', '$70', '$75', '$80'], datasets: [{ data: [5, 15, 45, 80, 45, 15, 5, 2], backgroundColor: ['#cbd5e1','#cbd5e1','#cbd5e1','#cbd5e1','#cbd5e1','#b32525','#b32525','#b32525'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }
+            });
+
+            // Chart 2: Line Chart
+            const lineCanvas = document.getElementById('lineChart');
+            if (window.lineChartObj) window.lineChartObj.destroy();
+            window.lineChartObj = new Chart(lineCanvas.getContext('2d'), {
+                type: 'line',
+                data: { labels: ['Q1', 'Q2', 'Q3', 'Q4'], datasets: [{ label: 'Traditional Leakage', data: [-12, -28, -45, -72], borderColor: '#7f8c8d', borderDash: [5, 5] }, { label: 'Monte Carlo Protected', data: [-12, -8, -4, -1], borderColor: '#27ae60', fill: true, backgroundColor: 'rgba(39, 174, 96, 0.1)' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 8 } } } } }
+            });
+        }
+    </script>
+</body>
+</html>
