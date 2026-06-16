@@ -12,6 +12,10 @@
         margin: 0 auto;
         padding: 40px;
     }
+    .header-container {
+        text-align: center;
+        margin-bottom: 30px;
+    }
     .kicker {
         color: #b32525;
         font-weight: bold;
@@ -19,33 +23,32 @@
         text-transform: uppercase;
         letter-spacing: 1.5px;
         margin-bottom: 12px;
-        text-align: center; 
     }
     h1 {
         font-family: 'Georgia', serif;
         font-size: 26pt;
         color: #1a2433;
-        margin-top: 0;
-        margin-bottom: 30px;
+        margin: 0;
         font-weight: normal;
         line-height: 1.2;
-        text-align: center; 
     }
     .main-divider {
         border: none;
         border-top: 3px solid #333333;
         margin-bottom: 30px;
     }
-    .metadata-container {
-        display: flex;
-        justify-content: center;
-        gap: 60px;
-        margin-bottom: 35px;
+    
+    /* Centered Metadata Layout */
+    .metadata-flex {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 60px !important;
         border-bottom: 1px solid #ccc; 
         padding-bottom: 25px; 
+        margin-bottom: 35px;
     }
     .meta-col {
-        text-align: center;
+        text-align: center !important;
         max-width: 250px;
     }
     .meta-header {
@@ -61,6 +64,7 @@
         margin: 0;
         line-height: 1.5;
     }
+    
     h2 {
         font-family: 'Georgia', serif;
         font-size: 17pt;
@@ -135,12 +139,14 @@
     }
     .chart-box {
         width: 48%;
+        height: 250px; /* Locked height to prevent stretch loops */
         background: #fff;
         border: 1px solid #e2e8f0;
         border-radius: 4px;
         padding: 15px;
         box-sizing: border-box;
         text-align: center;
+        overflow: hidden;
     }
     .chart-caption {
         font-size: 8.5pt;
@@ -154,14 +160,14 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div style="text-align: center;">
+    <div class="header-container">
         <div class="kicker">DATA SCIENCE & ADVANCED ANALYTICS PORTFOLIO CASE STUDY</div>
         <h1>Python Monte Carlo Enterprise Pricing Simulation</h1>
     </div>
     
     <hr class="main-divider">
 
-    <div class="metadata-container">
+    <div class="metadata-flex">
         <div class="meta-col">
             <div class="meta-header">PRINCIPAL ENGINEER</div>
             <p class="meta-content"><strong>Austin Sonny Stethem</strong><br>Pricing & MDM Analyst</p>
@@ -274,22 +280,20 @@
         });
 
         function renderCharts() {
-            // Chart 1: Histogram
             const histCanvas = document.getElementById('histogramChart');
             if (window.histChartObj) window.histChartObj.destroy();
             window.histChartObj = new Chart(histCanvas.getContext('2d'), {
                 type: 'bar',
                 data: { labels: ['$45', '$50', '$55', '$60', '$65', '$70', '$75', '$80'], datasets: [{ data: [5, 15, 45, 80, 45, 15, 5, 2], backgroundColor: ['#cbd5e1','#cbd5e1','#cbd5e1','#cbd5e1','#cbd5e1','#b32525','#b32525','#b32525'] }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { display: false } } }
             });
 
-            // Chart 2: Line Chart
             const lineCanvas = document.getElementById('lineChart');
             if (window.lineChartObj) window.lineChartObj.destroy();
             window.lineChartObj = new Chart(lineCanvas.getContext('2d'), {
                 type: 'line',
                 data: { labels: ['Q1', 'Q2', 'Q3', 'Q4'], datasets: [{ label: 'Traditional Leakage', data: [-12, -28, -45, -72], borderColor: '#7f8c8d', borderDash: [5, 5] }, { label: 'Monte Carlo Protected', data: [-12, -8, -4, -1], borderColor: '#27ae60', fill: true, backgroundColor: 'rgba(39, 174, 96, 0.1)' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 8 } } } } }
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 8 } } } } }
             });
         }
     </script>
