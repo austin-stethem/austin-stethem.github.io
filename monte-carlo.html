@@ -24,10 +24,10 @@
     
     .run-btn { background: #b32525; color: white; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 20px; }
     
-    /* TEXT SECTIONS */
+    /* NARRATIVE SECTION */
     .narrative { margin-top: 60px; border-top: 2px solid #1a2433; padding-top: 30px; }
     .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; }
-    .audit-table { width: 100%; border-collapse: collapse; font-size: 9pt; border: 1px solid #e2e8f0; margin-top: 20px; }
+    .audit-table { width: 100%; border-collapse: collapse; font-size: 9pt; border: 1px solid #e2e8f0; margin-top: 40px; }
     .audit-table th { background: #1a2433; color: white; padding: 12px; text-align: left; }
     .audit-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
 </style>
@@ -37,7 +37,6 @@
     <h1>Predictive Margin Strategy Lab</h1>
     <div class="subtitle">Replacing Blanket ABC Pricing with Granular, SQL-Fed SKU Optimization</div>
 
-    <!-- DASHBOARD -->
     <div class="dashboard">
         <div class="controls">
             <strong>SIMULATION CONTROLS</strong><br><br>
@@ -62,7 +61,17 @@
         </div>
     </div>
 
-    <!-- NARRATIVE TEXT -->
+    <div class="table-section">
+        <h3>Granular Audit: Blanket "Strategy" vs. Predictive Intelligence</h3>
+        <table class="audit-table">
+            <thead><tr><th>SKU_ID</th><th>Category</th><th>Blanket Margin</th><th>Predictive Margin</th><th>Verdict</th></tr></thead>
+            <tbody>
+                <tr><td>SKU-49221</td><td>Group C (Tail)</td><td>22%</td><td>31%</td><td style="color:#27ae60; font-weight:bold;">GAINED MARGIN</td></tr>
+                <tr style="background:#fef2f2;"><td>SKU-11922</td><td>KVI (High-Vis)</td><td>22%</td><td>18%</td><td style="color:#b32525; font-weight:bold;">CORRECTED OVERCHARGE</td></tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="narrative">
         <h2>Executive Narrative: Granular SKU Optimization</h2>
         <p>Enterprise pricing is traditionally reactive, relying on blanket ABC/KVI categorization to price tens of thousands of SKUs. This creates a systemic inefficiency: we unknowingly overcharge high-visibility items (risking market share) while "leaving money on the table" across the massive long-tail of Group C parts.</p>
@@ -77,54 +86,6 @@
             <li><strong>Stress-Test Real-Time:</strong> Instantly simulate our response to extreme stress, such as unforecasted tariff hikes, shipping delays, or aggressive competitor encroachment.</li>
             <li><strong>Proactive Hedging:</strong> Identify margin leakage <em>before</em> the month-end P&L reveals the damage.</li>
         </ul>
-
-        <h3>Granular Audit: Blanket Pricing vs. Predictive Intelligence</h3>
-        <table class="audit-table">
-            <thead><tr><th>SKU_ID</th><th>Category</th><th>Blanket Margin</th><th>Predictive Margin</th><th>Verdict</th></tr></thead>
-            <tbody>
-                <tr><td>SKU-49221</td><td>Group C (Tail)</td><td>22%</td><td>31%</td><td style="color:#27ae60; font-weight:bold;">GAINED MARGIN</td></tr>
-                <tr style="background:#fef2f2;"><td>SKU-11922</td><td>KVI (High-Vis)</td><td>22%</td><td>18%</td><td style="color:#b32525; font-weight:bold;">CORRECTED OVERCHARGE</td></tr>
-            </tbody>
-        </table>
     </div>
 
-    <script>
-        let histChart, riskChart;
-        function runSimulation() {
-            let f = parseInt(document.getElementById('slide-freight').value);
-            let c = parseInt(document.getElementById('slide-comp').value);
-            
-            // Logic
-            document.getElementById('out-blanket').innerText = "22.0%";
-            document.getElementById('out-opt').innerText = (28.5 - (f*0.1)).toFixed(1) + "%";
-            document.getElementById('out-leak').innerText = "-$" + (5000 + (f*1500)).toFixed(0);
-
-            if(histChart) histChart.destroy();
-            if(riskChart) riskChart.destroy();
-            
-            histChart = new Chart(document.getElementById('histChart'), {
-                type: 'bar', 
-                data: { labels: ['15-20','20-25','25-30','30+'], datasets: [{label: 'Margin Frequency', data: [1000, 4000, 6000, 1500], backgroundColor: '#1a2433'}]},
-                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency Distribution'} }, scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Frequency'}} } }
-            });
-            
-            riskChart = new Chart(document.getElementById('riskChart'), {
-                type: 'line', 
-                data: { 
-                    labels: ['15','20','25','30','35'], 
-                    datasets: [
-                        { label: 'Blanket (Static)', data: [100, 70, 40, 15, 0], borderColor: '#64748b', borderWidth: 3 },
-                        { label: 'Predictive (Optimized)', data: [90, 20, 5, 0, 0], borderColor: '#27ae60', borderWidth: 3 }
-                    ]
-                },
-                options: { 
-                    responsive: true, maintainAspectRatio: false, 
-                    plugins: { title: {display:true, text: 'Strategy Performance: Blanket vs. Predictive'} },
-                    scales: { x: {title: {display:true, text:'Margin %'}}, y: {title: {display:true, text:'Failure Probability (%)'}} } 
-                }
-            });
-        }
-        window.onload = runSimulation;
-    </script>
-</body>
-</html>
+    <script
