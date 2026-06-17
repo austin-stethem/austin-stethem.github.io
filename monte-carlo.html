@@ -29,11 +29,12 @@
     .run-btn { background: #b32525; color: white; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; }
     
     /* NARRATIVE SECTION */
-    .narrative { margin-top: 50px; border-top: 2px solid #1a2433; padding-top: 30px; }
+    .narrative { margin-top: 60px; border-top: 2px solid #1a2433; padding-top: 30px; }
     .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; }
     .audit-table { width: 100%; border-collapse: collapse; font-size: 9pt; border: 1px solid #e2e8f0; margin-top: 20px; }
     .audit-table th { background: #1a2433; color: white; padding: 10px; text-align: left; }
     .audit-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
+    ul { padding-left: 20px; }
 </style>
 </head>
 <body>
@@ -72,7 +73,6 @@
         </div>
     </div>
 
-    <!-- TABLE AUDIT -->
     <div class="table-section">
         <h3>Raw Data Audit: ERP Transaction "Noise" vs. Sanitized Output</h3>
         <table class="audit-table">
@@ -84,10 +84,9 @@
         </table>
     </div>
 
-    <!-- NARRATIVE -->
     <div class="narrative">
         <h2>Executive Narrative: Granular SKU Optimization</h2>
-        <p>Enterprise pricing is traditionally reactive, relying on blanket ABC/KVI categorization to price tens of thousands of SKUs. This creates systemic inefficiency: we unknowingly overcharge high-visibility items (risking market share) while "leaving money on the table" across the massive long-tail of Group C parts.</p>
+        <p>Enterprise pricing is traditionally reactive, relying on blanket ABC/KVI categorization. This creates systemic inefficiency: we unknowingly overcharge high-visibility items (risking market share) while "leaving money on the table" across the massive long-tail of Group C parts.</p>
         
         <div class="math-block">
             $$Expected Margin = \frac{Sale Price - (Base Cost \cdot (1 + Comp Erosion) + Freight Volatility)}{Sale Price}$$
@@ -114,6 +113,7 @@
             let f = parseInt(document.getElementById('slide-freight').value);
             let c = parseInt(document.getElementById('slide-comp').value);
             
+            // Logic
             document.getElementById('out-med').innerText = (27.5 - (f*0.2)).toFixed(1) + "%";
             document.getElementById('out-p95').innerText = (20.8 - (f*0.5)).toFixed(1) + "%";
             document.getElementById('out-fail').innerText = (5.0 + (f*0.5)).toFixed(1) + "%";
