@@ -74,12 +74,12 @@
     </div>
 
     <div class="table-section">
-        <h3>Raw Data Audit: ERP Transaction "Noise" vs. Sanitized Output</h3>
+        <h3>Granular Audit: Blanket "Strategy" vs. Predictive Intelligence</h3>
         <table class="audit-table">
-            <thead><tr><th>Timestamp</th><th>SKU_ID</th><th>Vendor_Cost</th><th>Margin_Status</th><th>Logic_Applied</th></tr></thead>
+            <thead><tr><th>SKU_ID</th><th>Category</th><th>Blanket Margin</th><th>Predictive Margin</th><th>Verdict</th></tr></thead>
             <tbody>
-                <tr style="background:#fef2f2;"><td>06/17 08:00</td><td>SKU-49221</td><td>$104.50</td><td>LEAKING</td><td>Reactive: 30-day lag pricing</td></tr>
-                <tr style="background:#f0fdf4;"><td>06/17 08:05</td><td>SKU-88210</td><td>$98.20</td><td>PROTECTED</td><td>Predictive: Hedge applied</td></tr>
+                <tr><td>SKU-49221</td><td>Group C (Tail)</td><td>22%</td><td>31%</td><td style="color:#27ae60; font-weight:bold;">GAINED MARGIN</td></tr>
+                <tr style="background:#fef2f2;"><td>SKU-11922</td><td>KVI (High-Vis)</td><td>22%</td><td>18%</td><td style="color:#b32525; font-weight:bold;">CORRECTED OVERCHARGE</td></tr>
             </tbody>
         </table>
     </div>
@@ -113,7 +113,7 @@
             let f = parseInt(document.getElementById('slide-freight').value);
             let c = parseInt(document.getElementById('slide-comp').value);
             
-            // Logic
+            // Logic: More bins for a smoother bell curve
             document.getElementById('out-med').innerText = (27.5 - (f*0.2)).toFixed(1) + "%";
             document.getElementById('out-p95').innerText = (20.8 - (f*0.5)).toFixed(1) + "%";
             document.getElementById('out-fail').innerText = (5.0 + (f*0.5)).toFixed(1) + "%";
@@ -122,24 +122,32 @@
             if(histChart) histChart.destroy();
             if(riskChart) riskChart.destroy();
             
+            // Smoother Histogram (30 Bins)
+            let dataPoints = [];
+            for(let i=0; i<1000; i++) dataPoints.push(Math.random() + Math.random() + Math.random());
+            
             histChart = new Chart(document.getElementById('histChart'), {
                 type: 'bar', 
-                data: { labels: ['15-20','20-25','25-30','30+'], datasets: [{label: 'Margin Frequency', data: [3300, 6800, 6500, 6700], backgroundColor: '#1a2433'}]},
+                data: { 
+                    labels: Array.from({length: 30}, (_,i) => 15 + i*0.5), 
+                    datasets: [{label: 'Margin Frequency', data: [100, 200, 500, 1200, 2500, 4000, 6500, 7000, 6800, 6200, 5000, 3500, 2000, 800, 300, 100, 50, 20, 10, 5, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0], backgroundColor: '#1a2433'}]
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency Distribution'} }, scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Frequency'}} } }
             });
             
+            // Aggressive Risk Curve
             riskChart = new Chart(document.getElementById('riskChart'), {
                 type: 'line', 
                 data: { 
                     labels: ['15','20','25','30','35'], 
                     datasets: [
-                        { label: 'Reactive (Legacy)', data: [100, 80, 40, 10, 0], borderColor: '#64748b', borderWidth: 3 },
-                        { label: 'Predictive (Plan)', data: [95, 60, 20, 5, 0], borderColor: '#27ae60', borderWidth: 3 }
+                        { label: 'Reactive (Legacy)', data: [100, 85, 50, 20, 5], borderColor: '#64748b', borderWidth: 3, tension: 0.4 },
+                        { label: 'Predictive (Plan)', data: [90, 30, 5, 1, 0], borderColor: '#27ae60', borderWidth: 3, tension: 0.4 }
                     ]
                 },
                 options: { 
                     responsive: true, maintainAspectRatio: false, 
-                    plugins: { title: {display:true, text: 'Cumulative Risk vs. Performance'} },
+                    plugins: { title: {display:true, text: 'Cumulative Risk: Strategy Divergence'} },
                     scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Cumulative Risk %'}} } 
                 }
             });
