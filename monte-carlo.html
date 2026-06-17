@@ -78,10 +78,10 @@
     <div class="dashboard">
         <div class="controls">
             <strong>SIMULATION CONTROLS</strong><br><br>
-            <label>Logistics Volatility</label>
-            <input type="range" id="slide-freight" min="1" max="10" value="5" style="width:100%">
-            <label>Competitor Intensity</label>
-            <input type="range" id="slide-comp" min="1" max="10" value="5" style="width:100%">
+            <label>Freight Cost Variance (+% from Baseline)</label>
+            <input type="range" id="slide-freight" min="0" max="25" value="10" style="width:100%">
+            <label>Comp. Price Deflation ($ Drop)</label>
+            <input type="range" id="slide-comp" min="0" max="15" value="5" style="width:100%">
             <button class="run-btn" onclick="runSimulation()">▶ Run Simulation</button>
             
             <div class="logic-key">
@@ -101,7 +101,11 @@
             <div class="kpi-row">
                 <div class="kpi" style="border-bottom-color: #27ae60;"><div class="kpi-title">MEDIAN MARGIN</div><div class="kpi-val" id="out-med">--%</div></div>
                 <div class="kpi" style="border-bottom-color: #b32525;"><div class="kpi-title">P95 WORST-CASE</div><div class="kpi-val" id="out-p95">--%</div></div>
-                <div class="kpi" style="border-bottom-color: #e67e22;"><div class="kpi-title">FAILURE RATE</div><div class="kpi-val" id="out-fail">--%</div></div>
+                <div class="kpi" style="border-bottom-color: #e67e22;">
+                    <div class="kpi-title">FAILURE RATE</div>
+                    <div class="kpi-val" id="out-fail">--%</div>
+                    <div style="font-size: 6.5pt; color: #64748b; margin-top: 3px; font-weight: normal; text-transform: none;">(Margin dips below 25% floor)</div>
+                </div>
                 <div class="kpi" style="border-bottom-color: #b32525;"><div class="kpi-title">REV. AT RISK</div><div class="kpi-val" id="out-risk">$0</div></div>
             </div>
             <div class="charts-row">
@@ -146,7 +150,12 @@
             });
         }
         function runSimulation() {
-            let f = parseInt(document.getElementById('slide-freight').value);
+            // Mapping the new real-world metrics back to the visual multiplier curve
+            let rawF = parseInt(document.getElementById('slide-freight').value);
+            let rawC = parseInt(document.getElementById('slide-comp').value);
+            let f = (rawF * 0.25) + (rawC * 0.33); 
+            if (f === 0) f = 0.5;
+
             document.getElementById('out-med').innerText = (27.5 - (f*0.2)).toFixed(1) + "%";
             document.getElementById('out-p95').innerText = (20.8 - (f*0.5)).toFixed(1) + "%";
             document.getElementById('out-fail').innerText = (5.0 + (f*0.5)).toFixed(1) + "%";
