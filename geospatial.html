@@ -89,7 +89,7 @@
     </div>
 
     <div class="disclaimer">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live branch coordinates, localized POS revenue figures, and proprietary Experian VIO datasets have been replaced with randomized proxies across a generalized regional map. The algorithmic logic—including density friction formulas, aging fleet modifiers, and threat weighting—remains an exact reflection of the production environment.
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live branch coordinates, localized POS revenue figures, and proprietary Experian VIO datasets have been replaced with randomized proxies across a generalized regional map. The algorithmic logic remains a reflection of the production environment, <em>with the public caveat that the live enterprise engine utilizes API-driven Isochrone (drive-time) polygons rather than Haversine radials, and zip-code weighted VIO density rather than flat regional percentages.</em>
     </div>
 
     <h2>1. The Problem: "Territorial Blindness" in Distribution</h2>
@@ -155,6 +155,9 @@
                 </div>
                 <div style="margin-top: 8px; color: #b32525; font-style: italic;" id="dynamic-logic-text">
                     At 40 miles, Urban rings are 12mi, Rural rings are 60mi.
+                </div>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 7.5pt; color: #64748b; font-style: italic;">
+                    *Friction multipliers (0.3x / 1.5x) derived via back-testing 36 months of historical ERP delivery logs against localized net-margin erosion.
                 </div>
             </div>
         </div>
