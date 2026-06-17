@@ -18,8 +18,24 @@
     h2 { font-family: 'Georgia', serif; font-size: 17pt; font-weight: normal; color: #1a2433; margin-top: 40px; margin-bottom: 15px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; }
     p { text-align: justify; margin-top: 0; margin-bottom: 15px; }
     
-    /* MAP CONTAINER */
-    #map { height: 450px; width: 100%; border: 1px solid #ccc; margin: 25px 0; border-radius: 4px; }
+    .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 25px; color: #666; padding: 10px 15px; border-left: 3px solid #b32525; background-color: #fcfcfc; }
+    
+    /* DASHBOARD LAYOUT */
+    .sim-container { display: flex; height: 750px; border: 1px solid #ccc; background: #fff; overflow: hidden; margin-top: 20px; }
+    .sim-sidebar { width: 240px; flex-shrink: 0; background: #fdfdfd; border-right: 1px solid #ccc; padding: 15px; font-size: 9pt; overflow-y: auto; }
+    .sim-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    
+    .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-bottom: 15px; background: #fff; border: 1px solid #eee; }
+    .raw-data-table th { background: #f1f5f9; color: #333; padding: 8px; text-align: left; border-bottom: 2px solid #ccc; }
+    .raw-data-table td { padding: 8px; border-bottom: 1px solid #eee; color: #555; }
+    .risk-high { color: #b32525; font-weight: bold; }
+    .risk-low { color: #27ae60; font-weight: bold; }
+
+    /* MAP & CONTROLS */
+    .control-panel { background: #f8fafc; padding: 10px 15px; border-bottom: 1px solid #ccc; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; font-size: 8.5pt; font-weight: bold; color: #333; }
+    .control-panel label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+    .control-panel input[type="range"] { width: 100px; }
+    #map-container { height: 400px; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; }
     
     .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
     .strategy-table th { background: #1a2433; color: white; padding: 12px; text-align: left; font-size: 9pt; }
@@ -48,50 +64,16 @@
         </div>
         <div class="meta-col">
             <div class="meta-header">TECHNICAL STACK</div>
-            <p class="meta-content">Google Apps Script, JavaScript, Maps API, Coordinate Matrices</p>
+            <p class="meta-content">JavaScript, Maps API, Coordinate Matrices, Spatial Algorithms</p>
         </div>
     </div>
 
-    <h2>1. Executive Project Summary & Business Context</h2>
-    <p>In a large-scale distribution network, branch performance is frequently misunderstood due to "territorial blindness"—the assumption that service areas are uniform. This leads to inefficient tiered pricing and missed expansion opportunities. I architected a Geospatial Intelligence engine that overlays competitive density rings onto our existing account base, providing the Sales and Marketing teams with a live "Heat Map" of margin vulnerability and greenfield potential.</p>
-
-    <h2>2. Interactive Competitive Density Map</h2>
-    <p>This interactive layer visualizes our branch coverage against the competitor landscape. Use the map to explore density clusters and identify regions where margin defense is currently critical.</p>
-    
-    <div id="map"></div>
-
-    <h2>3. Strategic Benefits for Sales & Marketing</h2>
-    <p>The system transforms the map from a simple location tool into a strategic asset for margin protection and account growth:</p>
-
-    <table class="strategy-table">
-        <tr><th>Strategic Lever</th><th>Business Application</th></tr>
-        <tr><td><strong>Tiered Pricing Alignment</strong></td><td>Visualizes price elasticity by measuring the distance between our branch and known competitor locations, allowing us to adjust tiered pricing matrices before we lose account volume.</td></tr>
-        <tr><td><strong>Account Protection</strong></td><td>Flags "at-risk" accounts located in high-density competitor clusters, triggering proactive marketing outreach to defend the business before attrition begins.</td></tr>
-        <tr><td><strong>Expansion Region Targeting</strong></td><td>Identifies geographic "voids" where high-value commercial accounts exist but competitor density is low, providing the Sales team with a definitive roadmap for expansion.</td></tr>
-        <tr><td><strong>Marketing Intelligence</strong></td><td>Enables Marketing to launch hyper-localized promotional campaigns, focusing spend exclusively on regions with the highest ROI based on current competitor positioning.</td></tr>
-    </table>
-
-    <h2>4. From Visual Insight to Market Penetration</h2>
-    <p>Data science is only effective if it drives operational action. By visualizing competitive density, I provide the Sales and Marketing departments with a shared operational picture. Instead of guessing where to send resources, the leadership team can now define growth strategies based on empirical geographic data. This tool moves the department from a reactive mode of "servicing whoever calls" to a proactive model of "capturing the highest-value market share."</p>
-
-    <div class="impact-footer">
-        STRATEGIC CORE COMPETENCY VALIDATION: This deployment validates advanced spatial-analytical capabilities: demonstrating the ability to integrate coordinate-based data into actionable business intelligence that directly shapes our market penetration and margin protection strategies.
+    <div class="disclaimer">
+        <strong>Data Governance Note:</strong> To comply with NDA, live branch coordinates, high-value account locations, and competitor identities have been replaced with randomized geographic proxy data modeled in the Minneapolis-St. Paul region. The spatial logic, distance matrix calculations, and interactive filtering remain exact reflections of the production environment.
     </div>
 
-    <script>
-        // Initialize Map (Centered on your region)
-        var map = L.map('map').setView([43.41, -95.12], 9);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+    <h2>1. Executive Project Summary & Business Context</h2>
+    <p>In a large-scale distribution network, branch performance is frequently misunderstood due to "territorial blindness"—the assumption that service areas are uniform. This leads to inefficient tiered pricing and missed expansion opportunities. I architected a Geospatial Intelligence engine that overlays competitive density rings onto our existing account base, providing the Sales and Marketing teams with a live, filterable "Heat Map" of margin vulnerability and greenfield potential.</p>
 
-        // Add dummy competitive density ring
-        var circle = L.circle([43.41, -95.12], {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.2,
-            radius: 15000
-        }).addTo(map).bindPopup("High Competitive Density Cluster");
-    </script>
-</body>
-</html>
+    <h2>2. Interactive Defense & Expansion Dashboard</h2>
+    <p>A static map is merely a picture; a dynamic map is a business tool. By allowing Regional Directors to filter by specific competitor threats, isolate Top 20% high
