@@ -21,7 +21,8 @@
     .nda-note { border-left: 4px solid #b32525; background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
     
     /* DASHBOARD LAYOUT */
-    .dashboard { display: grid; grid-template-columns: 320px 1fr; gap: 25px; margin-top: 30px; }
+    .dashboard-upper { display: grid; grid-template-columns: 320px 1fr; gap: 25px; margin-top: 30px; }
+    .dashboard-lower { margin-top: 25px; }
     .controls { background: #f8fafc; padding: 25px; border: 1px solid #cbd5e1; display: flex; flex-direction: column; }
     .sim-panel { display: flex; flex-direction: column; gap: 20px; }
     
@@ -31,12 +32,12 @@
     .val-display { color: #b32525; }
     input[type="range"] { width: 100%; cursor: pointer; }
     
-    .logic-key { background: #1a2433; color: #fff; padding: 18px; border-radius: 4px; font-size: 8.5pt; margin-top: auto; line-height: 1.5; }
+    .logic-key { background: #1a2433; color: #fff; padding: 18px; border-radius: 4px; font-size: 8.5pt; margin-top: 20px; line-height: 1.5; }
     .logic-key h4 { margin: 0 0 10px 0; font-size: 9pt; text-transform: uppercase; border-bottom: 1px solid #475569; padding-bottom: 5px; color: #e2e8f0; }
     
     /* KPIS */
     .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-    .kpi { padding: 15px; border-bottom: 4px solid #cbd5e1; background: #fff; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .kpi { padding: 15px; background: #fff; border-bottom: 1px solid #e2e8f0; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
     .kpi-title { font-size: 7.5pt; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
     .kpi-val { font-size: 16pt; font-weight: bold; color: #1a2433; font-family: monospace; }
     .kpi-sub { font-size: 7pt; color: #94a3b8; margin-top: 4px; }
@@ -44,7 +45,7 @@
     /* CHARTS & TABLES */
     .chart-container { border: 1px solid #cbd5e1; padding: 15px; background: #fff; height: 320px; position: relative; }
     
-    .data-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-top: 20px; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
     .data-table th { background: #1a2433; color: white; padding: 12px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; }
     .data-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155; }
     
@@ -53,10 +54,6 @@
     h2 { font-family: 'Georgia', serif; font-size: 18pt; color: #1a2433; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
     h3 { font-family: 'Segoe UI', sans-serif; font-size: 12pt; font-weight: 700; color: #1a2433; margin-top: 25px; margin-bottom: 10px; text-transform: uppercase; }
     p { margin-top: 0; margin-bottom: 15px; text-align: justify; }
-    
-    .badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 7.5pt; text-transform: uppercase; }
-    .badge-red { background: #fee2e2; color: #b32525; }
-    .badge-green { background: #dcfce7; color: #27ae60; }
 </style>
 </head>
 <body>
@@ -87,7 +84,7 @@
         <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, localized Spencer HQ inventory values and branch fulfillment volumes have been replaced with randomized enterprise proxies. The logic models the exact crisis variables executed during the June 2024 Little Sioux River flood: calculating the mathematical consequence of delayed physical-to-digital ERP decoupling during a catastrophic, zero-warning inventory loss event.
     </div>
 
-    <div class="dashboard">
+    <div class="dashboard-upper">
         <div class="controls">
             <div style="font-weight: 800; color: #1a2433; margin-bottom: 20px; font-size: 11pt; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px;">CRISIS ISOLATION PROTOCOL</div>
             
@@ -112,22 +109,22 @@
 
         <div class="sim-panel">
             <div class="kpi-grid">
-                <div class="kpi" style="border-bottom-color: #1a2433;">
+                <div class="kpi" style="border-top: 12px solid #b32525;">
                     <div class="kpi-title">DESTROYED CAPITAL</div>
                     <div class="kpi-val" id="kpi-capital">--</div>
                     <div class="kpi-sub">Logged for Vendor Credits</div>
                 </div>
-                <div class="kpi" style="border-bottom-color: #b32525;">
+                <div class="kpi" style="border-top: 12px solid #f59e0b;">
                     <div class="kpi-title">PHANTOM ORDERS (RISK)</div>
                     <div class="kpi-val" id="kpi-phantom">--</div>
                     <div class="kpi-sub">Failed fulfillment attempts</div>
                 </div>
-                <div class="kpi" style="border-bottom-color: #27ae60;">
+                <div class="kpi" style="border-top: 12px solid #27ae60;">
                     <div class="kpi-title">EBITDA PROTECTED</div>
                     <div class="kpi-val" id="kpi-ebitda">--</div>
                     <div class="kpi-sub">Via concurrent tariff pricing</div>
                 </div>
-                <div class="kpi" style="border-bottom-color: #1a2433;">
+                <div class="kpi" style="border-top: 12px solid #2980b9;">
                     <div class="kpi-title">NETWORK UPTIME</div>
                     <div class="kpi-val">100%</div>
                     <div class="kpi-sub">80 Branches Operational</div>
@@ -137,42 +134,44 @@
             <div class="chart-container">
                 <canvas id="impactChart"></canvas>
             </div>
-
-            <table class="data-table">
-                <thead>
-                    <tr><th>Action Protocol</th><th>Execution Method</th><th>Business Outcome</th></tr>
-                </thead>
-                <tbody>
-                    <tr style="background:#fef2f2;">
-                        <td><strong>Phase 1: Manual Heroics</strong></td>
-                        <td>Wall-to-wall physical cycle counting via headlamp (The "Muddy Clipboard").</td>
-                        <td>Zeroed out destroyed SKUs to prevent cascading network fulfillment failures post-event.</td>
-                    </tr>
-                    <tr style="background:#f0fdf4;">
-                        <td><strong>Phase 2: Architectural Evolution</strong></td>
-                        <td>Linking ERP availability to IoT water sensors and USGS API gauges.</td>
-                        <td>Automates a zero-hour "Quarantine Status" kill-switch, isolating the blast radius instantly.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Concurrent Continuity</strong></td>
-                        <td>Deploying tariff and pricing adjustments via temporary remote network connections.</td>
-                        <td>Protected regional EBITDA from compounding macroeconomic supply chain hits.</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
+    </div>
+
+    <div class="dashboard-lower">
+        <table class="data-table">
+            <thead>
+                <tr><th style="width: 25%;">Action Protocol</th><th style="width: 40%;">Execution Method</th><th>Business Outcome</th></tr>
+            </thead>
+            <tbody>
+                <tr style="background:#fef2f2;">
+                    <td><strong>Phase 1: Manual Heroics</strong></td>
+                    <td>Wall-to-wall physical cycle counting via headlamp (The "Muddy Clipboard").</td>
+                    <td>Zeroed out destroyed SKUs to prevent cascading network fulfillment failures post-event.</td>
+                </tr>
+                <tr style="background:#f0fdf4;">
+                    <td><strong>Phase 2: Architectural Evolution</strong></td>
+                    <td>Linking ERP availability to IoT water sensors and USGS API gauges.</td>
+                    <td>Automates a zero-hour "Quarantine Status" kill-switch, isolating the blast radius instantly.</td>
+                </tr>
+                <tr>
+                    <td><strong>Concurrent Continuity</strong></td>
+                    <td>Deploying tariff and pricing adjustments via temporary remote network connections.</td>
+                    <td>Protected regional EBITDA from compounding macroeconomic supply chain hits.</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div class="narrative">
         <h2>Executive Narrative: Crisis Management & Data Continuity</h2>
         
         <h3>1. The "Black Swan" Event & Digital Quarantine</h3>
-        <p>In June 2024, a catastrophic municipal failure resulted in a zero-warning, middle-of-the-night crest of the Little Sioux River at 22.2 feet[cite: 1]. The Spencer headquarters and primary regional warehousing facilities were submerged in river mud before emergency sirens were activated[cite: 1]. With the physical building already a total loss, the immediate strategic objective shifted entirely from physical preservation to digital quarantine.</p>
-        <p>When physical infrastructure collapses, cloud redundancies are only as effective as the ground-level team’s ability to access them[cite: 1]. Operating out of decentralized, primitive command centers, I leveraged off-site Des Moines server backups to maintain the enterprise pricing facade[cite: 1]. National pricing matrices and critical tariff adjustments were continuously deployed to the network[cite: 1]. To the outside B2B customer base and our 80 branches, corporate operations appeared entirely seamless[cite: 1].</p>
+        <p>In June 2024, a catastrophic municipal failure resulted in a zero-warning, middle-of-the-night crest of the Little Sioux River at 22.2 feet. The Spencer headquarters and primary regional warehousing facilities were submerged in river mud before emergency sirens were activated. With the physical building already a total loss, the immediate strategic objective shifted entirely from physical preservation to digital quarantine.</p>
+        <p>When physical infrastructure collapses, cloud redundancies are only as effective as the ground-level team’s ability to access them. Operating out of decentralized, primitive command centers, I leveraged off-site Des Moines server backups to maintain the enterprise pricing facade. National pricing matrices and critical tariff adjustments were continuously deployed to the network. To the outside B2B customer base and our 80 branches, corporate operations appeared entirely seamless.</p>
 
         <h3>2. Manual Data Reconciliation (The "Muddy Clipboard")</h3>
-        <p>The most critical threat during the flood was a database disconnect[cite: 1]. The ERP system inherently assumed the primary warehouse inventory was intact[cite: 1]. Left uncorrected, branches would order destroyed SKUs, resulting in catastrophic unfulfilled "phantom" orders[cite: 1].</p>
-        <p>Because automated scanning infrastructure was destroyed, reconciling the digital database required raw, manual execution[cite: 1]. I participated in and managed wall-to-wall manual cycle counts of the pitch-black warehouse, utilizing headlamps to identify and catalog mud-covered inventory[cite: 1]. By forcing the physical reality into the digital ERP under extreme duress, we severed the fulfillment loop and secured verifiable data needed to maximize cost-absorption and vendor credits[cite: 1].</p>
+        <p>The most critical threat during the flood was a database disconnect. The ERP system inherently assumed the primary warehouse inventory was intact. Left uncorrected, branches would order destroyed SKUs, resulting in catastrophic unfulfilled "phantom" orders.</p>
+        <p>Because automated scanning infrastructure was destroyed, reconciling the digital database required raw, manual execution. I participated in and managed wall-to-wall manual cycle counts of the pitch-black warehouse, utilizing headlamps to identify and catalog mud-covered inventory. By forcing the physical reality into the digital ERP under extreme duress, we severed the fulfillment loop and secured verifiable data needed to maximize cost-absorption and vendor credits.</p>
 
         <h3>3. The Architectural Evolution: Automated ERP Decoupling</h3>
         <p>While the manual "Muddy Clipboard" execution saved the network from immediate cascade failure, operational heroics are not a scalable enterprise strategy. The definitive architectural solution to a zero-warning physical disaster is an <strong>Automated API Kill-Switch</strong>.</p>
