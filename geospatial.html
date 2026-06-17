@@ -21,7 +21,7 @@
     .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 25px; color: #666; padding: 10px 15px; border-left: 3px solid #b32525; background-color: #fcfcfc; }
     
     /* DASHBOARD LAYOUT */
-    .sim-container { display: flex; height: 750px; border: 1px solid #ccc; background: #fff; overflow: hidden; margin-top: 20px; }
+    .sim-container { display: flex; height: 800px; border: 1px solid #ccc; background: #fff; overflow: hidden; margin-top: 20px; }
     .sim-sidebar { width: 260px; flex-shrink: 0; background: #fdfdfd; border-right: 1px solid #ccc; padding: 15px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; }
     .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; }
     .sidebar-controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.2; }
@@ -29,7 +29,7 @@
     
     .sim-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
     
-    .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-bottom: 15px; background: #fff; border: 1px solid #eee; }
+    .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-bottom: 20px; background: #fff; border: 1px solid #eee; }
     .raw-data-table th { background: #f1f5f9; color: #333; padding: 8px; text-align: left; border-bottom: 2px solid #ccc; }
     .raw-data-table td { padding: 8px; border-bottom: 1px solid #eee; color: #555; }
     
@@ -38,7 +38,7 @@
     .threat-elevated { color: #e67e22; font-weight: bold; }
     .threat-stable { color: #27ae60; font-weight: bold; }
 
-    #map-container { height: 480px; min-height: 480px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; background-color: #eaeaea; }
+    #map-container { height: 450px; min-height: 450px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; background-color: #eaeaea; }
     
     .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
     .strategy-table th { background: #1a2433; color: white; padding: 12px; text-align: left; font-size: 9pt; }
@@ -63,7 +63,7 @@
         </div>
         <div class="meta-col">
             <div class="meta-header">CORE COMPETENCIES</div>
-            <p class="meta-content">Geospatial Analytics, Territory Optimization, Market Penetration, Pricing Elasticity</p>
+            <p class="meta-content">Geospatial Analytics, Territory Optimization, Market Penetration, Account Retention</p>
         </div>
         <div class="meta-col">
             <div class="meta-header">TECHNICAL STACK</div>
@@ -76,31 +76,31 @@
     </div>
 
     <h2>1. Executive Project Summary & Business Context</h2>
-    <p>In a large-scale distribution network, branch performance is frequently misunderstood due to "territorial blindness"—the assumption that service areas are uniform. This leads to inefficient tiered pricing and missed expansion opportunities. I architected a Geospatial Intelligence engine that overlays competitive density rings onto our existing account base, providing the Sales and Marketing teams with a live, filterable "Heat Map" of margin vulnerability and greenfield potential.</p>
+    <p>In a large-scale distribution network, protecting existing high-margin business is just as critical as acquiring new accounts. Traditional systems suffer from "territorial blindness," reacting to margin erosion only after volume has dropped. I architected a Geospatial Intelligence engine that overlays competitive density rings onto both our physical hubs <em>and</em> our Top 20% fleet accounts. This provides Sales and Pricing teams with a live, predictive "Heat Map" of vulnerability.</p>
 
     <h2>2. Interactive Defense & Expansion Dashboard</h2>
-    <p>A static map is merely a picture; a dynamic map is a business tool. By allowing Regional Directors to filter by specific competitor threats, isolate Top 20% high-volume fleet accounts, and adjust our branch elasticity radius, this dashboard instantly highlights where margin protection is required. <em>(Note: Competitor C represents an aggressive market discounter and carries a 2.5x mathematical penalty in the vulnerability matrix).</em></p>
+    <p>By adjusting the regional elasticity radius below, the engine mathematically cross-references our physical assets and high-value accounts against active competitors in real-time. This instantly dictates where aggressive acquisition can safely occur, and where retention protocols must be deployed immediately. <em>(Note: Competitor C represents an aggressive market discounter and carries a 2.5x mathematical penalty in the vulnerability matrix).</em></p>
     
     <div class="sim-container">
         <div class="sim-sidebar">
             <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ENVIRONMENT</div>
-            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v4</div>
+            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v5</div>
             <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; branch_matrix.json</div>
             <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; competitor_data.csv</div>
             <div style="padding-left: 10px; margin-bottom: 25px; color: #555;">&#9654; top20_accounts.csv</div>
             
             <div style="font-weight: bold; margin-bottom: 10px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">DATA FILTERS</div>
-            <div style="color: #666; margin-bottom: 10px; font-size: 8.5pt; line-height: 1.4;">Active layers stream live from coordinate databases. Toggle layers below to isolate market threats.</div>
+            <div style="color: #666; margin-bottom: 10px; font-size: 8.5pt; line-height: 1.4;">Toggle layers below to isolate market threats.</div>
             
             <div class="sidebar-controls">
                 <label style="color: #1a2433;"><input type="checkbox" id="chk-branches" checked> Our Hubs</label>
                 <label style="color: #b32525;"><input type="checkbox" id="chk-compA" checked> Comp A (Star)</label>
                 <label style="color: #e67e22;"><input type="checkbox" id="chk-compB" checked> Comp B (Triangle)</label>
                 <label style="color: #8e44ad;"><input type="checkbox" id="chk-compC" checked> Comp C (Square)</label>
-                <label style="color: #27ae60;"><input type="checkbox" id="chk-top20"> Top 20% Fleet Accounts</label>
+                <label style="color: #27ae60;"><input type="checkbox" id="chk-top20" checked> Top 20% Accounts</label>
                 
                 <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px;">
-                    <label style="color: #1a2433; margin-bottom: 8px;">Branch Elasticity Radius:</label>
+                    <label style="color: #1a2433; margin-bottom: 8px;">Elasticity Radius:</label>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <input type="range" id="radius-slider" min="2" max="20" value="8">
                         <span id="radius-val" style="color: #b32525; width: 40px; text-align: right;">8 mi</span>
@@ -113,14 +113,25 @@
             <div id="map-container"></div>
             
             <div style="padding: 15px; overflow-y: auto; background: #fdfdfd; flex: 1;">
-                <div style="font-size: 8pt; font-weight: bold; color: #666; margin-bottom: 5px;">LIVE ALGORITHMIC THREAT ASSESSMENT</div>
-                <table class="raw-data-table" id="threat-table">
+                
+                <div style="font-size: 8pt; font-weight: bold; color: #1a2433; margin-bottom: 5px;">PHYSICAL ASSET (HUB) DEFENSE MATRIX</div>
+                <table class="raw-data-table" id="branch-threat-table">
                     <thead>
-                        <tr><th>Branch Region</th><th>Competitor Penetration (In Radius)</th><th>Vulnerability Index</th><th>System Action Protocol</th></tr>
+                        <tr><th>Hub Region</th><th>Threats in Radius</th><th>Vulnerability Index</th><th>System Action Protocol</th></tr>
                     </thead>
                     <tbody>
                         </tbody>
                 </table>
+
+                <div style="font-size: 8pt; font-weight: bold; color: #27ae60; margin-bottom: 5px; margin-top: 10px;">TOP 20% ACCOUNT RETENTION MATRIX</div>
+                <table class="raw-data-table" id="account-threat-table">
+                    <thead>
+                        <tr><th>Account Location</th><th>Threats in Radius</th><th>Flight Risk Score</th><th>Retention Protocol</th></tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+
             </div>
         </div>
     </div>
@@ -153,6 +164,14 @@
             { id: 'b2', name: "Eagan Distribution (SE)", lat: 44.81, lng: -93.16, circle: null, marker: null }
         ];
 
+        const topAccounts = [
+            { id: 't1', name: "Fleet Account - Shakopee", lat: 44.79, lng: -93.52, circle: null, marker: null },
+            { id: 't2', name: "Fleet Account - Lakeville", lat: 44.65, lng: -93.24, circle: null, marker: null },
+            { id: 't3', name: "Fleet Account - Brooklyn Park", lat: 45.10, lng: -93.35, circle: null, marker: null },
+            { id: 't4', name: "Fleet Account - Plymouth", lat: 45.01, lng: -93.46, circle: null, marker: null },
+            { id: 't5', name: "Fleet Account - Roseville", lat: 45.01, lng: -93.15, circle: null, marker: null }
+        ];
+
         // Competitor C has a 2.5 threat weight (Aggressive Discounter)
         const competitors = [
             { id: 'cA1', type: 'A', name: "Comp A", lat: 44.97, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
@@ -164,7 +183,7 @@
         ];
 
         // ---------------------------------------------------------
-        // 3. ICON GENERATION
+        // 3. ICON GENERATION & LAYERS
         // ---------------------------------------------------------
         function makeShapeIcon(color, size, shape) {
             let svgPath = '';
@@ -175,7 +194,7 @@
 
             return L.divIcon({
                 className: 'custom-shape-icon', 
-                html: '<svg viewBox="0 0 24 24" fill="' + color + '" width="' + size + '" height="' + size + '" style="filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5)); stroke: white; stroke-width: 1px;">' + svgPath + '</svg>', 
+                html: `<svg viewBox="0 0 24 24" fill="${color}" width="${size}" height="${size}" style="filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5)); stroke: white; stroke-width: 1px;">${svgPath}</svg>`, 
                 iconSize: [size, size], iconAnchor: [size/2, size/2], popupAnchor: [0, -size/2]
             });
         }
@@ -185,30 +204,30 @@
             compA: L.layerGroup().addTo(map),
             compB: L.layerGroup().addTo(map),
             compC: L.layerGroup().addTo(map),
-            top20: L.layerGroup()
+            top20: L.layerGroup().addTo(map) 
         };
 
-        // Render Initial Map Entities
+        // Render Branches
         branches.forEach(b => {
             b.marker = L.marker([b.lat, b.lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup(`<b>${b.name}</b>`).addTo(layers.branches);
             b.circle = L.circle([b.lat, b.lng], { color: '#1a2433', fillColor: '#1a2433', fillOpacity: 0.08, weight: 1, dashArray: '4, 4', radius: 8 * 1609.34 }).addTo(layers.branches);
         });
 
+        // Render Accounts
+        topAccounts.forEach(t => {
+            t.marker = L.marker([t.lat, t.lng], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup(`<b>${t.name}</b>`).addTo(layers.top20);
+            t.circle = L.circle([t.lat, t.lng], { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5', radius: 8 * 1609.34 }).addTo(layers.top20);
+        });
+
+        // Render Competitors
         competitors.forEach(c => {
             let targetLayer = c.type === 'A' ? layers.compA : c.type === 'B' ? layers.compB : layers.compC;
             c.marker = L.marker([c.lat, c.lng], {icon: makeShapeIcon(c.color, 16, c.shape)}).bindPopup(`<b>${c.name}</b>`).addTo(targetLayer);
         });
 
-        // Top 20 Accounts
-        const top20Coords = [[44.79, -93.52], [44.65, -93.24], [45.10, -93.35], [45.01, -93.46], [45.01, -93.15]];
-        top20Coords.forEach(coord => {
-            L.marker(coord, {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup("Fleet Account").addTo(layers.top20);
-        });
-
         // ---------------------------------------------------------
         // 4. MATH & LOGIC ENGINE
         // ---------------------------------------------------------
-        
         function getDistanceMiles(lat1, lon1, lat2, lon2) {
             const R = 3958.8;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -217,57 +236,74 @@
             return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
+        function calculateThreatRow(entity, activeComps, currentRadius, isBranch) {
+            let riskScore = 0;
+            let threatsInRange = [];
+
+            activeComps.forEach(comp => {
+                const dist = getDistanceMiles(entity.lat, entity.lng, comp.lat, comp.lng);
+                if (dist <= currentRadius) {
+                    threatsInRange.push(comp.type);
+                    riskScore += ((currentRadius - dist) / currentRadius) * 5 * comp.weight;
+                }
+            });
+
+            riskScore = Math.min(riskScore, 10.0).toFixed(1);
+
+            let threatText = threatsInRange.length > 0 ? `High (${threatsInRange.length} in zone)` : `Safe (0 in zone)`;
+            let riskClass = '';
+            let statusText = '';
+            let actionText = '';
+
+            if (riskScore >= 7.5) {
+                riskClass = 'threat-critical';
+                statusText = `Critical (${riskScore}/10)`;
+                actionText = isBranch ? 'Lock Tier-1 Margin.' : 'Deploy preemptive volume rebates.';
+            } else if (riskScore >= 4.0) {
+                riskClass = 'threat-elevated';
+                statusText = `Elevated (${riskScore}/10)`;
+                actionText = isBranch ? 'Target Competitor Accounts.' : 'Assign outside sales rep visit.';
+            } else {
+                riskClass = 'threat-stable';
+                statusText = `Stable (${riskScore}/10)`;
+                actionText = isBranch ? 'Raise Margin Floor by 2.5%.' : 'Routine account management.';
+            }
+
+            return `<tr>
+                <td>${entity.name}</td>
+                <td>${threatText}</td>
+                <td class="${riskClass}">${statusText}</td>
+                <td>${actionText}</td>
+            </tr>`;
+        }
+
         function updateDashboard() {
             const currentRadius = parseInt(document.getElementById('radius-slider').value);
             const activeComps = competitors.filter(c => document.getElementById(`chk-comp${c.type}`).checked);
-            const tableBody = document.querySelector('#threat-table tbody');
-            tableBody.innerHTML = ''; // Clear existing rows
+            
+            const branchTableBody = document.querySelector('#branch-threat-table tbody');
+            const accountTableBody = document.querySelector('#account-threat-table tbody');
+            
+            branchTableBody.innerHTML = ''; 
+            accountTableBody.innerHTML = ''; 
 
-            branches.forEach(branch => {
-                let riskScore = 0;
-                let threatsInRange = [];
-
-                activeComps.forEach(comp => {
-                    const dist = getDistanceMiles(branch.lat, branch.lng, comp.lat, comp.lng);
-                    if (dist <= currentRadius) {
-                        threatsInRange.push(comp.type);
-                        riskScore += ((currentRadius - dist) / currentRadius) * 5 * comp.weight;
-                    }
+            // Update Branch Table
+            if(document.getElementById('chk-branches').checked) {
+                branches.forEach(b => {
+                    branchTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(b, activeComps, currentRadius, true));
                 });
+            } else {
+                branchTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Hub Layer Disabled</td></tr>';
+            }
 
-                riskScore = Math.min(riskScore, 10.0).toFixed(1);
-
-                let threatText = threatsInRange.length > 0 ? `High (${threatsInRange.length} in zone)` : `Low (0 in zone)`;
-                let riskClass = '';
-                let statusText = '';
-                let actionText = '';
-
-                if (riskScore >= 7.5) {
-                    riskClass = 'threat-critical';
-                    statusText = `Critical (${riskScore}/10)`;
-                    actionText = 'Lock Tier-1 Margin. Trigger Loyalty Promo.';
-                } else if (riskScore >= 4.0) {
-                    riskClass = 'threat-elevated';
-                    statusText = `Elevated (${riskScore}/10)`;
-                    actionText = 'Hold Base Pricing. Target Competitor Accounts.';
-                } else {
-                    riskClass = 'threat-stable';
-                    statusText = `Stable (${riskScore}/10)`;
-                    actionText = 'Raise Margin Floor by 2.5%. Push Expansion.';
-                }
-
-                if(!document.getElementById('chk-branches').checked) {
-                     statusText = 'N/A'; riskClass = ''; actionText = 'Branch Layer Disabled'; threatText = '-';
-                }
-
-                const row = `<tr>
-                    <td>${branch.name}</td>
-                    <td>${threatText}</td>
-                    <td class="${riskClass}">${statusText}</td>
-                    <td>${actionText}</td>
-                </tr>`;
-                tableBody.insertAdjacentHTML('beforeend', row);
-            });
+            // Update Account Table
+            if(document.getElementById('chk-top20').checked) {
+                topAccounts.forEach(t => {
+                    accountTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(t, activeComps, currentRadius, false));
+                });
+            } else {
+                accountTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Account Layer Disabled</td></tr>';
+            }
         }
 
         // ---------------------------------------------------------
@@ -287,18 +323,14 @@
         setupToggle('chk-compC', 'compC');
         setupToggle('chk-top20', 'top20'); 
 
-        // Listen for radius slider movement
         document.getElementById('radius-slider').addEventListener('input', function(e) {
             var miles = parseInt(e.target.value);
             document.getElementById('radius-val').innerText = miles + " mi";
             var meters = miles * 1609.34;
             
-            // Update the visual rings on the map
-            branches.forEach(b => {
-                b.circle.setRadius(meters);
-            });
+            branches.forEach(b => { b.circle.setRadius(meters); });
+            topAccounts.forEach(t => { t.circle.setRadius(meters); });
             
-            // Update the math and table
             updateDashboard();
         });
 
