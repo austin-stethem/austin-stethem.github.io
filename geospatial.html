@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Geospatial Strategy Portfolio Case Study</title>
+<!-- Leaflet Map CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 9.5in; margin: 0 auto; padding: 40px; }
@@ -22,7 +23,13 @@
     
     /* DASHBOARD LAYOUT */
     .sim-container { display: flex; height: 750px; border: 1px solid #ccc; background: #fff; overflow: hidden; margin-top: 20px; }
-    .sim-sidebar { width: 240px; flex-shrink: 0; background: #fdfdfd; border-right: 1px solid #ccc; padding: 15px; font-size: 9pt; overflow-y: auto; }
+    
+    /* SIDEBAR WITH CONTROLS */
+    .sim-sidebar { width: 260px; flex-shrink: 0; background: #fdfdfd; border-right: 1px solid #ccc; padding: 15px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; }
+    .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; }
+    .sidebar-controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.2; }
+    .sidebar-controls input[type="range"] { width: 100%; cursor: pointer; }
+    
     .sim-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
     
     .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-bottom: 15px; background: #fff; border: 1px solid #eee; }
@@ -30,14 +37,9 @@
     .raw-data-table td { padding: 8px; border-bottom: 1px solid #eee; color: #555; }
     .risk-high { color: #b32525; font-weight: bold; }
     .risk-low { color: #27ae60; font-weight: bold; }
-
-    /* MAP & CONTROLS */
-    .control-panel { background: #f8fafc; padding: 10px 15px; border-bottom: 1px solid #ccc; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; font-size: 8.5pt; font-weight: bold; color: #333; }
-    .control-panel label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
-    .control-panel input[type="range"] { width: 100px; }
     
     /* BULLETPROOF MAP CONTAINER */
-    #map-container { height: 400px; min-height: 400px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; background-color: #eaeaea; }
+    #map-container { height: 480px; min-height: 480px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; background-color: #eaeaea; }
     
     .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
     .strategy-table th { background: #1a2433; color: white; padding: 12px; text-align: left; font-size: 9pt; }
@@ -45,6 +47,7 @@
     
     .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 30px; font-style: italic; font-weight: 600; color: #1a2433; font-size: 10pt; text-align: justify; }
 </style>
+<!-- Leaflet Map JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
@@ -81,32 +84,40 @@
     <p>A static map is merely a picture; a dynamic map is a business tool. By allowing Regional Directors to filter by specific competitor threats, isolate Top 20% high-volume fleet accounts, and adjust our branch elasticity radius, this dashboard instantly highlights where margin protection is required and where aggressive acquisition can safely occur.</p>
     
     <div class="sim-container">
+        <!-- Sidebar with Environment & Filters -->
         <div class="sim-sidebar">
             <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ENVIRONMENT</div>
             <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v3</div>
             <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; branch_matrix.json</div>
             <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; competitor_data.csv</div>
-            <div style="padding-left: 10px; margin-bottom: 20px; color: #555;">&#9654; top20_accounts.csv</div>
-            <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">DATA FILTERS</div>
-            <div style="color: #666; margin-bottom: 10px; line-height: 1.4;">Active layers stream live from coordinate databases. Use the top control bar to isolate market threats across the metro area.</div>
-        </div>
-
-        <div class="sim-main">
-            <div class="control-panel">
+            <div style="padding-left: 10px; margin-bottom: 25px; color: #555;">&#9654; top20_accounts.csv</div>
+            
+            <div style="font-weight: bold; margin-bottom: 10px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">DATA FILTERS</div>
+            <div style="color: #666; margin-bottom: 10px; font-size: 8.5pt; line-height: 1.4;">Active layers stream live from coordinate databases. Toggle layers below to isolate market threats.</div>
+            
+            <div class="sidebar-controls">
                 <label style="color: #1a2433;"><input type="checkbox" id="chk-branches" checked> Our Hubs</label>
                 <label style="color: #b32525;"><input type="checkbox" id="chk-compA" checked> Comp A (Star)</label>
                 <label style="color: #e67e22;"><input type="checkbox" id="chk-compB" checked> Comp B (Triangle)</label>
                 <label style="color: #8e44ad;"><input type="checkbox" id="chk-compC" checked> Comp C (Square)</label>
                 <label style="color: #27ae60;"><input type="checkbox" id="chk-top20"> Top 20% Fleet Accounts</label>
-                <div style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
-                    <label>Branch Elasticity Radius:</label>
-                    <input type="range" id="radius-slider" min="5" max="20" value="8">
-                    <span id="radius-val" style="width: 45px;">8 mi</span>
+                
+                <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px;">
+                    <label style="color: #1a2433; margin-bottom: 8px;">Branch Elasticity Radius:</label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="range" id="radius-slider" min="5" max="20" value="8">
+                        <span id="radius-val" style="color: #b32525; width: 40px; text-align: right;">8 mi</span>
+                    </div>
                 </div>
             </div>
-            
+        </div>
+
+        <!-- Main Panel -->
+        <div class="sim-main">
+            <!-- Interactive Map -->
             <div id="map-container"></div>
             
+            <!-- Data Output -->
             <div style="padding: 15px; overflow-y: auto; background: #fdfdfd; flex: 1;">
                 <div style="font-size: 8pt; font-weight: bold; color: #666; margin-bottom: 5px;">ACTIONABLE METRICS: AUTOMATED ACCOUNT DEFENSE PROTOCOL</div>
                 <table class="raw-data-table">
