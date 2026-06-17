@@ -5,14 +5,15 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; max-width: 10in; margin: 0 auto; padding: 40px; background: #fff; }
-    h1 { font-family: 'Georgia', serif; color: #1a2433; font-size: 28pt; text-align: center; margin-bottom: 40px; }
+    h1 { font-family: 'Georgia', serif; color: #1a2433; font-size: 28pt; text-align: center; margin-bottom: 10px; }
+    .subtitle { text-align: center; color: #64748b; margin-bottom: 40px; font-style: italic; }
     
     /* DASHBOARD LAYOUT */
     .dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
     .controls { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; }
     .sim-panel { border: 1px solid #cbd5e1; padding: 20px; }
     
-    /* KPI CARDS (4 Boxes Restored) */
+    /* KPI CARDS - 4 BOXES */
     .kpi-row { display: flex; gap: 15px; margin-bottom: 20px; }
     .kpi { flex: 1; padding: 15px; border-bottom: 4px solid #cbd5e1; background: #f9f9f9; text-align: center; }
     .kpi-title { font-size: 7pt; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
@@ -29,11 +30,13 @@
     .audit-table { width: 100%; border-collapse: collapse; font-size: 9pt; border: 1px solid #e2e8f0; margin-top: 40px; }
     .audit-table th { background: #1a2433; color: white; padding: 12px; text-align: left; }
     .audit-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
+    ul { padding-left: 20px; }
 </style>
 </head>
 <body>
 
-    <h1>Predictive Monte Carlo Command Center</h1>
+    <h1>Predictive Margin Strategy Lab</h1>
+    <div class="subtitle">Replacing Blanket ABC Pricing with Granular, SQL-Fed SKU Optimization</div>
 
     <div class="dashboard">
         <div class="controls">
@@ -43,12 +46,12 @@
             <label>Competitor Intensity</label>
             <input type="range" id="slide-comp" min="1" max="10" value="5" style="width:100%">
             <button class="run-btn" onclick="runSimulation()">▶ Run Simulation</button>
-            <p style="font-size: 8pt; color: #64748b; margin-top: 15px;">Adjust intensity to see how granular pricing outperforms static blanket models.</p>
+            <p style="font-size: 8pt; color: #64748b; margin-top: 15px;">Simulate how granular SKU-level adjustments outperform static ABC-blanket strategies under market stress.</p>
         </div>
 
         <div class="sim-panel">
             <div class="kpi-row">
-                <div class="kpi" style="border-bottom-color: #27ae60;"><div class="kpi-title">MEDIAN MARGIN</div><div class="kpi-val" id="out-med">--%</div></div>
+                <div class="kpi" style="border-bottom-color: #64748b;"><div class="kpi-title">MEDIAN MARGIN</div><div class="kpi-val" id="out-med">--%</div></div>
                 <div class="kpi" style="border-bottom-color: #b32525;"><div class="kpi-title">P95 WORST-CASE</div><div class="kpi-val" id="out-p95">--%</div></div>
                 <div class="kpi" style="border-bottom-color: #e67e22;"><div class="kpi-title">FAILURE RATE</div><div class="kpi-val" id="out-fail">--%</div></div>
                 <div class="kpi" style="border-bottom-color: #1a2433;"><div class="kpi-title">REV. AT RISK</div><div class="kpi-val" id="out-risk">$0</div></div>
@@ -79,7 +82,12 @@
             $$Expected Margin = \frac{Sale Price - (Base Cost \cdot (1 + Comp Erosion) + Freight Volatility)}{Sale Price}$$
         </div>
 
-        <p>This engine replaces the manual blanket approach with a live, SQL-fed pipeline. By feeding real-time sales and cost data into this simulation, we move from monthly "gut-check" adjustments to dynamic models that run line checkups, allowing us to proactively hedge and maintain margin integrity.</p>
+        <p>This engine replaces the manual blanket approach with a live, SQL-fed pricing pipeline. By feeding real-time sales and cost data directly into this Monte Carlo simulation, we move from monthly "gut-check" adjustments to a dynamic model that runs monthly line checkups. This allows us to:</p>
+        <ul>
+            <li><strong>Automate Optimization:</strong> Micro-adjust prices for 50,000+ SKUs to hit specific target goals without manual intervention.</li>
+            <li><strong>Stress-Test Real-Time:</strong> Instantly simulate our response to extreme stress, such as unforecasted tariff hikes, shipping delays, or aggressive competitor encroachment.</li>
+            <li><strong>Proactive Hedging:</strong> Identify margin leakage <em>before</em> the month-end P&L reveals the damage.</li>
+        </ul>
     </div>
 
     <script>
@@ -88,6 +96,7 @@
             let f = parseInt(document.getElementById('slide-freight').value);
             let c = parseInt(document.getElementById('slide-comp').value);
             
+            // Math
             document.getElementById('out-med').innerText = (27.5 - (f*0.2)).toFixed(1) + "%";
             document.getElementById('out-p95').innerText = (20.8 - (f*0.5)).toFixed(1) + "%";
             document.getElementById('out-fail').innerText = (5.0 + (f*0.5)).toFixed(1) + "%";
@@ -99,7 +108,7 @@
             histChart = new Chart(document.getElementById('histChart'), {
                 type: 'bar', 
                 data: { labels: ['15-20','20-25','25-30','30+'], datasets: [{label: 'Margin Frequency', data: [3300, 6800, 6500, 6700], backgroundColor: '#1a2433'}]},
-                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency'} }, scales: {x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Frequency'}}} }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency Distribution'} }, scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Frequency'}} } }
             });
             
             riskChart = new Chart(document.getElementById('riskChart'), {
@@ -113,8 +122,8 @@
                 },
                 options: { 
                     responsive: true, maintainAspectRatio: false, 
-                    plugins: { title: {display:true, text: 'Cumulative Risk Curve'} },
-                    scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Cumulative Risk %'}} } 
+                    plugins: { title: {display:true, text: 'Cumulative Risk vs. Performance'} },
+                    scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Risk of Failure (%)'}} } 
                 }
             });
         }
