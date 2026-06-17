@@ -1,83 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Python Monte Carlo Portfolio Case Study</title>
-<style>
-    body {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        color: #333;
-        font-size: 10.5pt;
-        line-height: 1.6;
-        max-width: 9.5in;
-        margin: 0 auto;
-        padding: 40px;
-    }
-    .header-container { text-align: center; margin-bottom: 30px; }
-    .kicker { color: #b32525; font-weight: bold; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
-    h1 { font-family: 'Georgia', serif; font-size: 26pt; color: #1a2433; margin: 0; font-weight: normal; line-height: 1.2; }
-    .main-divider { border: none; border-top: 3px solid #333333; margin-bottom: 30px; }
-    
-    .metadata-flex {
-        display: flex !important;
-        justify-content: center !important;
-        gap: 60px !important;
-        border-bottom: 1px solid #ccc; 
-        padding-bottom: 25px; 
-        margin-bottom: 35px;
-    }
-    .meta-col { text-align: center !important; max-width: 250px; }
-    .meta-header { font-size: 8pt; font-weight: bold; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    .meta-content { font-size: 10pt; margin: 0; line-height: 1.5; }
-    
-    h2 { font-family: 'Georgia', serif; font-size: 17pt; font-weight: normal; color: #1a2433; margin-top: 40px; margin-bottom: 15px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; }
-    p { text-align: justify; margin-top: 0; margin-bottom: 15px; }
-    .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 25px; color: #666; padding: 10px 15px; border-left: 3px solid #b32525; background-color: #fcfcfc; }
-    .visual-box { border: 1px dashed #b32525; padding: 20px; margin: 30px 0; background-color: #fdfaf9; }
-    
-    /* FIX FOR SIDEBAR OVERFLOW */
-    .sim-container {
-        display: flex;
-        height: 600px;
-        border: 1px solid #ccc;
-        background: #fff;
-        overflow: hidden; /* Prevents overflow */
-    }
-    .sim-sidebar {
-        width: 240px;
-        flex-shrink: 0; /* Ensures sidebar stays fixed width */
-        background: #fdfdfd;
-        border-right: 1px solid #ccc;
-        padding: 15px;
-        font-size: 9pt;
-        overflow-y: auto;
-    }
-    .sim-main {
-        flex: 1;
-        min-width: 0; /* Critical: allows content to shrink */
-        display: flex;
-        flex-direction: column;
-    }
-
-    #terminal-output { background: #000; color: #0f0; font-family: 'Courier New', Courier, monospace; font-size: 9pt; padding: 15px; height: 150px; overflow-y: auto; display: none; }
-    #dashboard-container { display: none; flex-direction: column; height: 100%; overflow-y: auto; padding: 15px; }
-    .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-bottom: 15px; background: #fff; }
-    .raw-data-table th { background: #f1f5f9; color: #333; padding: 6px; text-align: left; border-bottom: 2px solid #ccc; }
-    .raw-data-table td { padding: 6px; border-bottom: 1px solid #eee; color: #555; }
-    .erratic { color: #b32525; font-weight: bold; }
-    
-    .charts-wrapper { display: flex; justify-content: space-between; margin-top: 20px; }
-    .chart-box { width: 48%; height: 250px; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 10px; box-sizing: border-box; text-align: center; }
-    .chart-caption { font-size: 8.5pt; color: #555; font-style: italic; margin-top: 5px; text-align: left; line-height: 1.3; }
-</style>
+<title>Monte Carlo Simulation Portfolio Case Study</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* CORE PORTFOLIO STYLING (Maintains consistency with Geospatial page) */
+    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 10.5in; margin: 0 auto; padding: 40px; background-color: #ffffff; }
+    .header-container { text-align: center; margin-bottom: 40px; }
+    .kicker { color: #b32525; font-weight: bold; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+    h1 { font-family: 'Georgia', serif; font-size: 28pt; color: #1a2433; margin: 0; font-weight: normal; line-height: 1.2; letter-spacing: -0.5px;}
+    .main-divider { border: none; border-top: 3px solid #1a2433; margin-bottom: 30px; }
+    
+    .metadata-flex { display: flex !important; justify-content: center !important; gap: 50px !important; border-bottom: 1px solid #e2e8f0; padding-bottom: 25px; margin-bottom: 35px; }
+    .meta-col { text-align: center !important; max-width: 250px; }
+    .meta-header { font-size: 8pt; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .meta-content { font-size: 10pt; margin: 0; line-height: 1.5; color: #1e293b; }
+    
+    h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: #1a2433; margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+    h3 { font-family: 'Segoe UI', sans-serif; font-size: 12pt; font-weight: 700; color: #1a2433; margin-top: 25px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+    p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
+    
+    .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 30px; color: #64748b; padding: 15px; border-left: 4px solid #b32525; background-color: #f8fafc; }
+    .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; color: #0f172a; }
+    
+    pre { background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 9pt; overflow-x: auto; margin-bottom: 25px;}
+
+    /* DASHBOARD UI STYLING */
+    .sim-container { display: flex; height: 600px; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+    .sim-sidebar { width: 320px; flex-shrink: 0; background: #f8fafc; border-right: 1px solid #cbd5e1; padding: 20px; font-size: 9pt; display: flex; flex-direction: column; justify-content: space-between;}
+    .sim-main { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 20px;}
+    
+    .control-group { margin-bottom: 20px; }
+    .control-label { display: flex; justify-content: space-between; font-weight: bold; color: #1a2433; margin-bottom: 5px; font-size: 9pt; text-transform: uppercase;}
+    .control-desc { font-size: 8pt; color: #64748b; margin-bottom: 8px; line-height: 1.3;}
+    input[type="range"] { width: 100%; cursor: pointer; accent-color: #b32525; }
+    
+    .run-btn { background-color: #1a2433; color: white; border: none; padding: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; width: 100%; border-radius: 4px; font-size: 10pt; transition: background 0.2s;}
+    .run-btn:hover { background-color: #b32525; }
+
+    /* OUTPUT DASHBOARD */
+    .dashboard-top { display: flex; gap: 20px; margin-bottom: 20px; }
+    .kpi-card { flex: 1; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 15px; text-align: center; }
+    .kpi-title { font-size: 8pt; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;}
+    .kpi-value { font-size: 18pt; font-weight: bold; color: #1a2433; font-family: monospace;}
+    .kpi-alert { color: #b32525; }
+    
+    .chart-container { flex: 1; position: relative; width: 100%; min-height: 300px; border: 1px solid #e2e8f0; background: #fafafa; border-radius: 4px; padding: 10px;}
+
+    .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
+    .strategy-table th { background: #1a2433; color: white; padding: 14px; text-align: left; font-size: 9pt; border: 1px solid #1a2433; text-transform: uppercase; letter-spacing: 0.5px;}
+    .strategy-table td { padding: 14px; border: 1px solid #e2e8f0; font-size: 9.5pt; vertical-align: top; color: #334155;}
+    
+    .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 40px; font-style: italic; font-weight: 600; color: #1a2433; font-size: 10pt; text-align: justify; }
+</style>
 </head>
 <body>
     <div class="header-container">
-        <div class="kicker">DATA SCIENCE & ADVANCED ANALYTICS PORTFOLIO CASE STUDY</div>
+        <div class="kicker">DATA SCIENCE & ADVANCED ANALYTICS</div>
         <h1>Python Monte Carlo Enterprise Pricing Simulation</h1>
     </div>
-    <hr class="main-divider">
-
+    
     <div class="metadata-flex">
         <div class="meta-col">
             <div class="meta-header">PRINCIPAL ENGINEER</div>
@@ -85,122 +70,269 @@
         </div>
         <div class="meta-col">
             <div class="meta-header">CORE COMPETENCIES</div>
-            <p class="meta-content">Python, Monte Carlo Simulations, Predictive Risk Modeling, Financial Engineering</p>
+            <p class="meta-content">Python (NumPy, Pandas), Financial Engineering, Predictive Modeling, ERP Data Warehousing</p>
         </div>
         <div class="meta-col">
             <div class="meta-header">TECHNICAL STACK</div>
-            <p class="meta-content">Python (Pandas, NumPy, Matplotlib), ERP Data Extracts</p>
+            <p class="meta-content">Vectorized Arrays, Stochastic Simulation, Probability Distribution Logic</p>
         </div>
     </div>
 
     <div class="disclaimer">
-        <strong>Data Governance Note:</strong> To strictly comply with NDA, all financial matrices, cost baselines, and variance arrays in this simulation have been anonymized using representative stochastic proxy data. The programmatic python logic and distribution math remain exact reflections of the production environment.
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live landed costs and proprietary ERP margin matrix data have been replaced with a generalized baseline portfolio. The algorithmic logic—specifically the stochastic sampling methodology and worst-case percentile calculation formulas—remains an exact reflection of the production Python environment.
     </div>
 
-    <h2>1. Executive Project Summary & Business Context</h2>
-    <p>Traditional enterprise pricing models often fail due to reliance on reactive, deterministic forecasting. By automating the routine risk management for commodity bases, this engine acts as a force multiplier, allowing pricing teams to shift human intelligence toward high-touch strategic engagement for the top 10% of high-value fleet accounts.</p>
+    <h2>1. The Problem: Deterministic Forecasting in a Volatile World</h2>
+    <p>Enterprise pricing models often rely on deterministic forecasting—calculating next year's corporate margins based on last year's static averages. However, in a volatile supply chain, averages mask catastrophic risk. If a logistics disruption coincides with aggressive competitor pricing and a dip in demand, a standard spreadsheet model will fail to predict the compounding margin erosion.</p>
+    <p>To shift the Pricing Department from descriptive reporting to predictive risk management, I engineered a Python-based Monte Carlo simulation. This model utilizes vectorized operations to stress-test proposed pricing strategies against tens of thousands of randomized macroeconomic scenarios in seconds, providing executive leadership with probability distributions rather than static guesses.</p>
 
-    <h2>2. Injecting Chaos: Programmatic Uncertainty Optimization</h2>
-    <div class="visual-box">
-        <p style="font-weight:bold; color: #b32525; margin-bottom: 15px; text-align: center;">PYTHON STOCHASTIC SIMULATION ARCHITECTURE</p>
-        
-        <div class="sim-container">
-            <div class="sim-sidebar">
-                <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ENVIRONMENT</div>
-                <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; local_env (Python 3.10)</div>
-                <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; data_cleaning.py</div>
-                <div style="padding-left: 10px; margin-bottom: 20px; color: #555;">&#9654; erp_extract_Q3.csv</div>
-                <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ACTIVE SCRIPT</div>
-                <div style="padding-left: 10px; color: #333; background-color: #f1f5f9; border-left: 3px solid #b32525; padding: 6px; font-weight: 600;">monte_carlo_engine.py</div>
+    <h2>2. Vectorized Probability Mechanics (The Python Engine)</h2>
+    <p>The core power of a Monte Carlo simulation lies in programmatic uncertainty. Instead of assuming flat percentage adjustments, the engine samples continuous variables (such as freight shocks and demand decay) across normal and uniform distributions. By utilizing NumPy arrays, the system processes these independent macroeconomic variables concurrently across 50,000 distinct permutations.</p>
+    
+    <div class="math-block">
+        $$\text{Expected Margin} = \frac{\text{Sale Price} - (\text{Base Cost} \cdot (1 + \text{Comp Erosion}) + \text{Freight Volatility})}{\text{Sale Price}}$$
+    </div>
+
+    <p>The Python architecture prioritizes computational velocity, capable of crunching thousands of SKU and sale records effortlessly:</p>
+<pre>
+import numpy as np
+
+def run_compound_risk_simulation(base_cost, freight_mean, freight_std, iterations=50000):
+    # Vectorized array execution for high-velocity distribution modeling
+    freight_shocks = np.random.normal(freight_mean, freight_std, iterations)
+    competitor_erosion = np.random.uniform(0.01, 0.08, iterations)
+    
+    # Simulating 50,000 distinct landed-cost permutations instantly
+    simulated_landed_costs = base_cost * (1 + competitor_erosion) + freight_shocks
+    
+    # Extracting the P95 tail (Worst-case boundary)
+    p95_risk_boundary = np.percentile(simulated_landed_costs, 95)
+    return p95_risk_boundary
+</pre>
+
+    <h2>3. Interactive P&L Risk Dashboard</h2>
+    <p><em>Adjust the macroeconomic risk sliders below and click "Run Simulation." The JavaScript UI mimics the backend Python architecture, running an instantaneous 50,000-iteration Monte Carlo model to calculate the exact probability of your Gross Profit Margin falling below critical thresholds.</em></p>
+
+    <div class="sim-container">
+        <div class="sim-sidebar">
+            <div>
+                <div style="font-weight: bold; margin-bottom: 15px; color: #1a2433; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; font-size: 10pt;">MACROECONOMIC VARIABLES</div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Freight Volatility</span>
+                        <span id="val-freight" style="color: #b32525;">Medium</span>
+                    </div>
+                    <div class="control-desc">Variance in inbound logistics and carrier surcharges.</div>
+                    <input type="range" id="slide-freight" min="1" max="3" value="2">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Competitor Aggression</span>
+                        <span id="val-comp" style="color: #b32525;">Moderate</span>
+                    </div>
+                    <div class="control-desc">Uniform distribution of forced price-matching and margin erosion.</div>
+                    <input type="range" id="slide-comp" min="1" max="3" value="2">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Iterations</span>
+                        <span style="color: #1a2433;">50,000</span>
+                    </div>
+                    <div class="control-desc">Vectorized array size for the simulation run.</div>
+                </div>
+            </div>
+            
+            <button class="run-btn" onclick="runSimulation()">▶ Run Simulation</button>
+        </div>
+
+        <div class="sim-main">
+            <div class="dashboard-top">
+                <div class="kpi-card">
+                    <div class="kpi-title">Median Expected Margin</div>
+                    <div class="kpi-value" id="out-median">--%</div>
+                    <div style="font-size: 8pt; color: #64748b; margin-top: 5px;">(50th Percentile)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Worst-Case Scenario</div>
+                    <div class="kpi-value kpi-alert" id="out-p95">--%</div>
+                    <div style="font-size: 8pt; color: #64748b; margin-top: 5px;">(95th Percentile Risk Tail)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Margin Failure Risk</div>
+                    <div class="kpi-value" id="out-prob" style="color: #e67e22;">--%</div>
+                    <div style="font-size: 8pt; color: #64748b; margin-top: 5px;">(Probability of dropping < 25%)</div>
+                </div>
             </div>
 
-            <div class="sim-main">
-                <div style="height: 35%; background: #1e293b; color: #f8fafc; padding: 15px; font-family: 'Courier New', monospace; font-size: 9pt; position: relative; overflow-y: auto;">
-                    <div style="color: #64748b; margin-bottom: 8px;"># Vectorized Monte Carlo logic</div>
-                    <span style="color: #c678dd;">import</span> numpy <span style="color: #c678dd;">as</span> np<br><br>
-                    <span style="color: #c678dd;">def</span> <span style="color: #61afef;">run_simulation</span>(base_cost):<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;shocks = np.random.normal(mean, std, <span style="color: #d19a66;">10000</span>)<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c678dd;">return</span> np.percentile(shocks, <span style="color: #d19a66;">95</span>)
-                    <button id="run-py-btn" style="position: absolute; top: 15px; right: 15px; background: #b32525; color: white; border: none; padding: 6px 16px; cursor: pointer; font-weight: bold; border-radius: 4px; transition: background 0.2s;">&#9654; Run</button>
-                </div>
-                
-                <div style="height: 65%; background: #fdfdfd; padding: 15px; border-top: 2px solid #ccc; position: relative;">
-                    <div id="standby-text" style="color: #7f8c8d; text-align: center; margin-top: 100px; font-style: italic;">Awaiting Python execution environment...</div>
-                    <div id="terminal-output"></div>
-                    <div id="dashboard-container">
-                        <div style="font-size: 8pt; font-weight: bold; color: #666; margin-bottom: 5px;">STEP 1: RAW ERP DATA INGESTION</div>
-                        <p style="font-size: 9pt; color: #444; margin-bottom: 10px;">The engine performs a sanitization sweep to isolate freight-cost anomalies, maintaining the integrity of our risk-tail predictions.</p>
-                        <table class="raw-data-table">
-                            <tr><th>SKU_ID</th><th>Base Cost</th><th>Freight Anomaly</th><th>Status</th></tr>
-                            <tr><td>BRK-9901</td><td>$42.50</td><td class="erratic">$9.85 (+140%)</td><td style="color: #b32525; font-weight: bold;">High Volatility</td></tr>
-                        </table>
-
-                        <div style="font-size: 8pt; font-weight: bold; color: #666; margin-top: 15px; margin-bottom: 5px;">STEP 2: MONTE CARLO OUTPUT</div>
-                        <div class="charts-wrapper">
-                            <div class="chart-box">
-                                <canvas id="histogramChart"></canvas>
-                                <div class="chart-caption"><strong>Fig 1:</strong> Probability distribution of landed costs. <em>Red Tail</em> = P95 Risk Ceiling.</div>
-                            </div>
-                            <div class="chart-box">
-                                <canvas id="lineChart"></canvas>
-                                <div class="chart-caption"><strong>Fig 2:</strong> Cumulative margin impact. <em>Green Area</em> = recovered margin leakage.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="chart-container">
+                <canvas id="monteCarloChart"></canvas>
             </div>
         </div>
     </div>
 
-    <h2>3. From Probability to Executive Action</h2>
-    <p>By delegating commodity pricing to a high-accuracy, automated engine, we successfully converted a "bottleneck" process into a "predictive" one. This allows pricing architects to stop "firefighting" commodity fluctuations and start engineering value-add strategies.</p>
+    <h2>4. Transforming Data into Executive Strategy</h2>
+    <p>A data science model is only valuable if it dictates a business decision. By isolating the P95 tail (the worst 5% of possible outcomes), this architecture forces preventative margin defense before matrix release updates are pushed down to checkout networks:</p>
+
+    <table class="strategy-table">
+        <tr>
+            <th style="width: 25%;">Simulated Scenario</th>
+            <th>Executive Action Triggered</th>
+        </tr>
+        <tr>
+            <td><strong>High Logistics Shocks</strong></td>
+            <td>Triggers preventative localized price adjustments to pad margin reserves ahead of predicted volatility, preventing reactive end-of-month losses.</td>
+        </tr>
+        <tr>
+            <td><strong>Aggressive P95 Margin Tails</strong></td>
+            <td>Dictates the absolute minimum acceptable margin floor for new corporate pricing strategies. If the P95 risk drops below 25%, the strategy is rejected in committee.</td>
+        </tr>
+        <tr>
+            <td><strong>Extreme Competitor Erosion</strong></td>
+            <td>Initiates preemptive vendor negotiations for Net Purchase Discounts (NPD) to lower acquisition costs and protect tier alignment before volume is lost.</td>
+        </tr>
+    </table>
+
+    <div class="impact-footer">
+        STRATEGIC CORE COMPETENCY VALIDATION: This deployment acts as a definitive verification of advanced programming capabilities: demonstrating the ability to leverage Python to build stochastic, probabilistic financial models that translate raw supply chain chaos into actionable, executive-level risk management strategies.
+    </div>
 
     <script>
-        document.getElementById('run-py-btn').addEventListener('click', function(e) {
-            const btn = e.target;
-            const standby = document.getElementById('standby-text');
-            const terminal = document.getElementById('terminal-output');
-            const dashboard = document.getElementById('dashboard-container');
-            btn.style.background = '#8a1c1c';
-            btn.innerHTML = '&#8987; Executing...';
-            standby.style.display = 'none';
-            dashboard.style.display = 'none';
-            terminal.style.display = 'block';
-            terminal.innerHTML = '';
-            const terminalLines = ["> Ingesting erp_extract_Q3.csv...", "> Cleaning messy arrays...", "> SUCCESS: Simulation Complete."];
-            let lineIndex = 0;
-            const printLine = setInterval(() => {
-                if (lineIndex < terminalLines.length) {
-                    terminal.innerHTML += terminalLines[lineIndex] + "<br>";
-                    lineIndex++;
-                } else {
-                    clearInterval(printLine);
-                    setTimeout(() => {
-                        terminal.style.display = 'none';
-                        dashboard.style.display = 'flex';
-                        btn.style.background = '#1a2433';
-                        btn.innerHTML = '&#8634; Re-Run';
-                        renderCharts();
-                    }, 500);
-                }
-            }, 250);
+        // Update slider UI text
+        const textMap = {1: "Low", 2: "Medium/Mod", 3: "High/Aggressive"};
+        
+        document.getElementById('slide-freight').addEventListener('input', (e) => {
+            let val = parseInt(e.target.value);
+            document.getElementById('val-freight').innerText = val === 1 ? "Low" : val === 2 ? "Medium" : "Extreme";
         });
-        function renderCharts() {
-            const histCanvas = document.getElementById('histogramChart');
-            if (window.histChartObj) window.histChartObj.destroy();
-            window.histChartObj = new Chart(histCanvas.getContext('2d'), {
-                type: 'bar',
-                data: { labels: ['$45', '$50', '$55', '$60', '$65', '$70', '$75', '$80'], datasets: [{ data: [5, 15, 45, 80, 45, 15, 5, 2], backgroundColor: ['#cbd5e1','#cbd5e1','#cbd5e1','#cbd5e1','#cbd5e1','#b32525','#b32525','#b32525'] }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { display: false } } }
+        
+        document.getElementById('slide-comp').addEventListener('input', (e) => {
+            let val = parseInt(e.target.value);
+            document.getElementById('val-comp').innerText = val === 1 ? "Low" : val === 2 ? "Moderate" : "Aggressive";
+        });
+
+        let riskChart = null;
+
+        // Box-Muller transform to simulate Python's np.random.normal in JS
+        function randomNormal(mean, stdDev) {
+            let u1 = Math.random();
+            let u2 = Math.random();
+            let z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+            return z0 * stdDev + mean;
+        }
+
+        function runSimulation() {
+            const iterations = 50000;
+            const baseCost = 100.00;
+            const baseSell = 145.00; // Target ~31% Margin initially
+            
+            // Get Variables
+            const freightLevel = parseInt(document.getElementById('slide-freight').value);
+            const compLevel = parseInt(document.getElementById('slide-comp').value);
+
+            // Set Matrix Parameters based on UI
+            let freightMean = freightLevel === 1 ? 2.0 : freightLevel === 2 ? 5.0 : 12.0;
+            let freightStd = freightLevel === 1 ? 0.5 : freightLevel === 2 ? 2.0 : 4.5;
+            
+            let compMax = compLevel === 1 ? 0.02 : compLevel === 2 ? 0.05 : 0.12;
+
+            let margins = [];
+            let failureCount = 0;
+
+            // Run 50,000 permutations (Vectorized simulation)
+            for(let i = 0; i < iterations; i++) {
+                // Independent Variable 1: Freight Shock (Normal Distribution)
+                let f_shock = randomNormal(freightMean, freightStd);
+                
+                // Independent Variable 2: Competitor Margin Erosion (Uniform Distribution)
+                let c_erosion = Math.random() * compMax; // 0 to compMax
+                
+                // Calculate Landed Cost
+                let landedCost = (baseCost * (1 + c_erosion)) + f_shock;
+                
+                // Calculate Margin %
+                let margin = ((baseSell - landedCost) / baseSell) * 100;
+                margins.push(margin);
+                
+                // Critical Failure Boundary (< 25% margin)
+                if(margin < 25.0) failureCount++;
+            }
+
+            // Sort array to find Percentiles (mimicking np.percentile)
+            margins.sort((a, b) => a - b);
+            
+            let medianMargin = margins[Math.floor(iterations * 0.50)];
+            let p95Margin = margins[Math.floor(iterations * 0.05)]; // Bottom 5% worst cases
+            let failProb = (failureCount / iterations) * 100;
+
+            // Update UI KPIs
+            document.getElementById('out-median').innerText = medianMargin.toFixed(1) + "%";
+            document.getElementById('out-p95').innerText = p95Margin.toFixed(1) + "%";
+            document.getElementById('out-prob').innerText = failProb.toFixed(1) + "%";
+            
+            // Render Chart
+            renderChart(margins, medianMargin, p95Margin);
+        }
+
+        function renderChart(sortedData, median, p95) {
+            const ctx = document.getElementById('monteCarloChart').getContext('2d');
+            
+            // Create Histogram Bins
+            const numBins = 40;
+            const min = sortedData[0];
+            const max = sortedData[sortedData.length - 1];
+            const binSize = (max - min) / numBins;
+            
+            let labels = [];
+            let counts = new Array(numBins).fill(0);
+            
+            for(let i=0; i<numBins; i++) {
+                labels.push((min + (i * binSize)).toFixed(1) + '%');
+            }
+            
+            sortedData.forEach(val => {
+                let binIndex = Math.floor((val - min) / binSize);
+                if (binIndex >= numBins) binIndex = numBins - 1;
+                counts[binIndex]++;
             });
-            const lineCanvas = document.getElementById('lineChart');
-            if (window.lineChartObj) window.lineChartObj.destroy();
-            window.lineChartObj = new Chart(lineCanvas.getContext('2d'), {
-                type: 'line',
-                data: { labels: ['Q1', 'Q2', 'Q3', 'Q4'], datasets: [{ label: 'Traditional Leakage', data: [-12, -28, -45, -72], borderColor: '#7f8c8d', borderDash: [5, 5] }, { label: 'Monte Carlo Protected', data: [-12, -8, -4, -1], borderColor: '#27ae60', fill: true, backgroundColor: 'rgba(39, 174, 96, 0.1)' }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 8 } } } } }
+
+            // Destroy old chart to prevent overlap
+            if (riskChart) { riskChart.destroy(); }
+
+            riskChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Simulated Occurrences (50,000 Iterations)',
+                        data: counts,
+                        backgroundColor: '#1a2433',
+                        borderColor: '#cbd5e1',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Probability Distribution of Expected Margin', font: {size: 14, family: 'Georgia'}}
+                    },
+                    scales: {
+                        y: { title: { display: true, text: 'Frequency' }, beginAtZero: true },
+                        x: { title: { display: true, text: 'Gross Profit Margin (%)' },
+                            grid: { display: false }
+                        }
+                    }
+                }
             });
         }
+
+        // Run once on load
+        window.onload = runSimulation;
+
     </script>
 </body>
 </html>
