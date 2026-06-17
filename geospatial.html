@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Geospatial Strategy Portfolio Case Study</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 9.5in; margin: 0 auto; padding: 40px; }
     .header-container { text-align: center; margin-bottom: 30px; }
@@ -17,12 +18,16 @@
     h2 { font-family: 'Georgia', serif; font-size: 17pt; font-weight: normal; color: #1a2433; margin-top: 40px; margin-bottom: 15px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; }
     p { text-align: justify; margin-top: 0; margin-bottom: 15px; }
     
+    /* MAP CONTAINER */
+    #map { height: 450px; width: 100%; border: 1px solid #ccc; margin: 25px 0; border-radius: 4px; }
+    
     .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
     .strategy-table th { background: #1a2433; color: white; padding: 12px; text-align: left; font-size: 9pt; }
     .strategy-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 9pt; vertical-align: top; }
     
     .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 30px; font-style: italic; font-weight: 600; color: #1a2433; font-size: 10pt; text-align: justify; }
 </style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <div class="header-container">
@@ -50,7 +55,12 @@
     <h2>1. Executive Project Summary & Business Context</h2>
     <p>In a large-scale distribution network, branch performance is frequently misunderstood due to "territorial blindness"—the assumption that service areas are uniform. This leads to inefficient tiered pricing and missed expansion opportunities. I architected a Geospatial Intelligence engine that overlays competitive density rings onto our existing account base, providing the Sales and Marketing teams with a live "Heat Map" of margin vulnerability and greenfield potential.</p>
 
-    <h2>2. Strategic Benefits for Sales & Marketing</h2>
+    <h2>2. Interactive Competitive Density Map</h2>
+    <p>This interactive layer visualizes our branch coverage against the competitor landscape. Use the map to explore density clusters and identify regions where margin defense is currently critical.</p>
+    
+    <div id="map"></div>
+
+    <h2>3. Strategic Benefits for Sales & Marketing</h2>
     <p>The system transforms the map from a simple location tool into a strategic asset for margin protection and account growth:</p>
 
     <table class="strategy-table">
@@ -61,12 +71,27 @@
         <tr><td><strong>Marketing Intelligence</strong></td><td>Enables Marketing to launch hyper-localized promotional campaigns, focusing spend exclusively on regions with the highest ROI based on current competitor positioning.</td></tr>
     </table>
 
-    <h2>3. From Visual Insight to Market Penetration</h2>
+    <h2>4. From Visual Insight to Market Penetration</h2>
     <p>Data science is only effective if it drives operational action. By visualizing competitive density, I provide the Sales and Marketing departments with a shared operational picture. Instead of guessing where to send resources, the leadership team can now define growth strategies based on empirical geographic data. This tool moves the department from a reactive mode of "servicing whoever calls" to a proactive model of "capturing the highest-value market share."</p>
 
     <div class="impact-footer">
         STRATEGIC CORE COMPETENCY VALIDATION: This deployment validates advanced spatial-analytical capabilities: demonstrating the ability to integrate coordinate-based data into actionable business intelligence that directly shapes our market penetration and margin protection strategies.
     </div>
 
+    <script>
+        // Initialize Map (Centered on your region)
+        var map = L.map('map').setView([43.41, -95.12], 9);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add dummy competitive density ring
+        var circle = L.circle([43.41, -95.12], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.2,
+            radius: 15000
+        }).addTo(map).bindPopup("High Competitive Density Cluster");
+    </script>
 </body>
 </html>
