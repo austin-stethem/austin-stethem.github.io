@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Geospatial Strategy Portfolio Case Study</title>
+<!-- Leaflet Map CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 9.5in; margin: 0 auto; padding: 40px; }
@@ -35,7 +36,9 @@
     .control-panel { background: #f8fafc; padding: 10px 15px; border-bottom: 1px solid #ccc; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; font-size: 8.5pt; font-weight: bold; color: #333; }
     .control-panel label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
     .control-panel input[type="range"] { width: 100px; }
-    #map-container { height: 400px; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; }
+    
+    /* BULLETPROOF MAP CONTAINER */
+    #map-container { height: 400px; min-height: 400px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; background-color: #eaeaea; }
     
     .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
     .strategy-table th { background: #1a2433; color: white; padding: 12px; text-align: left; font-size: 9pt; }
@@ -43,6 +46,7 @@
     
     .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 30px; font-style: italic; font-weight: 600; color: #1a2433; font-size: 10pt; text-align: justify; }
 </style>
+<!-- Leaflet Map JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
@@ -76,4 +80,142 @@
     <p>In a large-scale distribution network, branch performance is frequently misunderstood due to "territorial blindness"—the assumption that service areas are uniform. This leads to inefficient tiered pricing and missed expansion opportunities. I architected a Geospatial Intelligence engine that overlays competitive density rings onto our existing account base, providing the Sales and Marketing teams with a live, filterable "Heat Map" of margin vulnerability and greenfield potential.</p>
 
     <h2>2. Interactive Defense & Expansion Dashboard</h2>
-    <p>A static map is merely a picture; a dynamic map is a business tool. By allowing Regional Directors to filter by specific competitor threats, isolate Top 20% high
+    <p>A static map is merely a picture; a dynamic map is a business tool. By allowing Regional Directors to filter by specific competitor threats, isolate Top 20% high-volume fleet accounts, and adjust the elasticity radius, this dashboard instantly highlights where margin protection is required and where aggressive acquisition can safely occur.</p>
+    
+    <div class="sim-container">
+        <!-- Sidebar -->
+        <div class="sim-sidebar">
+            <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ENVIRONMENT</div>
+            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v3</div>
+            <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; branch_matrix.json</div>
+            <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; competitor_data.csv</div>
+            <div style="padding-left: 10px; margin-bottom: 20px; color: #555;">&#9654; top20_accounts.csv</div>
+            <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">DATA FILTERS</div>
+            <div style="color: #666; margin-bottom: 10px; line-height: 1.4;">Active layers stream live from coordinate databases. Use the top control bar to isolate market threats.</div>
+        </div>
+
+        <!-- Main Panel -->
+        <div class="sim-main">
+            <!-- Map Control Panel -->
+            <div class="control-panel">
+                <label style="color: #1a2433;"><input type="checkbox" id="chk-branches" checked> Our Branches</label>
+                <label style="color: #b32525;"><input type="checkbox" id="chk-compA" checked> Comp A</label>
+                <label style="color: #e67e22;"><input type="checkbox" id="chk-compB" checked> Comp B</label>
+                <label style="color: #8e44ad;"><input type="checkbox" id="chk-compC" checked> Comp C</label>
+                <label style="color: #27ae60;"><input type="checkbox" id="chk-top20"> Top 20% Accounts</label>
+                <div style="margin-left: auto; display: flex; align-items: center; gap: 5px;">
+                    <label>Threat Radius:</label>
+                    <input type="range" id="radius-slider" min="2" max="15" value="5">
+                    <span id="radius-val" style="width: 35px;">5 mi</span>
+                </div>
+            </div>
+            
+            <!-- Interactive Map -->
+            <div id="map-container"></div>
+            
+            <!-- Data Output -->
+            <div style="padding: 15px; overflow-y: auto; background: #fdfdfd; flex: 1;">
+                <div style="font-size: 8pt; font-weight: bold; color: #666; margin-bottom: 5px;">ACTIONABLE METRICS: AUTOMATED ACCOUNT DEFENSE PROTOCOL</div>
+                <table class="raw-data-table">
+                    <tr><th>Branch Region</th><th>Competitor Proximity</th><th>Vulnerability Index</th><th>System Action</th></tr>
+                    <tr><td>St. Paul Core</td><td>High (Comp A & B overlap)</td><td class="risk-high">Critical (8.4/10)</td><td>Lock Tier-1 Margin. Trigger Loyalty Promo.</td></tr>
+                    <tr><td>Bloomington Hub</td><td>Low (0 within current radius)</td><td class="risk-low">Stable (1.2/10)</td><td>Raise Margin Floor by 2.5%. Push Expansion.</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h2>3. Strategic Benefits for Sales & Marketing</h2>
+    <table class="strategy-table">
+        <tr><th>Strategic Lever</th><th>Business Application</th></tr>
+        <tr><td><strong>Tiered Pricing Alignment</strong></td><td>Visualizes price elasticity by measuring the distance between our branch and known competitor locations, allowing us to adjust tiered pricing matrices before we lose account volume.</td></tr>
+        <tr><td><strong>Account Protection (Top 20%)</strong></td><td>Cross-references our highest-revenue fleet accounts against competitor expansion zones, triggering proactive marketing outreach to defend the business before attrition begins.</td></tr>
+        <tr><td><strong>Expansion Region Targeting</strong></td><td>Identifies geographic "voids" where high-value commercial accounts exist but competitor density is low, providing the Sales team with a definitive roadmap for market penetration.</td></tr>
+    </table>
+
+    <div class="impact-footer">
+        STRATEGIC CORE COMPETENCY VALIDATION: This deployment validates advanced spatial-analytical capabilities: demonstrating the ability to integrate coordinate-based data into actionable business intelligence that directly shapes market penetration and margin protection strategies.
+    </div>
+
+    <script>
+        // Initialize Map
+        var map = L.map('map-container', { scrollWheelZoom: false }).setView([44.95, -93.15], 10);
+        
+        // Highly reliable OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+            attribution: '&copy; OpenStreetMap contributors' 
+        }).addTo(map);
+
+        // Force Leaflet to redraw after the flex layout renders
+        setTimeout(function(){ map.invalidateSize(); }, 250);
+
+        // Icon Generators
+        function makeIcon(color, size) {
+            return L.divIcon({
+                className: 'custom-icon', 
+                html: '<div style="background-color: ' + color + '; width: ' + size + 'px; height: ' + size + 'px; border-radius: 50%; border: 1px solid white; box-shadow: 0px 0px 3px rgba(0,0,0,0.4);"></div>', 
+                iconSize: [size, size]
+            });
+        }
+
+        // Layer Groups
+        var layers = {
+            branches: L.layerGroup().addTo(map),
+            compA: L.layerGroup().addTo(map),
+            compB: L.layerGroup().addTo(map),
+            compC: L.layerGroup().addTo(map),
+            top20: L.layerGroup() // Off by default
+        };
+
+        var threatRings = []; // To store circles for radius updating
+
+        // 1. Branches (Blue/Dark)
+        L.marker([44.95, -93.09], {icon: makeIcon('#1a2433', 14)}).bindPopup("<b>St. Paul Core Branch</b>").addTo(layers.branches);
+        L.marker([44.83, -93.30], {icon: makeIcon('#1a2433', 14)}).bindPopup("<b>Bloomington Hub</b>").addTo(layers.branches);
+
+        // Function to create competitor and ring
+        function addCompetitor(lat, lng, color, layerGroup, name) {
+            L.marker([lat, lng], {icon: makeIcon(color, 10)}).bindPopup('<b>' + name + '</b>').addTo(layerGroup);
+            var ring = L.circle([lat, lng], { color: color, fillColor: color, fillOpacity: 0.1, weight: 1, radius: 5 * 1609.34 }).addTo(layerGroup);
+            threatRings.push(ring);
+        }
+
+        // 2. Competitors
+        // Comp A (Red)
+        addCompetitor(44.97, -93.04, '#b32525', layers.compA, "Competitor A");
+        addCompetitor(44.94, -93.03, '#b32525', layers.compA, "Competitor A");
+        // Comp B (Orange)
+        addCompetitor(44.98, -93.15, '#e67e22', layers.compB, "Competitor B");
+        addCompetitor(44.92, -93.18, '#e67e22', layers.compB, "Competitor B");
+        // Comp C (Purple)
+        addCompetitor(44.88, -93.05, '#8e44ad', layers.compC, "Competitor C");
+
+        // 3. Top 20% Accounts (Green)
+        L.marker([44.96, -93.08], {icon: makeIcon('#27ae60', 8)}).bindPopup("High-Value Fleet Account").addTo(layers.top20);
+        L.marker([44.93, -93.07], {icon: makeIcon('#27ae60', 8)}).bindPopup("High-Value Fleet Account").addTo(layers.top20);
+        L.marker([44.85, -93.28], {icon: makeIcon('#27ae60', 8)}).bindPopup("High-Value Fleet Account").addTo(layers.top20);
+        L.marker([44.82, -93.32], {icon: makeIcon('#27ae60', 8)}).bindPopup("High-Value Fleet Account").addTo(layers.top20);
+
+        // Control Panel Logic
+        function setupToggle(checkboxId, layerKey) {
+            document.getElementById(checkboxId).addEventListener('change', function(e) {
+                if(e.target.checked) { map.addLayer(layers[layerKey]); }
+                else { map.removeLayer(layers[layerKey]); }
+            });
+        }
+        setupToggle('chk-branches', 'branches');
+        setupToggle('chk-compA', 'compA');
+        setupToggle('chk-compB', 'compB');
+        setupToggle('chk-compC', 'compC');
+        setupToggle('chk-top20', 'top20');
+
+        // Radius Slider Logic
+        document.getElementById('radius-slider').addEventListener('input', function(e) {
+            var miles = e.target.value;
+            document.getElementById('radius-val').innerText = miles + " mi";
+            var meters = miles * 1609.34;
+            threatRings.forEach(function(ring) { ring.setRadius(meters); });
+        });
+    </script>
+</body>
+</html>
