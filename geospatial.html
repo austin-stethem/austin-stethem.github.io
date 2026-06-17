@@ -2,59 +2,61 @@
 <html>
 <head>
 <title>Geospatial Strategy Portfolio Case Study</title>
-<!-- Leaflet Map CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 9.5in; margin: 0 auto; padding: 40px; }
+    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 9.5in; margin: 0 auto; padding: 40px; background-color: #ffffff; }
     .header-container { text-align: center; margin-bottom: 30px; }
     .kicker { color: #b32525; font-weight: bold; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
     h1 { font-family: 'Georgia', serif; font-size: 26pt; color: #1a2433; margin: 0; font-weight: normal; line-height: 1.2; }
-    .main-divider { border: none; border-top: 3px solid #333333; margin-bottom: 30px; }
+    .main-divider { border: none; border-top: 3px solid #1a2433; margin-bottom: 30px; }
     
     .metadata-flex { display: flex !important; justify-content: center !important; gap: 60px !important; border-bottom: 1px solid #ccc; padding-bottom: 25px; margin-bottom: 35px; }
     .meta-col { text-align: center !important; max-width: 250px; }
-    .meta-header { font-size: 8pt; font-weight: bold; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    .meta-content { font-size: 10pt; margin: 0; line-height: 1.5; }
+    .meta-header { font-size: 8pt; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .meta-content { font-size: 10pt; margin: 0; line-height: 1.5; color: #1e293b; }
     
-    h2 { font-family: 'Georgia', serif; font-size: 17pt; font-weight: normal; color: #1a2433; margin-top: 40px; margin-bottom: 15px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; }
+    h2 { font-family: 'Georgia', serif; font-size: 17pt; font-weight: normal; color: #1a2433; margin-top: 40px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
     p { text-align: justify; margin-top: 0; margin-bottom: 15px; }
     
-    .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 25px; color: #666; padding: 10px 15px; border-left: 3px solid #b32525; background-color: #fcfcfc; }
+    .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 25px; color: #64748b; padding: 12px 15px; border-left: 3px solid #b32525; background-color: #f8fafc; }
     
     /* DASHBOARD LAYOUT */
-    .sim-container { display: flex; height: 800px; border: 1px solid #ccc; background: #fff; overflow: hidden; margin-top: 20px; }
-    .sim-sidebar { width: 260px; flex-shrink: 0; background: #fdfdfd; border-right: 1px solid #ccc; padding: 15px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; }
-    .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; }
+    .sim-container { display: flex; height: 850px; border: 1px solid #cbd5e1; background: #fff; overflow: hidden; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    .sim-sidebar { width: 280px; flex-shrink: 0; background: #f8fafc; border-right: 1px solid #cbd5e1; padding: 20px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; }
+    .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; color: #1e293b; }
     .sidebar-controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.2; }
-    .sidebar-controls input[type="range"] { width: 100%; cursor: pointer; }
+    .sidebar-controls input[type="range"] { width: 100%; cursor: pointer; margin-top: 5px; }
     
     .sim-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
     
-    .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-bottom: 20px; background: #fff; border: 1px solid #eee; }
-    .raw-data-table th { background: #f1f5f9; color: #333; padding: 8px; text-align: left; border-bottom: 2px solid #ccc; position: sticky; top: 0;}
-    .raw-data-table td { padding: 8px; border-bottom: 1px solid #eee; color: #555; }
-    .table-wrapper { max-height: 160px; overflow-y: auto; margin-bottom: 10px; border-bottom: 1px solid #ccc;}
+    .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; background: #fff; }
+    .raw-data-table th { background: #f1f5f9; color: #1e293b; padding: 10px; text-align: left; border-bottom: 2px solid #cbd5e1; position: sticky; top: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .raw-data-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; color: #334155; }
+    .table-wrapper { max-height: 180px; overflow-y: auto; margin-bottom: 15px; border-bottom: 1px solid #cbd5e1; }
     
-    /* Dynamic Threat Colors */
-    .threat-critical { color: #b32525; font-weight: bold; }
-    .threat-elevated { color: #e67e22; font-weight: bold; }
-    .threat-stable { color: #27ae60; font-weight: bold; }
+    /* Dynamic Badges & Colors */
+    .threat-critical { color: #b32525; font-weight: 700; }
+    .threat-elevated { color: #e67e22; font-weight: 700; }
+    .threat-stable { color: #27ae60; font-weight: 700; }
+    
+    .badge-urban { background-color: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
+    .badge-suburban { background-color: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
+    .badge-rural { background-color: #dcfce7; color: #15803d; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
 
-    #map-container { height: 400px; min-height: 400px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; background-color: #eaeaea; }
+    #map-container { height: 420px; min-height: 420px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #cbd5e1; background-color: #eaeaea; }
     
     .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
-    .strategy-table th { background: #1a2433; color: white; padding: 12px; text-align: left; font-size: 9pt; }
-    .strategy-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 9pt; vertical-align: top; }
+    .strategy-table th { background: #1a2433; color: white; padding: 12px; text-align: left; font-size: 9pt; border: 1px solid #1a2433; }
+    .strategy-table td { padding: 12px; border: 1px solid #e2e8f0; font-size: 9pt; vertical-align: top; }
     
     .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 30px; font-style: italic; font-weight: 600; color: #1a2433; font-size: 10pt; text-align: justify; }
 </style>
-<!-- Leaflet Map JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <div class="header-container">
         <div class="kicker">GEOSPATIAL INTELLIGENCE & MARKET STRATEGY</div>
-        <h1>Competitor Mapping & Statewide Elasticity Modeling</h1>
+        <h1>Topological Margin Defense & VIO Penetration</h1>
     </div>
     
     <hr class="main-divider">
@@ -66,80 +68,74 @@
         </div>
         <div class="meta-col">
             <div class="meta-header">CORE COMPETENCIES</div>
-            <p class="meta-content">Geospatial Analytics, Territory Optimization, Market Penetration, Account Retention</p>
+            <p class="meta-content">Spatial Algorithms, Topological Risk, ACES/PIES/VIO Data Joins, Market Capture Modeling</p>
         </div>
         <div class="meta-col">
             <div class="meta-header">TECHNICAL STACK</div>
-            <p class="meta-content">JavaScript, Maps API, Coordinate Matrices, Spatial Algorithms</p>
+            <p class="meta-content">JavaScript, Maps API, ERP POS Integration, VIO Density Simulation Engines</p>
         </div>
     </div>
 
     <div class="disclaimer">
-        <strong>Data Governance Note:</strong> To comply with NDA, live branch coordinates and competitor identities have been replaced with randomized geographic proxy data mapped across the state of Minnesota. The spatial logic, Haversine distance matrix calculations, and algorithmic threat-weighting remain exact reflections of the production environment.
+        <strong>Data Governance Note:</strong> To comply with NDA, live branch coordinates, POS revenue, and proprietary Experian VIO datasets have been replaced with randomized proxies across Minnesota. The algorithmic logic—calculating aging fleet density and cross-referencing it with competitor friction—remains an exact reflection of the production environment.
     </div>
 
     <h2>1. Executive Project Summary & Business Context</h2>
-    <p>In a large-scale distribution network, protecting existing high-margin business is just as critical as acquiring new accounts. Traditional systems suffer from "territorial blindness," reacting to margin erosion only after volume has dropped. I architected a Geospatial Intelligence engine that overlays competitive density rings onto both our physical hubs <em>and</em> our Top 20% fleet accounts. This provides Sales and Pricing teams with a live, predictive "Heat Map" of vulnerability across all market topologies—from dense urban cores to isolated rural routes.</p>
+    <p>A fatal flaw in aftermarket distribution mapping is the assumption that geographic area equals revenue potential. To move from descriptive mapping to prescriptive revenue capture, I engineered a Geospatial Intelligence dashboard that integrates a <strong>Vehicles in Operation (VIO) Penetration Protocol</strong>. By taking the effective radius of a branch, analyzing the demographic density, and extracting the estimated volume of 10+ year old prime target vehicles (e.g., 2011-2015 Silverados/F-150s), the algorithm generates live Market Capture percentages to direct Sales and Pricing interventions.</p>
 
-    <h2>2. Statewide Defense & Expansion Dashboard</h2>
-    <p>By adjusting the elasticity radius below, the engine mathematically cross-references our physical assets and high-value accounts against active competitors in real-time. Each competitor carries a distinct mathematical threat multiplier in the backend algorithm based on their pricing aggression. This dashboard instantly dictates where aggressive acquisition can safely occur, and where margin-lock protocols must be deployed immediately.</p>
+    <h2>2. Statewide Defense & VIO Dashboard</h2>
+    <p>Adjust the baseline elasticity below to calculate the threat matrix in real-time. The engine calculates the total VIO for aging fleets within the effective ring, compares it against simulated active POS sales, and flags our Market Capture rate. This allows leadership to instantly differentiate between a highly-penetrated defensive territory and a massive, untapped greenfield. <em>(Note: Competitor C represents an aggressive market discounter carrying a 2.5x mathematical threat penalty).</em></p>
     
     <div class="sim-container">
-        <!-- Sidebar with Environment & Filters -->
         <div class="sim-sidebar">
-            <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ENVIRONMENT</div>
-            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v7_statewide</div>
-            <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; branch_matrix.json</div>
-            <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; competitor_data.csv</div>
-            <div style="padding-left: 10px; margin-bottom: 25px; color: #555;">&#9654; top20_accounts.csv</div>
+            <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">ENVIRONMENT</div>
+            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; vio_engine_v10</div>
+            <div style="padding-left: 10px; margin-bottom: 8px; color: #475569;">&#9654; erp_pos_volumes.json</div>
+            <div style="padding-left: 10px; margin-bottom: 8px; color: #475569;">&#9654; experian_vio_10yr.csv</div>
+            <div style="padding-left: 10px; margin-bottom: 25px; color: #475569;">&#9654; density_index.py</div>
             
-            <div style="font-weight: bold; margin-bottom: 10px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">DATA FILTERS</div>
-            <div style="color: #666; margin-bottom: 10px; font-size: 8.5pt; line-height: 1.4;">Toggle layers below to isolate market threats.</div>
+            <div style="font-weight: bold; margin-bottom: 10px; color: #1a2433; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">DATA FILTERS</div>
+            <div style="color: #64748b; margin-bottom: 15px; font-size: 8.5pt; line-height: 1.4;">Toggle layers to isolate threats. VIO targets scale automatically based on regional density and the 14.2% aging fleet demographic modifier.</div>
             
             <div class="sidebar-controls">
                 <label style="color: #1a2433;"><input type="checkbox" id="chk-branches" checked> Our Hubs</label>
                 <label style="color: #b32525;"><input type="checkbox" id="chk-compA" checked> Comp A (Generalists)</label>
                 <label style="color: #e67e22;"><input type="checkbox" id="chk-compB" checked> Comp B (Regional)</label>
                 <label style="color: #8e44ad;"><input type="checkbox" id="chk-compC" checked> Comp C (Discounters)</label>
-                <label style="color: #27ae60;"><input type="checkbox" id="chk-top20" checked> Top 20% Accounts</label>
+                <label style="color: #27ae60;"><input type="checkbox" id="chk-top20" checked> Top 20% Fleet Accounts</label>
                 
-                <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px;">
-                    <label style="color: #1a2433; margin-bottom: 8px;">Statewide Elasticity Radius:</label>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="range" id="radius-slider" min="10" max="150" value="40">
-                        <span id="radius-val" style="color: #b32525; width: 45px; text-align: right;">40 mi</span>
-                    </div>
+                <div style="margin-top: 20px; border-top: 1px solid #cbd5e1; padding-top: 15px;">
+                    <label style="color: #1a2433; margin-bottom: 5px; display:flex; justify-content:space-between;">
+                        <span>Global Base Radius:</span>
+                        <span id="radius-val" style="color: #b32525;">40 mi</span>
+                    </label>
+                    <input type="range" id="radius-slider" min="10" max="100" value="40">
                 </div>
             </div>
         </div>
 
-        <!-- Main Panel -->
         <div class="sim-main">
-            <!-- Interactive Map -->
             <div id="map-container"></div>
             
-            <!-- Data Output -->
-            <div style="padding: 15px; overflow-y: hidden; background: #fdfdfd; flex: 1; display: flex; flex-direction: column;">
+            <div style="padding: 15px; overflow-y: hidden; background: #ffffff; flex: 1; display: flex; flex-direction: column;">
                 
-                <!-- Table 1: Branches -->
-                <div style="font-size: 8pt; font-weight: bold; color: #1a2433; margin-bottom: 5px;">PHYSICAL ASSET (HUB) DEFENSE MATRIX</div>
+                <div style="font-size: 8pt; font-weight: bold; color: #1a2433; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Physical Asset (Hub) Market Capture Matrix</div>
                 <div class="table-wrapper">
                     <table class="raw-data-table" id="branch-threat-table">
                         <thead>
-                            <tr><th>Hub Region</th><th>Threats in Radius</th><th>Vulnerability Index</th><th>System Action Protocol</th></tr>
+                            <tr><th>Hub Region</th><th>Eff. Radius</th><th>Target VIO (10yr+)</th><th>Est. Capture</th><th>Threats</th><th>System Action Protocol</th></tr>
                         </thead>
-                        <tbody><!-- Injected via JavaScript --></tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
 
-                <!-- Table 2: Accounts -->
-                <div style="font-size: 8pt; font-weight: bold; color: #27ae60; margin-bottom: 5px; margin-top: 10px;">TOP 20% ACCOUNT RETENTION MATRIX</div>
+                <div style="font-size: 8pt; font-weight: bold; color: #27ae60; margin-bottom: 5px; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Top 20% Account Retention Matrix</div>
                 <div class="table-wrapper" style="border-bottom: none; margin-bottom: 0;">
                     <table class="raw-data-table" id="account-threat-table">
                         <thead>
-                            <tr><th>Account Location</th><th>Threats in Radius</th><th>Flight Risk Score</th><th>Retention Protocol</th></tr>
+                            <tr><th>Account Location</th><th>Eff. Radius</th><th>Target VIO (10yr+)</th><th>Est. Capture</th><th>Threats</th><th>Retention Protocol</th></tr>
                         </thead>
-                        <tbody><!-- Injected via JavaScript --></tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
 
@@ -150,13 +146,13 @@
     <h2>3. Strategic Benefits for Sales & Marketing</h2>
     <table class="strategy-table">
         <tr><th>Strategic Lever</th><th>Business Application</th></tr>
-        <tr><td><strong>Tiered Pricing Alignment</strong></td><td>Visualizes price elasticity by measuring the distance between our branch and known competitor locations, allowing us to adjust tiered pricing matrices before we lose account volume.</td></tr>
-        <tr><td><strong>Account Protection (Top 20%)</strong></td><td>Cross-references our highest-revenue fleet accounts against competitor expansion zones, triggering proactive marketing outreach to defend the business before attrition begins.</td></tr>
-        <tr><td><strong>Expansion Region Targeting</strong></td><td>Identifies geographic "voids" where high-value commercial accounts exist but competitor density is low, providing the Sales team with a definitive roadmap for market penetration.</td></tr>
+        <tr><td><strong>VIO Market Penetration</strong></td><td>By applying Experian VIO data overlays, Sales Directors can instantly see if a branch is dominating its local market or leaving millions of dollars in unserviced vehicles on the table.</td></tr>
+        <tr><td><strong>Predictive Threat Defense</strong></td><td>If an aggressive discounter opens near a hub where our Market Capture is high, the system automatically triggers margin-lock protocols to defend our established base.</td></tr>
+        <tr><td><strong>Greenfield Targeting</strong></td><td>Identifies spatial voids where high concentrations of 10+ year old vehicles exist with minimal competitor overlap—providing an exact GPS coordinate for greenfield expansion.</td></tr>
     </table>
 
     <div class="impact-footer">
-        STRATEGIC CORE COMPETENCY VALIDATION: This deployment validates advanced spatial-analytical capabilities: demonstrating the ability to integrate coordinate-based data into actionable business intelligence that directly shapes market penetration and margin protection strategies.
+        STRATEGIC CORE COMPETENCY VALIDATION: This deployment validates advanced systems architecture: demonstrating the ability to integrate live coordinate data, topological density friction, and third-party VIO market-capture mechanics into a unified predictive risk engine.
     </div>
 
     <script>
@@ -168,43 +164,40 @@
         setTimeout(function(){ map.invalidateSize(); }, 250);
 
         // ---------------------------------------------------------
-        // 2. DATA ARRAYS (Statewide Minnesota Spread)
+        // 2. DATA ARRAYS WITH TOPOLOGY & POS VOLUME
+        // Topology Multipliers: Urban(0.3), Suburban(0.6), Rural(1.5)
+        // Population Densities: Urban(2500), Suburban(800), Rural(45)
+        // basePosVolume: Simulated active vehicle count serviced by the entity
         // ---------------------------------------------------------
         const branches = [
-            { id: 'b1', name: "Twin Cities Hub (Urban)", lat: 44.95, lng: -93.20, circle: null, marker: null },
-            { id: 'b2', name: "Duluth Port Hub (Industrial)", lat: 46.78, lng: -92.10, circle: null, marker: null },
-            { id: 'b3', name: "Rochester Hub (South)", lat: 44.01, lng: -92.46, circle: null, marker: null },
-            { id: 'b4', name: "Moorhead Hub (West Border)", lat: 46.87, lng: -96.76, circle: null, marker: null },
-            { id: 'b5', name: "Bemidji Hub (North Rural)", lat: 47.47, lng: -94.88, circle: null, marker: null }
+            { id: 'b1', name: "Twin Cities Hub", topo: 'Urban', mult: 0.3, popDensity: 2500, basePosVolume: 12500, lat: 44.95, lng: -93.20, circle: null, marker: null },
+            { id: 'b2', name: "Duluth Port Hub", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 4200, lat: 46.78, lng: -92.10, circle: null, marker: null },
+            { id: 'b3', name: "Rochester Hub", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 3800, lat: 44.01, lng: -92.46, circle: null, marker: null },
+            { id: 'b4', name: "Moorhead Hub", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 1800, lat: 46.87, lng: -96.76, circle: null, marker: null },
+            { id: 'b5', name: "Bemidji Hub", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 850, lat: 47.47, lng: -94.88, circle: null, marker: null }
         ];
 
         const topAccounts = [
-            { id: 't1', name: "Agri-Fleet - St. Cloud", lat: 45.56, lng: -94.16, circle: null, marker: null },
-            { id: 't2', name: "Mining Logistics - Hibbing", lat: 47.42, lng: -92.93, circle: null, marker: null },
-            { id: 't3', name: "Commercial - Owatonna", lat: 44.08, lng: -93.22, circle: null, marker: null },
-            { id: 't4', name: "Fleet - Thief River Falls", lat: 48.11, lng: -96.18, circle: null, marker: null },
-            { id: 't5', name: "Transit Auth - Mankato", lat: 44.16, lng: -94.00, circle: null, marker: null },
-            { id: 't6', name: "Distribution - Marshall", lat: 44.44, lng: -95.78, circle: null, marker: null },
-            { id: 't7', name: "Logistics - Albert Lea", lat: 43.65, lng: -93.36, circle: null, marker: null }
+            { id: 't1', name: "Agri-Fleet St. Cloud", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 850, lat: 45.56, lng: -94.16, circle: null, marker: null },
+            { id: 't2', name: "Mining Log Hibbing", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 600, lat: 47.42, lng: -92.93, circle: null, marker: null },
+            { id: 't3', name: "Commercial Owatonna", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 950, lat: 44.08, lng: -93.22, circle: null, marker: null },
+            { id: 't4', name: "Fleet TRF", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 420, lat: 48.11, lng: -96.18, circle: null, marker: null },
+            { id: 't5', name: "Transit Mankato", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 1100, lat: 44.16, lng: -94.00, circle: null, marker: null },
+            { id: 't6', name: "Distribution Marshall", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 580, lat: 44.44, lng: -95.78, circle: null, marker: null },
+            { id: 't7', name: "Logistics Minnetonka", topo: 'Urban', mult: 0.3, popDensity: 2500, basePosVolume: 2100, lat: 44.91, lng: -93.47, circle: null, marker: null }
         ];
 
-        // Competitors heavily varied. C = Discounters, A = Generalists, B = Regionals
         const competitors = [
-            // Comp A (Stars - Urban/General Focus - Moderate Weights)
             { id: 'cA1', type: 'A', name: "Comp A", lat: 44.98, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.2, marker: null },
             { id: 'cA2', type: 'A', name: "Comp A", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
             { id: 'cA3', type: 'A', name: "Comp A", lat: 46.79, lng: -92.11, color: '#b32525', shape: 'star', weight: 1.1, marker: null },
             { id: 'cA4', type: 'A', name: "Comp A", lat: 45.55, lng: -94.16, color: '#b32525', shape: 'star', weight: 1.3, marker: null },
             { id: 'cA5', type: 'A', name: "Comp A", lat: 44.16, lng: -94.00, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
-
-            // Comp B (Triangles - Regional Focus - Varied Weights)
             { id: 'cB1', type: 'B', name: "Comp B", lat: 46.86, lng: -96.78, color: '#e67e22', shape: 'triangle', weight: 1.4, marker: null },
             { id: 'cB2', type: 'B', name: "Comp B", lat: 46.35, lng: -94.20, color: '#e67e22', shape: 'triangle', weight: 0.9, marker: null },
             { id: 'cB3', type: 'B', name: "Comp B", lat: 45.88, lng: -95.38, color: '#e67e22', shape: 'triangle', weight: 1.1, marker: null },
             { id: 'cB4', type: 'B', name: "Comp B", lat: 45.12, lng: -95.04, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
             { id: 'cB5', type: 'B', name: "Comp B", lat: 44.44, lng: -95.78, color: '#e67e22', shape: 'triangle', weight: 1.2, marker: null },
-
-            // Comp C (Squares - Aggressive Discounters - Heavy Weights)
             { id: 'cC1', type: 'C', name: "Comp C", lat: 44.02, lng: -92.47, color: '#8e44ad', shape: 'square', weight: 2.8, marker: null },
             { id: 'cC2', type: 'C', name: "Comp C", lat: 44.83, lng: -93.30, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null },
             { id: 'cC3', type: 'C', name: "Comp C", lat: 47.23, lng: -93.53, color: '#8e44ad', shape: 'square', weight: 2.2, marker: null },
@@ -237,28 +230,32 @@
             top20: L.layerGroup().addTo(map) 
         };
 
-        const defaultRadiusMeters = 40 * 1609.34;
+        function getTopoBadge(topo) {
+            const lower = topo.toLowerCase();
+            return `<span class="badge-${lower}">${topo}</span>`;
+        }
 
-        // Render Branches
+        function formatNumber(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        }
+
         branches.forEach(b => {
-            b.marker = L.marker([b.lat, b.lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup(`<b>${b.name}</b>`).addTo(layers.branches);
-            b.circle = L.circle([b.lat, b.lng], { color: '#1a2433', fillColor: '#1a2433', fillOpacity: 0.08, weight: 1, dashArray: '4, 4', radius: defaultRadiusMeters }).addTo(layers.branches);
+            b.marker = L.marker([b.lat, b.lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup(`<b>${b.name}</b><br>Topology: ${b.topo}`).addTo(layers.branches);
+            b.circle = L.circle([b.lat, b.lng], { color: '#1a2433', fillColor: '#1a2433', fillOpacity: 0.08, weight: 1.5, dashArray: '4, 4' }).addTo(layers.branches);
         });
 
-        // Render Accounts
         topAccounts.forEach(t => {
-            t.marker = L.marker([t.lat, t.lng], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup(`<b>${t.name}</b>`).addTo(layers.top20);
-            t.circle = L.circle([t.lat, t.lng], { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5', radius: defaultRadiusMeters }).addTo(layers.top20);
+            t.marker = L.marker([t.lat, t.lng], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup(`<b>${t.name}</b><br>Topology: ${t.topo}`).addTo(layers.top20);
+            t.circle = L.circle([t.lat, t.lng], { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5' }).addTo(layers.top20);
         });
 
-        // Render Competitors
         competitors.forEach(c => {
             let targetLayer = c.type === 'A' ? layers.compA : c.type === 'B' ? layers.compB : layers.compC;
-            c.marker = L.marker([c.lat, c.lng], {icon: makeShapeIcon(c.color, 16, c.shape)}).bindPopup(`<b>${c.name}<br>Threat Multiplier: ${c.weight}x</b>`).addTo(targetLayer);
+            c.marker = L.marker([c.lat, c.lng], {icon: makeShapeIcon(c.color, 16, c.shape)}).bindPopup(`<b>${c.name}<br>Threat Weight: ${c.weight}x</b>`).addTo(targetLayer);
         });
 
         // ---------------------------------------------------------
-        // 4. MATH & LOGIC ENGINE
+        // 4. MATH, VIO & CAPTURE ENGINE
         // ---------------------------------------------------------
         function getDistanceMiles(lat1, lon1, lat2, lon2) {
             const R = 3958.8;
@@ -268,52 +265,69 @@
             return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
-        function calculateThreatRow(entity, activeComps, currentRadius, isBranch) {
+        function calculateThreatRow(entity, activeComps, baseRadius, isBranch) {
             let riskScore = 0;
             let threatsInRange = [];
+            
+            // Apply Topological Friction
+            let effectiveRadius = baseRadius * entity.mult;
+            
+            // Calculate Population & Simulate VIO (14.2% of Pop are 10yr+ fleet targets)
+            let areaSqMiles = Math.PI * Math.pow(effectiveRadius, 2);
+            let estimatedPopulation = areaSqMiles * entity.popDensity;
+            let targetVioCount = Math.round(estimatedPopulation * 0.142);
+            
+            // Dynamic POS scaling based on radius
+            let dynamicServiced = Math.round(entity.basePosVolume * (effectiveRadius / (40 * entity.mult)));
+            // Cap to avoid breaking logic at extreme sliders
+            if(dynamicServiced > targetVioCount) dynamicServiced = Math.round(targetVioCount * 0.85); 
+            
+            let marketCapture = targetVioCount > 0 ? ((dynamicServiced / targetVioCount) * 100).toFixed(1) : 0;
 
             activeComps.forEach(comp => {
                 const dist = getDistanceMiles(entity.lat, entity.lng, comp.lat, comp.lng);
-                if (dist <= currentRadius) {
+                if (dist <= effectiveRadius) {
                     threatsInRange.push(comp.type);
-                    // The algorithm: Proximity factor * base penalty * competitor specific weight multiplier
-                    riskScore += ((currentRadius - dist) / currentRadius) * 5 * comp.weight;
+                    riskScore += ((effectiveRadius - dist) / effectiveRadius) * 5 * comp.weight;
                 }
             });
 
             riskScore = Math.min(riskScore, 10.0).toFixed(1);
 
-            let threatText = threatsInRange.length > 0 ? `High (${threatsInRange.length} in zone)` : `Safe (0 in zone)`;
-            let riskClass = '';
-            let statusText = '';
+            let threatText = threatsInRange.length > 0 ? `<span style="color:#b32525; font-weight:bold;">${threatsInRange.length} Active</span>` : `<span style="color:#64748b;">0 Active</span>`;
+            
+            // Advanced Business Logic (Cross-referencing capture vs threats)
             let actionText = '';
-
-            if (riskScore >= 7.5) {
-                riskClass = 'threat-critical';
-                statusText = `Critical (${riskScore}/10)`;
-                actionText = isBranch ? 'Lock Tier-1 Margin.' : 'Deploy preemptive volume rebates.';
+            
+            if (threatsInRange.length === 0 && marketCapture < 15) {
+                 actionText = '<span style="color:#27ae60; font-weight:bold;">Aggressive Greenfield Expansion</span>';
+            } else if (riskScore >= 7.5 && marketCapture >= 20) {
+                 actionText = '<span style="color:#b32525; font-weight:bold;">Defensive Margin Lock (High VIO At Risk)</span>';
+            } else if (riskScore >= 7.5) {
+                 actionText = 'Deploy preemptive volume rebates.';
             } else if (riskScore >= 4.0) {
-                riskClass = 'threat-elevated';
-                statusText = `Elevated (${riskScore}/10)`;
-                actionText = isBranch ? 'Target Competitor Accounts.' : 'Assign outside sales rep visit.';
+                 actionText = 'Target Comp Accounts.';
             } else {
-                riskClass = 'threat-stable';
-                statusText = `Stable (${riskScore}/10)`;
-                actionText = isBranch ? 'Raise Margin Floor by 2.5%.' : 'Routine account management.';
+                 actionText = 'Raise Margin Floor (+2.5%).';
             }
 
             return `<tr>
-                <td>${entity.name}</td>
+                <td style="font-weight: 500;">${entity.name} ${getTopoBadge(entity.topo)}</td>
+                <td style="color:#475569;">${effectiveRadius.toFixed(1)} mi</td>
+                <td style="font-family: monospace; font-size: 9.5pt; font-weight: 600;">${formatNumber(targetVioCount)}</td>
+                <td style="font-family: monospace; font-size: 9.5pt; color: #0369a1; font-weight: 600;">${marketCapture}%</td>
                 <td>${threatText}</td>
-                <td class="${riskClass}">${statusText}</td>
                 <td>${actionText}</td>
             </tr>`;
         }
 
         function updateDashboard() {
-            const currentRadius = parseInt(document.getElementById('radius-slider').value);
+            const baseRadius = parseInt(document.getElementById('radius-slider').value);
             const activeComps = competitors.filter(c => document.getElementById(`chk-comp${c.type}`).checked);
             
+            branches.forEach(b => { b.circle.setRadius(baseRadius * b.mult * 1609.34); });
+            topAccounts.forEach(t => { t.circle.setRadius(baseRadius * t.mult * 1609.34); });
+
             const branchTableBody = document.querySelector('#branch-threat-table tbody');
             const accountTableBody = document.querySelector('#account-threat-table tbody');
             
@@ -321,19 +335,15 @@
             accountTableBody.innerHTML = ''; 
 
             if(document.getElementById('chk-branches').checked) {
-                branches.forEach(b => {
-                    branchTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(b, activeComps, currentRadius, true));
-                });
+                branches.forEach(b => { branchTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(b, activeComps, baseRadius, true)); });
             } else {
-                branchTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Hub Layer Disabled</td></tr>';
+                branchTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding: 15px;">Hub Layer Disabled</td></tr>';
             }
 
             if(document.getElementById('chk-top20').checked) {
-                topAccounts.forEach(t => {
-                    accountTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(t, activeComps, currentRadius, false));
-                });
+                topAccounts.forEach(t => { accountTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(t, activeComps, baseRadius, false)); });
             } else {
-                accountTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Account Layer Disabled</td></tr>';
+                accountTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding: 15px;">Account Layer Disabled</td></tr>';
             }
         }
 
@@ -355,17 +365,10 @@
         setupToggle('chk-top20', 'top20'); 
 
         document.getElementById('radius-slider').addEventListener('input', function(e) {
-            var miles = parseInt(e.target.value);
-            document.getElementById('radius-val').innerText = miles + " mi";
-            var meters = miles * 1609.34;
-            
-            branches.forEach(b => { b.circle.setRadius(meters); });
-            topAccounts.forEach(t => { t.circle.setRadius(meters); });
-            
+            document.getElementById('radius-val').innerText = e.target.value + " mi";
             updateDashboard();
         });
 
-        // Initial render
         updateDashboard();
 
     </script>
