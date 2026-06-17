@@ -3,9 +3,10 @@
 <head>
 <title>Predictive Margin Strategy | Monte Carlo Lab</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; max-width: 11in; margin: 0 auto; padding: 40px; background: #fff; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; max-width: 10in; margin: 0 auto; padding: 40px; background: #fff; }
     h1 { font-family: 'Georgia', serif; color: #1a2433; font-size: 28pt; text-align: center; margin-bottom: 10px; }
     .subtitle { text-align: center; color: #64748b; margin-bottom: 40px; font-style: italic; }
     
@@ -37,6 +38,7 @@
     .audit-table { width: 100%; border-collapse: collapse; font-size: 9pt; border: 1px solid #e2e8f0; margin-top: 20px; }
     .audit-table th { background: #1a2433; color: white; padding: 10px; text-align: left; }
     .audit-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
+    ul { padding-left: 20px; }
 </style>
 </head>
 <body>
@@ -44,7 +46,6 @@
     <h1>Predictive Margin Strategy Lab</h1>
     <div class="subtitle">Replacing Blanket ABC Pricing with Granular, SQL-Fed SKU Optimization</div>
 
-    <!-- DASHBOARD -->
     <div class="dashboard">
         <div class="controls">
             <strong>SIMULATION CONTROLS</strong><br><br>
@@ -68,6 +69,7 @@
                 <div class="gauge-container"><canvas id="gauge2"></canvas><div style="font-weight:bold; font-size: 9pt;">$80k Target</div></div>
                 <div class="gauge-container"><canvas id="gauge3"></canvas><div style="font-weight:bold; font-size: 9pt;">$85k Target</div></div>
             </div>
+
             <div class="kpi-row">
                 <div class="kpi" style="border-bottom-color: #27ae60;"><div class="kpi-title">MEDIAN MARGIN</div><div class="kpi-val" id="out-med">--%</div></div>
                 <div class="kpi" style="border-bottom-color: #b32525;"><div class="kpi-title">P95 WORST-CASE</div><div class="kpi-val" id="out-p95">--%</div></div>
@@ -81,7 +83,6 @@
         </div>
     </div>
 
-    <!-- TABLE AUDIT -->
     <div class="table-section">
         <h3>Granular Audit: Blanket "Strategy" vs. Predictive Intelligence</h3>
         <table class="audit-table">
@@ -93,7 +94,6 @@
         </table>
     </div>
 
-    <!-- NARRATIVE -->
     <div class="narrative">
         <h2>Executive Narrative: Granular SKU Optimization</h2>
         <p>Enterprise pricing is traditionally reactive, relying on blanket ABC/KVI categorization. This creates systemic inefficiency: we unknowingly overcharge high-visibility items (risking market share) while "leaving money on the table" across the massive long-tail of Group C parts.</p>
@@ -112,7 +112,7 @@
 
     <script>
         let g1, g2, g3, histChart, riskChart;
-        
+
         function createGauge(id, val) {
             return new Chart(document.getElementById(id), {
                 type: 'doughnut',
@@ -128,7 +128,7 @@
             let f = parseInt(document.getElementById('slide-freight').value);
             let c = parseInt(document.getElementById('slide-comp').value);
             
-            // Stats
+            // Logic
             document.getElementById('out-med').innerText = (27.5 - (f*0.2)).toFixed(1) + "%";
             document.getElementById('out-p95').innerText = (20.8 - (f*0.5)).toFixed(1) + "%";
             document.getElementById('out-fail').innerText = (5.0 + (f*0.5)).toFixed(1) + "%";
@@ -139,28 +139,4 @@
             // Gauges
             g1 = createGauge('gauge1', Math.max(0, 95 - (f*3)));
             g2 = createGauge('gauge2', Math.max(0, 85 - (f*4)));
-            g3 = createGauge('gauge3', Math.max(0, 75 - (f*5)));
-            
-            // Charts
-            histChart = new Chart(document.getElementById('histChart'), {
-                type: 'bar', 
-                data: { labels: ['15-20','20-25','25-30','30+'], datasets: [{label: 'Frequency', data: [3300, 6800, 6500, 6700], backgroundColor: '#1a2433'}]},
-                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency Distribution'} } }
-            });
-            
-            riskChart = new Chart(document.getElementById('riskChart'), {
-                type: 'line', 
-                data: { 
-                    labels: ['15','20','25','30','35'], 
-                    datasets: [
-                        { label: 'Reactive (Legacy)', data: [100, 80, 40, 10, 0], borderColor: '#64748b', borderWidth: 3, tension: 0.4 },
-                        { label: 'Predictive (Plan)', data: [95, 60, 20, 5, 0], borderColor: '#27ae60', borderWidth: 3, tension: 0.4 }
-                    ]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Cumulative Risk Curve'} } }
-            });
-        }
-        window.onload = runSimulation;
-    </script>
-</body>
-</html>
+            g
