@@ -2,7 +2,6 @@
 <html>
 <head>
 <title>Geospatial Strategy Portfolio Case Study</title>
-<!-- Leaflet Map CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 9.5in; margin: 0 auto; padding: 40px; }
@@ -23,8 +22,6 @@
     
     /* DASHBOARD LAYOUT */
     .sim-container { display: flex; height: 750px; border: 1px solid #ccc; background: #fff; overflow: hidden; margin-top: 20px; }
-    
-    /* SIDEBAR WITH CONTROLS */
     .sim-sidebar { width: 260px; flex-shrink: 0; background: #fdfdfd; border-right: 1px solid #ccc; padding: 15px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; }
     .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; }
     .sidebar-controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.2; }
@@ -35,10 +32,12 @@
     .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-bottom: 15px; background: #fff; border: 1px solid #eee; }
     .raw-data-table th { background: #f1f5f9; color: #333; padding: 8px; text-align: left; border-bottom: 2px solid #ccc; }
     .raw-data-table td { padding: 8px; border-bottom: 1px solid #eee; color: #555; }
-    .risk-high { color: #b32525; font-weight: bold; }
-    .risk-low { color: #27ae60; font-weight: bold; }
     
-    /* BULLETPROOF MAP CONTAINER */
+    /* Dynamic Threat Colors */
+    .threat-critical { color: #b32525; font-weight: bold; }
+    .threat-elevated { color: #e67e22; font-weight: bold; }
+    .threat-stable { color: #27ae60; font-weight: bold; }
+
     #map-container { height: 480px; min-height: 480px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #ccc; background-color: #eaeaea; }
     
     .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
@@ -47,7 +46,6 @@
     
     .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 30px; font-style: italic; font-weight: 600; color: #1a2433; font-size: 10pt; text-align: justify; }
 </style>
-<!-- Leaflet Map JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
@@ -74,20 +72,19 @@
     </div>
 
     <div class="disclaimer">
-        <strong>Data Governance Note:</strong> To comply with NDA, live branch coordinates, high-value account locations, and competitor identities have been replaced with randomized geographic proxy data modeled in the Minneapolis-St. Paul region. The spatial logic, distance matrix calculations, and interactive filtering remain exact reflections of the production environment.
+        <strong>Data Governance Note:</strong> To comply with NDA, live branch coordinates and competitor identities have been replaced with randomized geographic proxy data modeled in the Minneapolis-St. Paul region. The spatial logic, Haversine distance matrix calculations, and threat-weighting algorithms remain exact reflections of the production environment.
     </div>
 
     <h2>1. Executive Project Summary & Business Context</h2>
     <p>In a large-scale distribution network, branch performance is frequently misunderstood due to "territorial blindness"—the assumption that service areas are uniform. This leads to inefficient tiered pricing and missed expansion opportunities. I architected a Geospatial Intelligence engine that overlays competitive density rings onto our existing account base, providing the Sales and Marketing teams with a live, filterable "Heat Map" of margin vulnerability and greenfield potential.</p>
 
     <h2>2. Interactive Defense & Expansion Dashboard</h2>
-    <p>A static map is merely a picture; a dynamic map is a business tool. By allowing Regional Directors to filter by specific competitor threats, isolate Top 20% high-volume fleet accounts, and adjust our branch elasticity radius, this dashboard instantly highlights where margin protection is required and where aggressive acquisition can safely occur.</p>
+    <p>A static map is merely a picture; a dynamic map is a business tool. By allowing Regional Directors to filter by specific competitor threats, isolate Top 20% high-volume fleet accounts, and adjust our branch elasticity radius, this dashboard instantly highlights where margin protection is required. <em>(Note: Competitor C represents an aggressive market discounter and carries a 2.5x mathematical penalty in the vulnerability matrix).</em></p>
     
     <div class="sim-container">
-        <!-- Sidebar with Environment & Filters -->
         <div class="sim-sidebar">
             <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ENVIRONMENT</div>
-            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v3</div>
+            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v4</div>
             <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; branch_matrix.json</div>
             <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; competitor_data.csv</div>
             <div style="padding-left: 10px; margin-bottom: 25px; color: #555;">&#9654; top20_accounts.csv</div>
@@ -105,25 +102,24 @@
                 <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px;">
                     <label style="color: #1a2433; margin-bottom: 8px;">Branch Elasticity Radius:</label>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="range" id="radius-slider" min="5" max="20" value="8">
+                        <input type="range" id="radius-slider" min="2" max="20" value="8">
                         <span id="radius-val" style="color: #b32525; width: 40px; text-align: right;">8 mi</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Panel -->
         <div class="sim-main">
-            <!-- Interactive Map -->
             <div id="map-container"></div>
             
-            <!-- Data Output -->
             <div style="padding: 15px; overflow-y: auto; background: #fdfdfd; flex: 1;">
-                <div style="font-size: 8pt; font-weight: bold; color: #666; margin-bottom: 5px;">ACTIONABLE METRICS: AUTOMATED ACCOUNT DEFENSE PROTOCOL</div>
-                <table class="raw-data-table">
-                    <tr><th>Branch Region</th><th>Competitor Penetration (Current Radius)</th><th>Vulnerability Index</th><th>System Action</th></tr>
-                    <tr><td>Maple Grove Hub (NW)</td><td>High (Comp A & B overlap)</td><td class="risk-high">Critical (8.4/10)</td><td>Lock Tier-1 Margin. Trigger Loyalty Promo.</td></tr>
-                    <tr><td>Eagan Distribution (SE)</td><td>Low (0 within current radius)</td><td class="risk-low">Stable (1.2/10)</td><td>Raise Margin Floor by 2.5%. Push Expansion South.</td></tr>
+                <div style="font-size: 8pt; font-weight: bold; color: #666; margin-bottom: 5px;">LIVE ALGORITHMIC THREAT ASSESSMENT</div>
+                <table class="raw-data-table" id="threat-table">
+                    <thead>
+                        <tr><th>Branch Region</th><th>Competitor Penetration (In Radius)</th><th>Vulnerability Index</th><th>System Action Protocol</th></tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -142,109 +138,174 @@
     </div>
 
     <script>
-        // Initialize Map centered on the broader Twin Cities Metro
+        // ---------------------------------------------------------
+        // 1. MAP INITIALIZATION
+        // ---------------------------------------------------------
         var map = L.map('map-container', { scrollWheelZoom: false }).setView([44.95, -93.25], 9);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-            attribution: '&copy; OpenStreetMap contributors' 
-        }).addTo(map);
-
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
         setTimeout(function(){ map.invalidateSize(); }, 250);
 
-        // Icon Generator using SVG Shapes
+        // ---------------------------------------------------------
+        // 2. DATA ARRAYS
+        // ---------------------------------------------------------
+        const branches = [
+            { id: 'b1', name: "Maple Grove Hub (NW)", lat: 45.07, lng: -93.45, circle: null, marker: null },
+            { id: 'b2', name: "Eagan Distribution (SE)", lat: 44.81, lng: -93.16, circle: null, marker: null }
+        ];
+
+        // Competitor C has a 2.5 threat weight (Aggressive Discounter)
+        const competitors = [
+            { id: 'cA1', type: 'A', name: "Comp A - Minneapolis", lat: 44.97, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
+            { id: 'cA2', type: 'A', name: "Comp A - St. Paul", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
+            { id: 'cB1', type: 'B', name: "Comp B - Minnetonka", lat: 44.91, lng: -93.47, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
+            { id: 'cB2', type: 'B', name: "Comp B - Eden Prairie", lat: 44.85, lng: -93.45, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
+            { id: 'cC1', type: 'C', name: "Comp C - Blaine (Discounter)", lat: 45.16, lng: -93.23, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null },
+            { id: 'cC2', type: 'C', name: "Comp C - Woodbury (Discounter)", lat: 44.92, lng: -92.93, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null }
+        ];
+
+        // ---------------------------------------------------------
+        // 3. ICON GENERATION
+        // ---------------------------------------------------------
         function makeShapeIcon(color, size, shape) {
             let svgPath = '';
-            if (shape === 'star') {
-                svgPath = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>';
-            } else if (shape === 'triangle') {
-                svgPath = '<path d="M12 2L22 20H2L12 2z"/>';
-            } else if (shape === 'square') {
-                svgPath = '<rect x="3" y="3" width="18" height="18"/>';
-            } else { // default circle
-                svgPath = '<circle cx="12" cy="12" r="10"/>';
-            }
+            if (shape === 'star') svgPath = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>';
+            else if (shape === 'triangle') svgPath = '<path d="M12 2L22 20H2L12 2z"/>';
+            else if (shape === 'square') svgPath = '<rect x="3" y="3" width="18" height="18"/>';
+            else svgPath = '<circle cx="12" cy="12" r="10"/>';
 
             return L.divIcon({
                 className: 'custom-shape-icon', 
                 html: '<svg viewBox="0 0 24 24" fill="' + color + '" width="' + size + '" height="' + size + '" style="filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5)); stroke: white; stroke-width: 1px;">' + svgPath + '</svg>', 
-                iconSize: [size, size],
-                iconAnchor: [size/2, size/2],
-                popupAnchor: [0, -size/2]
+                iconSize: [size, size], iconAnchor: [size/2, size/2], popupAnchor: [0, -size/2]
             });
         }
 
-        // Layer Groups
         var layers = {
             branches: L.layerGroup().addTo(map),
             compA: L.layerGroup().addTo(map),
             compB: L.layerGroup().addTo(map),
             compC: L.layerGroup().addTo(map),
-            top20: L.layerGroup() // Off by default
+            top20: L.layerGroup()
         };
 
-        var branchRings = []; // Array to hold the dynamic rings on our branches
+        // Render Initial Map Entities
+        branches.forEach(b => {
+            b.marker = L.marker([b.lat, b.lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup(`<b>${b.name}</b>`).addTo(layers.branches);
+            b.circle = L.circle([b.lat, b.lng], { color: '#1a2433', fillColor: '#1a2433', fillOpacity: 0.08, weight: 1, dashArray: '4, 4', radius: 8 * 1609.34 }).addTo(layers.branches);
+        });
 
-        // 1. Branches & Elasticity Rings (Spread out to Suburbs)
-        function addBranch(lat, lng, name) {
-            L.marker([lat, lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup("<b>" + name + "</b>").addTo(layers.branches);
-            var ring = L.circle([lat, lng], { 
-                color: '#1a2433', 
-                fillColor: '#1a2433', 
-                fillOpacity: 0.08, 
-                weight: 1, 
-                dashArray: '4, 4',
-                radius: 8 * 1609.34 // 8 miles default
-            }).addTo(layers.branches);
-            branchRings.push(ring);
+        competitors.forEach(c => {
+            let targetLayer = c.type === 'A' ? layers.compA : c.type === 'B' ? layers.compB : layers.compC;
+            c.marker = L.marker([c.lat, c.lng], {icon: makeShapeIcon(c.color, 16, c.shape)}).bindPopup(`<b>${c.name}</b>`).addTo(targetLayer);
+        });
+
+        // Top 20 Accounts
+        const top20Coords = [[44.79, -93.52], [44.65, -93.24], [45.10, -93.35], [45.01, -93.46], [45.01, -93.15]];
+        top20Coords.forEach(coord => {
+            L.marker(coord, {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup("Fleet Account").addTo(layers.top20);
+        });
+
+        // ---------------------------------------------------------
+        // 4. MATH & LOGIC ENGINE
+        // ---------------------------------------------------------
+        
+        // Haversine formula to calculate accurate geographical distance in miles
+        function getDistanceMiles(lat1, lon1, lat2, lon2) {
+            const R = 3958.8;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
-        addBranch(45.07, -93.45, "Maple Grove Hub (NW)");
-        addBranch(44.81, -93.16, "Eagan Distribution (SE)");
+        // Live Dashboard Update
+        function updateDashboard() {
+            const currentRadius = parseInt(document.getElementById('radius-slider').value);
+            const activeComps = competitors.filter(c => document.getElementById(`chk-comp${c.type}`).checked);
+            const tableBody = document.querySelector('#threat-table tbody');
+            tableBody.innerHTML = ''; // Clear existing rows
 
-        // 2. Competitors (Spread across the metro)
-        function addCompetitor(lat, lng, color, shape, layerGroup, name) {
-            L.marker([lat, lng], {icon: makeShapeIcon(color, 16, shape)}).bindPopup('<b>' + name + '</b>').addTo(layerGroup);
-        }
+            branches.forEach(branch => {
+                let riskScore = 0;
+                let threatsInRange = [];
 
-        // Comp A (Red Star - Urban/Central focus)
-        addCompetitor(44.97, -93.26, '#b32525', 'star', layers.compA, "Competitor A - Minneapolis");
-        addCompetitor(44.95, -93.09, '#b32525', 'star', layers.compA, "Competitor A - St. Paul");
-        
-        // Comp B (Orange Triangle - West/Southwest focus)
-        addCompetitor(44.91, -93.47, '#e67e22', 'triangle', layers.compB, "Competitor B - Minnetonka");
-        addCompetitor(44.85, -93.45, '#e67e22', 'triangle', layers.compB, "Competitor B - Eden Prairie");
-        
-        // Comp C (Purple Square - North/East focus)
-        addCompetitor(45.16, -93.23, '#8e44ad', 'square', layers.compC, "Competitor C - Blaine");
-        addCompetitor(44.92, -92.93, '#8e44ad', 'square', layers.compC, "Competitor C - Woodbury");
+                // Calculate distance and threat for this branch against all active competitors
+                activeComps.forEach(comp => {
+                    const dist = getDistanceMiles(branch.lat, branch.lng, comp.lat, comp.lng);
+                    if (dist <= currentRadius) {
+                        threatsInRange.push(comp.type);
+                        // Proximity multiplier: Closer = higher score. Multiplied by specific competitor weight.
+                        riskScore += ((currentRadius - dist) / currentRadius) * 5 * comp.weight;
+                    }
+                });
 
-        // 3. Top 20% Accounts (Green Circles - Spread to outer ring)
-        L.marker([44.79, -93.52], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup("Fleet Account - Shakopee").addTo(layers.top20);
-        L.marker([44.65, -93.24], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup("Fleet Account - Lakeville").addTo(layers.top20);
-        L.marker([45.10, -93.35], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup("Fleet Account - Brooklyn Park").addTo(layers.top20);
-        L.marker([45.01, -93.46], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup("Fleet Account - Plymouth").addTo(layers.top20);
-        L.marker([45.01, -93.15], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup("Fleet Account - Roseville").addTo(layers.top20);
+                // Cap score at 10.0
+                riskScore = Math.min(riskScore, 10.0).toFixed(1);
 
-        // Control Panel Logic
-        function setupToggle(checkboxId, layerKey) {
-            document.getElementById(checkboxId).addEventListener('change', function(e) {
-                if(e.target.checked) { map.addLayer(layers[layerKey]); }
-                else { map.removeLayer(layers[layerKey]); }
+                // Determine Output Logic
+                let threatText = threatsInRange.length > 0 ? `High (${threatsInRange.length} present)` : `Low (0 in radius)`;
+                let riskClass = '';
+                let statusText = '';
+                let actionText = '';
+
+                if (riskScore >= 7.5) {
+                    riskClass = 'threat-critical';
+                    statusText = `Critical (${riskScore}/10)`;
+                    actionText = 'Lock Tier-1 Margin. Trigger Loyalty Promo.';
+                } else if (riskScore >= 4.0) {
+                    riskClass = 'threat-elevated';
+                    statusText = `Elevated (${riskScore}/10)`;
+                    actionText = 'Hold Base Pricing. Target Competitor Accounts.';
+                } else {
+                    riskClass = 'threat-stable';
+                    statusText = `Stable (${riskScore}/10)`;
+                    actionText = 'Raise Margin Floor by 2.5%. Push Expansion.';
+                }
+
+                // If branches are toggled off, clear the data
+                if(!document.getElementById('chk-branches').checked) {
+                     statusText = 'N/A'; riskClass = ''; actionText = 'Branch Layer Disabled'; threatText = '-';
+                }
+
+                // Inject row
+                const row = `<tr>
+                    <td>${branch.name}</td>
+                    <td>${threatText}</td>
+                    <td class="${riskClass}">${statusText}</td>
+                    <td>${actionText}</td>
+                </tr>`;
+                tableBody.insertAdjacentHTML('beforeend', row);
             });
         }
+
+        // ---------------------------------------------------------
+        // 5. EVENT LISTENERS
+        // ---------------------------------------------------------
+        function setupToggle(checkboxId, layerKey) {
+            document.getElementById(checkboxId).addEventListener('change', function(e) {
+                if(e.target.checked) map.addLayer(layers[layerKey]);
+                else map.removeLayer(layers[layerKey]);
+                updateDashboard(); // Recalculate math on toggle
+            });
+        }
+        
         setupToggle('chk-branches', 'branches');
         setupToggle('chk-compA', 'compA');
         setupToggle('chk-compB', 'compB');
         setupToggle('chk-compC', 'compC');
-        setupToggle('chk-top20', 'top20');
+        setupToggle('chk-top20', 'top20'); // Doesn't affect math, just visuals
 
-        // Radius Slider Logic (Now updates Branch Rings dynamically)
         document.getElementById('radius-slider').addEventListener('input', function(e) {
             var miles = e.target.value;
             document.getElementById('radius-val').innerText = miles + " mi";
             var meters = miles * 1609.34;
             branchRings.forEach(function(ring) { ring.setRadius(meters); });
+            updateDashboard(); // Recalculate math on slider move
         });
+
+        // Initial render
+        updateDashboard();
+
     </script>
 </body>
 </html>
