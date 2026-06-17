@@ -155,12 +155,12 @@
 
         // Competitor C has a 2.5 threat weight (Aggressive Discounter)
         const competitors = [
-            { id: 'cA1', type: 'A', name: "Comp A - Minneapolis", lat: 44.97, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
-            { id: 'cA2', type: 'A', name: "Comp A - St. Paul", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
-            { id: 'cB1', type: 'B', name: "Comp B - Minnetonka", lat: 44.91, lng: -93.47, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
-            { id: 'cB2', type: 'B', name: "Comp B - Eden Prairie", lat: 44.85, lng: -93.45, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
-            { id: 'cC1', type: 'C', name: "Comp C - Blaine (Discounter)", lat: 45.16, lng: -93.23, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null },
-            { id: 'cC2', type: 'C', name: "Comp C - Woodbury (Discounter)", lat: 44.92, lng: -92.93, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null }
+            { id: 'cA1', type: 'A', name: "Comp A", lat: 44.97, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
+            { id: 'cA2', type: 'A', name: "Comp A", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
+            { id: 'cB1', type: 'B', name: "Comp B", lat: 44.91, lng: -93.47, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
+            { id: 'cB2', type: 'B', name: "Comp B", lat: 44.85, lng: -93.45, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
+            { id: 'cC1', type: 'C', name: "Comp C", lat: 45.16, lng: -93.23, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null },
+            { id: 'cC2', type: 'C', name: "Comp C", lat: 44.92, lng: -92.93, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null }
         ];
 
         // ---------------------------------------------------------
@@ -209,7 +209,6 @@
         // 4. MATH & LOGIC ENGINE
         // ---------------------------------------------------------
         
-        // Haversine formula to calculate accurate geographical distance in miles
         function getDistanceMiles(lat1, lon1, lat2, lon2) {
             const R = 3958.8;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -218,7 +217,6 @@
             return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
-        // Live Dashboard Update
         function updateDashboard() {
             const currentRadius = parseInt(document.getElementById('radius-slider').value);
             const activeComps = competitors.filter(c => document.getElementById(`chk-comp${c.type}`).checked);
@@ -229,21 +227,17 @@
                 let riskScore = 0;
                 let threatsInRange = [];
 
-                // Calculate distance and threat for this branch against all active competitors
                 activeComps.forEach(comp => {
                     const dist = getDistanceMiles(branch.lat, branch.lng, comp.lat, comp.lng);
                     if (dist <= currentRadius) {
                         threatsInRange.push(comp.type);
-                        // Proximity multiplier: Closer = higher score. Multiplied by specific competitor weight.
                         riskScore += ((currentRadius - dist) / currentRadius) * 5 * comp.weight;
                     }
                 });
 
-                // Cap score at 10.0
                 riskScore = Math.min(riskScore, 10.0).toFixed(1);
 
-                // Determine Output Logic
-                let threatText = threatsInRange.length > 0 ? `High (${threatsInRange.length} present)` : `Low (0 in radius)`;
+                let threatText = threatsInRange.length > 0 ? `High (${threatsInRange.length} in zone)` : `Low (0 in zone)`;
                 let riskClass = '';
                 let statusText = '';
                 let actionText = '';
@@ -262,12 +256,10 @@
                     actionText = 'Raise Margin Floor by 2.5%. Push Expansion.';
                 }
 
-                // If branches are toggled off, clear the data
                 if(!document.getElementById('chk-branches').checked) {
                      statusText = 'N/A'; riskClass = ''; actionText = 'Branch Layer Disabled'; threatText = '-';
                 }
 
-                // Inject row
                 const row = `<tr>
                     <td>${branch.name}</td>
                     <td>${threatText}</td>
@@ -285,7 +277,7 @@
             document.getElementById(checkboxId).addEventListener('change', function(e) {
                 if(e.target.checked) map.addLayer(layers[layerKey]);
                 else map.removeLayer(layers[layerKey]);
-                updateDashboard(); // Recalculate math on toggle
+                updateDashboard();
             });
         }
         
@@ -293,14 +285,21 @@
         setupToggle('chk-compA', 'compA');
         setupToggle('chk-compB', 'compB');
         setupToggle('chk-compC', 'compC');
-        setupToggle('chk-top20', 'top20'); // Doesn't affect math, just visuals
+        setupToggle('chk-top20', 'top20'); 
 
+        // Listen for radius slider movement
         document.getElementById('radius-slider').addEventListener('input', function(e) {
-            var miles = e.target.value;
+            var miles = parseInt(e.target.value);
             document.getElementById('radius-val').innerText = miles + " mi";
             var meters = miles * 1609.34;
-            branchRings.forEach(function(ring) { ring.setRadius(meters); });
-            updateDashboard(); // Recalculate math on slider move
+            
+            // Update the visual rings on the map
+            branches.forEach(b => {
+                b.circle.setRadius(meters);
+            });
+            
+            // Update the math and table
+            updateDashboard();
         });
 
         // Initial render
