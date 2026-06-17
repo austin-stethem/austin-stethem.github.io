@@ -72,19 +72,19 @@
     </div>
 
     <div class="disclaimer">
-        <strong>Data Governance Note:</strong> To comply with NDA, live branch coordinates and competitor identities have been replaced with randomized geographic proxy data modeled in the Minneapolis-St. Paul region. The spatial logic, Haversine distance matrix calculations, and threat-weighting algorithms remain exact reflections of the production environment.
+        <strong>Data Governance Note:</strong> To comply with NDA, live branch coordinates and competitor identities have been replaced with randomized geographic proxy data modeled across the broader Minnesota region. The spatial logic, Haversine distance matrix calculations, and threat-weighting algorithms remain exact reflections of the production environment.
     </div>
 
     <h2>1. Executive Project Summary & Business Context</h2>
     <p>In a large-scale distribution network, protecting existing high-margin business is just as critical as acquiring new accounts. Traditional systems suffer from "territorial blindness," reacting to margin erosion only after volume has dropped. I architected a Geospatial Intelligence engine that overlays competitive density rings onto both our physical hubs <em>and</em> our Top 20% fleet accounts. This provides Sales and Pricing teams with a live, predictive "Heat Map" of vulnerability.</p>
 
-    <h2>2. Interactive Defense & Expansion Dashboard</h2>
-    <p>By adjusting the regional elasticity radius below, the engine mathematically cross-references our physical assets and high-value accounts against active competitors in real-time. This instantly dictates where aggressive acquisition can safely occur, and where retention protocols must be deployed immediately. <em>(Note: Competitor C represents an aggressive market discounter and carries a 2.5x mathematical penalty in the vulnerability matrix).</em></p>
+    <h2>2. Regional Defense & Expansion Dashboard</h2>
+    <p>By adjusting the regional elasticity radius below, the engine mathematically cross-references our physical assets and high-value accounts against active competitors in real-time. This instantly dictates where aggressive acquisition can safely occur (e.g., rural greenfields), and where retention protocols must be deployed immediately in dense urban centers. <em>(Note: Competitor C represents an aggressive market discounter and carries a 2.5x mathematical penalty in the vulnerability matrix).</em></p>
     
     <div class="sim-container">
         <div class="sim-sidebar">
             <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #ddd; padding-bottom: 5px;">ENVIRONMENT</div>
-            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v5</div>
+            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; geo_engine_v6_regional</div>
             <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; branch_matrix.json</div>
             <div style="padding-left: 10px; margin-bottom: 8px; color: #555;">&#9654; competitor_data.csv</div>
             <div style="padding-left: 10px; margin-bottom: 25px; color: #555;">&#9654; top20_accounts.csv</div>
@@ -94,16 +94,16 @@
             
             <div class="sidebar-controls">
                 <label style="color: #1a2433;"><input type="checkbox" id="chk-branches" checked> Our Hubs</label>
-                <label style="color: #b32525;"><input type="checkbox" id="chk-compA" checked> Comp A (Star)</label>
-                <label style="color: #e67e22;"><input type="checkbox" id="chk-compB" checked> Comp B (Triangle)</label>
-                <label style="color: #8e44ad;"><input type="checkbox" id="chk-compC" checked> Comp C (Square)</label>
+                <label style="color: #b32525;"><input type="checkbox" id="chk-compA" checked> Comp A (Star - Urban)</label>
+                <label style="color: #e67e22;"><input type="checkbox" id="chk-compB" checked> Comp B (Triangle - West)</label>
+                <label style="color: #8e44ad;"><input type="checkbox" id="chk-compC" checked> Comp C (Square - Discounter)</label>
                 <label style="color: #27ae60;"><input type="checkbox" id="chk-top20" checked> Top 20% Accounts</label>
                 
                 <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 15px;">
-                    <label style="color: #1a2433; margin-bottom: 8px;">Elasticity Radius:</label>
+                    <label style="color: #1a2433; margin-bottom: 8px;">Regional Elasticity Radius:</label>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="range" id="radius-slider" min="2" max="20" value="8">
-                        <span id="radius-val" style="color: #b32525; width: 40px; text-align: right;">8 mi</span>
+                        <input type="range" id="radius-slider" min="5" max="50" value="25">
+                        <span id="radius-val" style="color: #b32525; width: 45px; text-align: right;">25 mi</span>
                     </div>
                 </div>
             </div>
@@ -150,36 +150,36 @@
 
     <script>
         // ---------------------------------------------------------
-        // 1. MAP INITIALIZATION
+        // 1. MAP INITIALIZATION (Zoomed out for regional view)
         // ---------------------------------------------------------
-        var map = L.map('map-container', { scrollWheelZoom: false }).setView([44.95, -93.25], 9);
+        var map = L.map('map-container', { scrollWheelZoom: false }).setView([44.75, -93.5], 8);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
         setTimeout(function(){ map.invalidateSize(); }, 250);
 
         // ---------------------------------------------------------
-        // 2. DATA ARRAYS
+        // 2. DATA ARRAYS (Expanded across urban, suburban, and rural)
         // ---------------------------------------------------------
         const branches = [
-            { id: 'b1', name: "Maple Grove Hub (NW)", lat: 45.07, lng: -93.45, circle: null, marker: null },
-            { id: 'b2', name: "Eagan Distribution (SE)", lat: 44.81, lng: -93.16, circle: null, marker: null }
+            { id: 'b1', name: "Maple Grove Hub (NW Metro)", lat: 45.07, lng: -93.45, circle: null, marker: null },
+            { id: 'b2', name: "Eagan Distribution (SE Metro)", lat: 44.81, lng: -93.16, circle: null, marker: null },
+            { id: 'b3', name: "Mankato Regional (SW Rural)", lat: 44.16, lng: -93.99, circle: null, marker: null }
         ];
 
         const topAccounts = [
-            { id: 't1', name: "Fleet Account - Shakopee", lat: 44.79, lng: -93.52, circle: null, marker: null },
-            { id: 't2', name: "Fleet Account - Lakeville", lat: 44.65, lng: -93.24, circle: null, marker: null },
-            { id: 't3', name: "Fleet Account - Brooklyn Park", lat: 45.10, lng: -93.35, circle: null, marker: null },
-            { id: 't4', name: "Fleet Account - Plymouth", lat: 45.01, lng: -93.46, circle: null, marker: null },
-            { id: 't5', name: "Fleet Account - Roseville", lat: 45.01, lng: -93.15, circle: null, marker: null }
+            { id: 't1', name: "Fleet Account - Lakeville", lat: 44.65, lng: -93.24, circle: null, marker: null },
+            { id: 't2', name: "Agri-Fleet - St. Cloud", lat: 45.56, lng: -94.16, circle: null, marker: null },
+            { id: 't3', name: "Commercial - Owatonna", lat: 44.08, lng: -93.22, circle: null, marker: null },
+            { id: 't4', name: "Logistics - Red Wing", lat: 44.56, lng: -92.53, circle: null, marker: null },
+            { id: 't5', name: "Agri-Fleet - Glencoe", lat: 44.77, lng: -94.15, circle: null, marker: null }
         ];
 
-        // Competitor C has a 2.5 threat weight (Aggressive Discounter)
         const competitors = [
-            { id: 'cA1', type: 'A', name: "Comp A", lat: 44.97, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
-            { id: 'cA2', type: 'A', name: "Comp A", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
-            { id: 'cB1', type: 'B', name: "Comp B", lat: 44.91, lng: -93.47, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
-            { id: 'cB2', type: 'B', name: "Comp B", lat: 44.85, lng: -93.45, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
-            { id: 'cC1', type: 'C', name: "Comp C", lat: 45.16, lng: -93.23, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null },
-            { id: 'cC2', type: 'C', name: "Comp C", lat: 44.92, lng: -92.93, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null }
+            { id: 'cA1', type: 'A', name: "Comp A - Mpls Core", lat: 44.97, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
+            { id: 'cA2', type: 'A', name: "Comp A - St. Paul", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
+            { id: 'cB1', type: 'B', name: "Comp B - Minnetonka", lat: 44.91, lng: -93.47, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
+            { id: 'cB2', type: 'B', name: "Comp B - Hutchinson", lat: 44.89, lng: -94.36, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
+            { id: 'cC1', type: 'C', name: "Comp C - Blaine (Discounter)", lat: 45.16, lng: -93.23, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null },
+            { id: 'cC2', type: 'C', name: "Comp C - Faribault (Discounter)", lat: 44.29, lng: -93.27, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null }
         ];
 
         // ---------------------------------------------------------
@@ -207,16 +207,18 @@
             top20: L.layerGroup().addTo(map) 
         };
 
+        const defaultRadiusMeters = 25 * 1609.34;
+
         // Render Branches
         branches.forEach(b => {
             b.marker = L.marker([b.lat, b.lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup(`<b>${b.name}</b>`).addTo(layers.branches);
-            b.circle = L.circle([b.lat, b.lng], { color: '#1a2433', fillColor: '#1a2433', fillOpacity: 0.08, weight: 1, dashArray: '4, 4', radius: 8 * 1609.34 }).addTo(layers.branches);
+            b.circle = L.circle([b.lat, b.lng], { color: '#1a2433', fillColor: '#1a2433', fillOpacity: 0.08, weight: 1, dashArray: '4, 4', radius: defaultRadiusMeters }).addTo(layers.branches);
         });
 
         // Render Accounts
         topAccounts.forEach(t => {
             t.marker = L.marker([t.lat, t.lng], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup(`<b>${t.name}</b>`).addTo(layers.top20);
-            t.circle = L.circle([t.lat, t.lng], { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5', radius: 8 * 1609.34 }).addTo(layers.top20);
+            t.circle = L.circle([t.lat, t.lng], { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5', radius: defaultRadiusMeters }).addTo(layers.top20);
         });
 
         // Render Competitors
