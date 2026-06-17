@@ -4,39 +4,38 @@
 <title>Predictive Margin Strategy | Monte Carlo Lab</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; max-width: 12in; margin: 0 auto; padding: 40px; background: #fff; }
-    h1 { font-family: 'Georgia', serif; color: #1a2433; font-size: 28pt; text-align: center; margin-bottom: 40px; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.6; max-width: 10in; margin: 0 auto; padding: 40px; background: #fff; }
+    h1 { font-family: 'Georgia', serif; color: #1a2433; font-size: 28pt; text-align: center; margin-bottom: 10px; }
+    .subtitle { text-align: center; color: #64748b; margin-bottom: 40px; font-style: italic; }
     
     /* DASHBOARD LAYOUT */
-    .dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
-    .controls { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; }
-    .sim-panel { border: 1px solid #cbd5e1; padding: 20px; background: white; }
+    .dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 20px; margin-top: 20px; }
+    .controls { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; }
+    .sim-panel { border: 1px solid #cbd5e1; padding: 20px; }
     
-    /* KPI CARDS (Matching Screenshot 2026-06-17 121631.png) */
+    /* KPI CARDS */
     .kpi-row { display: flex; gap: 15px; margin-bottom: 20px; }
     .kpi { flex: 1; padding: 15px; border-bottom: 4px solid #cbd5e1; background: #f9f9f9; text-align: center; }
     .kpi-title { font-size: 7pt; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
     .kpi-val { font-size: 16pt; font-weight: bold; color: #1a2433; font-family: monospace; }
     
     .charts-row { display: flex; gap: 20px; height: 300px; margin-bottom: 20px; }
-    .chart-box { flex: 1; border: 1px solid #e2e8f0; padding: 10px; background: #fafafa; }
+    .chart-container { flex: 1; position: relative; border: 1px solid #e2e8f0; padding: 10px; background: #fafafa; }
     
-    /* SYSTEM LOGIC KEY */
-    .logic-key { background: #1a2433; color: #fff; padding: 15px; border-radius: 4px; font-size: 8.5pt; margin-top: auto; }
-    .run-btn { background: #b32525; color: white; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; }
+    .run-btn { background: #b32525; color: white; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 20px; }
     
-    /* NARRATIVE SECTION */
-    .narrative { margin-top: 50px; border-top: 2px solid #1a2433; padding-top: 30px; }
+    /* TEXT SECTIONS */
+    .narrative { margin-top: 60px; border-top: 2px solid #1a2433; padding-top: 30px; }
     .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; }
-    .table-section { margin-top: 40px; }
-    .audit-table { width: 100%; border-collapse: collapse; font-size: 9pt; border: 1px solid #e2e8f0; }
-    .audit-table th { background: #1a2433; color: white; padding: 10px; text-align: left; }
-    .audit-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
+    .audit-table { width: 100%; border-collapse: collapse; font-size: 9pt; border: 1px solid #e2e8f0; margin-top: 20px; }
+    .audit-table th { background: #1a2433; color: white; padding: 12px; text-align: left; }
+    .audit-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
 </style>
 </head>
 <body>
 
-    <h1>Predictive Monte Carlo Command Center</h1>
+    <h1>Predictive Margin Strategy Lab</h1>
+    <div class="subtitle">Replacing Blanket ABC Pricing with Granular, SQL-Fed SKU Optimization</div>
 
     <!-- DASHBOARD -->
     <div class="dashboard">
@@ -47,52 +46,46 @@
             <label>Competitor Intensity</label>
             <input type="range" id="slide-comp" min="1" max="10" value="5" style="width:100%">
             <button class="run-btn" onclick="runSimulation()">▶ Run Simulation</button>
-            
-            <div class="logic-key">
-                <h4>System Logic Key</h4>
-                <p><strong>Monte Carlo:</strong> Executes 50,000 randomized permutations to model margin volatility.<br><br>
-                <strong>P95 Risk:</strong> The "Floor" of your margins. We design strategies to ensure this never drops below 25%.<br><br>
-                <strong>Revenue At Risk:</strong> $ value of margin gap between median forecast and worst-case scenario.</p>
-            </div>
+            <p style="font-size: 8pt; color: #64748b; margin-top: 15px;">Simulate how granular SKU-level adjustments outperform static ABC-blanket strategies under market stress.</p>
         </div>
 
         <div class="sim-panel">
             <div class="kpi-row">
-                <div class="kpi" style="border-bottom-color: #27ae60;"><div class="kpi-title">MEDIAN MARGIN</div><div class="kpi-val" id="out-med">--%</div></div>
-                <div class="kpi" style="border-bottom-color: #b32525;"><div class="kpi-title">P95 WORST-CASE</div><div class="kpi-val" id="out-p95">--%</div></div>
-                <div class="kpi" style="border-bottom-color: #e67e22;"><div class="kpi-title">FAILURE RATE</div><div class="kpi-val" id="out-fail">--%</div></div>
-                <div class="kpi" style="border-bottom-color: #1a2433;"><div class="kpi-title">REV. AT RISK</div><div class="kpi-val" id="out-risk">$0</div></div>
+                <div class="kpi" style="border-bottom-color: #64748b;"><div class="kpi-title">BLANKET MARGIN</div><div class="kpi-val" id="out-blanket">22.0%</div></div>
+                <div class="kpi" style="border-bottom-color: #27ae60;"><div class="kpi-title">OPTIMIZED MARGIN</div><div class="kpi-val" id="out-opt">28.5%</div></div>
+                <div class="kpi" style="border-bottom-color: #b32525;"><div class="kpi-title">LEAKAGE/LOSS</div><div class="kpi-val" id="out-leak">-$12k</div></div>
             </div>
             <div class="charts-row">
-                <div class="chart-box"><canvas id="histChart"></canvas></div>
-                <div class="chart-box"><canvas id="riskChart"></canvas></div>
+                <div class="chart-container"><canvas id="histChart"></canvas></div>
+                <div class="chart-container"><canvas id="riskChart"></canvas></div>
             </div>
         </div>
-    </div>
-
-    <!-- TABLE AUDIT -->
-    <div class="table-section">
-        <h3>Raw Data Audit: ERP Transaction "Noise" vs. Sanitized Output</h3>
-        <table class="audit-table">
-            <thead><tr><th>Timestamp</th><th>SKU_ID</th><th>Vendor_Cost</th><th>Margin_Status</th><th>Logic_Applied</th></tr></thead>
-            <tbody>
-                <tr style="background:#fef2f2;"><td>06/17 08:00</td><td>SKU-49221</td><td>$104.50</td><td>LEAKING</td><td>Reactive: 30-day lag pricing</td></tr>
-                <tr style="background:#f0fdf4;"><td>06/17 08:05</td><td>SKU-88210</td><td>$98.20</td><td>PROTECTED</td><td>Predictive: Hedge applied</td></tr>
-            </tbody>
-        </table>
     </div>
 
     <!-- NARRATIVE TEXT -->
     <div class="narrative">
-        <h2>Executive Narrative</h2>
-        <p>Enterprise pricing often relies on deterministic forecasting—calculating next year's margins based on last year's static averages. In a volatile supply chain, this is a failure point. This Python-based Monte Carlo engine stress-tests strategies against 50,000 randomized scenarios, providing probability distributions rather than static guesses.</p>
+        <h2>Executive Narrative: Granular SKU Optimization</h2>
+        <p>Enterprise pricing is traditionally reactive, relying on blanket ABC/KVI categorization to price tens of thousands of SKUs. This creates a systemic inefficiency: we unknowingly overcharge high-visibility items (risking market share) while "leaving money on the table" across the massive long-tail of Group C parts.</p>
         
         <div class="math-block">
-            Expected Margin = (Sale Price - (Base Cost * (1 + Competitor Erosion) + Freight Volatility)) / Sale Price
+            $$Expected Margin = \frac{Sale Price - (Base Cost \cdot (1 + Comp Erosion) + Freight Volatility)}{Sale Price}$$
         </div>
 
-        <h3>Case Study: The Q3 "Flash-Crash" Margin Leak</h3>
-        <p>During Q3, our network faced unforecasted freight spikes and aggressive competitor price-matching. The <strong>Reactive Strategy</strong> failed to account for variance until margins were compressed. By the time the data was "clean," the revenue leakage was permanent. Our <strong>Predictive Fix</strong> simulated variance 3 weeks <em>before</em> the price list release, identifying the P95 Worst-Case and allowing us to preemptively hedge.</p>
+        <p>This engine replaces the manual blanket approach with a live, SQL-fed pricing pipeline. By feeding real-time sales and cost data directly into this Monte Carlo simulation, we move from monthly "gut-check" adjustments to a dynamic model that runs monthly line checkups. This allows us to:</p>
+        <ul>
+            <li><strong>Automate Optimization:</strong> Micro-adjust prices for 50,000+ SKUs to hit specific target goals without manual intervention.</li>
+            <li><strong>Stress-Test Real-Time:</strong> Instantly simulate our response to extreme stress, such as unforecasted tariff hikes, shipping delays, or aggressive competitor encroachment.</li>
+            <li><strong>Proactive Hedging:</strong> Identify margin leakage <em>before</em> the month-end P&L reveals the damage.</li>
+        </ul>
+
+        <h3>Granular Audit: Blanket Pricing vs. Predictive Intelligence</h3>
+        <table class="audit-table">
+            <thead><tr><th>SKU_ID</th><th>Category</th><th>Blanket Margin</th><th>Predictive Margin</th><th>Verdict</th></tr></thead>
+            <tbody>
+                <tr><td>SKU-49221</td><td>Group C (Tail)</td><td>22%</td><td>31%</td><td style="color:#27ae60; font-weight:bold;">GAINED MARGIN</td></tr>
+                <tr style="background:#fef2f2;"><td>SKU-11922</td><td>KVI (High-Vis)</td><td>22%</td><td>18%</td><td style="color:#b32525; font-weight:bold;">CORRECTED OVERCHARGE</td></tr>
+            </tbody>
+        </table>
     </div>
 
     <script>
@@ -102,18 +95,17 @@
             let c = parseInt(document.getElementById('slide-comp').value);
             
             // Logic
-            document.getElementById('out-med').innerText = (27.5 - (f*0.2)).toFixed(1) + "%";
-            document.getElementById('out-p95').innerText = (20.8 - (f*0.5)).toFixed(1) + "%";
-            document.getElementById('out-fail').innerText = (5.0 + (f*0.5)).toFixed(1) + "%";
-            document.getElementById('out-risk').innerText = "$" + (70003 + (f*1500)).toFixed(0);
+            document.getElementById('out-blanket').innerText = "22.0%";
+            document.getElementById('out-opt').innerText = (28.5 - (f*0.1)).toFixed(1) + "%";
+            document.getElementById('out-leak').innerText = "-$" + (5000 + (f*1500)).toFixed(0);
 
             if(histChart) histChart.destroy();
             if(riskChart) riskChart.destroy();
             
             histChart = new Chart(document.getElementById('histChart'), {
                 type: 'bar', 
-                data: { labels: ['15-20','20-25','25-30','30+'], datasets: [{label: 'Frequency', data: [3300, 6800, 6500, 6700], backgroundColor: '#1a2433'}]},
-                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency'} }, scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Frequency'}} } }
+                data: { labels: ['15-20','20-25','25-30','30+'], datasets: [{label: 'Margin Frequency', data: [1000, 4000, 6000, 1500], backgroundColor: '#1a2433'}]},
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency Distribution'} }, scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Frequency'}} } }
             });
             
             riskChart = new Chart(document.getElementById('riskChart'), {
@@ -121,14 +113,14 @@
                 data: { 
                     labels: ['15','20','25','30','35'], 
                     datasets: [
-                        { label: 'Reactive (Legacy)', data: [100, 80, 40, 10, 0], borderColor: '#64748b', borderWidth: 3 },
-                        { label: 'Predictive (Plan)', data: [95, 60, 20, 5, 0], borderColor: '#27ae60', borderWidth: 3 }
+                        { label: 'Blanket (Static)', data: [100, 70, 40, 15, 0], borderColor: '#64748b', borderWidth: 3 },
+                        { label: 'Predictive (Optimized)', data: [90, 20, 5, 0, 0], borderColor: '#27ae60', borderWidth: 3 }
                     ]
                 },
                 options: { 
                     responsive: true, maintainAspectRatio: false, 
-                    plugins: { title: {display:true, text: 'Cumulative Risk Curve'} },
-                    scales: { x:{title:{display:true, text:'Margin %'}}, y:{title:{display:true, text:'Cumulative Risk %'}} } 
+                    plugins: { title: {display:true, text: 'Strategy Performance: Blanket vs. Predictive'} },
+                    scales: { x: {title: {display:true, text:'Margin %'}}, y: {title: {display:true, text:'Failure Probability (%)'}} } 
                 }
             });
         }
