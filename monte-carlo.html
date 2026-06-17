@@ -79,10 +79,10 @@
         <div class="controls">
             <strong>SIMULATION CONTROLS</strong><br><br>
             <label>Freight Cost Variance (+% from Baseline)</label>
-            <input type="range" id="slide-freight" min="0" max="25" value="10" style="width:100%">
+            <input type="range" id="slide-freight" min="0" max="25" value="10" style="width:100%" oninput="runSimulation()">
             <label>Comp. Price Deflation ($ Drop)</label>
-            <input type="range" id="slide-comp" min="0" max="15" value="5" style="width:100%">
-            <button class="run-btn" onclick="runSimulation()">▶ Run Simulation</button>
+            <input type="range" id="slide-comp" min="0" max="15" value="5" style="width:100%" oninput="runSimulation()">
+            <button class="run-btn" onclick="runSimulation()">▶ Reset Simulation</button>
             
             <div class="logic-key">
                 <h4>System Logic Key</h4>
@@ -142,6 +142,13 @@
 
     <script>
         let g1, g2, g3, histChart, riskChart;
+
+        function safeDestroy(chartObj) {
+            if (chartObj) {
+                chartObj.destroy();
+            }
+        }
+
         function createGauge(id, val) {
             return new Chart(document.getElementById(id), {
                 type: 'doughnut',
@@ -149,10 +156,12 @@
                 options: { rotation: 270, circumference: 180, cutout: '80%', plugins: { legend: {display: false}, tooltip: { callbacks: { label: (c) => c.formattedValue + '%' } } } }
             });
         }
+
         function runSimulation() {
-            // Mapping the new real-world metrics back to the visual multiplier curve
-            let rawF = parseInt(document.getElementById('slide-freight').value);
-            let rawC = parseInt(document.getElementById('slide-comp').value);
+            // Safe parsing to prevent NaN array errors
+            let rawF = parseFloat(document.getElementById('slide-freight').value) || 0;
+            let rawC = parseFloat(document.getElementById('slide-comp').value) || 0;
+            
             let f = (rawF * 0.25) + (rawC * 0.33); 
             if (f === 0) f = 0.5;
 
@@ -161,7 +170,12 @@
             document.getElementById('out-fail').innerText = (5.0 + (f*0.5)).toFixed(1) + "%";
             document.getElementById('out-risk').innerText = "$" + (70003 + (f*1500)).toFixed(0);
             
-            if(g1) { g1.destroy(); g2.destroy(); g3.destroy(); histChart.destroy(); riskChart.destroy(); }
+            // Wipe the slate cleanly before rendering
+            safeDestroy(g1);
+            safeDestroy(g2);
+            safeDestroy(g3);
+            safeDestroy(histChart);
+            safeDestroy(riskChart);
             
             g1 = createGauge('gauge1', Math.max(0, 95 - (f*3)));
             g2 = createGauge('gauge2', Math.max(0, 85 - (f*4)));
@@ -169,13 +183,22 @@
             
             histChart = new Chart(document.getElementById('histChart'), {
                 type: 'bar', 
-                data: { labels: Array.from({length: 30}, (_,i) => (15 + i*0.5).toFixed(1)), datasets: [{label: 'Frequency', data: Array.from({length:30}, (_,i)=>Math.exp(-Math.pow(i-18,2)/20)*7000), backgroundColor: '#1a2433'}]},
+                data: { 
+                    labels: Array.from({length: 30}, (_,i) => (15 + i*0.5).toFixed(1)), 
+                    datasets: [{label: 'Frequency', data: Array.from({length:30}, (_,i)=>Math.exp(-Math.pow(i-18,2)/20)*7000), backgroundColor: '#1a2433'}]
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency'} } }
             });
             
             riskChart = new Chart(document.getElementById('riskChart'), {
                 type: 'line', 
-                data: { labels: ['15','20','25','30','35'], datasets: [{ label: 'Reactive', data: [100, 85, 50, 20, 5], borderColor: '#64748b', borderWidth: 3 }, { label: 'Predictive', data: [90, 30, 5, 1, 0], borderColor: '#27ae60', borderWidth: 3 }] },
+                data: { 
+                    labels: ['15','20','25','30','35'], 
+                    datasets: [
+                        { label: 'Reactive', data: [100, 85, 50, 20, 5], borderColor: '#64748b', borderWidth: 3 }, 
+                        { label: 'Predictive', data: [90, 30, 5, 1, 0], borderColor: '#27ae60', borderWidth: 3 }
+                    ] 
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Cumulative Risk'} } }
             });
         }
