@@ -5,11 +5,10 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
-    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10pt; line-height: 1.5; max-width: 12in; margin: 0 auto; padding: 40px; background-color: #ffffff; }
+    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 12in; margin: 0 auto; padding: 40px; background-color: #ffffff; }
     .header-container { text-align: center; margin-bottom: 40px; }
-    .kicker { color: #b32525; font-weight: bold; font-size: 8pt; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+    .kicker { color: #b32525; font-weight: bold; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
     h1 { font-family: 'Georgia', serif; font-size: 28pt; color: #1a2433; margin: 0; font-weight: normal; line-height: 1.2; letter-spacing: -0.5px;}
     
     /* DASHBOARD LAYOUT */
@@ -20,7 +19,7 @@
     .sparknotes { background: #1a2433; color: #fff; padding: 15px; border-radius: 4px; font-size: 8.5pt; margin-top: 20px; }
     .sparknotes h4 { color: #f8fafc; margin-top: 0; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid #475569; padding-bottom: 5px;}
     
-    /* COLORED KPI CARDS */
+    /* KPI CARDS WITH COLORED BOTTOM BORDERS */
     .kpi-row { display: flex; gap: 15px; margin-bottom: 15px; }
     .kpi-card { flex: 1; background: #f8fafc; padding: 15px; border-radius: 4px; text-align: center; border-bottom: 4px solid #cbd5e1; }
     .kpi-title { font-size: 7.5pt; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 5px;}
@@ -35,6 +34,12 @@
     .gain { color: #27ae60; font-weight: bold; }
     
     .run-btn { background-color: #b32525; color: white; border: none; padding: 14px; font-weight: bold; text-transform: uppercase; cursor: pointer; width: 100%; border-radius: 4px; }
+    
+    /* TEXT SECTION STYLES */
+    .text-section { margin-top: 40px; }
+    .text-section h3 { font-family: 'Georgia', serif; color: #1a2433; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; }
+    .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; color: #0f172a; }
+    pre { background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 9pt; overflow-x: auto; margin-bottom: 25px;}
 </style>
 </head>
 <body>
@@ -43,6 +48,7 @@
         <h1>Predictive Monte Carlo Command Center</h1>
     </div>
 
+    <!-- Interactive Dashboard -->
     <div class="sim-container">
         <div class="sim-sidebar">
             <div>
@@ -51,12 +57,11 @@
                 <input type="range" id="slide-comp" min="1" max="3" value="2" style="width:100%"><div style="font-size:8pt; margin-bottom:15px;">Competitor Price Pressure</div>
                 <button class="run-btn" onclick="runSimulation()">▶ Run Simulation</button>
             </div>
-            
             <div class="sparknotes">
                 <h4>System Logic Key</h4>
-                <p><strong>Monte Carlo:</strong> 50k randomized permutations modeling margin risk.<br><br>
-                <strong>P95 Risk:</strong> The "Floor." We design strategies ensuring this doesn't drop below 25%.<br><br>
-                <strong>Revenue At Risk:</strong> $ potential lost if we ignore volatility.</p>
+                <p><strong>Monte Carlo:</strong> Executes 50,000 randomized permutations to model margin volatility. <br><br>
+                <strong>P95 Risk:</strong> The "Floor" of your margins. We design strategies to ensure this never drops below 25%.<br><br>
+                <strong>Revenue At Risk:</strong> $ value of margin gap between median forecast and worst-case scenario.</p>
             </div>
         </div>
 
@@ -76,6 +81,23 @@
                 <tbody id="roi-body"></tbody>
             </table>
         </div>
+    </div>
+
+    <!-- Narrative Section -->
+    <div class="text-section">
+        <h2>Executive Narrative</h2>
+        <p>Enterprise pricing models often rely on deterministic forecasting—calculating next year's corporate margins based on last year's static averages. However, in a volatile supply chain, averages mask catastrophic risk. To shift from descriptive reporting to predictive risk management, I engineered this Python-based Monte Carlo simulation. It utilizes vectorized operations (NumPy) to stress-test proposed pricing strategies against tens of thousands of randomized macroeconomic scenarios, providing executive leadership with probability distributions rather than static guesses.</p>
+        
+        <div class="math-block">
+            $$\text{Expected Margin} = \frac{\text{Sale Price} - (\text{Base Cost} \cdot (1 + \text{Comp Erosion}) + \text{Freight Volatility})}{\text{Sale Price}}$$
+        </div>
+
+        <h3>Departmental Applicability</h3>
+        <ul>
+            <li><strong>Finance & Pricing:</strong> Generates <strong>Risk-Adjusted Margin Floors</strong>. Instead of blanket 30% targets, finance uses P95 tail data to identify SKUs requiring higher margins to hedge against logistical spikes.</li>
+            <li><strong>Sales Leadership:</strong> Validates price-match requests. If the simulation shows a high "Failure Probability" in the P95 tail, leadership has the empirical data to reject the price match or negotiate volume guarantees.</li>
+            <li><strong>Executive Leadership:</strong> Quantifies "Revenue At Risk" to dictate capital allocation. It turns abstract supply chain chaos into a managed business risk.</li>
+        </ul>
     </div>
 
     <script>
@@ -100,24 +122,22 @@
             document.getElementById('out-risk-dollars').innerText = "$" + (1500000 * (median-p95)/100).toFixed(0);
             document.getElementById('roi-body').innerHTML = `<tr><td>Reactive (Legacy)</td><td>28.5%</td><td>18.0%</td><td>-</td></tr><tr><td>Predictive (Monte Carlo)</td><td>31.2%</td><td>26.5%</td><td class="gain">+8.5% Net Margin</td></tr>`;
             
-            // Build Bins
             let bins = new Array(20).fill(0);
             results.forEach(val => {
                 let bin = Math.min(Math.floor((val - 15) / 2), 19);
                 if(bin >= 0) bins[bin]++;
             });
 
-            // Update Charts
             if(histChart) histChart.destroy();
             if(cdfChart) cdfChart.destroy();
             
             histChart = new Chart(document.getElementById('histChart'), {
-                type: 'bar', data: { labels: bins.map((_,i)=>(15+i*2).toFixed(0)), datasets: [{ data: bins, backgroundColor: '#1a2433' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false}, title: {display:true, text: 'Margin Frequency'} } }
+                type: 'bar', data: { labels: bins.map((_,i)=>(15+i*2).toFixed(0)), datasets: [{ label: 'Margin Freq', data: bins, backgroundColor: '#1a2433' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false}, title: {display:true, text: 'Margin Probability'} } }
             });
             
             cdfChart = new Chart(document.getElementById('cdfChart'), {
-                type: 'line', data: { labels: bins.map((_,i)=>(15+i*2).toFixed(0)), datasets: [{ data: bins.map((_,i)=>i*5), borderColor: '#b32525', tension: 0.4 }] },
+                type: 'line', data: { labels: bins.map((_,i)=>(15+i*2).toFixed(0)), datasets: [{ label: 'Cumul. Risk', data: bins.map((_,i)=>i*5), borderColor: '#b32525', tension: 0.4 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false}, title: {display:true, text: 'Cumulative Risk'} } }
             });
         }
