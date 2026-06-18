@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Case Study: KVI Indexing & Margin Defense</title>
+    <title>Case Study: Enterprise KVI Indexing</title>
     <style>
         :root {
             --dark-blue: #1a2433;
@@ -11,85 +11,93 @@
             --text-color: #333;
             --bg-color: #fbfbfb;
         }
-        body { font-family: 'Segoe UI', Helvetica, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 40px; }
-        header { border-bottom: 2px solid var(--alert-red); padding-bottom: 20px; margin-bottom: 20px; }
+        body { font-family: 'Segoe UI', Helvetica, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 40px; line-height: 1.6; }
+        header { border-bottom: 2px solid var(--alert-red); padding-bottom: 20px; margin-bottom: 30px; }
         .kicker { color: var(--alert-red); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; }
-        h1 { font-family: 'Georgia', serif; margin: 5px 0; color: var(--dark-blue); }
-        .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.9rem; }
-        .meta-table td { padding: 10px; border: 1px solid #ddd; background: #fff; }
-        .dashboard-container { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
-        .panel { background: #fff; padding: 25px; border-radius: 4px; border: 1px solid #e0e0e0; }
-        .control-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
-        input[type="range"] { width: 100%; cursor: pointer; }
-        .result-box { font-size: 2rem; font-weight: bold; color: var(--success-green); margin-top: 10px; }
-        .disclaimer { font-size: 0.75rem; color: #7f8c8d; margin-top: 30px; font-style: italic; border-top: 1px solid #eee; padding-top: 10px; }
+        h1 { font-family: 'Georgia', serif; margin: 5px 0; color: var(--dark-blue); font-size: 2.2rem; }
+        .metadata-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .meta-card { background: #fff; padding: 15px; border-left: 4px solid var(--dark-blue); border-bottom: 1px solid #ddd; }
+        .meta-title { font-weight: bold; color: var(--dark-blue); display: block; margin-bottom: 5px; }
+        
+        .dashboard-layout { display: grid; grid-template-columns: 250px 1fr; gap: 40px; }
+        .sidebar { font-size: 0.9rem; }
+        h2 { font-family: 'Georgia', serif; color: var(--dark-blue); border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 0; }
+        
+        .disclaimer { font-size: 0.7rem; color: #888; margin-top: 40px; font-style: italic; border-top: 1px solid #eee; padding-top: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f4f4f4; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="kicker">Strategic Analytics Engine</div>
+    <div class="kicker">Systems Architecture & Analytics Portfolio</div>
     <h1>Enterprise KVI Indexing & Predictive Margin Defense</h1>
+    <p><strong>Principal:</strong> Austin Sonny Stethem | Pricing & MDM Analyst</p>
 </header>
 
-<table class="meta-table">
-    <tr>
-        <td><strong>Competencies:</strong> Data Warehousing, Predictive Forecasting, BI Integration</td>
-        <td><strong>Stack:</strong> SQL, Phocas BI, ERP-Integrated Waterfalls</td>
-    </tr>
-</table>
+<div class="metadata-section">
+    <div class="meta-card">
+        <span class="meta-title">Core Competencies</span>
+        Data Warehousing, Cross-Functional Strategy, Predictive Forecasting, BI Integration[cite: 1]
+    </div>
+    <div class="meta-card">
+        <span class="meta-title">Technical Stack</span>
+        SQL, Phocas BI, ERP-Integrated Waterfalls, Meta-Data Modeling[cite: 1]
+    </div>
+</div>
 
-<div class="dashboard-container">
-    <aside class="panel">
-        <h3>Execution Parameters</h3>
-        <div class="control-group">
-            <label>Logistics Cost Multiplier (<span id="log-val">1.0</span>x)</label>
-            <input type="range" id="log-slider" min="1" max="2" step="0.05" value="1.0" oninput="updateModel()">
-        </div>
-        <div class="control-group">
-            <label>Market Competitor Pressure (0 - 100)</label>
-            <input type="range" id="comp-slider" min="0" max="100" value="20" oninput="updateModel()">
-        </div>
-        <div class="control-group">
-            <label>Sentiment Trust Weight (0 - 1.0)</label>
-            <input type="range" id="sent-slider" min="0" max="1" step="0.1" value="0.5" oninput="updateModel()">
-        </div>
+<div class="dashboard-layout">
+    <aside class="sidebar">
+        <h3>Contents</h3>
+        <p>1. Executive Summary</p>
+        <p>2. KVI Logic & Synthesis</p>
+        <p>3. Meta-Modeling</p>
+        <p>4. BI Integration</p>
     </aside>
 
-    <main class="panel">
-        <h3>Executive Project Summary</h3>
-        <p>This engine shifts pricing from reactive, complaint-driven heuristics to proactive, forecast-driven margin defense. By synthesizing usage volume, logistics cost-vectors, and field sentiment, the system automates price waterfalls across product families[cite: 1].</p>
+    <main>
+        <h2>1. Executive Project Summary & Business Context</h2>
+        <p>Historically, pricing adjustments at the enterprise level were reactive, driven largely by field-level complaints or sporadic customer feedback—a "loudest voice" heuristic that inherently lagged behind market volatility across our 80-branch network[cite: 1]. To eliminate this administrative drag, I architected and manage a Dynamic Weighted Indexing engine that shifts our pricing operations from passive spreadsheet management to proactive, forecast-driven margin defense[cite: 1]. By synthesizing usage volume, competitor pricing, and seasonal logistics cost-vectors, this system identifies Known Value Items (KVIs) and automates the pricing logic for entire product families[cite: 1].</p>
+
+        <h2>2. The Logic of KVI Identification & Data Synthesis</h2>
+        <p>Defining a Known Value Item (KVI) requires more than just analyzing sales volume; it requires a cross-functional consensus on what constitutes a "price-sensitive" anchor[cite: 1]. The KVI identification engine is a collaborative output between the Product Analytics team, Information Software leads, and the Pricing department[cite: 1]. We filter SKUs through a multi-variable funnel that includes 12-month rolling usage data, margin thresholds, and market sentiment-curated recommendations from branch managers and field sales agents[cite: 1].</p>
+
+        <h2>3. Price Waterfall Mechanics & Competitive Meta-Modeling</h2>
+        <p>Rather than performing manual, line-by-line price changes, I utilize a "Meta-Modeling" approach to pricing[cite: 1]. Once we establish a definitive "meta" price point for a core product range, the system automatically flows pricing adjustments to likeminded numbers within that product group[cite: 1]. This allows the pricing engine to scale exponentially; a single logic update ripples across the catalog, zeroing in on competitive gaps based on current market research[cite: 1].</p>
+
+        <h2>4. Proactive Forecasting & Phocas BI Integration</h2>
+        <p>We no longer wait for a customer complaint to signal a pricing error[cite: 1].</p>
         
-        <h3>Projected Margin Health</h3>
-        <div id="result" class="result-box">Margin: 24.5%</div>
-        
+        <table>
+            <tr>
+                <th>Volatility Trigger</th>
+                <th>Data Synthesis Model</th>
+                <th>Automated Pricing Response</th>
+            </tr>
+            <tr>
+                <td>Logistics & Freight Spikes</td>
+                <td>Phocas BI Cost-Delta Tracking</td>
+                <td>Dynamic Surcharge Waterfall Execution to protect base margin prior to POS checkout.</td>
+            </tr>
+            <tr>
+                <td>Competitor Margin Erosion</td>
+                <td>Ground-Level Sales Agent Sentiment</td>
+                <td>Target "Meta" Product Re-Indexing to eliminate localized market friction immediately.</td>
+            </tr>
+            <tr>
+                <td>Seasonal Demand Decay</td>
+                <td>12-Month Rolling Usage Analytics</td>
+                <td>Preventative markdowns and category velocity re-weighting to mitigate dead stock.</td>
+            </tr>
+        </table>
+
         <div class="disclaimer">
-            * Disclaimer: This tool uses randomized/proxy data to comply with NDAs while demonstrating exact production pricing logic used in the KVI indexing system.
+            * Disclaimer: This case study utilizes proprietary production logic for demonstration purposes. This is a static representation of the Enterprise KVI Indexing strategy[cite: 1].
         </div>
     </main>
 </div>
-
-<script>
-    function updateModel() {
-        const log = parseFloat(document.getElementById('log-slider').value);
-        const comp = parseFloat(document.getElementById('comp-slider').value);
-        const sentiment = parseFloat(document.getElementById('sent-slider').value);
-        
-        document.getElementById('log-val').innerText = log.toFixed(2);
-        
-        // Simulation Logic: Base Margin (30%) - (Logistics Impact) - (Competitor Friction * Sentiment Trust)
-        let baseMargin = 30.0;
-        let logImpact = (log - 1) * 5; 
-        let compImpact = (comp / 100) * 8 * sentiment;
-        
-        let finalMargin = baseMargin - logImpact - compImpact;
-        
-        const resEl = document.getElementById('result');
-        resEl.innerText = "Projected Margin: " + finalMargin.toFixed(1) + "%";
-        resEl.style.color = finalMargin < 20 ? "#b32525" : "#27ae60";
-    }
-</script>
 
 </body>
 </html>
