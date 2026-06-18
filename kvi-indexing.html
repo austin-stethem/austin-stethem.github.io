@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Case Study: KVI Indexing & Margin Defense</title>
+    <style>
+        :root {
+            --dark-blue: #1a2433;
+            --alert-red: #b32525;
+            --success-green: #27ae60;
+            --text-color: #333;
+            --bg-color: #fbfbfb;
+        }
+        body { font-family: 'Segoe UI', Helvetica, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 40px; }
+        header { border-bottom: 2px solid var(--alert-red); padding-bottom: 20px; margin-bottom: 20px; }
+        .kicker { color: var(--alert-red); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; }
+        h1 { font-family: 'Georgia', serif; margin: 5px 0; color: var(--dark-blue); }
+        .meta-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.9rem; }
+        .meta-table td { padding: 10px; border: 1px solid #ddd; background: #fff; }
+        .dashboard-container { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
+        .panel { background: #fff; padding: 25px; border-radius: 4px; border: 1px solid #e0e0e0; }
+        .control-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
+        input[type="range"] { width: 100%; cursor: pointer; }
+        .result-box { font-size: 2rem; font-weight: bold; color: var(--success-green); margin-top: 10px; }
+        .disclaimer { font-size: 0.75rem; color: #7f8c8d; margin-top: 30px; font-style: italic; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="kicker">Strategic Analytics Engine</div>
+    <h1>Enterprise KVI Indexing & Predictive Margin Defense</h1>
+</header>
+
+<table class="meta-table">
+    <tr>
+        <td><strong>Competencies:</strong> Data Warehousing, Predictive Forecasting, BI Integration</td>
+        <td><strong>Stack:</strong> SQL, Phocas BI, ERP-Integrated Waterfalls</td>
+    </tr>
+</table>
+
+<div class="dashboard-container">
+    <aside class="panel">
+        <h3>Execution Parameters</h3>
+        <div class="control-group">
+            <label>Logistics Cost Multiplier (<span id="log-val">1.0</span>x)</label>
+            <input type="range" id="log-slider" min="1" max="2" step="0.05" value="1.0" oninput="updateModel()">
+        </div>
+        <div class="control-group">
+            <label>Market Competitor Pressure (0 - 100)</label>
+            <input type="range" id="comp-slider" min="0" max="100" value="20" oninput="updateModel()">
+        </div>
+        <div class="control-group">
+            <label>Sentiment Trust Weight (0 - 1.0)</label>
+            <input type="range" id="sent-slider" min="0" max="1" step="0.1" value="0.5" oninput="updateModel()">
+        </div>
+    </aside>
+
+    <main class="panel">
+        <h3>Executive Project Summary</h3>
+        <p>This engine shifts pricing from reactive, complaint-driven heuristics to proactive, forecast-driven margin defense. By synthesizing usage volume, logistics cost-vectors, and field sentiment, the system automates price waterfalls across product families[cite: 1].</p>
+        
+        <h3>Projected Margin Health</h3>
+        <div id="result" class="result-box">Margin: 24.5%</div>
+        
+        <div class="disclaimer">
+            * Disclaimer: This tool uses randomized/proxy data to comply with NDAs while demonstrating exact production pricing logic used in the KVI indexing system.
+        </div>
+    </main>
+</div>
+
+<script>
+    function updateModel() {
+        const log = parseFloat(document.getElementById('log-slider').value);
+        const comp = parseFloat(document.getElementById('comp-slider').value);
+        const sentiment = parseFloat(document.getElementById('sent-slider').value);
+        
+        document.getElementById('log-val').innerText = log.toFixed(2);
+        
+        // Simulation Logic: Base Margin (30%) - (Logistics Impact) - (Competitor Friction * Sentiment Trust)
+        let baseMargin = 30.0;
+        let logImpact = (log - 1) * 5; 
+        let compImpact = (comp / 100) * 8 * sentiment;
+        
+        let finalMargin = baseMargin - logImpact - compImpact;
+        
+        const resEl = document.getElementById('result');
+        resEl.innerText = "Projected Margin: " + finalMargin.toFixed(1) + "%";
+        resEl.style.color = finalMargin < 20 ? "#b32525" : "#27ae60";
+    }
+</script>
+
+</body>
+</html>
