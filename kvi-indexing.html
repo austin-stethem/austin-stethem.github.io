@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,30 +21,21 @@
             padding: 40px 20px;
             background-color: var(--bg-color);
         }
-        header {
-            border-bottom: 2px solid var(--alert-red);
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-        }
-        .kicker {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: var(--alert-red);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-        h1 {
-            font-family: 'Georgia', serif;
-            color: var(--dark-slate-blue);
-            font-size: 2.2rem;
-            margin: 0 0 10px 0;
-            line-height: 1.2;
-        }
-        .principal {
-            font-size: 1rem;
-            color: #555;
-        }
+        
+        /* PDF HEADER STYLING */
+        .doc-header { width: 100%; border-bottom: 2px solid #1a2433; padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: #b32525; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
+        .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: #1a2433; margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        
+        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; }
+        .meta-cell { vertical-align: top; padding: 0 15px; font-size: 9pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
+        .meta-cell:last-child { border-right: none; }
+        .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .meta-value { color: #1e293b; font-weight: 500; }
+        
+        .nda-note { border-left: 4px solid #b32525; background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
+
+        /* Document Body Styling */
         h2 {
             font-family: 'Georgia', serif;
             color: var(--dark-slate-blue);
@@ -52,32 +44,12 @@
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
         }
-        .meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .meta-box {
-            background: #fff;
-            padding: 20px;
-            border-left: 4px solid var(--dark-slate-blue);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .meta-title {
-            font-weight: bold;
-            color: var(--dark-slate-blue);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            display: block;
-            margin-bottom: 8px;
-        }
         p {
             text-align: justify;
             margin-bottom: 15px;
         }
-        /* Visual Aid Table Styling */
-        table {
+        
+        table.data-table {
             width: 100%;
             border-collapse: collapse;
             margin: 30px 0;
@@ -86,7 +58,7 @@
             border-radius: 4px;
             overflow: hidden;
         }
-        th {
+        table.data-table th {
             background-color: var(--dark-slate-blue);
             color: #fff;
             padding: 15px;
@@ -96,20 +68,20 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        td {
+        table.data-table td {
             border-bottom: 1px solid #eee;
             padding: 15px;
             vertical-align: top;
             font-size: 0.95rem;
             border-right: 1px solid #eee;
         }
-        td:last-child {
+        table.data-table td:last-child {
             border-right: none;
         }
-        tr:last-child td {
+        table.data-table tr:last-child td {
             border-bottom: none;
         }
-        tr:nth-child(even) { background-color: #fdfdfd; }
+        table.data-table tr:nth-child(even) { background-color: #fdfdfd; }
         
         .validation-box {
             background: #eef7f2;
@@ -135,21 +107,30 @@
 </head>
 <body>
 
-    <header>
-        <div class="kicker">Systems Architecture & Analytics Portfolio Case Study</div>
-        <h1>Enterprise KVI Indexing & Predictive Margin Defense</h1>
-        <div class="principal"><strong>Principal Engineer:</strong> Austin Sonny Stethem | Pricing & MDM Analyst</div>
-    </header>
+    <div class="doc-header">
+        <div class="doc-tagline">Systems Architecture & Analytics Portfolio Case Study</div>
+        <div class="doc-title">Enterprise KVI Indexing & Predictive Margin Defense</div>
+    </div>
 
-    <div class="meta-grid">
-        <div class="meta-box">
-            <span class="meta-title">Core Competencies</span>
-            Data Warehousing, Cross-Functional Strategy, Predictive Forecasting, BI Integration
-        </div>
-        <div class="meta-box">
-            <span class="meta-title">Technical Stack</span>
-            SQL, Phocas BI, ERP-Integrated Waterfalls, Meta-Data Modeling
-        </div>
+    <table class="meta-table">
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Data Warehousing, Cross-Functional Strategy, Predictive Forecasting, BI Integration</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Technical Stack</span>
+                <span class="meta-value">SQL, Phocas BI, ERP-Integrated Waterfalls, Meta-Data Modeling</span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="nda-note">
+        * Disclaimer: This case study utilizes proprietary production logic for demonstration purposes. It uses randomized/proxy data to comply with NDAs while demonstrating exact production pricing logic.
     </div>
 
     <h2>1. Executive Project Summary & Business Context</h2>
@@ -167,7 +148,7 @@
     <h2>4. Proactive Forecasting & Phocas BI Integration</h2>
     <p>The shift from reactive to proactive management is facilitated by layering these filters within Phocas BI. We no longer wait for a customer complaint to signal a pricing error.</p>
 
-    <table>
+    <table class="data-table">
         <thead>
             <tr>
                 <th>Volatility Trigger</th>
