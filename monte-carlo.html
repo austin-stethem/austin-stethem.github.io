@@ -2,76 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>P-Tier Volume Stratification & KVI Margin Defense</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compounding Waterfall & Profit Reconciliation - Austin Sonny Stethem</title>
     <style>
-        /* CORE AESTHETIC */
-        body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 10.5in; margin: 0 auto; padding: 40px; background-color: #ffffff; }
-        h1, h2 { font-family: 'Georgia', serif; color: #1a2433; font-weight: normal; }
-        h1 { font-size: 26pt; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 5px; }
-        h2 { font-size: 18pt; margin-top: 35px; margin-bottom: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
-        p { color: #334155; margin-bottom: 15px; text-align: justify; }
+        :root {
+            --dark-slate-blue: #1a2433;
+            --alert-red: #b32525;
+            --success-green: #27ae60;
+            --bg-color: #fbfbfb;
+        }
+        body {
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            max-width: 950px; /* Slightly widened to accommodate the dashboard cleanly */
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+        }
         
-        .kicker { color: #b32525; font-weight: bold; font-size: 9pt; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
-        .author-title { font-size: 12pt; color: #475569; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;}
-        .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 30px; color: #64748b; padding: 12px; border-left: 4px solid #b32525; background-color: #f1f5f9; }
+        /* PDF HEADER STYLING */
+        .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
+        .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        
+        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
+        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
+        .meta-cell:last-child { border-right: none; }
+        .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .meta-value { color: #1e293b; font-weight: 500; }
+        
+        .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
 
-        /* DASHBOARD LAYOUT */
+        /* Document Body Styling */
+        h2 { font-family: 'Georgia', serif; color: var(--dark-slate-blue); font-size: 1.4rem; margin-top: 40px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        p { text-align: justify; margin-bottom: 15px; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #333; padding-left: 25px;}
+        li { margin-bottom: 8px; }
+
+        /* DASHBOARD INTEGRATION */
         .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
-        .sim-sidebar { width: 320px; flex-shrink: 0; background: #1a2433; color: white; padding: 25px; }
+        .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; }
         .sim-main { flex: 1; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
 
         .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
         
         .control-group { margin-bottom: 25px; }
         .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
-        .val-readout { color: #b32525; font-family: monospace; font-size: 11pt; font-weight: bold;}
-        input[type="range"] { width: 100%; cursor: pointer; accent-color: #b32525; }
+        .val-readout { color: var(--alert-red); font-family: monospace; font-size: 11pt; font-weight: bold;}
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--alert-red); }
 
-        .btn-run { background: #b32525; color: white; border: none; padding: 12px; width: 100%; font-family: 'Segoe UI'; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px; letter-spacing: 1px; transition: background 0.2s;}
+        .btn-run { background: var(--alert-red); color: white; border: none; padding: 12px; width: 100%; font-family: 'Segoe UI'; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px; letter-spacing: 1px; transition: background 0.2s;}
         .btn-run:hover { background: #8e1c1c; }
         .btn-secondary { background: #475569; margin-bottom: 20px; }
         .btn-secondary:hover { background: #334155; }
 
-        /* TABLES & CARDS */
-        .p-tier-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; background: white; border: 1px solid #e2e8f0; margin-bottom: 20px;}
-        .p-tier-table th { background: #f1f5f9; color: #1a2433; padding: 12px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #cbd5e1;}
-        .p-tier-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155; font-family: monospace; font-size: 10.5pt;}
+        /* DATA TABLES */
+        table.data-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden; }
+        table.data-table th { background-color: var(--dark-slate-blue); color: #fff; padding: 12px; text-align: left; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        table.data-table td { border-bottom: 1px solid #eee; padding: 12px; vertical-align: top; font-size: 0.95rem; border-right: 1px solid #eee; font-family: monospace;}
+        table.data-table td:last-child { border-right: none; }
+        table.data-table tr:last-child td { border-bottom: none; }
+        table.data-table tr:nth-child(even) { background-color: #fdfdfd; }
         .highlight-row { background-color: #e0f2fe !important; border-left: 4px solid #0369a1; font-weight: bold;}
         .highlight-row td { color: #0369a1 !important; }
 
+        /* KPI CARDS */
         .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
-        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 20px; text-align: center; border-radius: 4px; border-top: 4px solid #1a2433; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 20px; text-align: center; border-radius: 4px; border-top: 4px solid var(--dark-slate-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .kpi-card-wide { grid-column: span 3; border-top: 4px solid #0369a1; text-align: left; padding: 20px; background: #f0f9ff;}
         .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-        .kpi-value { font-size: 20pt; font-family: monospace; font-weight: bold; color: #1a2433; }
+        .kpi-value { font-size: 20pt; font-family: monospace; font-weight: bold; color: var(--dark-slate-blue); }
         
-        /* Dynamic Colors */
-        .status-safe { color: #27ae60 !important; border-top-color: #27ae60 !important; }
+        .status-safe { color: var(--success-green) !important; border-top-color: var(--success-green) !important; }
         .status-warn { color: #e67e22 !important; border-top-color: #e67e22 !important; }
-        .status-critical { color: #b32525 !important; border-top-color: #b32525 !important; }
+        .status-critical { color: var(--alert-red) !important; border-top-color: var(--alert-red) !important; }
         
-        .sku-header { display: flex; justify-content: space-between; align-items: center; background: #1a2433; color: white; padding: 15px 20px; font-weight: bold; font-size: 11pt; border-radius: 4px 4px 0 0;}
-        .sku-badge { background: #b32525; padding: 4px 10px; border-radius: 4px; font-size: 9pt; font-family: monospace;}
+        .sku-header { display: flex; justify-content: space-between; align-items: center; background: var(--dark-slate-blue); color: white; padding: 15px 20px; font-weight: bold; font-size: 11pt; border-radius: 4px 4px 0 0;}
+        .sku-badge { background: var(--alert-red); padding: 4px 10px; border-radius: 4px; font-size: 9pt; font-family: monospace;}
     </style>
 </head>
 <body>
 
-    <div class="kicker">Enterprise Pricing Architecture</div>
-    <h1>P-Tier Volume Stratification & KVI Margin Defense</h1>
-    <div class="author-title"><strong>Austin Sonny Stethem</strong> | Principal Engineer, Pricing & MDM Analyst</div>
-
-    <div class="disclaimer">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary margin targets, and exact landed-cost arrays have been replaced with randomized proxies. The algorithmic logic—including the multi-echelon P-Tier stratification and Monte Carlo stochastic architecture—remains an exact reflection of the production environment.
+    <div class="doc-header">
+        <div class="doc-tagline">Systems Architecture & Analytics Portfolio Case Study</div>
+        <div class="doc-title">Compounding Waterfall & Profit Reconciliation Engine</div>
     </div>
 
-    <h2>1. The Problem: The Flaw of "Flat Margin" Pricing</h2>
-    <p>In complex B2B distribution, margin is an illusion if it isn't weighted by volume. A standard ERP system might show a healthy 45% margin on a SKU at the P1 (Retail) level. However, if 80% of the actual transaction volume is moving through P3 (Jobber) accounts at a 22% margin, any flat pricing adjustment creates massive enterprise risk—bleeding volume on highly sensitive anchor items while miscalculating true profitability.</p>
+    <table class="meta-table">
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">B2B P-Tier Stratification, Stochastic Reconciliation, Gross Margin Divisor Logic</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Technical Stack</span>
+                <span class="meta-value">JavaScript, ERP Waterfall Simulation, Predictive Risk Modeling</span>
+            </td>
+        </tr>
+    </table>
 
-    <h2>2. System Architecture: The P-Tier Break-Line Engine</h2>
-    <p>To eliminate this blindspot, I architected a Dynamic Weighted Indexing engine that acts as a closed-loop pricing system:</p>
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary ERP markup structures, and exact landed-cost arrays have been replaced with randomized proxies. The algorithmic logic—including the multi-echelon P-Tier stratification, strict Gross Margin divisor logic, and Monte Carlo stochastic architecture—remains an exact reflection of the production environment.
+    </div>
+
+    <h2>1. The Danger of Compounding Waterfalls</h2>
+    <p>In B2B distribution, pricing is rarely a flat markup from cost. It is a compounding chain: P4 is built on P10, P3 is built on P4, and so on. Furthermore, front-end retail tiers (P2 and P1) are constrained by rigid psychological rounding rules and hardcoded gross margin divisors. This creates a massive mathematical vulnerability: a sudden cost spike at the P10 level violently ripples through the chain, often destroying the margin at the specific tier where the actual Jobber customer volume sits.</p>
+
+    <h2>2. System Architecture: The Reconciliation Engine</h2>
     <ul>
-        <li><strong>Phase 1: Multi-Echelon Volume Stratification:</strong> The engine pulls 12-month rolling ERP data and scans the pricing waterfall (P1 List, P2 Cash, P3 Jobber, P4 Heavy Jobber). It identifies the exact "Break-Line"—the specific P-Tier where the majority of product volume is moving.</li>
-        <li><strong>Phase 2: Weighted KVI Identification:</strong> Once the Volume Break-Line is established, the engine calculates the True Weighted Margin. SKUs with heavy Jobber (P3/P4) concentrations are automatically flagged as highly elastic Known Value Items (KVIs) and assigned strict variance limiters.</li>
-        <li><strong>Phase 3: Stochastic Stress Testing:</strong> Before a price change is executed, the engine runs Monte Carlo risk permutations against the <em>Weighted Margin</em>, factoring in freight spikes and competitor deflation, ensuring our "P95 Worst-Case" floor is mathematically defended at the specific tier where the customer is actually buying.</li>
+        <li><strong>Phase 1: Waterfall Construction:</strong> The engine pulls base P10 cost and cascades the pricing through P4 (Heavy Jobber), P3 (Jobber), P2 (Cash), and P1 (List). It enforces strict programmatic rounding logic (forcing P2 to .99 or .x9) and locks P1 to a strict 41% Gross Margin divisor to accurately mirror ERP reality.</li>
+        <li><strong>Phase 2: Volume Break-Line Identification:</strong> It isolates the true B2B reality (where 95% of volume flows through P3/P4 Jobber accounts) and calculates projected annual profit based on that specific "Volume Break-Line."</li>
+        <li><strong>Phase 3: Stochastic Re-Indexing:</strong> The engine stress-tests the compounding chain against landed-cost volatility. It calculates the exact revenue gap caused by the disruption and issues a prescriptive, mathematically perfect divisor adjustment on the Jobber tier to ensure the Annual Target Profit goal is successfully met.</li>
     </ul>
 
     <!-- INTERACTIVE DASHBOARD SIMULATION -->
@@ -79,20 +125,19 @@
         <!-- SIDEBAR CONTROLS -->
         <div class="sim-sidebar">
             <div class="sidebar-header">Data Pipeline</div>
-            <button class="btn-run btn-secondary" onclick="generateSKU()">Load Random Proxy SKU</button>
+            <button class="btn-run btn-secondary" onclick="generateSKU()">Load Proxy SKU</button>
             
-            <div class="sidebar-header" style="margin-top: 30px;">Risk Parameters</div>
+            <div class="sidebar-header" style="margin-top: 30px;">Cost Stress Test</div>
             <div class="control-group">
-                <label><span>Freight Spike (%):</span> <span class="val-readout" id="val-freight">0%</span></label>
-                <input type="range" id="slider-freight" min="0" max="25" value="0" disabled>
+                <label><span>P10 Freight Spike:</span> <span class="val-readout" id="val-freight">+$0.00</span></label>
+                <input type="range" id="slider-freight" min="0" max="15" step="0.25" value="0" disabled>
             </div>
 
-            <div class="control-group">
-                <label><span>Comp. Deflation (%):</span> <span class="val-readout" id="val-comp">0%</span></label>
-                <input type="range" id="slider-comp" min="0" max="15" value="0" disabled>
+            <div style="font-size: 8.5pt; color: #94a3b8; font-style: italic; line-height: 1.4; margin-bottom: 20px;">
+                *Adjusting P10 cost triggers a ripple effect through the compounding waterfall, recalculating annual profit yields.
             </div>
 
-            <button class="btn-run" id="btn-monte-carlo" onclick="runSimulation()" disabled>Execute Monte Carlo</button>
+            <button class="btn-run" id="btn-monte-carlo" onclick="runSimulation()" disabled>Execute Reconciliation</button>
         </div>
 
         <!-- MAIN READOUT -->
@@ -100,36 +145,41 @@
             
             <div class="sku-header" id="sku-header">
                 <span id="sku-name">Awaiting Pipeline Input...</span>
-                <span class="sku-badge" id="sku-base-cost">Base Cost (P10): $0.00</span>
+                <span class="sku-badge" id="sku-metrics">Volume: 0 units | Target: $0</span>
             </div>
 
-            <table class="p-tier-table" id="tier-table">
+            <table class="data-table" id="tier-table">
                 <thead>
                     <tr>
-                        <th>Price Tier</th>
-                        <th>Target Customer</th>
+                        <th>Tier</th>
+                        <th>Logic Chain</th>
                         <th>Simulated Price</th>
-                        <th>Tier Margin</th>
+                        <th>Margin %</th>
                         <th>Volume Share</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="5" style="text-align: center; color: #94a3b8; font-family: 'Segoe UI'; font-style: italic;">Click 'Load Random Proxy SKU' to initialize ERP waterfall array...</td></tr>
+                    <tr><td colspan="5" style="text-align: center; color: #94a3b8; font-family: 'Segoe UI'; font-style: italic;">Click 'Load Proxy SKU' to initialize ERP waterfall array...</td></tr>
                 </tbody>
             </table>
 
             <div class="kpi-grid">
-                <div class="kpi-card" id="card-weighted">
-                    <div class="kpi-title">True Weighted Margin</div>
-                    <div class="kpi-value" id="out-weighted">--%</div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Annual Target Goal</div>
+                    <div class="kpi-value" id="out-target" style="color: #0369a1;">$--</div>
                 </div>
-                <div class="kpi-card" id="card-p95">
-                    <div class="kpi-title">P95 Floor (Stress Test)</div>
-                    <div class="kpi-value" id="out-p95">--%</div>
+                <div class="kpi-card" id="card-projected">
+                    <div class="kpi-title">Projected Yield</div>
+                    <div class="kpi-value" id="out-projected">$--</div>
                 </div>
-                <div class="kpi-card" id="card-action">
-                    <div class="kpi-title">System Action Protocol</div>
-                    <div class="kpi-value" id="out-action" style="font-size: 11pt; padding-top: 10px;">Awaiting Inputs</div>
+                <div class="kpi-card" id="card-gap">
+                    <div class="kpi-title">Profit Gap</div>
+                    <div class="kpi-value" id="out-gap">$--</div>
+                </div>
+                
+                <div class="kpi-card-wide kpi-card" id="card-action">
+                    <div class="kpi-title" style="color: #0369a1;">Prescriptive Action Protocol</div>
+                    <div class="kpi-value" id="out-action" style="font-size: 13pt; font-family: 'Segoe UI'; font-weight: 600; margin-top: 5px;">Awaiting Stochastic Inputs...</div>
                 </div>
             </div>
         </div>
@@ -137,130 +187,129 @@
 
     <script>
         const sliderFreight = document.getElementById('slider-freight');
-        const sliderComp = document.getElementById('slider-comp');
         const valFreight = document.getElementById('val-freight');
-        const valComp = document.getElementById('val-comp');
         const btnMonteCarlo = document.getElementById('btn-monte-carlo');
 
-        sliderFreight.addEventListener('input', (e) => { valFreight.innerText = `+${e.target.value}%`; runSimulation(); });
-        sliderComp.addEventListener('input', (e) => { valComp.innerText = `-${e.target.value}%`; runSimulation(); });
+        sliderFreight.addEventListener('input', (e) => { valFreight.innerText = `+$${parseFloat(e.target.value).toFixed(2)}`; runSimulation(); });
 
         let currentSKU = null;
 
         const proxyProducts = [
-            { name: "BRK-992 Heavy Duty Rotor", baseCost: 45.00 },
-            { name: "FLT-104 Premium Oil Filter", baseCost: 4.50 },
-            { name: "ALT-77B Reman Alternator", baseCost: 115.00 },
-            { name: "CHM-55 Synthetic Brake Fluid", baseCost: 12.25 }
+            { name: "BRK-992 HD Rotor", baseCost: 45.00, volume: 8500, targetEBITDA: 135000 },
+            { name: "ALT-77B Reman Alternator", baseCost: 115.00, volume: 2200, targetEBITDA: 65000 },
+            { name: "FLT-104 Premium Filter", baseCost: 4.50, volume: 45000, targetEBITDA: 85000 }
         ];
 
         function generateSKU() {
-            // Enable sliders
             sliderFreight.disabled = false;
-            sliderComp.disabled = false;
             btnMonteCarlo.disabled = false;
             sliderFreight.value = 0;
-            sliderComp.value = 0;
-            valFreight.innerText = "0%";
-            valComp.innerText = "0%";
+            valFreight.innerText = "+$0.00";
 
-            // Pick random SKU
             const prod = proxyProducts[Math.floor(Math.random() * proxyProducts.length)];
             
-            // Randomize volume distribution (Ensuring Jobber accounts usually hold the weight)
-            let vol1 = Math.floor(Math.random() * 10) + 5;   // P1: 5-15%
-            let vol2 = Math.floor(Math.random() * 15) + 10;  // P2: 10-25%
-            let vol4 = Math.floor(Math.random() * 20) + 10;  // P4: 10-30%
-            let vol3 = 100 - (vol1 + vol2 + vol4);           // P3: Remainder (Usually the largest)
+            // Fixed distribution reflecting true B2B reality: 95% Jobber (P3/P4), 0% List.
+            const volumes = [0, 5, 80, 15]; // P1, P2, P3, P4
+            const breakIndex = 2; // P3 Break-Line
 
-            const volumes = [vol1, vol2, vol3, vol4];
-            const maxVolIndex = volumes.indexOf(Math.max(...volumes)); // Find the Break-Line
-
-            // Calculate Waterfall Prices & Margins
-            const tiers = [
-                { id: "P1", desc: "List / Retail", markup: 1.80, vol: vol1 },
-                { id: "P2", desc: "Cash / Small Jobber", markup: 1.50, vol: vol2 },
-                { id: "P3", desc: "Core Jobber", markup: 1.35, vol: vol3 },
-                { id: "P4", desc: "Favorable / Heavy", markup: 1.20, vol: vol4 }
-            ];
-
-            let weightedMarginAccumulator = 0;
-            let tableHTML = "";
-
-            tiers.forEach((t, index) => {
-                let price = prod.baseCost * t.markup;
-                let margin = ((price - prod.baseCost) / price) * 100;
-                weightedMarginAccumulator += margin * (t.vol / 100);
-
-                let isBreakLine = (index === maxVolIndex);
-                let rowClass = isBreakLine ? "highlight-row" : "";
-                let badge = isBreakLine ? ` <span style="background:#0369a1; color:white; padding:2px 6px; font-size:7pt; border-radius:3px; margin-left:8px; font-family:'Segoe UI';">VOL BREAK-LINE</span>` : "";
-
-                tableHTML += `
-                <tr class="${rowClass}">
-                    <td><strong>${t.id}</strong></td>
-                    <td>${t.desc}${badge}</td>
-                    <td>$${price.toFixed(2)}</td>
-                    <td>${margin.toFixed(1)}%</td>
-                    <td>${t.vol}%</td>
-                </tr>`;
-            });
-
-            // Save to global state
             currentSKU = {
                 name: prod.name,
-                cost: prod.baseCost,
-                weightedMargin: weightedMarginAccumulator,
-                breakTier: tiers[maxVolIndex].id
+                cost_p10: prod.baseCost,
+                volume: prod.volume,
+                target: prod.targetEBITDA,
+                vols: volumes,
+                breakIndex: breakIndex,
             };
 
-            // Update UI
-            document.getElementById('sku-name').innerText = `SKU: ${currentSKU.name}`;
-            document.getElementById('sku-base-cost').innerText = `Base Cost (P10): $${currentSKU.cost.toFixed(2)}`;
-            document.querySelector('#tier-table tbody').innerHTML = tableHTML;
-            
-            document.getElementById('out-weighted').innerText = currentSKU.weightedMargin.toFixed(1) + "%";
-            
-            // Reset Risk UI
-            document.getElementById('out-p95').innerText = currentSKU.weightedMargin.toFixed(1) + "%";
-            document.getElementById('card-p95').className = "kpi-card status-safe";
-            document.getElementById('out-action').innerText = "BASELINE SECURE";
-            document.getElementById('out-action').className = "kpi-value status-safe";
+            document.getElementById('sku-name').innerText = `SKU: ${currentSKU.name} (Base P10: $${currentSKU.cost_p10.toFixed(2)})`;
+            document.getElementById('sku-metrics').innerText = `Annual Vol: ${currentSKU.volume.toLocaleString()} | Goal: $${currentSKU.target.toLocaleString()}`;
+            document.getElementById('out-target').innerText = `$${currentSKU.target.toLocaleString()}`;
+
+            runSimulation(); 
         }
 
         function runSimulation() {
             if (!currentSKU) return;
 
-            const fSpike = parseFloat(sliderFreight.value) / 100; 
-            const cDrop = parseFloat(sliderComp.value) / 100;     
+            const freightSpike = parseFloat(sliderFreight.value);
+            const new_p10 = currentSKU.cost_p10 + freightSpike;
 
-            // True Risk is calculated against the WEIGHTED margin, not the flat retail margin
-            const rawHit = (fSpike * 0.5) + (cDrop * 1.5); 
+            // ERP DIVISOR WATERFALL
+            const p4_divisor = 0.80; // 20% margin from P10 to P4
+            const p3_divisor = 0.85; // 15% margin from P4 to P3
+            const p2_divisor = 0.80; // 20% margin from P3 to P2
+            const p1_divisor = 0.59; // 41% margin from P2 to P1 (Hardcoded)
+
+            const price_p4 = new_p10 / p4_divisor;
+            const price_p3 = price_p4 / p3_divisor;
             
-            // P95 adds standard deviation volatility to the worst case
-            const volatilityRNG = Math.random() * (1.5 - 0.5) + 0.5; 
-            const p95Margin = currentSKU.weightedMargin - (rawHit * 100) - volatilityRNG; 
+            // Psychological Rounding specifically to the P2 tier
+            let raw_p2 = price_p3 / p2_divisor;
+            const price_p2 = raw_p2 > 14 ? Math.floor(raw_p2) + 0.99 : Math.floor(raw_p2 * 10) / 10 + 0.09;
 
-            const p95El = document.getElementById('out-p95');
-            p95El.innerText = p95Margin.toFixed(1) + "%";
+            // Strict 41% Margin Divisor for P1
+            const price_p1 = price_p2 / p1_divisor;
 
-            const cardP95 = document.getElementById('card-p95');
+            const prices = [price_p1, price_p2, price_p3, price_p4];
+            const labels = ["P1 (List)", "P2 (Cash)", "P3 (Jobber)", "P4 (Heavy)"];
+            const logicStr = ["Divisor: 0.59 (41%)", "Divisor: 0.80 + Rounding", "Divisor: 0.85", "Divisor: 0.80"];
+
+            let totalProjectedProfit = 0;
+            let tableHTML = "";
+
+            for (let i = 0; i < 4; i++) {
+                let marginAmount = prices[i] - new_p10;
+                let marginPct = (marginAmount / prices[i]) * 100;
+                let unitVol = currentSKU.volume * (currentSKU.vols[i] / 100);
+                
+                totalProjectedProfit += (marginAmount * unitVol);
+
+                let isBreak = (i === currentSKU.breakIndex);
+                let rowClass = isBreak ? "highlight-row" : "";
+                let badge = isBreak ? ` <span style="background:#0369a1; color:white; padding:2px 6px; font-size:7pt; border-radius:3px; margin-left:8px;">BREAK-LINE</span>` : "";
+
+                tableHTML += `
+                <tr class="${rowClass}">
+                    <td><strong>${labels[i]}</strong></td>
+                    <td>${logicStr[i]}</td>
+                    <td>$${prices[i].toFixed(2)}</td>
+                    <td>${marginPct.toFixed(1)}%</td>
+                    <td>${currentSKU.vols[i]}% ${badge}</td>
+                </tr>`;
+            }
+
+            document.querySelector('#tier-table tbody').innerHTML = tableHTML;
+            document.getElementById('out-projected').innerText = `$${Math.round(totalProjectedProfit).toLocaleString()}`;
+
+            const gap = currentSKU.target - totalProjectedProfit;
+            const gapEl = document.getElementById('out-gap');
             const actionEl = document.getElementById('out-action');
-            
-            cardP95.className = "kpi-card"; // reset
-            
-            if (p95Margin < 18.0) {
-                cardP95.classList.add("status-critical");
-                actionEl.innerText = `CRITICAL: ${currentSKU.breakTier} MARGIN COLLAPSE`;
-                actionEl.className = "kpi-value status-critical";
-            } else if (p95Margin < 22.0) {
-                cardP95.classList.add("status-warn");
-                actionEl.innerText = `WARNING: ADJUST ${currentSKU.breakTier} BRACKET`;
-                actionEl.className = "kpi-value status-warn";
+            const cardProj = document.getElementById('card-projected');
+            const cardAction = document.getElementById('card-action');
+
+            if (gap <= 0) {
+                gapEl.innerText = "+$" + Math.abs(Math.round(gap)).toLocaleString();
+                gapEl.style.color = "var(--success-green)";
+                cardProj.className = "kpi-card status-safe";
+                cardAction.style.borderTopColor = "var(--success-green)";
+                actionEl.innerText = `System Secure. Current divisor structure exceeds annual target by $${Math.abs(Math.round(gap)).toLocaleString()}. No Jobber indexing required.`;
             } else {
-                cardP95.classList.add("status-safe");
-                actionEl.innerText = "DEFENSE ACTIVE: SAFE";
-                actionEl.className = "kpi-value status-safe";
+                gapEl.innerText = "-$" + Math.round(gap).toLocaleString();
+                gapEl.style.color = "var(--alert-red)";
+                cardProj.className = "kpi-card status-critical";
+                cardAction.style.borderTopColor = "var(--alert-red)";
+
+                const breakLineVolume = currentSKU.volume * (currentSKU.vols[currentSKU.breakIndex] / 100);
+                const requiredIncreasePerUnit = gap / breakLineVolume;
+                
+                const target_P3_Price = price_p3 + requiredIncreasePerUnit;
+                const target_P3_Divisor = price_p4 / target_P3_Price; 
+                
+                const target_GM = (1 - target_P3_Divisor) * 100;
+                const current_GM = (1 - p3_divisor) * 100;
+                const marginDelta = target_GM - current_GM;
+
+                actionEl.innerText = `CRITICAL GAP. Decrease P3 Divisor to ${target_P3_Divisor.toFixed(3)} (Increasing P3 Gross Margin by +${marginDelta.toFixed(2)}%). This recaptures $${Math.round(gap).toLocaleString()} strictly from Jobber volume.`;
             }
         }
     </script>
