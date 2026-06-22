@@ -9,12 +9,37 @@
         .page-header { text-align: center; margin-bottom: 40px; }
         .page-header h1 { color: #1a2433; margin-bottom: 5px; }
         .page-header p { margin: 5px 0; color: #64748b; }
+        .nav-links { margin-top: 10px; }
+        .nav-links a { color: #b32525; font-weight: bold; text-decoration: none; margin: 0 10px; }
+        .nav-links a:hover { text-decoration: underline; }
+        
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
-        .card { background: #fff; border: 1px solid #e2e8f0; padding: 20px; border-radius: 4px; display: flex; flex-direction: column; }
+        
+        .card { 
+            background: #fff; 
+            border: 1px solid #e2e8f0; 
+            padding: 20px; 
+            border-radius: 4px; 
+            display: flex; 
+            flex-direction: column;
+            transition: border 0.3s ease-in-out;
+        }
+        
+        .card:hover { border: 1px solid #b32525; }
+        
         .card h3 { margin-top: 0; color: #1a2433; font-size: 1.1rem; }
         .tech { font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
         .desc { font-size: 0.9rem; margin-bottom: auto; }
-        .btn { display: inline-block; margin-top: 15px; color: #b32525; font-weight: bold; text-decoration: none; font-size: 0.9rem; }
+        
+        .btn { 
+            display: block; 
+            margin-top: 15px; 
+            color: #b32525; 
+            font-weight: bold; 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            text-align: center;
+        }
         .btn:hover { text-decoration: underline; }
     </style>
 </head>
@@ -23,7 +48,11 @@
     <div class="page-header">
         <h1>Austin Stethem</h1>
         <p>Strategic Pricing & Data Analyst | 712-299-5267 | austinstethem1976@gmail.com</p>
-        <hr style="width: 50%; border: 0; border-top: 1px solid #ccc; margin: 20px auto;">
+        <div class="nav-links">
+            <a href=https://www.linkedin.com/in/austin-stethem-4503b4197/ target="_blank">LinkedIn</a>
+            <a href=Stethem_Austin_Resume.pdf target="_blank">View Resume (PDF)</a>
+        </div>
+        <hr style="width: 50%; border: 0; border-top: 1px solid #ccc; margin: 25px auto;">
         <h2>Systems Architecture & Analytics Portfolio</h2>
         <p>Pricing Engine Architecture, Predictive Modeling, and Operational Resilience.</p>
     </div>
