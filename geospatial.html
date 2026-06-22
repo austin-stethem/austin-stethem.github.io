@@ -1,94 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Geospatial Strategy Portfolio Case Study</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<style>
-    body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 10.5in; margin: 0 auto; padding: 40px; background-color: #ffffff; }
-    .header-container { text-align: center; margin-bottom: 40px; }
-    .kicker { color: #b32525; font-weight: bold; font-size: 8.5pt; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
-    h1 { font-family: 'Georgia', serif; font-size: 28pt; color: #1a2433; margin: 0; font-weight: normal; line-height: 1.2; letter-spacing: -0.5px;}
-    .main-divider { border: none; border-top: 3px solid #1a2433; margin-bottom: 30px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictive VIO Market Capture - Austin Sonny Stethem</title>
     
-    .metadata-flex { display: flex !important; justify-content: center !important; gap: 50px !important; border-bottom: 1px solid #e2e8f0; padding-bottom: 25px; margin-bottom: 35px; }
-    .meta-col { text-align: center !important; max-width: 250px; }
-    .meta-header { font-size: 8pt; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    .meta-content { font-size: 10pt; margin: 0; line-height: 1.5; color: #1e293b; }
-    
-    h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: #1a2433; margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-    h3 { font-family: 'Segoe UI', sans-serif; font-size: 12pt; font-weight: 700; color: #1a2433; margin-top: 25px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
-    p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
-    ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
-    li { margin-bottom: 8px; }
-    
-    .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 30px; color: #64748b; padding: 15px; border-left: 4px solid #b32525; background-color: #f8fafc; }
-    
-    /* DASHBOARD LAYOUT */
-    .sim-container { display: flex; height: 850px; border: 1px solid #cbd5e1; background: #fff; overflow: hidden; margin-top: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
-    .sim-sidebar { width: 300px; flex-shrink: 0; background: #f8fafc; border-right: 1px solid #cbd5e1; padding: 20px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; }
-    .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; color: #1e293b; }
-    .sidebar-controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.2; }
-    .sidebar-controls input[type="range"] { width: 100%; cursor: pointer; margin-top: 5px; }
-    
-    /* NEW LOGIC KEY SECTION */
-    .logic-key { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-top: 15px; font-size: 8.5pt; color: #475569; line-height: 1.4; }
-    .logic-key h4 { margin: 0 0 8px 0; font-size: 8.5pt; color: #1e293b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;}
-    .logic-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
-    
-    .sim-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-    
-    .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; background: #fff; }
-    .raw-data-table th { background: #f1f5f9; color: #1e293b; padding: 10px; text-align: left; border-bottom: 2px solid #cbd5e1; position: sticky; top: 0; text-transform: uppercase; letter-spacing: 0.5px; }
-    .raw-data-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; color: #334155; }
-    .table-wrapper { max-height: 180px; overflow-y: auto; margin-bottom: 15px; border-bottom: 1px solid #cbd5e1; }
-    
-    /* Dynamic Badges & Colors */
-    .threat-critical { color: #b32525; font-weight: 700; }
-    .threat-elevated { color: #e67e22; font-weight: 700; }
-    .threat-stable { color: #27ae60; font-weight: 700; }
-    
-    .badge-urban { background-color: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
-    .badge-suburban { background-color: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
-    .badge-rural { background-color: #dcfce7; color: #15803d; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    #map-container { height: 420px; min-height: 420px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #cbd5e1; background-color: #eaeaea; }
-    
-    .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
-    .strategy-table th { background: #1a2433; color: white; padding: 14px; text-align: left; font-size: 9pt; border: 1px solid #1a2433; text-transform: uppercase; letter-spacing: 0.5px;}
-    .strategy-table td { padding: 14px; border: 1px solid #e2e8f0; font-size: 9.5pt; vertical-align: top; color: #334155;}
-    
-    .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 40px; font-style: italic; font-weight: 600; color: #1a2433; font-size: 10pt; text-align: justify; }
+    <style>
+        /* STANDARDIZED PORTFOLIO ROOT VARIABLES */
+        :root {
+            --dark-slate-blue: #1a2433;
+            --alert-red: #b32525;
+            --success-green: #27ae60;
+            --bg-color: #fbfbfb;
+        }
 
-    .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; color: #0f172a; }
-</style>
+        body {
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #333;
+            font-size: 10.5pt;
+            line-height: 1.6;
+            max-width: 10.5in; /* Kept wider for map dashboard layout */
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+        }
 
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        /* PDF HEADER STYLING */
+        .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
+        .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        
+        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
+        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
+        .meta-cell:last-child { border-right: none; }
+        .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .meta-value { color: #1e293b; font-weight: 500; }
+        
+        .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        /* Typography */
+        h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Segoe UI', sans-serif; font-size: 12pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+        p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
+        li { margin-bottom: 8px; }
+
+        /* DASHBOARD SPECIFIC LAYOUT */
+        .sim-container { display: flex; height: 850px; border: 1px solid #cbd5e1; background: #fff; overflow: hidden; margin-top: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+        .sim-sidebar { width: 300px; flex-shrink: 0; background: #f8fafc; border-right: 1px solid #cbd5e1; padding: 20px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; }
+        .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; color: #1e293b; }
+        .sidebar-controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.2; }
+        .sidebar-controls input[type="range"] { width: 100%; cursor: pointer; margin-top: 5px; }
+        
+        .logic-key { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-top: 15px; font-size: 8.5pt; color: #475569; line-height: 1.4; }
+        .logic-key h4 { margin: 0 0 8px 0; font-size: 8.5pt; color: #1e293b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;}
+        .logic-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        
+        .sim-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+        
+        #map-container { height: 420px; min-height: 420px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #cbd5e1; background-color: #eaeaea; }
+
+        .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; background: #fff; }
+        .raw-data-table th { background: #f1f5f9; color: #1e293b; padding: 10px; text-align: left; border-bottom: 2px solid #cbd5e1; position: sticky; top: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .raw-data-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; color: #334155; }
+        .table-wrapper { max-height: 180px; overflow-y: auto; margin-bottom: 15px; border-bottom: 1px solid #cbd5e1; }
+        
+        /* Dynamic Badges & Colors */
+        .threat-critical { color: var(--alert-red); font-weight: 700; }
+        .threat-elevated { color: #e67e22; font-weight: 700; }
+        .threat-stable { color: var(--success-green); font-weight: 700; }
+        
+        .badge-urban { background-color: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
+        .badge-suburban { background-color: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
+        .badge-rural { background-color: #dcfce7; color: #15803d; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
+
+        .strategy-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
+        .strategy-table th { background: var(--dark-slate-blue); color: white; padding: 14px; text-align: left; font-size: 9pt; border: 1px solid var(--dark-slate-blue); text-transform: uppercase; letter-spacing: 0.5px;}
+        .strategy-table td { padding: 14px; border: 1px solid #e2e8f0; font-size: 9.5pt; vertical-align: top; color: #334155;}
+        
+        .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 40px; font-style: italic; font-weight: 600; color: var(--dark-slate-blue); font-size: 10pt; text-align: justify; }
+
+        .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; color: #0f172a; }
+    </style>
 </head>
 <body>
-    <div class="header-container">
-        <div class="kicker">GEOSPATIAL INTELLIGENCE & DATA SCIENCE</div>
-        <h1>Predictive VIO Market Capture & Topological Threat Modeling</h1>
-    </div>
-    
-    <div class="metadata-flex">
-        <div class="meta-col">
-            <div class="meta-header">PRINCIPAL ENGINEER</div>
-            <p class="meta-content"><strong>Austin Sonny Stethem</strong><br>Pricing & MDM Analyst</p>
-        </div>
-        <div class="meta-col">
-            <div class="meta-header">CORE COMPETENCIES</div>
-            <p class="meta-content">Spatial Algorithms, Topological Risk, ACES/PIES/VIO Data Joins, Market Penetration</p>
-        </div>
-        <div class="meta-col">
-            <div class="meta-header">TECHNICAL STACK</div>
-            <p class="meta-content">JavaScript, Maps API, Experian VIO Datasets, Haversine Distance Matrices</p>
-        </div>
+
+    <div class="doc-header">
+        <div class="doc-tagline">Geospatial Intelligence & Data Science</div>
+        <div class="doc-title">Predictive VIO Market Capture & Topological Threat Modeling</div>
     </div>
 
-    <div class="disclaimer">
+    <table class="meta-table">
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Spatial Algorithms, Topological Risk, ACES/PIES/VIO Data Joins, Market Penetration</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Technical Stack</span>
+                <span class="meta-value">JavaScript, Maps API, Experian VIO Datasets, Haversine Distance Matrices</span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="nda-note">
         <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live branch coordinates, localized POS revenue figures, and proprietary Experian VIO datasets have been replaced with randomized proxies across a generalized regional map. The algorithmic logic remains a reflection of the production environment, <em>with the public caveat that the live enterprise engine utilizes API-driven Isochrone (drive-time) polygons rather than Haversine radials, and zip-code weighted VIO density rather than flat regional percentages.</em>
     </div>
 
