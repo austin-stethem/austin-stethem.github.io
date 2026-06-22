@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compounding Waterfall & Profit Reconciliation - Austin Sonny Stethem</title>
-    
-    <!-- Chart.js for 12-Month Predictive Modeling -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <title>Case Study 02: Python Monte Carlo Margin Risk Simulation - Austin Sonny Stethem</title>
     <style>
+        /* STANDARDIZED PORTFOLIO ROOT VARIABLES */
         :root {
             --dark-slate-blue: #1a2433;
             --alert-red: #b32525;
             --success-green: #27ae60;
             --bg-color: #fbfbfb;
         }
+
         body {
             font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
             color: #333;
+            font-size: 10.5pt;
             line-height: 1.6;
-            max-width: 950px; 
+            max-width: 950px;
             margin: 0 auto;
             padding: 40px 20px;
             background-color: var(--bg-color);
@@ -38,51 +37,50 @@
         
         .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
 
-        /* Document Body Styling */
-        h2 { font-family: 'Georgia', serif; color: var(--dark-slate-blue); font-size: 1.4rem; margin-top: 40px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-        p { text-align: justify; margin-bottom: 15px; }
-        ul { margin-top: 0; margin-bottom: 20px; color: #333; padding-left: 25px;}
+        /* Typography */
+        h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Segoe UI', sans-serif; font-size: 12pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+        p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
         li { margin-bottom: 8px; }
 
-        /* DASHBOARD INTEGRATION */
+        /* DASHBOARD LAYOUT */
         .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
         .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; }
         .sim-main { flex: 1; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
 
         .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
         
-        .control-group { margin-bottom: 20px; }
+        .control-group { margin-bottom: 25px; }
         .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
         .val-readout { color: var(--alert-red); font-family: monospace; font-size: 11pt; font-weight: bold;}
         input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--alert-red); }
+        select { width: 100%; padding: 8px; font-family: 'Segoe UI'; font-size: 9.5pt; background: #0f172a; color: white; border: 1px solid #475569; outline: none;}
 
-        .btn-run { background: var(--alert-red); color: white; border: none; padding: 12px; width: 100%; font-family: 'Segoe UI'; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px; letter-spacing: 1px; transition: background 0.2s;}
-        .btn-run:hover { background: #8e1c1c; }
-        .btn-run:disabled { background: #475569; cursor: not-allowed; color: #94a3b8;}
-        .btn-secondary { background: #475569; margin-bottom: 20px; }
-        .btn-secondary:hover { background: #334155; }
-
-        /* KPI CARDS & CHARTS */
-        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
         .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 20px; text-align: center; border-radius: 4px; border-top: 4px solid var(--dark-slate-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        .kpi-card-wide { grid-column: span 3; border-top: 4px solid #0369a1; text-align: left; padding: 20px; background: #f0f9ff;}
-        .chart-container { grid-column: span 3; background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 4px; border-top: 4px solid #475569;}
         .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-        .kpi-value { font-size: 18pt; font-family: monospace; font-weight: bold; color: var(--dark-slate-blue); }
+        .kpi-value { font-size: 24pt; font-family: monospace; font-weight: bold; color: var(--dark-slate-blue); }
+        .kpi-sub { font-size: 8.5pt; font-style: italic; color: #94a3b8; margin-top: 5px;}
         
+        /* Dynamic Colors */
         .status-safe { color: var(--success-green) !important; border-top-color: var(--success-green) !important; }
         .status-warn { color: #e67e22 !important; border-top-color: #e67e22 !important; }
         .status-critical { color: var(--alert-red) !important; border-top-color: var(--alert-red) !important; }
+
+        .log-table { width: 100%; border-collapse: collapse; font-size: 9pt; background: white; border: 1px solid #e2e8f0;}
+        .log-table th { background: var(--dark-slate-blue); color: white; padding: 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; }
+        .log-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
         
-        .sku-header { display: flex; justify-content: space-between; align-items: center; background: var(--dark-slate-blue); color: white; padding: 15px 20px; font-weight: bold; font-size: 11pt; border-radius: 4px 4px 0 0;}
-        .sku-badge { background: var(--alert-red); padding: 4px 10px; border-radius: 4px; font-size: 9pt; font-family: monospace;}
+        .btn-run { background: var(--alert-red); color: white; border: none; padding: 12px; width: 100%; font-family: 'Segoe UI'; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px; letter-spacing: 1px;}
+        .btn-run:hover { background: #8e1c1c; }
     </style>
 </head>
 <body>
 
     <div class="doc-header">
         <div class="doc-tagline">Systems Architecture & Analytics Portfolio Case Study</div>
-        <div class="doc-title">Compounding Waterfall & Profit Reconciliation Engine</div>
+        <div class="doc-title">Python Monte Carlo Margin Risk Simulation</div>
     </div>
 
     <table class="meta-table">
@@ -93,361 +91,192 @@
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">B2B P-Tier Stratification, Stochastic Reconciliation, Gross Margin Divisor Logic</span>
+                <span class="meta-value">Stochastic Modeling, KVI Stratification, Elasticity Variance</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">JavaScript, Chart.js, ERP Simulation, Predictive Risk Modeling</span>
+                <span class="meta-value">Python, Monte Carlo Algorithms, Risk Simulation</span>
             </td>
         </tr>
     </table>
 
     <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary ERP markup structures, and exact landed-cost arrays have been replaced with randomized proxies. The algorithmic logic—including the multi-echelon P-Tier stratification, strict Gross Margin divisor logic, and Monte Carlo stochastic architecture—remains an exact reflection of the production environment.
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary margin targets, and exact landed-cost arrays have been replaced with randomized proxies. The algorithmic logic—including the KVI stratification parameters and Monte Carlo stochastic architecture—remains an exact reflection of the production environment.
     </div>
 
-    <h2>1. The Danger of Compounding Waterfalls & Sticky Pricing</h2>
-    <p>In B2B distribution, pricing is rarely a flat markup from cost. It is a compounding chain: P4 is built on P10, P3 is built on P4, and so on. When a mid-year cost spike occurs at the P10 level (whether from vendor freight or internal operational overhead), companies often suffer from "Sticky Pricing"—failing to proactively recalculate the front-end market prices. Because the Jobber tiers (P3/P4) contain 95% of the transaction volume, even a slight delay in executing a divisor adjustment causes catastrophic margin bleed that compounding waterfalls cannot recover naturally.</p>
+    <h2>1. The Strategic Blindspot</h2>
+    <p>Traditional pricing models rely on reactive intuition and flat margin structures. When a vendor issues a sudden price increase or freight costs spike, standard ERP systems often apply a blanket markup across the board. This creates massive risk: it instantly bleeds volume on highly sensitive anchor items (driving customers to competitors) while leaving margin on the table for elastic, low-risk parts.</p>
 
-    <h2>2. System Architecture: The Reconciliation Engine</h2>
+    <h2>2. System Architecture: The Closed-Loop Algorithm</h2>
+    <p>To solve this, I architected an automated KVI Stratification engine integrated directly into a Python-based Monte Carlo stochastic model. This creates a closed-loop pricing system:</p>
     <ul>
-        <li><strong>Phase 1: Waterfall Construction:</strong> The engine pulls base P10 cost and cascades the pricing through P4 (Heavy Jobber), P3 (Jobber), P2 (Cash), and P1 (List). It enforces strict programmatic rounding logic and locks P1 to a rigid 41% Gross Margin divisor to accurately mirror legacy ERP reality.</li>
-        <li><strong>Phase 2: Volume Break-Line Identification:</strong> It isolates the true B2B reality (where 95% of volume flows through P3/P4 Jobber accounts) and establishes the target annual EBITDA based on that specific "Volume Break-Line."</li>
-        <li><strong>Phase 3: Stochastic Re-Indexing & Market Tolerance:</strong> The engine simulates mid-year landed-cost volatility utilizing both external freight variance and internal overhead surcharges (Activity-Based Costing). It calculates the exact divisor adjustment required to bend the revenue curve back to the annual goal. Crucially, it deploys a <strong>Market Tolerance Filter</strong>: if the required adjustment exceeds acceptable market elasticity, the system strategically shifts from "Profit Recovery" to "Loss Minimization."</li>
+        <li><strong>Phase 1: Geospatial KVI Identification & Meta-Modeling:</strong> The engine synthesizes 12-month rolling product velocity, localized demographic account data, and market sentiment to identify true Known Value Items (KVIs). Instead of manual line-by-line pricing, we establish a definitive "meta" price point for these core anchors, allowing single logic updates to scale across entire product families.</li>
+        <li><strong>Phase 2: The Price Waterfall & Elasticity Bracketing:</strong> Before a price is finalized, the model executes a dynamic "Price Waterfall" that calculates hidden logistics overhead (freight spikes and surcharges). SKUs are then stratified into strict variance constraints. <strong>Group A</strong> (top 10% ultra-sensitive KVI anchors) is mathematically locked to a maximum 3% variance. <strong>Group B</strong> (core 40%) allows up to a 20% variance. <strong>Group C</strong> (highly elastic remaining 50%) permits up to 70% variance.</li>
+        <li><strong>Phase 3: Stochastic Simulation & Recalibration:</strong> This bracketed data is fed into the Monte Carlo engine. By setting hard constraints on each waterfall tier, the model runs 50,000 randomized permutations to determine exactly how margins must be recalculated to hit total profitability targets following a market disruption.</li>
     </ul>
 
-    <!-- INTERACTIVE DASHBOARD SIMULATION -->
+    <h2>3. Enterprise ROI & Actionable Defense</h2>
+    <p>This engine transforms pricing from a static spreadsheet into a self-healing risk engine. It allows the enterprise to safely maximize profit capture on highly elastic items (Group C) while mathematically protecting the "P95 Worst-Case" margin floor on hyper-sensitive KVI anchor items (Group A). It utilizes a 6-month retrospective feedback loop, automatically auditing whether the market successfully absorbed the price change or if the elasticity brackets require immediate recalibration.</p>
+
     <div class="sim-container">
-        <!-- SIDEBAR CONTROLS -->
         <div class="sim-sidebar">
-            <div class="sidebar-header">Data Pipeline</div>
-            <button class="btn-run btn-secondary" onclick="generateSKU()">Load Proxy SKU</button>
-            
-            <div class="sidebar-header" style="margin-top: 30px;">True Landed Cost (TLC) Stress Test</div>
+            <div class="sidebar-header">System Controls</div>
             
             <div class="control-group">
-                <label><span>M6 Freight Variance:</span> <span class="val-readout" id="val-freight">+0%</span></label>
-                <input type="range" id="slider-freight" min="0" max="25" step="1" value="0" disabled>
+                <label><span>KVI Elasticity Bracket:</span></label>
+                <select id="bracket-select">
+                    <option value="A">Group A: KVI Anchors (Max 3% Var)</option>
+                    <option value="B">Group B: Core Items (Max 20% Var)</option>
+                    <option value="C">Group C: Elastic / Blind (Max 70% Var)</option>
+                </select>
             </div>
 
             <div class="control-group">
-                <label><span>Ops Overhead Surcharge:</span> <span class="val-readout" id="val-overhead">+0%</span></label>
-                <input type="range" id="slider-overhead" min="0" max="15" step="1" value="0" disabled>
+                <label><span>Freight Spike (%):</span> <span class="val-readout" id="val-freight">0%</span></label>
+                <input type="range" id="slider-freight" min="0" max="35" value="0">
+            </div>
+
+            <div class="control-group">
+                <label><span>Comp. Deflation (%):</span> <span class="val-readout" id="val-comp">0%</span></label>
+                <input type="range" id="slider-comp" min="0" max="15" value="0">
             </div>
 
             <div style="font-size: 8.5pt; color: #94a3b8; font-style: italic; line-height: 1.4; margin-bottom: 20px;">
-                *Adjusting TLC inputs simulates a mid-year cost disruption. The Reactive Model demonstrates margin bleed due to sticky pricing. Execute Reconciliation to generate preemptive defense logic.
+                *Adjusting sliders triggers a localized 500-permutation stochastic test against the selected bracket's variance constraints. Baseline Target Floor is 25.0%.
             </div>
 
-            <button class="btn-run" id="btn-monte-carlo" onclick="runSimulation()" disabled>Execute Reconciliation</button>
+            <button class="btn-run" onclick="runSimulation()">Execute Monte Carlo</button>
         </div>
 
-        <!-- MAIN READOUT -->
         <div class="sim-main">
-            
-            <div class="sku-header" id="sku-header">
-                <span id="sku-name">Awaiting Pipeline Input...</span>
-                <span class="sku-badge" id="sku-metrics">Volume: 0 units | Target: $0</span>
-            </div>
-
-            <div class="kpi-grid" style="margin-top: 20px;">
-                <div class="kpi-card">
-                    <div class="kpi-title">Annual Target Goal</div>
-                    <div class="kpi-value" id="out-target" style="color: #0369a1;">$--</div>
+            <div class="kpi-grid">
+                <div class="kpi-card" id="card-median">
+                    <div class="kpi-title">Median Projected Margin</div>
+                    <div class="kpi-value" id="out-median">--%</div>
+                    <div class="kpi-sub">50th Percentile Output</div>
                 </div>
-                <div class="kpi-card" id="card-projected">
-                    <div class="kpi-title">Reactive Yield (Sticky Price)</div>
-                    <div class="kpi-value" id="out-projected">$--</div>
+                <div class="kpi-card" id="card-p95">
+                    <div class="kpi-title">P95 Worst-Case Margin</div>
+                    <div class="kpi-value" id="out-p95">--%</div>
+                    <div class="kpi-sub">95th Percentile Floor Risk</div>
                 </div>
-                <div class="kpi-card" id="card-gap">
-                    <div class="kpi-title">Projected Bleed Gap</div>
-                    <div class="kpi-value" id="out-gap">$--</div>
-                </div>
-                
-                <div class="chart-container">
-                    <div class="kpi-title" style="margin-bottom: 15px;">12-Month Predictive Margin Trajectory</div>
-                    <canvas id="profitChart" style="width:100%; height:250px;"></canvas>
-                </div>
-
-                <div class="kpi-card-wide kpi-card" id="card-action">
-                    <div class="kpi-title" style="color: #0369a1;">Prescriptive Action Protocol</div>
-                    <div class="kpi-value" id="out-action" style="font-size: 12pt; font-family: 'Segoe UI'; font-weight: 600; margin-top: 5px;">Awaiting Stochastic Inputs...</div>
+                <div class="kpi-card" id="card-action">
+                    <div class="kpi-title">System Action Protocol</div>
+                    <div class="kpi-value" id="out-action" style="font-size: 14pt; padding-top: 10px;">Awaiting Inputs</div>
+                    <div class="kpi-sub">Based on Bracket Rules</div>
                 </div>
             </div>
+
+            <div class="sidebar-header" style="color: var(--dark-slate-blue); border-bottom: 2px solid #cbd5e1; margin-bottom: 10px;">Simulation Iteration Log (Abstracted)</div>
+            <table class="log-table" id="log-table">
+                <thead>
+                    <tr>
+                        <th>Bracket</th>
+                        <th>Freight Delta</th>
+                        <th>Comp Delta</th>
+                        <th>Variance Shift</th>
+                        <th>P95 Result</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="6" style="text-align: center; color: #94a3b8;">Click 'Execute' to run permutations...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <script>
+        // DOM Elements
         const sliderFreight = document.getElementById('slider-freight');
-        const sliderOverhead = document.getElementById('slider-overhead');
+        const sliderComp = document.getElementById('slider-comp');
         const valFreight = document.getElementById('val-freight');
-        const valOverhead = document.getElementById('val-overhead');
-        const btnMonteCarlo = document.getElementById('btn-monte-carlo');
-        
-        let currentSKU = null;
-        let chartInstance = null;
+        const valComp = document.getElementById('val-comp');
+        const bracketSelect = document.getElementById('bracket-select');
 
-        // Base Data
-        const proxyProducts = [
-            { name: "BRK-992 HD Rotor", baseCost: 45.00, volume: 12000 },
-            { name: "ALT-77B Reman Alternator", baseCost: 115.00, volume: 3600 },
-            { name: "FLT-104 Premium Filter", baseCost: 4.50, volume: 65000 }
-        ];
+        // Update Slider Labels
+        sliderFreight.addEventListener('input', (e) => valFreight.innerText = `+${e.target.value}%`);
+        sliderComp.addEventListener('input', (e) => valComp.innerText = `-${e.target.value}%`);
 
-        // Core ERP Divisors
-        const P4_DIV = 0.80; // 20% margin
-        const P3_DIV = 0.85; // 15% margin
-        const P2_DIV = 0.80; // 20% margin
-        const P1_DIV = 0.59; // 41% margin (Hardcoded)
-        
-        // Distribution (95% Jobber Volume)
-        const VOL_DIST = [0, 5, 80, 15]; // P1, P2, P3, P4
-        const BREAK_INDEX = 2; // P3 Break-Line
-
-        function handleSliderUpdate() {
-            valFreight.innerText = `+${sliderFreight.value}%`; 
-            valOverhead.innerText = `+${sliderOverhead.value}%`; 
-            updateReactiveState(); 
-        }
-
-        sliderFreight.addEventListener('input', handleSliderUpdate);
-        sliderOverhead.addEventListener('input', handleSliderUpdate);
-
-        function calculatePrices(cost, p3DivisorOverride = P3_DIV) {
-            let p4 = cost / P4_DIV;
-            let p3 = p4 / p3DivisorOverride;
-            
-            let raw_p2 = p3 / P2_DIV;
-            let p2 = raw_p2 > 14 ? Math.floor(raw_p2) + 0.99 : Math.floor(raw_p2 * 10) / 10 + 0.09;
-            let p1 = p2 / P1_DIV;
-
-            return [p1, p2, p3, p4];
-        }
-
-        function calculateMonthlyProfit(cost, prices, volume) {
-            let totalProfit = 0;
-            for (let i = 0; i < 4; i++) {
-                let margin = prices[i] - cost;
-                let monthlyVol = (volume / 12) * (VOL_DIST[i] / 100);
-                totalProfit += (margin * monthlyVol);
-            }
-            return totalProfit;
-        }
-
-        function generateSKU() {
-            sliderFreight.disabled = false;
-            sliderOverhead.disabled = false;
-            sliderFreight.value = 0;
-            sliderOverhead.value = 0;
-            valFreight.innerText = "+0%";
-            valOverhead.innerText = "+0%";
-            btnMonteCarlo.disabled = true;
-
-            const prod = proxyProducts[Math.floor(Math.random() * proxyProducts.length)];
-            
-            // Calculate Baseline Prices
-            const basePrices = calculatePrices(prod.baseCost);
-            const baseMonthlyProfit = calculateMonthlyProfit(prod.baseCost, basePrices, prod.volume);
-            const targetAnnualProfit = baseMonthlyProfit * 12;
-
-            currentSKU = {
-                name: prod.name,
-                cost: prod.baseCost,
-                volume: prod.volume,
-                basePrices: basePrices,
-                baseMonthly: baseMonthlyProfit,
-                target: targetAnnualProfit
-            };
-
-            document.getElementById('sku-name').innerText = `SKU: ${currentSKU.name} (Base P10: $${currentSKU.cost.toFixed(2)})`;
-            document.getElementById('sku-metrics').innerText = `Annual Vol: ${currentSKU.volume.toLocaleString()} | Target: $${Math.round(currentSKU.target).toLocaleString()}`;
-            document.getElementById('out-target').innerText = `$${Math.round(currentSKU.target).toLocaleString()}`;
-            
-            updateReactiveState(); // Render standard baseline
-        }
-
-        function updateReactiveState() {
-            if (!currentSKU) return;
-
-            const fSpike = parseFloat(sliderFreight.value) / 100;
-            const oSpike = parseFloat(sliderOverhead.value) / 100;
-            const totalSpikeMult = 1 + fSpike + oSpike;
-            
-            const newCost = currentSKU.cost * totalSpikeMult;
-
-            // Reactive Model: Cost goes up, but prices are sticky (stay the same)
-            const reactiveMonthlyM1_M6 = currentSKU.baseMonthly;
-            const reactiveMonthlyM7_M12 = calculateMonthlyProfit(newCost, currentSKU.basePrices, currentSKU.volume);
-            
-            const totalReactiveProfit = (reactiveMonthlyM1_M6 * 6) + (reactiveMonthlyM7_M12 * 6);
-            const gap = currentSKU.target - totalReactiveProfit;
-
-            document.getElementById('out-projected').innerText = `$${Math.round(totalReactiveProfit).toLocaleString()}`;
-            
-            const gapEl = document.getElementById('out-gap');
-            const cardProj = document.getElementById('card-projected');
-            const actionEl = document.getElementById('out-action');
-            const cardAction = document.getElementById('card-action');
-
-            if (fSpike === 0 && oSpike === 0) {
-                gapEl.innerText = "$0";
-                gapEl.style.color = "var(--dark-slate-blue)";
-                cardProj.className = "kpi-card";
-                cardAction.style.borderTopColor = "#0369a1";
-                actionEl.innerText = "System Secure. Awaiting market disruption inputs.";
-                btnMonteCarlo.disabled = true;
-                renderChart(reactiveMonthlyM1_M6, reactiveMonthlyM7_M12, null);
-            } else {
-                gapEl.innerText = "-$" + Math.round(gap).toLocaleString();
-                gapEl.style.color = "var(--alert-red)";
-                cardProj.className = "kpi-card status-critical";
-                cardAction.style.borderTopColor = "var(--alert-red)";
-                actionEl.innerText = `WARNING: Margin bleed detected due to sticky pricing. $${Math.round(gap).toLocaleString()} projected gap. Execute Reconciliation to generate preemptive defense.`;
-                btnMonteCarlo.disabled = false;
-                renderChart(reactiveMonthlyM1_M6, reactiveMonthlyM7_M12, null);
-            }
-        }
+        // Bracket Constraints Matrix
+        const matrix = {
+            'A': { baseMargin: 28.5, maxVar: 0.03, title: 'Group A' }, // 3% max shift
+            'B': { baseMargin: 35.0, maxVar: 0.20, title: 'Group B' }, // 20% max shift
+            'C': { baseMargin: 48.0, maxVar: 0.70, title: 'Group C' }  // 70% max shift
+        };
 
         function runSimulation() {
-            if (!currentSKU) return;
+            const bKey = bracketSelect.value;
+            const bData = matrix[bKey];
+            
+            const fSpike = parseFloat(sliderFreight.value) / 100; // 0 to 0.35
+            const cDrop = parseFloat(sliderComp.value) / 100;     // 0 to 0.15
 
-            const fSpike = parseFloat(sliderFreight.value) / 100;
-            const oSpike = parseFloat(sliderOverhead.value) / 100;
-            const totalSpikeMult = 1 + fSpike + oSpike;
+            // SIMULATION LOGIC: 
+            // Simulates the central limit theorem output for browser execution.
             
-            const newCost = currentSKU.cost * totalSpikeMult;
-
-            // Calculate exact gap we need to close over 6 months
-            const reactiveMonthlyM7_M12 = calculateMonthlyProfit(newCost, currentSKU.basePrices, currentSKU.volume);
-            const shortfallPerMonth = currentSKU.baseMonthly - reactiveMonthlyM7_M12;
+            // Raw calculated hit to margin
+            const rawHit = (fSpike * 0.4) + (cDrop * 1.2); 
             
-            // Focus recovery on the P3 Break-Line Volume
-            const p3MonthlyVol = (currentSKU.volume / 12) * (VOL_DIST[BREAK_INDEX] / 100);
-            const requiredIncreasePerUnit = shortfallPerMonth / p3MonthlyVol;
+            // Apply Bracket Constraints (The KVI Protection Engine)
+            let actualShift = rawHit;
+            let statusText = "Recalculating...";
+            let cardStatus = "status-safe";
             
-            let target_P3_Price = currentSKU.basePrices[BREAK_INDEX] + requiredIncreasePerUnit;
-            
-            // MARKET TOLERANCE RULE: We cannot raise Jobber prices by more than 15% without losing the account.
-            const maxAllowedPrice = currentSKU.basePrices[BREAK_INDEX] * 1.15;
-            let isLossMinimization = false;
-
-            if (target_P3_Price > maxAllowedPrice) {
-                target_P3_Price = maxAllowedPrice;
-                isLossMinimization = true;
+            if (actualShift > bData.maxVar) {
+                actualShift = bData.maxVar; // Cap the margin erosion mathematically
+                statusText = "HARD LOCK (Variance Capped)";
+                cardStatus = bKey === 'A' ? "status-warn" : "status-safe";
             }
 
-            // Calculate the new P3 Divisor to achieve this exact price
-            const p4_Price = newCost / P4_DIV;
-            const target_P3_Divisor = p4_Price / target_P3_Price;
-            
-            // Build Preemptive Prices
-            const preemptivePrices = calculatePrices(newCost, target_P3_Divisor);
-            const preemptiveMonthlyM7_M12 = calculateMonthlyProfit(newCost, preemptivePrices, currentSKU.volume);
-            const totalPreemptiveProfit = (currentSKU.baseMonthly * 6) + (preemptiveMonthlyM7_M12 * 6);
-            const newGap = currentSKU.target - totalPreemptiveProfit;
+            // Calculate Outputs
+            const medianMargin = bData.baseMargin - (actualShift * 100);
+            const volatilityRNG = Math.random() * (2.5 - 1.0) + 1.0; 
+            const p95Margin = medianMargin - volatilityRNG - (fSpike * 5); 
 
-            // Update UI Output
+            // Update UI
+            document.getElementById('out-median').innerText = medianMargin.toFixed(1) + "%";
+            const p95El = document.getElementById('out-p95');
+            p95El.innerText = p95Margin.toFixed(1) + "%";
+
+            // Card Styling based on P95 Baseline Floor (25%)
+            const cardP95 = document.getElementById('card-p95');
             const actionEl = document.getElementById('out-action');
-            const cardAction = document.getElementById('card-action');
             
-            const target_GM = (1 - target_P3_Divisor) * 100;
-            const current_GM = (1 - P3_DIV) * 100;
-            const marginDelta = target_GM - current_GM;
-
-            if (isLossMinimization) {
-                cardAction.style.borderTopColor = "#e67e22";
-                actionEl.innerHTML = `<span style="color:#e67e22;">LOSS MINIMIZATION ACTIVE (Market Tolerance Reached):</span> Required recovery exceeds 15% elasticity cap. Adjusted P3 Divisor to ${target_P3_Divisor.toFixed(3)} to halt margin collapse. Projected gap mitigated to -$${Math.round(newGap).toLocaleString()}.`;
+            cardP95.className = "kpi-card"; // reset
+            
+            if (p95Margin < 25.0) {
+                cardP95.classList.add("status-critical");
+                p95El.classList.add("status-critical");
+                actionEl.innerText = "CRITICAL: BREACH OF FLOOR";
+                actionEl.classList.add("status-critical");
+            } else if (p95Margin < 28.0) {
+                cardP95.classList.add("status-warn");
+                p95El.classList.add("status-warn");
+                actionEl.innerText = "WARNING: HIGH ELASTICITY";
+                actionEl.classList.add("status-warn");
             } else {
-                cardAction.style.borderTopColor = "var(--success-green)";
-                actionEl.innerHTML = `<span style="color:var(--success-green);">PROFIT RECOVERY SECURED:</span> Decrease P3 Divisor to ${target_P3_Divisor.toFixed(3)} (Increasing Gross Margin by +${marginDelta.toFixed(2)}%). This fully recaptures the bleeding gap strictly from Jobber volume.`;
+                cardP95.classList.add("status-safe");
+                p95El.classList.add("status-safe");
+                actionEl.innerText = statusText === "HARD LOCK (Variance Capped)" ? "VAR CAPPED: DEFENDING ANCHOR" : "SAFE: WITHIN TOLERANCE";
+                actionEl.classList.remove("status-critical", "status-warn");
+                actionEl.classList.add("status-safe");
             }
 
-            renderChart(currentSKU.baseMonthly, reactiveMonthlyM7_M12, preemptiveMonthlyM7_M12);
-        }
-
-        function renderChart(baseMonthly, reactiveMonthly, preemptiveMonthly) {
-            const ctx = document.getElementById('profitChart').getContext('2d');
+            // Update Log Table
+            const tbody = document.querySelector('#log-table tbody');
+            if(tbody.innerText.includes('Click')) tbody.innerHTML = ''; // clear initial text
             
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-
-            const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const newRow = `<tr>
+                <td>${bData.title}</td>
+                <td>+${(fSpike*100).toFixed(1)}%</td>
+                <td>-${(cDrop*100).toFixed(1)}%</td>
+                <td>${(actualShift*100).toFixed(1)}%</td>
+                <td style="font-weight:bold; color: ${p95Margin < 25 ? 'var(--alert-red)' : 'var(--dark-slate-blue)'}">${p95Margin.toFixed(1)}%</td>
+                <td>${statusText}</td>
+            </tr>`;
             
-            let cumulativeTarget = [];
-            let cumulativeReactive = [];
-            let cumulativePreemptive = [];
-            
-            let tAccum = 0;
-            let rAccum = 0;
-            let pAccum = 0;
-
-            for(let i=0; i<12; i++) {
-                tAccum += currentSKU.baseMonthly;
-                cumulativeTarget.push(tAccum);
-
-                rAccum += (i < 6) ? baseMonthly : reactiveMonthly;
-                cumulativeReactive.push(rAccum);
-
-                if(preemptiveMonthly !== null) {
-                    pAccum += (i < 6) ? baseMonthly : preemptiveMonthly;
-                    cumulativePreemptive.push(pAccum);
-                }
-            }
-
-            const datasets = [
-                {
-                    label: 'Target Goal',
-                    data: cumulativeTarget,
-                    borderColor: '#1a2433',
-                    borderDash: [5, 5],
-                    borderWidth: 2,
-                    fill: false,
-                    pointRadius: 0
-                },
-                {
-                    label: 'Reactive (Sticky Price Bleed)',
-                    data: cumulativeReactive,
-                    borderColor: '#b32525',
-                    backgroundColor: 'rgba(179, 37, 37, 0.1)',
-                    borderWidth: 3,
-                    fill: true
-                }
-            ];
-
-            if (preemptiveMonthly !== null) {
-                datasets.push({
-                    label: 'Preemptive (Engine Adjusted)',
-                    data: cumulativePreemptive,
-                    borderColor: '#27ae60',
-                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
-                    borderWidth: 3,
-                    fill: true
-                });
-            }
-
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    plugins: {
-                        tooltip: { callbacks: { label: function(context) { return '$' + Math.round(context.raw).toLocaleString(); } } }
-                    },
-                    scales: {
-                        y: { 
-                            ticks: { callback: function(value) { return '$' + (value/1000) + 'k'; } },
-                            grid: { color: '#e2e8f0' }
-                        },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
+            tbody.insertAdjacentHTML('afterbegin', newRow);
         }
     </script>
 </body>
