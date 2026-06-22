@@ -1,208 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Predictive Margin Strategy | Monte Carlo Lab</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.55; max-width: 10in; margin: 0 auto; padding: 40px; background: #fff; }
-    
-    /* PDF HEADER STYLING */
-    .doc-header { width: 100%; border-bottom: 2px solid #1a2433; padding-bottom: 18px; margin-bottom: 24px; text-align: center; }
-    .doc-tagline { font-size: 8pt; font-weight: 700; color: #991b1b; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; }
-    .doc-title { font-family: 'Georgia', serif; font-size: 24pt; color: #0f172a; margin: 0 0 10px 0; }
-    .meta-table { width: 90%; margin: 0 auto 30px auto; border-collapse: collapse; }
-    .meta-cell { vertical-align: top; padding: 0 20px; font-size: 9pt; text-align: center; }
-    .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
-    .meta-value { color: #1e293b; font-weight: 500; }
-    .nda-note { border-left: 4px solid #991b1b; background: #f8fafc; padding: 15px; margin: 20px auto; font-size: 8.5pt; font-style: italic; max-width: 90%; }
-    
-    /* DASHBOARD */
-    .dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 20px; margin-top: 20px; }
-    .controls { background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; }
-    .sim-panel { border: 1px solid #cbd5e1; padding: 20px; background: white; }
-    
-    /* KPI */
-    .kpi-row { display: flex; gap: 15px; margin-bottom: 20px; }
-    .kpi { flex: 1; padding: 15px; border-bottom: 4px solid #cbd5e1; background: #f9f9f9; text-align: center; }
-    .kpi-title { font-size: 7pt; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
-    .kpi-val { font-size: 16pt; font-weight: bold; color: #1a2433; font-family: monospace; }
-    
-    /* GAUGES & CHARTS */
-    .gauge-row { display: flex; gap: 20px; margin-bottom: 30px; justify-content: center; }
-    .gauge-container { width: 150px; height: 120px; }
-    .charts-row { display: flex; gap: 20px; height: 300px; margin-bottom: 20px; }
-    .chart-container { flex: 1; position: relative; border: 1px solid #e2e8f0; padding: 10px; background: #fafafa; min-height: 250px; }
-    
-    /* SIDEBAR */
-    .logic-key { background: #1a2433; color: #fff; padding: 15px; border-radius: 4px; font-size: 8.5pt; margin-top: 20px; }
-    .run-btn { background: #b32525; color: white; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; }
-    
-    /* NARRATIVE */
-    .narrative { margin-top: 60px; border-top: 2px solid #1a2433; padding-top: 30px; }
-    .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; }
-    .audit-table { width: 100%; border-collapse: collapse; font-size: 9pt; border: 1px solid #e2e8f0; margin-top: 20px; }
-    .audit-table th { background: #1a2433; color: white; padding: 10px; text-align: left; }
-    .audit-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
-</style>
+    <meta charset="UTF-8">
+    <title>Predictive KVI Stratification & Stochastic Margin Modeling</title>
+    <style>
+        /* CORE AESTHETIC & TYPOGRAPHY */
+        body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 10.5in; margin: 0 auto; padding: 40px; background-color: #ffffff; }
+        h1, h2 { font-family: 'Georgia', serif; color: #1a2433; font-weight: normal; }
+        h1 { font-size: 26pt; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 5px; }
+        h2 { font-size: 18pt; margin-top: 35px; margin-bottom: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        h3 { font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: #1a2433; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 20px;}
+        p { color: #334155; margin-bottom: 15px; text-align: justify; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
+        li { margin-bottom: 8px; }
+
+        .kicker { color: #b32525; font-weight: bold; font-size: 9pt; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+        .author-title { font-size: 12pt; color: #475569; margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px;}
+        .disclaimer { font-size: 9pt; font-style: italic; margin-bottom: 30px; color: #64748b; padding: 12px; border-left: 4px solid #b32525; background-color: #f1f5f9; }
+
+        /* DASHBOARD LAYOUT */
+        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+        .sim-sidebar { width: 320px; flex-shrink: 0; background: #1a2433; color: white; padding: 25px; }
+        .sim-main { flex: 1; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
+
+        .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
+        
+        .control-group { margin-bottom: 25px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
+        .val-readout { color: #b32525; font-family: monospace; font-size: 11pt; font-weight: bold;}
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: #b32525; }
+        select { width: 100%; padding: 8px; font-family: 'Segoe UI'; font-size: 9.5pt; background: #0f172a; color: white; border: 1px solid #475569; outline: none;}
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 20px; text-align: center; border-radius: 4px; border-top: 4px solid #1a2433; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .kpi-value { font-size: 24pt; font-family: monospace; font-weight: bold; color: #1a2433; }
+        .kpi-sub { font-size: 8.5pt; font-style: italic; color: #94a3b8; margin-top: 5px;}
+        
+        /* Dynamic Colors */
+        .status-safe { color: #27ae60 !important; border-top-color: #27ae60 !important; }
+        .status-warn { color: #e67e22 !important; border-top-color: #e67e22 !important; }
+        .status-critical { color: #b32525 !important; border-top-color: #b32525 !important; }
+
+        .log-table { width: 100%; border-collapse: collapse; font-size: 9pt; background: white; border: 1px solid #e2e8f0;}
+        .log-table th { background: #1a2433; color: white; padding: 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; }
+        .log-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; }
+        
+        .btn-run { background: #b32525; color: white; border: none; padding: 12px; width: 100%; font-family: 'Segoe UI'; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px; letter-spacing: 1px;}
+        .btn-run:hover { background: #8e1c1c; }
+    </style>
 </head>
 <body>
 
-    <div class="doc-header">
-        <p class="doc-tagline">DATA SCIENCE & ADVANCED ANALYTICS</p>
-        <div class="doc-title">Architecting an Enterprise Pricing Audit Engine & Stochastic Landed-Cost Simulator</div>
-    </div>
-    
-    <table class="meta-table">
-        <tr>
-            <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value"><strong>Austin Sonny Stethem</strong><br>Pricing & MDM Analyst</span>
-            </td>
-            <td class="meta-cell">
-                <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Data Governance, Cost Waterfalls, ETL Architecture, Advanced Stochastic Modeling</span>
-            </td>
-            <td class="meta-cell">
-                <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">SQL Server, Python (NumPy/Pandas), Phocas BI Enterprise</span>
-            </td>
-        </tr>
-    </table>
+    <div class="kicker">Advanced Analytics & Strategic Pricing</div>
+    <h1>Predictive KVI Stratification & Stochastic Margin Modeling</h1>
+    <div class="author-title"><strong>Austin Sonny Stethem</strong> | Principal Engineer, Pricing & MDM Analyst</div>
 
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transaction data and proprietary cost arrays have been replaced with randomized proxies. The algorithmic logic—including Monte Carlo stochastic modeling, landed-cost waterfall variables, and SQL ETL architecture—remains an exact reflection of the production environment.
+    <div class="disclaimer">
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary margin targets, and exact landed-cost arrays have been replaced with randomized proxies. The algorithmic logic—including the KVI stratification parameters and Monte Carlo stochastic architecture—remains an exact reflection of the production environment.
     </div>
 
-    <div class="dashboard">
-        <div class="controls">
-            <strong>SIMULATION CONTROLS</strong><br><br>
-            <label>Freight Cost Variance (+% from Baseline)</label>
-            <input type="range" id="slide-freight" min="0" max="25" value="10" style="width:100%" oninput="runSimulation()">
-            <label>Comp. Price Deflation ($ Drop)</label>
-            <input type="range" id="slide-comp" min="0" max="15" value="5" style="width:100%" oninput="runSimulation()">
-            <button class="run-btn" onclick="runSimulation()">▶ Reset Simulation</button>
-            
-            <div class="logic-key">
-                <h4>System Logic Key</h4>
-                <p><strong>Monte Carlo:</strong> 50k randomized permutations modeling margin risk.<br><br>
-                <strong>P95 Risk:</strong> The "Floor" of your margins. We design strategies ensuring this doesn't drop below 25%.<br><br>
-                <strong>Revenue At Risk:</strong> $ potential lost if we ignore volatility.</p>
-            </div>
-        </div>
+    <h2>1. The Strategic Blindspot</h2>
+    <p>Traditional pricing models rely on reactive intuition and flat margin structures. When a vendor issues a sudden price increase or freight costs spike, standard ERP systems often apply a blanket markup across the board. This creates massive risk: it instantly bleeds volume on highly sensitive anchor items (driving customers to competitors) while leaving margin on the table for elastic, low-risk parts.</p>
 
-        <div class="sim-panel">
-            <div class="gauge-row">
-                <div class="gauge-container"><canvas id="gauge1"></canvas><div style="text-align:center; font-weight:bold; font-size: 8pt;">$75k Target</div></div>
-                <div class="gauge-container"><canvas id="gauge2"></canvas><div style="text-align:center; font-weight:bold; font-size: 8pt;">$80k Target</div></div>
-                <div class="gauge-container"><canvas id="gauge3"></canvas><div style="text-align:center; font-weight:bold; font-size: 8pt;">$85k Target</div></div>
-            </div>
-            <div class="kpi-row">
-                <div class="kpi" style="border-bottom-color: #27ae60;"><div class="kpi-title">MEDIAN MARGIN</div><div class="kpi-val" id="out-med">--%</div></div>
-                <div class="kpi" style="border-bottom-color: #b32525;"><div class="kpi-title">P95 WORST-CASE</div><div class="kpi-val" id="out-p95">--%</div></div>
-                <div class="kpi" style="border-bottom-color: #e67e22;">
-                    <div class="kpi-title">FAILURE RATE</div>
-                    <div class="kpi-val" id="out-fail">--%</div>
-                    <div style="font-size: 6.5pt; color: #64748b; margin-top: 3px; font-weight: normal; text-transform: none;">(Margin dips below 25% floor)</div>
-                </div>
-                <div class="kpi" style="border-bottom-color: #b32525;"><div class="kpi-title">REV. AT RISK</div><div class="kpi-val" id="out-risk">$0</div></div>
-            </div>
-            <div class="charts-row">
-                <div class="chart-container"><canvas id="histChart"></canvas></div>
-                <div class="chart-container"><canvas id="riskChart"></canvas></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="narrative">
-        <h2>Executive Narrative: Granular SKU Optimization</h2>
-        <p>Enterprise pricing is traditionally reactive, relying on blanket ABC/KVI categorization. This creates systemic inefficiency: we unknowingly overcharge high-visibility items (risking market share) while "leaving money on the table" across the massive long-tail of Group C parts.</p>
-        
-        <div class="math-block">
-            $$Expected Margin = \frac{Sale Price - (Base Cost \cdot (1 + Comp Erosion) + Freight Volatility)}{Sale Price}$$
-        </div>
-
-        <h3>Granular Audit: Blanket vs. Predictive Intelligence</h3>
-        <table class="audit-table">
-            <thead><tr><th>Timestamp</th><th>SKU_ID</th><th>Vendor_Cost</th><th>Margin_Status</th><th>Logic_Applied</th></tr></thead>
-            <tbody>
-                <tr style="background:#fef2f2;"><td>06/17 08:00</td><td>SKU-49221</td><td>$104.50</td><td>LEAKING</td><td>Reactive: 30-day lag pricing</td></tr>
-                <tr style="background:#f0fdf4;"><td>06/17 08:05</td><td>SKU-88210</td><td>$98.20</td><td>PROTECTED</td><td>Predictive: Hedge applied</td></tr>
-            </tbody>
-        </table>
-
-        <h3>Departmental Applicability</h3>
-        <ul>
-            <li><strong>Finance & Pricing:</strong> Generates <strong>Risk-Adjusted Margin Floors</strong>, moving beyond blanket targets to SKU-level hedge protection, "squeezing" the long-tail for maximum profit.</li>
-            <li><strong>Sales Leadership:</strong> Validates price-match requests. If the simulation shows high "Failure Probability," leadership has the empirical data to reject the match or negotiate volume guarantees.</li>
-            <li><strong>Executive Leadership:</strong> Quantifies "Revenue At Risk" to dictate capital allocation, turning abstract supply chain chaos into a managed business risk.</li>
-        </ul>
-    </div>
-
-    <script>
-        let g1, g2, g3, histChart, riskChart;
-
-        function safeDestroy(chartObj) {
-            if (chartObj) {
-                chartObj.destroy();
-            }
-        }
-
-        function createGauge(id, val) {
-            return new Chart(document.getElementById(id), {
-                type: 'doughnut',
-                data: { labels: ['Success', 'Fail'], datasets: [{ data: [val, 100-val], backgroundColor: ['#27ae60', '#e2e8f0'] }] },
-                options: { rotation: 270, circumference: 180, cutout: '80%', plugins: { legend: {display: false}, tooltip: { callbacks: { label: (c) => c.formattedValue + '%' } } } }
-            });
-        }
-
-        function runSimulation() {
-            // Safe parsing to prevent NaN array errors
-            let rawF = parseFloat(document.getElementById('slide-freight').value) || 0;
-            let rawC = parseFloat(document.getElementById('slide-comp').value) || 0;
-            
-            let f = (rawF * 0.25) + (rawC * 0.33); 
-            if (f === 0) f = 0.5;
-
-            document.getElementById('out-med').innerText = (27.5 - (f*0.2)).toFixed(1) + "%";
-            document.getElementById('out-p95').innerText = (20.8 - (f*0.5)).toFixed(1) + "%";
-            document.getElementById('out-fail').innerText = (5.0 + (f*0.5)).toFixed(1) + "%";
-            document.getElementById('out-risk').innerText = "$" + (70003 + (f*1500)).toFixed(0);
-            
-            // Wipe the slate cleanly before rendering
-            safeDestroy(g1);
-            safeDestroy(g2);
-            safeDestroy(g3);
-            safeDestroy(histChart);
-            safeDestroy(riskChart);
-            
-            g1 = createGauge('gauge1', Math.max(0, 95 - (f*3)));
-            g2 = createGauge('gauge2', Math.max(0, 85 - (f*4)));
-            g3 = createGauge('gauge3', Math.max(0, 75 - (f*5)));
-            
-            histChart = new Chart(document.getElementById('histChart'), {
-                type: 'bar', 
-                data: { 
-                    labels: Array.from({length: 30}, (_,i) => (15 + i*0.5).toFixed(1)), 
-                    datasets: [{label: 'Frequency', data: Array.from({length:30}, (_,i)=>Math.exp(-Math.pow(i-18,2)/20)*7000), backgroundColor: '#1a2433'}]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Margin Frequency'} } }
-            });
-            
-            riskChart = new Chart(document.getElementById('riskChart'), {
-                type: 'line', 
-                data: { 
-                    labels: ['15','20','25','30','35'], 
-                    datasets: [
-                        { label: 'Reactive', data: [100, 85, 50, 20, 5], borderColor: '#64748b', borderWidth: 3 }, 
-                        { label: 'Predictive', data: [90, 30, 5, 1, 0], borderColor: '#27ae60', borderWidth: 3 }
-                    ] 
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text: 'Cumulative Risk'} } }
-            });
-        }
-        window.onload = runSimulation;
-    </script>
-</body>
-</html>
+    <h2>2. System Architecture: The Closed-Loop Algorithm</h2>
+    <p>To solve this, I architected an automated KVI Stratification engine integrated directly into a Python-based Monte Carlo stochastic model. This creates a closed-loop pricing system:</p>
+    <ul>
+        <li><strong>Phase 1: Geospatial KVI Identification & Meta-Modeling:</strong> The engine synthesizes 12-month rolling product velocity, localized demographic account data, and market sentiment to identify true Known Value Items (KVIs). Instead of manual line-by-line pricing, we establish a definitive "meta" price point for these
