@@ -7,18 +7,18 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 40px 20px; background: #fbfbfb; }
         .page-header { text-align: center; margin-bottom: 40px; }
-        .page-header h1 { color: #1a2433; margin-bottom: 5px; }
-        .page-header p { margin: 5px 0; color: #64748b; }
+        .page-header h1 { color: #1a2433; margin-bottom: 5px; font-size: 2.5rem; }
+        .page-header p { margin: 0; color: #64748b; font-size: 1.1rem; font-weight: 500; }
         
-        /* Updated contact links styling - Permanently Red and Bold */
-        .contact-info a { color: #b32525; font-weight: 600; text-decoration: none; border-bottom: 1px dotted transparent; transition: border-color 0.2s ease; }
-        .contact-info a:hover { border-bottom: 1px solid #b32525; }
-        
-        .nav-links { margin-top: 15px; }
-        .nav-links a { color: #b32525; font-weight: bold; text-decoration: none; margin: 0 10px; border-bottom: 1px dotted transparent; transition: border-color 0.2s ease;}
-        .nav-links a:hover { border-bottom: 1px solid #b32525; }
+        /* Consolidated Navigation Bar */
+        .contact-nav { margin-top: 15px; display: flex; justify-content: center; gap: 20px; }
+        .contact-nav a { color: #b32525; font-weight: bold; text-decoration: none; border-bottom: 1px dotted transparent; transition: all 0.2s ease; }
+        .contact-nav a:hover { border-bottom: 1px solid #b32525; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 40px; }
+        
+        /* The Hero Card Solution for Odd Numbered Grids */
+        .featured-card { grid-column: 1 / -1; }
         
         .card { 
             background: #fff; 
@@ -37,17 +37,17 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.05);
         }
         
-        .card h3 { margin-top: 0; color: #1a2433; font-size: 1.15rem; margin-bottom: 8px;}
+        .card h3 { margin-top: 0; color: #1a2433; font-size: 1.25rem; margin-bottom: 8px;}
         .tech { font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
         .desc { font-size: 0.95rem; margin-bottom: auto; color: #475569; line-height: 1.5;}
         
-        /* Upgraded Button Styling - Darker Gray for Contrast */
+        /* Upgraded Button Styling - Darker Gray */
         .btn { 
             display: block; 
             margin-top: 20px; 
-            background: #e2e8f0; /* Darker distinct gray background */
-            color: #1e293b; 
-            border: 1px solid #cbd5e1;
+            background: #cbd5e1; 
+            color: #1a2433; 
+            border: 1px solid #94a3b8;
             padding: 10px 15px;
             font-weight: 600; 
             text-decoration: none; 
@@ -57,9 +57,9 @@
             transition: all 0.2s ease-in-out;
         }
         .btn:hover { 
-            background: #cbd5e1; /* Even darker on hover */
-            border-color: #94a3b8;
-            color: #b32525; /* Signature red text pops out */
+            background: #94a3b8;
+            border-color: #64748b;
+            color: #b32525; 
             text-decoration: none; 
         }
     </style>
@@ -68,14 +68,12 @@
 
     <div class="page-header">
         <h1>Austin Stethem</h1>
-        <p class="contact-info">
-            Strategic Pricing & Data Analyst | 
-            <a href="tel:7122995267">712-299-5267</a> | 
-            <a href="mailto:austinstethem1976@gmail.com">austinstethem1976@gmail.com</a>
-        </p>
-        <div class="nav-links">
+        <p>Strategic Pricing & Data Analyst</p>
+        <div class="contact-nav">
             <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank">LinkedIn</a>
             <a href="Stethem_Austin_Resume.pdf" target="_blank">View Resume (PDF)</a>
+            <a href="tel:7122995267">712-299-5267</a>
+            <a href="mailto:austinstethem1976@gmail.com">austinstethem1976@gmail.com</a>
         </div>
         <hr style="width: 50%; border: 0; border-top: 1px solid #ccc; margin: 30px auto;">
         <h2>Systems Architecture & Analytics Portfolio</h2>
@@ -85,46 +83,51 @@
     </div>
 
     <div class="grid">
-        <!-- Case Study 01 -->
-        <div class="card">
+        <!-- Hero Project (Full width) -->
+        <div class="card featured-card">
             <div class="tech">JavaScript, Maps API, VIO Datasets</div>
             <h3>Predictive VIO Market Capture</h3>
-            <p class="desc">Engineered a geospatial intelligence platform mapping physical assets against competitors to identify predictive market capture opportunities.</p>
+            <p class="desc">Engineered a geospatial intelligence platform mapping physical assets against competitors to identify high-value market capture opportunities through Topological Friction Modeling.</p>
             <a href="geospatial.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 02 -->
+        <!-- 4 Grid Projects -->
         <div class="card">
             <div class="tech">Python, Deterministic Math, KVI P-Tiers</div>
             <h3>Algorithmic Margin Defense</h3>
-            <p class="desc">Architected a deterministic cross-subsidization engine that integrates with ERP data to defend baseline margin against severe supply chain inflation.</p>
+            <p class="desc">Architected a deterministic cross-subsidization engine that integrates with ERP data to defend baseline margin against supply chain inflation.</p>
             <a href="algorithmic-margin-defense.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 03 -->
         <div class="card">
             <div class="tech">Python, Monte Carlo, Data Science</div>
             <h3>Stochastic Margin Optimization</h3>
-            <p class="desc">Developed a Monte Carlo simulator injecting statistical noise into historical demand curves to mathematically identify maximum Expected Profit (E[P]).</p>
+            <p class="desc">Developed a Monte Carlo simulator injecting statistical noise into demand curves to mathematically identify maximum Expected Profit (E[P]).</p>
             <a href="monte-carlo-optimization.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 04 -->
         <div class="card">
             <div class="tech">SQL, Phocas BI, ERP Integration</div>
             <h3>Phocas BI Pricing Strategy</h3>
-            <p class="desc">Deployed an automated margin defense system synthesizing usage volume and logistics vectors using SQL and comprehensive Phocas BI integration.</p>
+            <p class="desc">Deployed an automated margin defense system synthesizing usage volume and logistics vectors using SQL and Phocas BI.</p>
             <a href="phocas-pricing-strategy.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 05 -->
         <div class="card">
             <div class="tech">JavaScript, Cash Flow, FIFO Modeling</div>
             <h3>FIFO Inventory Revaluation</h3>
-            <p class="desc">Built a cash flow modeling tool demonstrating how preemptive pricing against deep inventory buffers generates scalable EBITDA windfalls.</p>
+            <p class="desc">Built a cash flow modeling tool demonstrating how preemptive pricing against deep inventory buffers generates EBITDA windfalls.</p>
             <a href="inventory-windfall-engine.html" class="btn">Review Case Study &rarr;</a>
         </div>
     </div>
 
 </body>
 </html>
+```
+
+### Repo Maintenance Note:
+Don't forget to head over to your GitHub repository and:
+1. **Delete** `monte-carlo.html` (the old, merged file).
+2. **Rename** `erp-reconciliation-engine.html.txt` to `erp-reconciliation-engine.html` (removing the `.txt`).
+
+Now that the homepage is looking sleek and professional, what "STAR" (Situation, Task, Action, Result) content update should we tackle first? Should we start with the VIO Case Study?
