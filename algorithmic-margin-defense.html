@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study 03: Stochastic Margin Optimization - Austin Sonny Stethem</title>
+    <!-- Chart.js Core -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root { --dark-slate-blue: #1a2433; --alert-red: #b32525; --success-green: #27ae60; --bg-color: #fbfbfb; }
+        body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 950px; margin: 0 auto; padding: 40px 20px; background-color: var(--bg-color); }
+        .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
+        .back-link:hover { text-decoration: underline; }
+        
+        .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
+        .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
+        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
+        .meta-cell:last-child { border-right: none; }
+        .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .meta-value { color: #1e293b; font-weight: 500; }
+        
+        .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
+        h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        p { text-align: justify; margin-bottom: 15px; color: #334155; }
+        
+        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); align-items: stretch; flex-wrap: wrap;}
+        .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; display: flex; flex-direction: column; }
+        .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
+        .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
+        
+        .control-group { margin-bottom: 25px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
+        .val-readout { color: var(--alert-red); font-family: monospace; font-size: 11pt; font-weight: bold;}
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--alert-red); }
+        select { width: 100%; padding: 8px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; font-family: 'Segoe UI'; font-size: 9pt; outline: none;}
+        select option { background: var(--dark-slate-blue); color: white; }
+        
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 20px; text-align: center; border-radius: 4px; border-top: 4px solid var(--dark-slate-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .kpi-value { font-size: 20pt; font-family: monospace; font-weight: bold; color: var(--dark-slate-blue); }
+        .kpi-sub { font-size: 8.5pt; font-style: italic; color: #94a3b8; margin-top: 5px;}
+        
+        .chart-container { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 4px; border-top: 4px solid #0369a1; margin-bottom: 20px;}
+        .chart-box { position: relative; height: 320px; width: 100%; }
+        
+        .btn-run { background: var(--alert-red); color: white; border: none; padding: 12px; width: 100%; font-family: 'Segoe UI'; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px; letter-spacing: 1px; transition: background 0.2s, color 0.2s; border-radius: 4px;}
+        .btn-run:hover { background: #8e1c1c; }
+        .btn-run:disabled { background: #e67e22; cursor: not-allowed; opacity: 0.9; }
+        
+        pre.code-block { background-color: #0f172a; color: #e2e8f0; padding: 20px; border-radius: 6px; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 9.5pt; border-left: 4px solid #3b82f6; line-height: 1.4; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); margin-bottom: 30px; }
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-keyword { color: #c678dd; font-weight: bold; }
+        .code-function { color: #61afef; }
+        .code-string { color: #98c379; }
+        .code-number { color: #d19a66; }
+
+        @media (max-width: 768px) {
+            .sim-sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
+    <div class="doc-header">
+        <div class="doc-tagline">Systems Architecture & Analytics Portfolio Case Study</div>
+        <div class="doc-title">Stochastic Margin Optimization</div>
+    </div>
+
+    <table class="meta-table">
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Probability Distributions, Expected Value (E[P]), Demand Elasticity</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Technical Stack</span>
+                <span class="meta-value">Data Science, Python, NumPy, Monte Carlo Methods</span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, specific SKU attributes, and true margin arrays have been replaced with randomized abstractions. The stochastic optimization architecture and Box-Muller transform generation reflect production-grade data science environments.
+    </div>
+
+    <h2>1. The Illusion of the "Perfect Price"</h2>
+    <p>In standard pricing strategy, teams often search for the "exact break point" of a SKU—a single, magical number that maximizes yield. This is a fundamental flaw. The market is not a static environment; it is a chaotic system. Freight costs fluctuate weekly, competitor deflations hit unannounced, and demand curves bend unexpectedly.</p>
+    <p>A deterministic model can calculate margin based on assumptions, but to extract every drop of margin without accidentally crushing sales volume, we must transition into <strong>Data Science</strong>. We must abandon the idea of a fixed price and instead solve for <strong>Expected Profit ($E[P]$)</strong> using probability distributions.</p>
+
+    <h2>2. The Stochastic Optimizer</h2>
+    <p>To optimize margin accurately, I architected a true Monte Carlo Simulation. Instead of feeding the engine flat variables (e.g., "$15 freight cost"), the algorithm is fed a distribution curve. The engine simulates thousands of alternate realities for a single SKU. In each reality, it randomizes the incoming cost based on shipping volatility, and it randomizes the market demand based on the elasticity curve.</p>
+    <p>By plotting the results of 5,000 permutations on a histogram, the algorithm mathematically identifies the exact target retail price that yields the highest Median Expected Profit, while explicitly calculating the P5 (5th Percentile) worst-case scenario to ensure we never fall below our operational floor.</p>
+
+    <div class="sim-container">
+        <div class="sim-sidebar">
+            <div class="sidebar-header">Stochastic Inputs</div>
+            
+            <div class="control-group">
+                <label><span>Target Retail Price ($):</span> <span class="val-readout" id="val-price">$65.00</span></label>
+                <input type="range" id="slider-price" min="50" max="90" step="1" value="65">
+                <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Baseline Cost: $45.00 / Base Demand: 500 units</div>
+            </div>
+
+            <div class="control-group">
+                <label><span>Freight Volatility:</span></label>
+                <select id="select-volatility">
+                    <option value="0.05">Low (Stable Lanes)</option>
+                    <option value="0.15" selected>Medium (Standard Surcharges)</option>
+                    <option value="0.30">High (Global Supply Shock)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label><span>Market Elasticity:</span></label>
+                <select id="select-elasticity">
+                    <option value="0.5">Inelastic (Captive Item)</option>
+                    <option value="1.0" selected>Normal (Standard Competition)</option>
+                    <option value="2.5">Highly Elastic (Price War Risk)</option>
+                </select>
+            </div>
+
+            <div style="font-size: 8.5pt; color: #94a3b8; font-style: italic; line-height: 1.4; margin-bottom: 20px;">
+                *Adjust the target retail price and market conditions. Executing the test triggers 5,000 random permutations to graph the probability distribution of your Expected Profit.
+            </div>
+
+            <button class="btn-run" id="btn-execute" onclick="triggerSimulation()">Run 5,000 Permutations</button>
+        </div>
+
+        <div class="sim-main">
+            <div class="kpi-grid">
+                <div class="kpi-card" id="card-p5">
+                    <div class="kpi-title" style="color: #ef4444;">P5 Worst-Case Risk</div>
+                    <div class="kpi-value" id="out-p5" style="color: #ef4444;">$--</div>
+                    <div class="kpi-sub">5th Percentile Profit Floor</div>
+                </div>
+                <div class="kpi-card" style="border-top-color: #3b82f6;">
+                    <div class="kpi-title" style="color: #3b82f6;">Expected E[P] Yield</div>
+                    <div class="kpi-value" id="out-median" style="color: #3b82f6;">$--</div>
+                    <div class="kpi-sub">Median Probable Profit</div>
+                </div>
+                <div class="kpi-card" id="card-p95">
+                    <div class="kpi-title" style="color: #10b981;">P95 Best-Case Upside</div>
+                    <div class="kpi-value" id="out-p95" style="color: #10b981;">$--</div>
+                    <div class="kpi-sub">95th Percentile Windfall</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="kpi-title" style="margin-bottom: 10px;">Profit Probability Distribution (5,000 Simulations)</div>
+                <div class="chart-box">
+                    <canvas id="histogramChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>3. Core Engine: Python Optimization Logic</h2>
+    <p>The mathematical backbone of this strategy is executed in Python using NumPy vectorization for rapid permutation processing. The script generates normally distributed market noise via standard deviation scaling and applies demand destruction based on theoretical elasticity curves.</p>
+    
+    <pre class="code-block"><code><span class="code-comment"># Python Stochastic Margin Optimization (Data Science Module)</span>
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+
+<span class="code-keyword">def</span> <span class="code-function">run_monte_carlo_optimizer</span>(base_cost, target_price, volatility_factor, elasticity, iterations=<span class="code-number">50000</span>):
+    <span class="code-comment"># 1. Generate stochastic cost arrays (Normally distributed freight variance)</span>
+    cost_array = base_cost * (<span class="code-number">1</span> + np.random.normal(loc=<span class="code-number">0</span>, scale=volatility_factor, size=iterations))
+    
+    <span class="code-comment"># 2. Calculate baseline demand destruction based on elasticity</span>
+    price_delta = (target_price - <span class="code-number">65.00</span>) / <span class="code-number">65.00</span>
+    base_demand = <span class="code-number">500</span> * (<span class="code-number">1</span> - (price_delta * elasticity))
+    
+    <span class="code-comment"># 3. Inject stochastic market noise into physical demand</span>
+    demand_array = np.random.normal(loc=base_demand, scale=<span class="code-number">45</span>, size=iterations)
+    demand_array = np.maximum(demand_array, <span class="code-number">0</span>) <span class="code-comment"># Floor at 0 sales</span>
+    
+    <span class="code-comment"># 4. Vectorized execution of E[P] formula</span>
+    profit_array = (target_price - cost_array) * demand_array
+    
+    <span class="code-keyword">return</span> {
+        <span class="code-string">"p5_risk"</span>: np.percentile(profit_array, <span class="code-number">5</span>),
+        <span class="code-string">"median_ep"</span>: np.median(profit_array),
+        <span class="code-string">"p95_upside"</span>: np.percentile(profit_array, <span class="code-number">95</span>)
+    }</code></pre>
+
+    <h2>4. Phase 2: Machine Learning & Continuous Training Loops</h2>
+    <p>To prevent the algorithm from acting as a static calculator, the ultimate architectural phase transitions this script into a <strong>Supervised Machine Learning Loop</strong>. As the model suggests optimized target prices, it requires boundaries and historical feedback to sharpen its predictive accuracy over time.</p>
+    <ul>
+        <li><strong>Boundary Constraints (The Bumpers):</strong> Unbound algorithms are dangerous. We establish explicit elasticity maximums per P-Tier. If the algorithm mathematically determines that a 400% markup on a spark plug maximizes short-term profit, the boundary constraints intercept the action to prevent catastrophic, long-term volume death.</li>
+        <li><strong>Continuous Feedback Loops:</strong> Once a month, empirical point-of-sale data is fed back into the engine. By measuring the delta between the <em>Simulated Expected Profit</em> and the <em>Actual Realized Profit</em>, the algorithm calculates its own error rate. It uses this delta to automatically adjust its internal elasticity weights, shrinking variance and increasing accuracy month over month.</li>
+        <li><strong>Anomaly Sanitization (Defending Concept Drift):</strong> A primary risk of ML integration is "Data Poisoning." If a local competitor liquidates, causing an unnatural drop in our volume, a raw algorithm will assume the market has become permanently inelastic. To defend against Concept Drift, an anomaly-detection filter sanitizes incoming POS data, ensuring the model ignores statistical outliers and only trains on true market trends.</li>
+    </ul>
+
+    <script>
+        const sliderPrice = document.getElementById('slider-price');
+        const valPrice = document.getElementById('val-price');
+        const selectVol = document.getElementById('select-volatility');
+        const selectElast = document.getElementById('select-elasticity');
+        const btnExecute = document.getElementById('btn-execute');
+        let chartInstance = null;
+
+        sliderPrice.addEventListener('input', (e) => { valPrice.innerText = `$${parseFloat(e.target.value).toFixed(2)}`; });
+
+        // Box-Muller transform for normal distribution in JS
+        function randomNormal(mean, stdDev) {
+            let u = 1 - Math.random(); 
+            let v = Math.random();
+            let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+            return z * stdDev + mean;
+        }
+
+        function triggerSimulation() {
+            btnExecute.disabled = true;
+            btnExecute.innerText = "Running Monte Carlo Math...";
+            
+            setTimeout(() => {
+                runOptimization();
+                btnExecute.disabled = false;
+                btnExecute.innerText = "Run 5,000 Permutations";
+            }, 600);
+        }
+
+        function runOptimization() {
+            const targetPrice = parseFloat(sliderPrice.value);
+            const volatility = parseFloat(selectVol.value);
+            const elasticity = parseFloat(selectElast.value);
+            
+            const baseCost = 45.00;
+            const baselinePrice = 65.00;
+            const baselineDemand = 500;
+            const iterations = 5000;
+            
+            let profits = [];
+
+            // Calculate demand destruction (deterministic baseline)
+            const priceDelta = (targetPrice - baselinePrice) / baselinePrice;
+            const adjustedDemandBase = baselineDemand * (1 - (priceDelta * elasticity));
+
+            // Run 5000 Stochastic Permutations
+            for (let i = 0; i < iterations; i++) {
+                // 1. Randomize Cost (Volatile)
+                let simulatedCost = baseCost * (1 + randomNormal(0, volatility));
+                
+                // 2. Randomize Demand (Noise)
+                let simulatedDemand = randomNormal(adjustedDemandBase, 40); 
+                simulatedDemand = Math.max(simulatedDemand, 0); // Can't sell negative items
+
+                // 3. Calculate instance profit
+                let instanceProfit = (targetPrice - simulatedCost) * simulatedDemand;
+                profits.push(instanceProfit);
+            }
+
+            // Sort for percentiles
+            profits.sort((a, b) => a - b);
+            
+            const p5 = profits[Math.floor(iterations * 0.05)];
+            const median = profits[Math.floor(iterations * 0.50)];
+            const p95 = profits[Math.floor(iterations * 0.95)];
+
+            // Update DOM
+            document.getElementById('out-p5').innerText = `$${Math.round(p5).toLocaleString()}`;
+            document.getElementById('out-median').innerText = `$${Math.round(median).toLocaleString()}`;
+            document.getElementById('out-p95').innerText = `$${Math.round(p95).toLocaleString()}`;
+
+            // Create Histogram Bins
+            const numBins = 30;
+            const min = profits[0];
+            const max = profits[profits.length - 1];
+            const binSize = (max - min) / numBins;
+            
+            let bins = new Array(numBins).fill(0);
+            let labels = [];
+
+            for (let i = 0; i < numBins; i++) {
+                labels.push(`$${Math.round(min + (i * binSize))}`);
+            }
+
+            for (let i = 0; i < iterations; i++) {
+                let binIndex = Math.floor((profits[i] - min) / binSize);
+                if (binIndex >= numBins) binIndex = numBins - 1;
+                bins[binIndex]++;
+            }
+
+            renderHistogram(labels, bins);
+        }
+
+        function renderHistogram(labels, data) {
+            const ctx = document.getElementById('histogramChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Frequency (Number of Permutations)',
+                        data: data,
+                        backgroundColor: '#3b82f6',
+                        borderColor: '#2563eb',
+                        borderWidth: 1,
+                        barPercentage: 1.0,
+                        categoryPercentage: 1.0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) { return 'Expected Profit: ' + context[0].label; },
+                                label: function(context) { return context.raw + ' Simulated Realities'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Frequency', font: {size: 11, weight: 'bold'} },
+                            grid: { color: '#e2e8f0' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { maxTicksLimit: 8, font: {size: 10} }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Run once on load to populate the chart
+        runOptimization();
+    </script>
+</body>
+</html>
