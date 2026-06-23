@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phocas BI & Automated Pricing Architecture - Austin Sonny Stethem</title>
+    <title>Phocas BI & Automated Pricing Architecture - Austin Stethem</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         /* STANDARDIZED PORTFOLIO ROOT VARIABLES */
         :root {
@@ -11,18 +13,25 @@
             --alert-red: #b32525;
             --success-green: #27ae60;
             --bg-color: #fbfbfb;
+            --warning-orange: #e67e22;
         }
+
         body {
             font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
             color: #333;
+            font-size: 10.5pt;
             line-height: 1.6;
-            max-width: 950px; /* Aligned width */
+            max-width: 950px;
             margin: 0 auto;
             padding: 40px 20px;
             background-color: var(--bg-color);
         }
-        
-        /* PDF HEADER STYLING */
+
+        /* PORTFOLIO NAVIGATION */
+        .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
+        .back-link:hover { text-decoration: underline; }
+
+        /* HEADER STYLING */
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
@@ -35,82 +44,76 @@
         
         .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
 
-        /* Document Body Styling */
-        h2 {
-            font-family: 'Georgia', serif;
-            color: var(--dark-slate-blue);
-            font-size: 1.4rem;
-            margin-top: 40px;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 5px;
-        }
-        p {
-            text-align: justify;
-            margin-bottom: 15px;
-        }
-        
-        table.data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-        table.data-table th {
-            background-color: var(--dark-slate-blue);
-            color: #fff;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        table.data-table td {
-            border-bottom: 1px solid #e2e8f0;
-            padding: 15px;
-            vertical-align: top;
-            font-size: 0.95rem;
-            border-right: 1px solid #e2e8f0;
-        }
-        table.data-table td:last-child {
-            border-right: none;
-        }
-        table.data-table tr:last-child td {
-            border-bottom: none;
-        }
+        /* Typography */
+        h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
+        li { margin-bottom: 8px; }
+
+        /* NARRATIVE SCENARIO BOX */
+        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
+
+        /* DATA TABLE STYLING */
+        .table-wrapper { overflow-x: auto; margin: 30px 0; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        table.data-table { width: 100%; border-collapse: collapse; background: #fff; min-width: 600px; }
+        table.data-table th { background-color: var(--dark-slate-blue); color: #fff; padding: 15px; text-align: left; font-weight: 600; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; }
+        table.data-table td { border-bottom: 1px solid #e2e8f0; padding: 15px; vertical-align: top; font-size: 9.5pt; border-right: 1px solid #e2e8f0; color: #334155; }
+        table.data-table td:last-child { border-right: none; }
+        table.data-table tr:last-child td { border-bottom: none; }
         table.data-table tr:nth-child(even) { background-color: #f8fafc; }
+
+        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border-radius: 6px; overflow: hidden; flex-wrap: wrap;}
+        .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; display: flex; flex-direction: column; }
+        .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
+        .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; color: #94a3b8;}
         
-        .validation-box {
-            background: #f0fdf4;
-            border-left: 4px solid var(--success-green);
-            padding: 25px;
-            margin-top: 50px;
-            border-radius: 0 4px 4px 0;
-            border-top: 1px solid #e2e8f0;
-            border-right: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .validation-title {
-            font-weight: bold;
-            color: var(--success-green);
-            text-transform: uppercase;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-            display: block;
-            letter-spacing: 0.5px;
-        }
-        .validation-box p {
-            margin: 0;
-            font-style: italic;
-            color: #1e293b;
+        .control-group { margin-bottom: 20px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
+        .val-readout { color: #fca5a5; font-family: monospace; font-size: 11pt; font-weight: bold;}
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--alert-red); margin-top: 5px;}
+        
+        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 20px; text-align: center; border-radius: 4px; border-top: 4px solid var(--dark-slate-blue); margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .kpi-value { font-size: 24pt; font-family: monospace; font-weight: bold; color: var(--success-green); }
+        .chart-box { position: relative; height: 300px; width: 100%; }
+
+        /* VALIDATION BOX */
+        .validation-box { background: #f0fdf4; border-left: 4px solid var(--success-green); padding: 25px; margin-top: 50px; margin-bottom: 30px; border-radius: 0 4px 4px 0; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .validation-title { font-weight: bold; color: var(--success-green); text-transform: uppercase; font-size: 9pt; margin-bottom: 10px; display: block; letter-spacing: 0.5px; }
+        .validation-box p { margin: 0; font-style: italic; color: #1e293b; font-size: 10pt; line-height: 1.6;}
+
+        /* NAVIGATION BUTTONS */
+        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
+        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
+        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
+        
+        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
+        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center;}
+        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
+        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
+        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
+        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
+        .nav-btn.next .nav-label { color: #fca5a5; }
+        .nav-title { font-size: 11pt; font-weight: bold;}
+
+        /* MOBILE RESPONSIVENESS FIXES */
+        @media (max-width: 800px) {
+            .meta-table tr { display: flex; flex-direction: column; }
+            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
+            .sim-container { flex-direction: column; }
+            .sim-sidebar { width: 100%; box-sizing: border-box; }
+            .sim-main { padding: 15px; box-sizing: border-box; min-width: unset; }
+            .project-navigation { flex-direction: column; }
+            .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
+            .doc-title { font-size: 22pt; }
         }
     </style>
 </head>
 <body>
+
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
 
     <div class="doc-header">
         <div class="doc-tagline">Systems Architecture & Analytics Portfolio Case Study</div>
@@ -139,6 +142,12 @@
     </div>
 
     <h2>1. Executive Project Summary & Business Context</h2>
+    
+    <div class="scenario-box">
+        <strong>The Enterprise Scenario (Step 4 of 5)</strong>
+        The algorithmic guardrails (Step 3) are actively defending our margins in the ERP against the 15% vendor cost spike. However, the architecture is only as strong as its feedback loop. Before we calculate our final cash windfall, we must monitor our Key Value Items (KVIs) in real-time using Phocas BI to ensure the new pricing hasn't triggered volume destruction in our highly contested territories. We shift from deployment to continuous BI surveillance.
+    </div>
+
     <p>Historically, pricing adjustments at the enterprise level were reactive, driven largely by field-level complaints or sporadic customer feedback—a "loudest voice" heuristic that inherently lagged behind market volatility across our 80-branch network.</p>
     <p>To eliminate this administrative drag, I architected and manage a Dynamic Weighted Indexing engine that shifts our pricing operations from passive spreadsheet management to proactive, forecast-driven margin defense. By synthesizing usage volume, competitor pricing, and seasonal logistics cost-vectors, this system identifies Known Value Items (KVIs) and automates the pricing logic for entire product families.</p>
 
@@ -150,40 +159,243 @@
     <p>Rather than performing manual, line-by-line price changes, I utilize a "Meta-Modeling" approach to pricing. Once we establish a definitive "meta" price point for a core product range (e.g., a specific line of brake components), the system automatically flows pricing adjustments to likeminded numbers within that product group.</p>
     <p>When pricing a specific SKU, the model automatically executes a "Price Waterfall," calculating variables including sales velocity, logistics overhead (freight charges and surcharges), and localized competitive gaps. This allows the pricing engine to scale exponentially; a single logic update ripples across the catalog, zeroing in on competitive gaps based on current market research.</p>
 
-    <h2>4. Proactive Forecasting & Phocas BI Integration</h2>
-    <p>The shift from reactive to proactive management is facilitated by layering these filters within Phocas BI. We no longer wait for a customer complaint to signal a pricing error.</p>
+    <h3>Interactive BI Price Waterfall Simulator</h3>
+    <p><em>Adjust the supply chain variables below to simulate how the Phocas BI engine calculates the True Landed Margin of a SKU after factoring in freight shocks and competitive KVI discounts.</em></p>
 
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>Volatility Trigger</th>
-                <th>Data Synthesis Model</th>
-                <th>Automated Pricing Response</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>Logistics & Freight Spikes</strong></td>
-                <td>Phocas BI Cost-Delta Tracking</td>
-                <td>Dynamic Surcharge Waterfall Execution to protect base margin prior to POS checkout.</td>
-            </tr>
-            <tr>
-                <td><strong>Competitor Margin Erosion</strong></td>
-                <td>Ground-Level Sales Agent Sentiment</td>
-                <td>Target "Meta" Product Re-Indexing to eliminate localized market friction immediately.</td>
-            </tr>
-            <tr>
-                <td><strong>Seasonal Demand Decay</strong></td>
-                <td>12-Month Rolling Usage Analytics</td>
-                <td>Preventative markdowns and category velocity re-weighting to mitigate dead stock.</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="sim-container">
+        <div class="sim-sidebar">
+            <div class="sidebar-header">Waterfall Inputs</div>
+            
+            <div class="control-group">
+                <label><span>Base Vendor Cost ($):</span> <span class="val-readout" style="color: #cbd5e1;" id="val-cost">$100</span></label>
+                <input type="range" id="slider-cost" min="20" max="250" step="5" value="100">
+            </div>
+
+            <div class="control-group">
+                <label><span>Freight Surcharge ($):</span> <span class="val-readout" id="val-freight">+$15</span></label>
+                <input type="range" id="slider-freight" min="0" max="50" step="1" value="15">
+                <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Logistics penalty applied to cost.</div>
+            </div>
+
+            <div class="control-group">
+                <label><span>Base Markup Target (%):</span> <span class="val-readout" style="color: #cbd5e1;" id="val-markup">40%</span></label>
+                <input type="range" id="slider-markup" min="10" max="80" step="1" value="40">
+            </div>
+
+            <div class="control-group" style="margin-bottom: 10px;">
+                <label><span>KVI Competitor Discount ($):</span> <span class="val-readout" id="val-discount">-$12</span></label>
+                <input type="range" id="slider-discount" min="0" max="50" step="1" value="12">
+                <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Price reduction to match market.</div>
+            </div>
+        </div>
+
+        <div class="sim-main">
+            <div class="kpi-card" id="kpi-margin-card">
+                <div class="kpi-title" id="kpi-margin-title">Final Landed Gross Margin</div>
+                <div class="kpi-value" id="out-margin">--%</div>
+            </div>
+
+            <div class="chart-box">
+                <canvas id="waterfallChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. Proactive Forecasting & Phocas BI Integration</h2>
+    <p>The shift from reactive to proactive management is facilitated by layering these waterfall filters within Phocas BI. We no longer wait for a customer complaint to signal a pricing error. The dashboard actively alerts executives to margin variances based on real-time data flow.</p>
+
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Volatility Trigger</th>
+                    <th>Data Synthesis Model</th>
+                    <th>Automated Pricing Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Logistics & Freight Spikes</strong></td>
+                    <td>Phocas BI Cost-Delta Tracking</td>
+                    <td>Dynamic Surcharge Waterfall Execution to protect base margin prior to POS checkout.</td>
+                </tr>
+                <tr>
+                    <td><strong>Competitor Margin Erosion</strong></td>
+                    <td>Ground-Level Sales Agent Sentiment</td>
+                    <td>Target "Meta" Product Re-Indexing to eliminate localized market friction immediately.</td>
+                </tr>
+                <tr>
+                    <td><strong>Seasonal Demand Decay</strong></td>
+                    <td>12-Month Rolling Usage Analytics</td>
+                    <td>Preventative markdowns and category velocity re-weighting to mitigate dead stock.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div class="validation-box">
         <span class="validation-title">Strategic Core Competency Validation</span>
         <p>This deployment acts as a definitive verification of proactive data strategy: successfully transitioning enterprise pricing from a complaint-driven heuristic to a forecast-driven, cross-functional risk management engine capable of protecting margins across millions of active SKUs.</p>
     </div>
 
+    <div class="next-step-box">
+        <h3>Ecosystem Step 5: P&L Realization</h3>
+        <p>With our market share protected and our BI feedback loop actively monitoring volume, we hit the final, most lucrative part of the cycle. Because we decoupled our retail logic from our physical receiving docks, we are now raising prices <em>today</em> on inventory we bought <em>yesterday</em> at the old cost. Let's model the resulting EBITDA windfall.</p>
+        <div class="project-navigation">
+            <a href="algorithmic-margin-defense.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Previous Phase</span>
+                <span class="nav-title">Step 3: Strategy Execution</span>
+            </a>
+            <a href="inventory-windfall-engine.html" class="nav-btn next">
+                <span class="nav-label">Next Phase &rarr;</span>
+                <span class="nav-title">Step 5: P&L Realization</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const sliderCost = document.getElementById('slider-cost');
+        const sliderFreight = document.getElementById('slider-freight');
+        const sliderMarkup = document.getElementById('slider-markup');
+        const sliderDiscount = document.getElementById('slider-discount');
+
+        const valCost = document.getElementById('val-cost');
+        const valFreight = document.getElementById('val-freight');
+        const valMarkup = document.getElementById('val-markup');
+        const valDiscount = document.getElementById('val-discount');
+
+        let waterfallChart = null;
+
+        function updateWaterfall() {
+            // Get values
+            const baseCost = parseFloat(sliderCost.value);
+            const freight = parseFloat(sliderFreight.value);
+            const markupPct = parseFloat(sliderMarkup.value) / 100;
+            const discount = parseFloat(sliderDiscount.value);
+
+            // Update UI Labels
+            valCost.innerText = `$${baseCost}`;
+            valFreight.innerText = `+$${freight}`;
+            valMarkup.innerText = `${sliderMarkup.value}%`;
+            valDiscount.innerText = `-$${discount}`;
+
+            // Math
+            const trueLandedCost = baseCost + freight;
+            // standard markup formula: Price = Cost / (1 - Margin)
+            const targetRetailPrice = trueLandedCost / (1 - markupPct);
+            const absoluteMarkup = targetRetailPrice - trueLandedCost;
+            
+            let finalPrice = targetRetailPrice - discount;
+            if (finalPrice < trueLandedCost) finalPrice = trueLandedCost; // Don't sell below true cost in this sim
+
+            const actualDiscountApplied = targetRetailPrice - finalPrice;
+
+            // Final Margin KPI
+            const finalMarginPct = ((finalPrice - trueLandedCost) / finalPrice) * 100;
+            
+            const kpiEl = document.getElementById('out-margin');
+            const cardEl = document.getElementById('kpi-margin-card');
+            const titleEl = document.getElementById('kpi-margin-title');
+
+            kpiEl.innerText = `${finalMarginPct.toFixed(1)}%`;
+            
+            // Dynamic KPI color styling
+            if(finalMarginPct < 15) {
+                kpiEl.style.color = '#b32525'; // Red (Danger)
+                cardEl.style.borderTopColor = '#b32525';
+                titleEl.innerText = "WARNING: Unsafe Margin Level";
+                titleEl.style.color = '#b32525';
+            } else if (finalMarginPct < 25) {
+                kpiEl.style.color = '#e67e22'; // Orange (Warning)
+                cardEl.style.borderTopColor = '#e67e22';
+                titleEl.innerText = "Final Landed Gross Margin";
+                titleEl.style.color = '#64748b';
+            } else {
+                kpiEl.style.color = '#27ae60'; // Green (Healthy)
+                cardEl.style.borderTopColor = '#27ae60';
+                titleEl.innerText = "Final Landed Gross Margin";
+                titleEl.style.color = '#64748b';
+            }
+
+            // Waterfall Chart Data Structure (using floating bars: [start, end])
+            const labels = ['Base Cost', 'Freight Surcharge', 'Target Markup', 'KVI Discount', 'Final Retail Price'];
+            
+            const data = [
+                [0, baseCost], // Base Cost
+                [baseCost, trueLandedCost], // Freight
+                [trueLandedCost, targetRetailPrice], // Target Markup
+                [targetRetailPrice, finalPrice], // Discount (Goes backwards)
+                [0, finalPrice] // Final Price
+            ];
+
+            const backgroundColors = [
+                '#94a3b8', // Gray for Base Cost
+                '#e67e22', // Orange for Surcharge
+                '#3b82f6', // Blue for Markup
+                '#ef4444', // Red for Discount
+                '#27ae60'  // Green for Final
+            ];
+
+            renderChart(labels, data, backgroundColors);
+        }
+
+        function renderChart(labels, data, colors) {
+            const ctx = document.getElementById('waterfallChart').getContext('2d');
+            if (waterfallChart) waterfallChart.destroy();
+
+            waterfallChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Price Components ($)',
+                        data: data,
+                        backgroundColor: colors,
+                        borderWidth: 0,
+                        borderRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    // Calculate difference between start and end of floating bar
+                                    const val = Math.abs(context.raw[1] - context.raw[0]);
+                                    return ` $${val.toFixed(2)}`;
+                                }
+                            },
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleFont: { family: "'Segoe UI', sans-serif" },
+                            bodyFont: { family: "'Courier New', monospace", size: 14 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Price ($)', font: {size: 11, weight: 'bold'} },
+                            grid: { color: '#e2e8f0', borderDash: [4, 4] },
+                            ticks: { callback: function(value) { return '$' + value; } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: {size: 10, weight: '600'} }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Attach listeners
+        sliderCost.addEventListener('input', updateWaterfall);
+        sliderFreight.addEventListener('input', updateWaterfall);
+        sliderMarkup.addEventListener('input', updateWaterfall);
+        sliderDiscount.addEventListener('input', updateWaterfall);
+
+        // Init
+        updateWaterfall();
+    </script>
 </body>
 </html>
