@@ -11,16 +11,15 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-        /* STANDARDIZED PORTFOLIO ROOT VARIABLES */
         :root {
             --dark-slate-blue: #1a2433;
             --alert-red: #b32525;
             --success-green: #27ae60;
-            --bg-color: #f8fafc; /* Matched exactly to index.html */
+            --bg-color: #fbfbfb;
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif; /* Standardized to match index.html */
+            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif;
             color: #334155;
             font-size: 10.5pt;
             line-height: 1.6;
@@ -30,11 +29,9 @@
             background-color: var(--bg-color);
         }
 
-        /* PORTFOLIO NAVIGATION */
         .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
         .back-link:hover { text-decoration: underline; }
 
-        /* HEADER STYLING */
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
@@ -47,14 +44,28 @@
         
         .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
 
-        /* Typography */
         h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         h3 { font-family: 'Inter', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
         p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
         ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
         li { margin-bottom: 8px; }
 
-        /* DASHBOARD SPECIFIC LAYOUT */
+        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
+        
+        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
+        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
+        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
+        
+        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
+        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center;}
+        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
+        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
+        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
+        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
+        .nav-btn.next .nav-label { color: #fca5a5; }
+        .nav-title { font-size: 11pt; font-weight: bold;}
+
         .sim-container { display: flex; height: 850px; border: 1px solid #cbd5e1; background: #fff; overflow: hidden; margin-top: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border-radius: 6px;}
         .sim-sidebar { width: 300px; flex-shrink: 0; background: #f1f5f9; border-right: 1px solid #cbd5e1; padding: 20px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; }
         .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; color: #1e293b; }
@@ -74,7 +85,6 @@
         .raw-data-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; color: #334155; }
         .table-wrapper { max-height: 180px; overflow-y: auto; margin-bottom: 15px; border-bottom: 1px solid #cbd5e1; }
         
-        /* MOBILE RESPONSIVENESS FIX */
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; }
@@ -84,11 +94,6 @@
             .table-wrapper { max-height: 250px; }
         }
 
-        /* Dynamic Badges & Colors */
-        .threat-critical { color: var(--alert-red); font-weight: 700; }
-        .threat-elevated { color: #e67e22; font-weight: 700; }
-        .threat-stable { color: var(--success-green); font-weight: 700; }
-        
         .badge-urban { background-color: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
         .badge-suburban { background-color: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
         .badge-rural { background-color: #dcfce7; color: #15803d; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; }
@@ -132,7 +137,13 @@
         <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live branch coordinates, localized POS revenue figures, and proprietary Experian VIO datasets have been replaced with randomized proxies across a generalized regional map. The algorithmic logic remains a reflection of the production environment, <em>with the public caveat that the live enterprise engine utilizes API-driven Isochrone (drive-time) polygons rather than Haversine radials, and zip-code weighted VIO density rather than flat regional percentages.</em>
     </div>
 
-    <h2>1. The Problem: "Territorial Blindness" in Distribution</h2>
+    <h2>1. Situation & Task: The Territorial Blindspot</h2>
+    
+    <div class="scenario-box">
+        <strong>The Enterprise Scenario (Step 1 of 5)</strong>
+        A tier-1 vendor has announced an impending 15% cost increase across our core product lines. Simultaneously, an aggressive competitor is encroaching on our high-value territories. Before we can mathematically model the financial risk or defend our margins in the ERP, we must first map the battlefield. We need to know exactly <em>where</em> we are exposed and quantify the raw market potential surrounding our physical assets.
+    </div>
+
     <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories. This creates a fatal strategic blind spot: the assumption that geographic area equals revenue potential. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor.</p>
     <p>Furthermore, mapping competitor locations without quantifying the actual *human and vehicular volume* caught in the crossfire leaves Pricing and Sales leadership reacting to margin erosion only after the volume has already been lost. To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine to strip away this "territorial blindness."</p>
 
@@ -257,17 +268,26 @@
         STRATEGIC CORE COMPETENCY VALIDATION: This deployment acts as a definitive verification of advanced systems architecture—demonstrating the ability to synthesize raw coordinate mapping, demographic friction indexes, and third-party VIO market-capture mechanics into a unified, executive-level predictive risk engine.
     </div>
 
+    <div class="next-step-box">
+        <h3>Ecosystem Step 2: Risk Modeling</h3>
+        <p>With our vulnerable territories securely mapped, we now know exactly <em>where</em> we are at risk. But before we execute a price increase in those battlegrounds to combat the vendor's 15% hike, we must mathematically simulate the statistical risk of losing volume. How far can we push the price ceiling?</p>
+        <div class="project-navigation">
+            <a href="index.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Ecosystem Hub</span>
+                <span class="nav-title">Return to Portfolio</span>
+            </a>
+            <a href="monte-carlo-optimization.html" class="nav-btn next">
+                <span class="nav-label">Next Phase &rarr;</span>
+                <span class="nav-title">Step 2: Risk Modeling</span>
+            </a>
+        </div>
+    </div>
+
     <script>
-        // ---------------------------------------------------------
-        // 1. MAP INITIALIZATION 
-        // ---------------------------------------------------------
         var map = L.map('map-container', { scrollWheelZoom: false }).setView([46.2, -94.3], 6);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
         setTimeout(function(){ map.invalidateSize(); }, 250);
 
-        // ---------------------------------------------------------
-        // 2. DATA ARRAYS WITH TOPOLOGY & POS VOLUME
-        // ---------------------------------------------------------
         const branches = [
             { id: 'b1', name: "Twin Cities Hub", topo: 'Urban', mult: 0.3, popDensity: 2500, basePosVolume: 12500, lat: 44.95, lng: -93.20, circle: null, marker: null },
             { id: 'b2', name: "Duluth Port Hub", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 4200, lat: 46.78, lng: -92.10, circle: null, marker: null },
@@ -287,26 +307,23 @@
         ];
 
         const competitors = [
-            { id: 'cA1', type: 'A', name: "Comp A", lat: 44.98, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.2, marker: null },
-            { id: 'cA2', type: 'A', name: "Comp A", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
-            { id: 'cA3', type: 'A', name: "Comp A", lat: 46.79, lng: -92.11, color: '#b32525', shape: 'star', weight: 1.1, marker: null },
-            { id: 'cA4', type: 'A', name: "Comp A", lat: 45.55, lng: -94.16, color: '#b32525', shape: 'star', weight: 1.3, marker: null },
-            { id: 'cA5', type: 'A', name: "Comp A", lat: 44.16, lng: -94.00, color: '#b32525', shape: 'star', weight: 1.0, marker: null },
-            { id: 'cB1', type: 'B', name: "Comp B", lat: 46.86, lng: -96.78, color: '#e67e22', shape: 'triangle', weight: 1.4, marker: null },
-            { id: 'cB2', type: 'B', name: "Comp B", lat: 46.35, lng: -94.20, color: '#e67e22', shape: 'triangle', weight: 0.9, marker: null },
-            { id: 'cB3', type: 'B', name: "Comp B", lat: 45.88, lng: -95.38, color: '#e67e22', shape: 'triangle', weight: 1.1, marker: null },
-            { id: 'cB4', type: 'B', name: "Comp B", lat: 45.12, lng: -95.04, color: '#e67e22', shape: 'triangle', weight: 1.0, marker: null },
-            { id: 'cB5', type: 'B', name: "Comp B", lat: 44.44, lng: -95.78, color: '#e67e22', shape: 'triangle', weight: 1.2, marker: null },
-            { id: 'cC1', type: 'C', name: "Comp C", lat: 44.02, lng: -92.47, color: '#8e44ad', shape: 'square', weight: 2.8, marker: null },
-            { id: 'cC2', type: 'C', name: "Comp C", lat: 44.83, lng: -93.30, color: '#8e44ad', shape: 'square', weight: 2.5, marker: null },
-            { id: 'cC3', type: 'C', name: "Comp C", lat: 47.23, lng: -93.53, color: '#8e44ad', shape: 'square', weight: 2.2, marker: null },
-            { id: 'cC4', type: 'C', name: "Comp C", lat: 47.48, lng: -94.89, color: '#8e44ad', shape: 'square', weight: 2.6, marker: null },
-            { id: 'cC5', type: 'C', name: "Comp C", lat: 44.05, lng: -91.64, color: '#8e44ad', shape: 'square', weight: 2.4, marker: null }
+            { id: 'cA1', type: 'A', name: "Comp A", lat: 44.98, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.2 },
+            { id: 'cA2', type: 'A', name: "Comp A", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0 },
+            { id: 'cA3', type: 'A', name: "Comp A", lat: 46.79, lng: -92.11, color: '#b32525', shape: 'star', weight: 1.1 },
+            { id: 'cA4', type: 'A', name: "Comp A", lat: 45.55, lng: -94.16, color: '#b32525', shape: 'star', weight: 1.3 },
+            { id: 'cA5', type: 'A', name: "Comp A", lat: 44.16, lng: -94.00, color: '#b32525', shape: 'star', weight: 1.0 },
+            { id: 'cB1', type: 'B', name: "Comp B", lat: 46.86, lng: -96.78, color: '#e67e22', shape: 'triangle', weight: 1.4 },
+            { id: 'cB2', type: 'B', name: "Comp B", lat: 46.35, lng: -94.20, color: '#e67e22', shape: 'triangle', weight: 0.9 },
+            { id: 'cB3', type: 'B', name: "Comp B", lat: 45.88, lng: -95.38, color: '#e67e22', shape: 'triangle', weight: 1.1 },
+            { id: 'cB4', type: 'B', name: "Comp B", lat: 45.12, lng: -95.04, color: '#e67e22', shape: 'triangle', weight: 1.0 },
+            { id: 'cB5', type: 'B', name: "Comp B", lat: 44.44, lng: -95.78, color: '#e67e22', shape: 'triangle', weight: 1.2 },
+            { id: 'cC1', type: 'C', name: "Comp C", lat: 44.02, lng: -92.47, color: '#8e44ad', shape: 'square', weight: 2.8 },
+            { id: 'cC2', type: 'C', name: "Comp C", lat: 44.83, lng: -93.30, color: '#8e44ad', shape: 'square', weight: 2.5 },
+            { id: 'cC3', type: 'C', name: "Comp C", lat: 47.23, lng: -93.53, color: '#8e44ad', shape: 'square', weight: 2.2 },
+            { id: 'cC4', type: 'C', name: "Comp C", lat: 47.48, lng: -94.89, color: '#8e44ad', shape: 'square', weight: 2.6 },
+            { id: 'cC5', type: 'C', name: "Comp C", lat: 44.05, lng: -91.64, color: '#8e44ad', shape: 'square', weight: 2.4 }
         ];
 
-        // ---------------------------------------------------------
-        // 3. ICON GENERATION & LAYERS
-        // ---------------------------------------------------------
         function makeShapeIcon(color, size, shape) {
             let svgPath = '';
             if (shape === 'star') svgPath = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>';
@@ -317,7 +334,7 @@
             return L.divIcon({
                 className: 'custom-shape-icon', 
                 html: `<svg viewBox="0 0 24 24" fill="${color}" width="${size}" height="${size}" style="filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5)); stroke: white; stroke-width: 1px;">${svgPath}</svg>`, 
-                iconSize: [size, size], iconAnchor: [size/2, size/2], popupAnchor: [0, -size/2]
+                iconSize: [size, size], iconAnchor: [size/2, size/2]
             });
         }
 
@@ -339,23 +356,20 @@
         }
 
         branches.forEach(b => {
-            b.marker = L.marker([b.lat, b.lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup(`<b>${b.name}</b><br>Topology: ${b.topo}`).addTo(layers.branches);
+            L.marker([b.lat, b.lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup(`<b>${b.name}</b><br>Topology: ${b.topo}`).addTo(layers.branches);
             b.circle = L.circle([b.lat, b.lng], { color: '#1a2433', fillColor: '#1a2433', fillOpacity: 0.08, weight: 1.5, dashArray: '4, 4' }).addTo(layers.branches);
         });
 
         topAccounts.forEach(t => {
-            t.marker = L.marker([t.lat, t.lng], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup(`<b>${t.name}</b><br>Topology: ${t.topo}`).addTo(layers.top20);
+            L.marker([t.lat, t.lng], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup(`<b>${t.name}</b><br>Topology: ${t.topo}`).addTo(layers.top20);
             t.circle = L.circle([t.lat, t.lng], { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5' }).addTo(layers.top20);
         });
 
         competitors.forEach(c => {
             let targetLayer = c.type === 'A' ? layers.compA : c.type === 'B' ? layers.compB : layers.compC;
-            c.marker = L.marker([c.lat, c.lng], {icon: makeShapeIcon(c.color, 16, c.shape)}).bindPopup(`<b>${c.name}<br>Threat Weight: ${c.weight}x</b>`).addTo(targetLayer);
+            L.marker([c.lat, c.lng], {icon: makeShapeIcon(c.color, 16, c.shape)}).bindPopup(`<b>${c.name}<br>Threat Weight: ${c.weight}x</b>`).addTo(targetLayer);
         });
 
-        // ---------------------------------------------------------
-        // 4. MATH, VIO & CAPTURE ENGINE
-        // ---------------------------------------------------------
         function getDistanceMiles(lat1, lon1, lat2, lon2) {
             const R = 3958.8;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -364,7 +378,7 @@
             return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
         }
 
-        function calculateThreatRow(entity, activeComps, baseRadius, isBranch) {
+        function calculateThreatRow(entity, activeComps, baseRadius) {
             let riskScore = 0;
             let threatsInRange = [];
             
@@ -387,12 +401,9 @@
             });
 
             riskScore = Math.min(riskScore, 10.0).toFixed(1);
-
             let threatText = threatsInRange.length > 0 ? `<span style="color:#b32525; font-weight:bold;">${threatsInRange.length} Active</span>` : `<span style="color:#64748b;">0 Active</span>`;
             
             let actionText = '';
-            
-            // Upgraded Action Protocols for Executive Narrative
             if (threatsInRange.length === 0 && marketCapture < 15) {
                  actionText = '<span style="color:#27ae60; font-weight:bold;">Aggressive Greenfield Expansion</span>';
             } else if (riskScore >= 7.5 && marketCapture >= 20) {
@@ -419,7 +430,6 @@
             const baseRadius = parseInt(document.getElementById('radius-slider').value);
             const activeComps = competitors.filter(c => document.getElementById(`chk-comp${c.type}`).checked);
             
-            // Update Dynamic Text Box
             document.getElementById('dynamic-logic-text').innerText = `At ${baseRadius} miles, Urban rings are ${(baseRadius * 0.3).toFixed(1)}mi, Rural rings are ${(baseRadius * 1.5).toFixed(1)}mi.`;
             
             branches.forEach(b => { b.circle.setRadius(baseRadius * b.mult * 1609.34); });
@@ -432,21 +442,18 @@
             accountTableBody.innerHTML = ''; 
 
             if(document.getElementById('chk-branches').checked) {
-                branches.forEach(b => { branchTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(b, activeComps, baseRadius, true)); });
+                branches.forEach(b => { branchTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(b, activeComps, baseRadius)); });
             } else {
                 branchTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding: 15px;">Hub Layer Disabled</td></tr>';
             }
 
             if(document.getElementById('chk-top20').checked) {
-                topAccounts.forEach(t => { accountTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(t, activeComps, baseRadius, false)); });
+                topAccounts.forEach(t => { accountTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(t, activeComps, baseRadius)); });
             } else {
                 accountTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding: 15px;">Account Layer Disabled</td></tr>';
             }
         }
 
-        // ---------------------------------------------------------
-        // 5. EVENT LISTENERS
-        // ---------------------------------------------------------
         function setupToggle(checkboxId, layerKey) {
             document.getElementById(checkboxId).addEventListener('change', function(e) {
                 if(e.target.checked) map.addLayer(layers[layerKey]);
@@ -467,7 +474,6 @@
         });
 
         updateDashboard();
-
     </script>
 </body>
 </html>
