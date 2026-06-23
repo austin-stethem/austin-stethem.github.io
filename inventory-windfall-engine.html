@@ -3,45 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Study 05: FIFO Inventory Revaluation & Windfall Mapping - Austin Sonny Stethem</title>
+    <title>FIFO Inventory Revaluation - Austin Stethem</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
-        :root { --dark-slate-blue: #1a2433; --alert-red: #b32525; --success-green: #27ae60; --bg-color: #fbfbfb; }
-        body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 950px; margin: 0 auto; padding: 40px 20px; background-color: var(--bg-color); }
+        :root { 
+            --dark-slate-blue: #1a2433; 
+            --alert-red: #b32525; 
+            --success-green: #27ae60; 
+            --bg-color: #fbfbfb; 
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif; 
+            color: #333; 
+            font-size: 10.5pt; 
+            line-height: 1.6; 
+            max-width: 950px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background-color: var(--bg-color); 
+        }
+        
+        .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
+        .back-link:hover { text-decoration: underline; }
+        
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
-        .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
         .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
         .meta-cell:last-child { border-right: none; }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
-        .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
-        h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        p { text-align: justify; margin-bottom: 15px; color: #334155; }
         
-        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
-        .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; }
-        .sim-main { flex: 1; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
-        .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
+        .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
+        
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        p { text-align: justify; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
+        li { margin-bottom: 8px; }
+        
+        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
+        
+        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); align-items: stretch; flex-wrap: wrap; overflow: hidden;}
+        .sim-sidebar { width: 320px; flex-shrink: 0; background: #f1f5f9; color: #1e293b; padding: 25px; display: flex; flex-direction: column; border-right: 1px solid #cbd5e1;}
+        .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #ffffff; display: flex; flex-direction: column;}
+        .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; color: #475569;}
+        
         .control-group { margin-bottom: 25px; }
-        .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
-        .val-readout { color: var(--alert-red); font-family: monospace; font-size: 11pt; font-weight: bold;}
+        .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #1e293b; }
+        .val-readout { color: var(--alert-red); font-family: 'Courier New', monospace; font-size: 11pt; font-weight: bold;}
         input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--alert-red); }
         
-        .chart-container { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 4px; border-top: 4px solid #0369a1; margin-bottom: 20px;}
-        .chart-box { position: relative; height: 350px; width: 100%; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 20px; text-align: center; border-radius: 6px; border-top: 4px solid var(--dark-slate-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+        .kpi-value { font-size: 24pt; font-family: monospace; font-weight: bold; color: var(--dark-slate-blue); }
+        .kpi-sub { font-size: 8.5pt; font-style: italic; color: #94a3b8; margin-top: 5px;}
         
-        .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; color: #0f172a; }
+        .chart-container { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 4px; border-top: 4px solid #0369a1; margin-bottom: 20px;}
+        .chart-box { position: relative; height: 320px; width: 100%; }
+
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
+        .impact-box ul { font-size: 10pt; }
+
+        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
+        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
+        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
+        
+        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
+        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center;}
+        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
+        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
+        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
+        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
+        .nav-btn.next .nav-label { color: #fca5a5; }
+        .nav-title { font-size: 11pt; font-weight: bold;}
+
+        @media (max-width: 800px) {
+            .meta-table tr { display: flex; flex-direction: column; }
+            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
+            .sim-container { flex-direction: column; }
+            .sim-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid #cbd5e1; }
+            .sim-main { padding: 15px; box-sizing: border-box; min-width: unset; }
+            .project-navigation { flex-direction: column; }
+            .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .doc-title { font-size: 22pt; }
+        }
     </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
     <div class="doc-header">
-        <div class="doc-tagline">Systems Architecture & Analytics Portfolio Case Study</div>
-        <div class="doc-title">FIFO Inventory Revaluation & Windfall Mapping</div>
+        <div class="doc-tagline">Financial Modeling & P&L Strategy</div>
+        <div class="doc-title">FIFO Inventory Revaluation & EBITDA Windfall</div>
     </div>
 
     <table class="meta-table">
@@ -52,168 +116,262 @@
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Cash Flow Modeling, FIFO Valuation, Realized P&L Forecasting</span>
+                <span class="meta-value">Cash Flow Modeling, FIFO/LIFO Mechanics, Margin Realization, P&L Defense</span>
             </td>
             <td class="meta-cell">
-                <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">JavaScript, Chart.js, ERP Inventory Valuation Rules</span>
+                <span class="meta-label">Strategic Focus</span>
+                <span class="meta-value">Capitalizing on supply chain inflation to generate short-term EBITDA windfalls.</span>
             </td>
         </tr>
     </table>
 
     <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live physical inventory volumes and localized unit costs have been normalized into a 35% Base Margin heuristic. The time-scale logic driving the FIFO windfall visualization remains an exact reflection of production financial modeling.
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live standard costs, actual vendor increase schedules, and specific SKU velocities have been replaced with randomized abstractions. The mathematical mechanism for capitalizing on FIFO (First-In, First-Out) inventory layers remains identical to the logic utilized to generate millions in bottom-line revenue.
     </div>
 
-    <h2>1. The Disconnect: Replacement Cost vs. Realized P&L</h2>
-    <p>A common vulnerability in enterprise pricing strategy is treating cost as a theoretical absolute. When a vendor announces a mid-year cost increase, standard systems calculate the immediate loss in <strong>Replacement Margin</strong>. However, large distribution networks physically warehouse weeks or months of inventory. Therefore, when a preemptive price increase is executed in the ERP to defend against a future cost spike, the enterprise temporarily generates massive excess profit by selling <em>cheap, old-cost stock</em> at the <em>new, higher-cost price point</em>. This is known as a FIFO Inventory Windfall.</p>
+    <h2>1. Situation & Task: The Inflationary Lag</h2>
     
-    <h2>2. Time-Scaled Mathematical Architecture</h2>
-    <p>By decoupling the Unit Volumetric Margin from the Time-Scaled Margin, I am able to forecast actual cash flow to the bottom line, allowing the enterprise to strategically weather cost storms using the buffer of our own warehouses. The engine calculates the precise Realized Margin at time ($t$) using First-In, First-Out valuation logic:</p>
-    
-    <div class="math-block">
-        $$Realized Margin_{t} = \frac{(QOH \times Margin_{windfall}) + ((Vol_{t} - QOH) \times Margin_{replacement})}{Vol_{t}}$$
+    <div class="scenario-box">
+        <strong>The Enterprise Scenario (Step 5 of 5)</strong>
+        Our Phocas BI tracking (Step 4) confirms our new price points are holding firm in the market without sacrificing volume. Now we arrive at the most lucrative part of the cycle. Because our supply chain teams secured 60 days of inventory <em>before</em> the 15% cost spike hit, and we decoupled our retail price from our physical receiving docks, we are selling cheap stock at the newly elevated retail tiers. We must model this immediate EBITDA windfall.
     </div>
+
+    <p><strong>The Context:</strong> In physical distribution, when a manufacturer announces a sudden 10% price increase, the instinct of a reactive pricing team is to wait. They often hold prices steady until the new, expensive inventory physically arrives on the shelves, believing this is the "fair" way to treat customers.</p>
+    <p><strong>The Task:</strong> This reactive mindset destroys potential capital. In reality, a mature distribution network often holds 60 to 90 days of Quantity On Hand (QOH) that was purchased at the <em>old, cheaper cost</em>. I was tasked with engineering a financial strategy to decouple our retail price logic from our physical receiving docks, transforming supply chain inflation into an immediate P&L advantage.</p>
+
+    <h2>2. Action: Pricing on Replacement Cost</h2>
+    <p>I transitioned the organizational pricing mechanism away from <em>Average Cost</em> and strictly onto <em>Replacement Cost</em>. By architecting this business logic into the ERP, the system instantly triggers a retail markup the moment a vendor price increase is announced—regardless of what is sitting on our shelves.</p>
+    
+    <p><strong>Systems Integration (The Ecosystem):</strong> In reality, vendor cost increases are never a flat percentage across all SKUs. As demonstrated in my <em>Algorithmic Margin Defense</em> and <em>Stochastic Optimization</em> models, cost shocks vary wildly by item. Those engines handle the micro-level elasticity—protecting KVIs and finding margin on elastic items—to ultimately calculate a <strong>Weighted Average Cost Spike</strong> for the portfolio. It is that finalized, blended deficit that feeds into this macro-level FIFO model.</p>
+
+    <p>Because accounting strictly follows FIFO (First-In, First-Out), we are now selling inventory that was bought cheaply, but charging the customer the new, inflated market rate. This gap between the old physical cost and the new retail price creates a temporary, massive spike in margin: <strong>The EBITDA Windfall.</strong></p>
+
+    <h2>3. Interactive FIFO Windfall Simulator</h2>
+    <p><em>Use the operational sliders below to simulate a vendor cost shock on a high-velocity product line. The engine will calculate the exact amount of "Free EBITDA" generated by executing the price increase immediately while bleeding through the existing physical inventory buffer.</em></p>
 
     <div class="sim-container">
         <div class="sim-sidebar">
-            <div class="sidebar-header">Disruption Parameters</div>
+            <div class="sidebar-header">Operational Inputs</div>
             
             <div class="control-group">
-                <label><span>Month 6 Cost Spike (%):</span> <span class="val-readout" id="val-spike">+0%</span></label>
-                <input type="range" id="slider-spike" min="0" max="20" value="0">
+                <label><span>Monthly Velocity (Run Rate):</span> <span class="val-readout" style="color: #0369a1;" id="val-velocity">1,500 Units</span></label>
+                <input type="range" id="slider-velocity" min="500" max="5000" step="100" value="1500">
+                <div style="font-size: 8pt; color: #64748b; margin-top: 4px;">Baseline target margin: 35.0%</div>
             </div>
 
             <div class="control-group">
-                <label><span>Engine Price Increase (%):</span> <span class="val-readout" id="val-price">+0%</span></label>
-                <input type="range" id="slider-price" min="0" max="20" value="0">
+                <label><span>Weighted Cost Spike (%):</span> <span class="val-readout" id="val-increase">+12.0%</span></label>
+                <input type="range" id="slider-increase" min="2" max="25" step="0.5" value="12.0">
+                <div style="font-size: 8pt; color: #64748b; margin-top: 4px;">Blended average across KVI/Elastic tiers.</div>
             </div>
-
-            <div class="sidebar-header" style="margin-top: 40px;">Physical Warehouse Status</div>
 
             <div class="control-group">
-                <label><span>Network QOH (Days Supply):</span> <span class="val-readout" id="val-qoh" style="color:var(--success-green);">30 Days</span></label>
-                <input type="range" id="slider-qoh" min="0" max="150" step="15" value="30">
+                <label><span>Current QOH Buffer (Days):</span> <span class="val-readout" style="color: #27ae60;" id="val-qoh">60 Days</span></label>
+                <input type="range" id="slider-qoh" min="0" max="150" step="15" value="60">
             </div>
 
-            <div style="font-size: 8.5pt; color: #94a3b8; font-style: italic; line-height: 1.4; margin-bottom: 20px;">
-                *Simulation executes mid-year (Month 6). Adjust QOH depth to visualize how physical inventory physically dictates the timing of the P&L hit or the creation of a temporary cash windfall.
+            <div style="font-size: 8.5pt; color: #475569; border-top: 1px dashed #cbd5e1; padding-top: 15px; margin-top: 30px;">
+                <strong>System Logic:</strong> The algorithm assumes the retail price is raised on Day 1 to defend the 35% baseline against the new replacement cost. The Windfall is generated exclusively on the physical units already owned at the legacy cost.
             </div>
         </div>
 
         <div class="sim-main">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title" style="color: #0369a1;">Windfall Duration</div>
+                    <div class="kpi-value" id="out-duration" style="color: #0369a1;">--</div>
+                    <div class="kpi-sub">Time to bleed legacy stock</div>
+                </div>
+                <div class="kpi-card" style="border-top-color: var(--alert-red);">
+                    <div class="kpi-title" style="color: var(--alert-red);">Peak FIFO Margin</div>
+                    <div class="kpi-value" id="out-peak" style="color: var(--alert-red);">--</div>
+                    <div class="kpi-sub">Margin realized on old stock</div>
+                </div>
+                <div class="kpi-card" style="border-top-color: var(--success-green); background: #f0fdf4;">
+                    <div class="kpi-title" style="color: var(--success-green);">Total EBITDA Windfall</div>
+                    <div class="kpi-value" id="out-windfall" style="color: var(--success-green);">$--</div>
+                    <div class="kpi-sub">Pure P&L Profit Generation</div>
+                </div>
+            </div>
+
             <div class="chart-container">
-                <div style="font-size: 10pt; font-weight: 700; color: var(--dark-slate-blue); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;">12-Month Realized P&L Trajectory</div>
-                <div style="font-size: 8.5pt; color: #64748b; margin-bottom: 15px;">Visualizing the FIFO gap between Replacement theoreticals and actual realized cash flow.</div>
+                <div class="kpi-title" style="margin-bottom: 10px;">Margin Realization Timeline (FIFO Bleed-Out)</div>
                 <div class="chart-box">
-                    <canvas id="windfallChart"></canvas>
+                    <canvas id="fifoChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <h2>4. Result: Bottom-Line P&L Impact</h2>
+    
+    <div class="impact-box">
+        <h3>Turning Inflation into a Revenue Center</h3>
+        <p>By shifting the organization's logic from Average Cost to Replacement Cost, the Pricing Department ceased to be a reactive administrative function and became an active revenue center.</p>
+        <p>This strategy demonstrates that true analytical value doesn't just come from building complex machine learning models; it comes from deeply understanding <strong>the mechanics of cash flow</strong>. By leveraging the physical realities of the supply chain against the accounting principles of the General Ledger, I was able to generate verifiable, risk-free EBITDA windfalls month over month, fundamentally padding the corporate bottom line during periods of severe macroeconomic inflation.</p>
+    </div>
+
+    <div class="next-step-box">
+        <h3>Ecosystem Architecture Complete</h3>
+        <p>This concludes the 5-step Enterprise Pricing Architecture scenario. We successfully identified the geospatial threat, probabilistically modeled the risk floor, deployed guardrail-constrained ERP updates, established the BI feedback loop to monitor market health, and ultimately captured the FIFO inventory windfall.</p>
+        <div class="project-navigation">
+            <a href="phocas-pricing-strategy.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Previous Phase</span>
+                <span class="nav-title">Step 4: Performance Tracking</span>
+            </a>
+            <a href="index.html" class="nav-btn next">
+                <span class="nav-label">End of Scenario &rarr;</span>
+                <span class="nav-title">Return to Ecosystem Hub</span>
+            </a>
+        </div>
+    </div>
+
     <script>
-        const sliderSpike = document.getElementById('slider-spike');
-        const sliderPrice = document.getElementById('slider-price');
+        // DOM Element bindings
+        const sliderVelocity = document.getElementById('slider-velocity');
+        const sliderIncrease = document.getElementById('slider-increase');
         const sliderQoh = document.getElementById('slider-qoh');
-        const valSpike = document.getElementById('val-spike');
-        const valPrice = document.getElementById('val-price');
+        
+        const valVelocity = document.getElementById('val-velocity');
+        const valIncrease = document.getElementById('val-increase');
         const valQoh = document.getElementById('val-qoh');
+
         let chartInstance = null;
 
-        const BASE_MARGIN = 35.0;
+        // Base Financials
+        const BASE_COST = 100.00;
+        const TARGET_MARGIN = 0.35;
+        const BASE_PRICE = BASE_COST / (1 - TARGET_MARGIN); // $153.85
 
         function updateSimulation() {
-            const spike = parseInt(sliderSpike.value);
-            const priceInc = parseInt(sliderPrice.value);
+            // Get inputs
+            const velocityMonthly = parseInt(sliderVelocity.value);
+            const increasePct = parseFloat(sliderIncrease.value) / 100;
             const qohDays = parseInt(sliderQoh.value);
 
-            valSpike.innerText = `+${spike}%`;
-            valPrice.innerText = `+${priceInc}%`;
-            valQoh.innerText = `${qohDays} Days`;
+            // Update UI Labels
+            valVelocity.innerText = velocityMonthly.toLocaleString() + " Units";
+            valIncrease.innerText = "+" + (increasePct * 100).toFixed(1) + "%";
+            valQoh.innerText = qohDays + " Days";
 
-            // Calculate Monthly Margins
-            const replacementMargin = BASE_MARGIN - spike + priceInc;
-            const windfallMargin = BASE_MARGIN + priceInc;
+            // Mathematics
+            const newCost = BASE_COST * (1 + increasePct);
+            const newPrice = newCost / (1 - TARGET_MARGIN);
             
-            // Convert QOH days to months for charting
-            const qohMonths = qohDays / 30;
+            // Peak margin is selling Old Cost at New Price
+            const peakMargin = (newPrice - BASE_COST) / newPrice;
 
-            let dataRealized = [];
-            let dataReplacement = [];
+            // Windfall calculation
+            const unitsOwned = (velocityMonthly / 30) * qohDays;
+            const normalProfitPerUnit = BASE_PRICE - BASE_COST;
+            const windfallProfitPerUnit = newPrice - BASE_COST;
+            const absoluteWindfall = (windfallProfitPerUnit - normalProfitPerUnit) * unitsOwned;
 
-            for (let month = 1; month <= 12; month++) {
-                if (month < 6) {
-                    // Before disruption
-                    dataRealized.push(BASE_MARGIN);
-                    dataReplacement.push(BASE_MARGIN);
-                } else {
-                    // Month 6 and beyond
-                    dataReplacement.push(replacementMargin); // Theoretical drops instantly
-                    
-                    const monthsSinceDisruption = month - 6;
-                    
-                    if (monthsSinceDisruption < Math.floor(qohMonths)) {
-                        // Fully within the windfall period (selling old stock)
-                        dataRealized.push(windfallMargin);
-                    } else if (monthsSinceDisruption === Math.floor(qohMonths)) {
-                        // Transition month (fractional split between old and new stock)
-                        const remainder = qohMonths - Math.floor(qohMonths);
-                        const blendedMonth = (windfallMargin * remainder) + (replacementMargin * (1 - remainder));
-                        dataRealized.push(blendedMonth);
-                    } else {
-                        // Windfall exhausted, hitting new reality
-                        dataRealized.push(replacementMargin);
-                    }
-                }
+            // Update KPIs
+            document.getElementById('out-duration').innerText = qohDays + " Days";
+            document.getElementById('out-peak').innerText = (peakMargin * 100).toFixed(1) + "%";
+            document.getElementById('out-windfall').innerText = "$" + Math.round(absoluteWindfall).toLocaleString();
+
+            // Generate Chart Data (Timeline over 6 months)
+            const labels = ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'];
+            let baselineProfitData = [];
+            let windfallData = [];
+            
+            let remainingOldUnits = unitsOwned;
+
+            for(let i=0; i<6; i++) {
+                let monthlyUnitsSold = velocityMonthly;
+                let monthOldUnitsSold = Math.min(remainingOldUnits, monthlyUnitsSold);
+                let monthNewUnitsSold = monthlyUnitsSold - monthOldUnitsSold;
+
+                // Baseline profit if we were just buying and selling at the new replacement cost
+                let baselineProfit = monthlyUnitsSold * (newPrice - newCost);
+                baselineProfitData.push(baselineProfit);
+                
+                // Track absolute windfall dollars generated purely from the old, cheap inventory
+                let monthWindfall = monthOldUnitsSold * (newCost - BASE_COST);
+                windfallData.push(monthWindfall);
+
+                remainingOldUnits -= monthOldUnitsSold;
             }
 
-            renderChart(dataReplacement, dataRealized);
+            renderChart(labels, baselineProfitData, windfallData);
         }
 
-        function renderChart(repData, realData) {
-            const ctx = document.getElementById('windfallChart').getContext('2d');
+        function renderChart(labels, baselineProfitData, windfallData) {
+            const ctx = document.getElementById('fifoChart').getContext('2d');
             if (chartInstance) chartInstance.destroy();
 
             chartInstance = new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun (Spike)', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    labels: labels,
                     datasets: [
                         {
-                            label: 'Theoretical Replacement Margin',
-                            data: repData,
-                            borderColor: '#b32525',
-                            borderDash: [5, 5],
-                            borderWidth: 2,
-                            fill: false,
-                            tension: 0.1
+                            label: 'Extra FIFO Windfall Profit ($)',
+                            data: windfallData,
+                            backgroundColor: '#27ae60', // Success Green
+                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }
                         },
                         {
-                            label: 'Realized P&L Margin (FIFO)',
-                            data: realData,
-                            borderColor: '#27ae60',
-                            backgroundColor: 'rgba(39, 174, 96, 0.15)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.1
+                            label: 'Baseline Standard Profit ($)',
+                            data: baselineProfitData,
+                            backgroundColor: '#94a3b8', // Slate Gray
+                            borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4 }
                         }
                     ]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
+                    responsive: true,
+                    maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
-                    plugins: { tooltip: { callbacks: { label: function(context) { return context.raw.toFixed(1) + '% Margin'; } } } },
-                    scales: { y: { min: 10, max: 60, ticks: { callback: function(value) { return value + '%'; } }, grid: { color: '#e2e8f0' } }, x: { grid: { display: false } } }
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { family: "'Segoe UI', sans-serif", size: 12, weight: '500' } } },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleFont: { size: 13, family: "'Segoe UI', sans-serif" },
+                            bodyFont: { size: 13, family: "'Courier New', monospace" },
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.dataset.label.replace(' ($)', '') + ': $' + Math.round(context.raw).toLocaleString();
+                                },
+                                footer: function(tooltipItems) {
+                                    let total = 0;
+                                    tooltipItems.forEach(function(tooltipItem) {
+                                        total += tooltipItem.raw;
+                                    });
+                                    return '\n Total Monthly Profit: $' + Math.round(total).toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            stacked: true,
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: 'Total Profit Dollars ($)', font: {size: 11, weight: 'bold'} },
+                            ticks: { callback: function(value) { return '$' + (value/1000).toFixed(0) + 'k'; } },
+                            grid: { color: '#e2e8f0', borderDash: [4, 4] }
+                        },
+                        x: {
+                            stacked: true,
+                            grid: { display: false },
+                            ticks: { font: {size: 11, weight: '500'} }
+                        }
+                    }
                 }
             });
         }
 
-        sliderSpike.addEventListener('input', updateSimulation);
-        sliderPrice.addEventListener('input', updateSimulation);
+        // Attach listeners to sliders
+        sliderVelocity.addEventListener('input', updateSimulation);
+        sliderIncrease.addEventListener('input', updateSimulation);
         sliderQoh.addEventListener('input', updateSimulation);
-        
-        updateSimulation(); // Init
+
+        // Run simulation immediately on load
+        updateSimulation();
     </script>
 </body>
 </html>
