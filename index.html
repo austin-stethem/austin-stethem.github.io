@@ -11,8 +11,8 @@
         .page-header p { margin: 5px 0; color: #64748b; }
         
         /* Updated contact links styling */
-        .contact-info a { color: #64748b; text-decoration: none; }
-        .contact-info a:hover { color: #b32525; text-decoration: underline; }
+        .contact-info a { color: #b32525; font-weight: 600; text-decoration: none; }
+        .contact-info a:hover { color: #8e1c1c; text-decoration: underline; }
         
         .nav-links { margin-top: 10px; }
         .nav-links a { color: #b32525; font-weight: bold; text-decoration: none; margin: 0 10px; }
@@ -36,16 +36,27 @@
         .tech { font-size: 0.8rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
         .desc { font-size: 0.9rem; margin-bottom: auto; }
         
+        /* Upgraded Button Styling */
         .btn { 
             display: block; 
             margin-top: 15px; 
-            color: #b32525; 
-            font-weight: bold; 
+            background: #f1f5f9; /* Slightly darker than the white card background */
+            color: #1a2433; 
+            border: 1px solid #cbd5e1;
+            padding: 10px 15px;
+            font-weight: 600; 
             text-decoration: none; 
             font-size: 0.9rem; 
             text-align: center;
+            border-radius: 4px;
+            transition: all 0.2s ease-in-out;
         }
-        .btn:hover { text-decoration: underline; }
+        .btn:hover { 
+            background: #e2e8f0; /* Darkens the gray on hover */
+            border-color: #94a3b8;
+            color: #b32525; /* Signature red text on hover */
+            text-decoration: none; 
+        }
     </style>
 </head>
 <body>
@@ -75,15 +86,23 @@
             <a href="geospatial.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 02 -->
+        <!-- Case Study 02 (NEW) -->
         <div class="card">
-            <div class="tech">Python, Monte Carlo, KVI Inputs</div>
-            <h3>Python Monte Carlo Margin Risk</h3>
-            <p class="desc">Stochastic modeling engine running 50,000 permutations to stress-test P95 margin vulnerability.</p>
-            <a href="monte-carlo.html" class="btn">Review Case Study &rarr;</a>
+            <div class="tech">Python, Deterministic Math, KVI P-Tiers</div>
+            <h3>Algorithmic Margin Defense</h3>
+            <p class="desc">Deterministic business logic engine calculating cross-subsidization markups to protect baseline EBITDA.</p>
+            <a href="algorithmic-margin-defense.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 03 -->
+        <!-- Case Study 03 (NEW) -->
+        <div class="card">
+            <div class="tech">Python, Monte Carlo, Data Science</div>
+            <h3>Stochastic Margin Optimization</h3>
+            <p class="desc">Data science simulator injecting statistical noise to find optimal expected profit (E[P]) target prices.</p>
+            <a href="monte-carlo-optimization.html" class="btn">Review Case Study &rarr;</a>
+        </div>
+
+        <!-- Case Study 04 -->
         <div class="card">
             <div class="tech">JavaScript, Chart.js, Waterfall Logic</div>
             <h3>Compounding Waterfall & Pricing</h3>
@@ -91,7 +110,7 @@
             <a href="compounding-waterfall.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 04 -->
+        <!-- Case Study 05 -->
         <div class="card">
             <div class="tech">SQL, Phocas BI, ERP Integration</div>
             <h3>Phocas BI Pricing Strategy</h3>
@@ -99,7 +118,7 @@
             <a href="phocas-pricing-strategy.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 05 -->
+        <!-- Case Study 06 -->
         <div class="card">
             <div class="tech">JavaScript, Cash Flow, FIFO Modeling</div>
             <h3>FIFO Inventory Revaluation</h3>
@@ -107,7 +126,7 @@
             <a href="inventory-windfall-engine.html" class="btn">Review Case Study &rarr;</a>
         </div>
 
-        <!-- Case Study 06 -->
+        <!-- Case Study 07 -->
         <div class="card">
             <div class="tech">ERP Ecosystems, Reconciliation, API Logic</div>
             <h3>Crisis Management & Reconciliation</h3>
