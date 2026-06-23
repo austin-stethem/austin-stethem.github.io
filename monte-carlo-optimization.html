@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stochastic Margin Optimization - Austin Sonny Stethem</title>
-    <!-- Chart.js Core -->
+    <title>Stochastic Margin Optimization - Austin Stethem</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
@@ -16,6 +15,7 @@
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
         .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
         .meta-cell:last-child { border-right: none; }
@@ -28,6 +28,22 @@
         ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
         li { margin-bottom: 8px; }
         
+        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
+        
+        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
+        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
+        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
+        
+        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
+        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center;}
+        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
+        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
+        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
+        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
+        .nav-btn.next .nav-label { color: #fca5a5; }
+        .nav-title { font-size: 11pt; font-weight: bold;}
+
         .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); align-items: stretch; flex-wrap: wrap;}
         .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; display: flex; flex-direction: column; }
         .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
@@ -60,14 +76,22 @@
         .code-string { color: #98c379; }
         .code-number { color: #d19a66; }
 
-        /* New Impact Box Styling */
         .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
         .impact-box ul { font-size: 10pt; }
 
-        @media (max-width: 768px) {
-            .sim-sidebar { width: 100%; }
+        /* MOBILE RESPONSIVENESS FIXES */
+        @media (max-width: 800px) {
+            .meta-table tr { display: flex; flex-direction: column; }
+            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
+            .sim-container { flex-direction: column; }
+            .sim-sidebar { width: 100%; box-sizing: border-box; }
+            .sim-main { padding: 15px; box-sizing: border-box; min-width: unset; }
+            .project-navigation { flex-direction: column; }
+            .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .doc-title { font-size: 22pt; }
         }
     </style>
 </head>
@@ -92,7 +116,7 @@
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">Data Science, Python (NumPy), Monte Carlo Methods</span>
+                <span class="meta-value">SQL, Python (NumPy, Pandas), Jupyter, Monte Carlo Methods</span>
             </td>
         </tr>
     </table>
@@ -102,6 +126,12 @@
     </div>
 
     <h2>1. Situation: The Flaw of Averages</h2>
+    
+    <div class="scenario-box">
+        <strong>The Enterprise Scenario (Step 2 of 5)</strong>
+        Continuing from Step 1, we have isolated our highly-competitive battleground territories via geospatial mapping. We still face the impending 15% vendor cost spike. However, before executing a blanket price increase to offset that cost, we must mathematically simulate the risk. If we raise prices on our sensitive Key Value Items (KVIs) in those contested zones, how much volume will we lose to the discounter? We must establish our statistical risk boundaries.
+    </div>
+
     <p><strong>The Context:</strong> In standard pricing strategy, teams often rely on single-point historical averages to set target margins. However, the supply chain is a chaotic system. When you price a SKU based on the "average" freight cost and "average" demand, you fall victim to the Flaw of Averages: a strategy that works 50% of the time, and blows up the other 50%. If global freight costs spike 30% for a single quarter, a static markup strategy can instantly wipe out a category's annual EBITDA.</p>
 
     <h2>2. Task: Shifting to Probabilistic Risk Modeling</h2>
@@ -175,10 +205,16 @@
         </div>
     </div>
 
-    <h2>4. Action: Python Time-Series Vectorization</h2>
-    <p>The mathematical backbone is executed in Python using <code>NumPy</code> vectorization to process 60,000 total time-steps (5,000 realities &times; 12 months) in milliseconds. Crucially, before the stochastic engine runs, historical sales data must be sanitized. The code below demonstrates how Interquartile Range (IQR) logic strips promotional anomalies before generating the baseline demand matrix.</p>
+    <h2>4. Action: SQL Pipeline & Data Science Stack</h2>
+    <p>The mathematical backbone is built on an end-to-end data stack. First, I use <strong>SQL</strong> to extract high-fidelity transactional history from the ERP. This data is pulled into <strong>Jupyter</strong>, where I utilize <strong>Pandas</strong> to clean and sanitize anomalies (e.g., removing promotional outliers using IQR logic), and finally <strong>NumPy</strong> for high-speed vectorization of the simulation itself.</p>
     
-    <pre class="code-block"><code><span class="code-comment"># Python Stochastic Margin Optimization (Time-Series Module)</span>
+    <pre class="code-block"><code><span class="code-comment">-- SQL Pipeline: Extracting cleaned baseline transactional data</span>
+<span class="code-keyword">SELECT</span> sku_id, transaction_date, sales_volume, unit_cost
+<span class="code-keyword">FROM</span> enterprise_data_warehouse.sales_fact_table
+<span class="code-keyword">WHERE</span> promo_flag = <span class="code-number">0</span> 
+<span class="code-keyword">AND</span> transaction_date > <span class="code-string">'2025-01-01'</span>;
+
+<span class="code-comment"># Python Stochastic Margin Optimization (Time-Series Module)</span>
 <span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
 <span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
 
@@ -226,12 +262,27 @@
     
     <div class="impact-box">
         <h3>Strategic ROI & Continuous Improvement</h3>
-        <p>By abandoning single-point averages and utilizing this time-series probabilistic framework, the pricing organization successfully protected long-term EBITDA while identifying hidden margin opportunities on volatile items. However, a static algorithm eventually degrades. The final architectural step integrates these Monte Carlo outputs into a <strong>Supervised Machine Learning Feedback Loop</strong>.</p>
+        <p>By abandoning single-point averages and utilizing this probabilistic framework, the pricing organization successfully protected long-term EBITDA. The final architectural step integrates these Monte Carlo outputs into a <strong>Supervised Machine Learning Feedback Loop</strong>.</p>
         <ul>
-            <li><strong>Dynamic Elasticity Tuning:</strong> Every 30 days, actual Point-of-Sale (POS) data is fed back into the engine. The model calculates the delta between its <em>Predicted P50 Expected Profit</em> and the <em>Realized Profit</em>, automatically micro-adjusting its own internal elasticity weights to shrink the variance.</li>
-            <li><strong>Concept Drift Defense:</strong> Standard algorithms fail when market paradigms abruptly shift (e.g., a local competitor liquidates, temporarily skewing volume). By utilizing anomaly detection within the feedback loop, the engine automatically sanitizes poisoned data, ensuring it only trains on true, long-term market trends.</li>
+            <li><strong>Dynamic Elasticity Tuning:</strong> Every 30 days, actual Point-of-Sale (POS) data is fed back into the engine. The model calculates the delta between its <em>Predicted P50 Expected Profit</em> and the <em>Realized Profit</em>, automatically micro-adjusting its own internal elasticity weights.</li>
+            <li><strong>Concept Drift Defense:</strong> The engine uses anomaly detection to sanitize "poisoned" data (like temporary supply shocks), ensuring the training set reflects true long-term market trends rather than transient noise.</li>
         </ul>
-        <p style="margin-bottom: 0; font-weight: bold; color: var(--alert-red);">The Result: A self-correcting pricing engine that grows mathematically sharper and more profitable with every fiscal quarter.</p>
+        <p style="margin-bottom: 0; font-weight: bold; color: var(--alert-red);">The Result: A self-correcting pricing engine that grows mathematically sharper with every fiscal quarter.</p>
+    </div>
+
+    <div class="next-step-box">
+        <h3>Ecosystem Step 3: Strategy Execution</h3>
+        <p>We now have our geospatial threat map (Step 1) and our absolute probabilistic price floors (Step 2). It is time to execute. We must deploy an algorithm into the ERP that surgically raises prices to offset the 15% cost spike without breaching the risk limits of our core items.</p>
+        <div class="project-navigation">
+            <a href="geospatial.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Previous Phase</span>
+                <span class="nav-title">Step 1: Market Intelligence</span>
+            </a>
+            <a href="algorithmic-margin-defense.html" class="nav-btn next">
+                <span class="nav-label">Next Phase &rarr;</span>
+                <span class="nav-title">Step 3: Strategy Execution</span>
+            </a>
+        </div>
     </div>
 
     <script>
@@ -244,7 +295,6 @@
 
         sliderPrice.addEventListener('input', (e) => { valPrice.innerText = `$${parseFloat(e.target.value).toFixed(2)}`; });
 
-        // Box-Muller transform for normal distribution in JS
         function randomNormal(mean, stdDev) {
             let u = 1 - Math.random(); 
             let v = Math.random();
@@ -255,52 +305,35 @@
         function triggerSimulation() {
             btnExecute.disabled = true;
             btnExecute.innerText = "Running 5,000 Realities...";
-            
-            setTimeout(() => {
-                runOptimization();
-                btnExecute.disabled = false;
-                btnExecute.innerText = "Run 5,000 Permutations";
-            }, 600);
+            setTimeout(() => { runOptimization(); btnExecute.disabled = false; btnExecute.innerText = "Run 5,000 Permutations"; }, 600);
         }
 
         function runOptimization() {
             const targetPrice = parseFloat(sliderPrice.value);
             const volatility = parseFloat(selectVol.value);
             const elasticity = parseFloat(selectElast.value);
-            
             const baseCost = 45.00;
             const baselinePrice = 65.00;
             const baselineDemand = 500;
             const iterations = 5000;
             const months = 12;
-            
             let allPaths = [];
 
-            // Calculate demand destruction (deterministic baseline)
             const priceDelta = (targetPrice - baselinePrice) / baselinePrice;
             const adjustedDemandBase = baselineDemand * (1 - (priceDelta * elasticity));
 
-            // Run 5000 Stochastic Random Walks
             for (let i = 0; i < iterations; i++) {
                 let cumulativeProfit = 0;
-                let path = [0]; // Month 0 is $0
-                
+                let path = [0];
                 for (let m = 1; m <= months; m++) {
-                    // 1. Randomize Cost (Volatile walk)
                     let simulatedCost = baseCost * (1 + randomNormal(0, volatility));
-                    
-                    // 2. Randomize Demand (Noise)
-                    let simulatedDemand = randomNormal(adjustedDemandBase, 40); 
-                    simulatedDemand = Math.max(simulatedDemand, 0); // Can't sell negative items
-
-                    // 3. Calculate instance profit
+                    let simulatedDemand = Math.max(randomNormal(adjustedDemandBase, 40), 0);
                     cumulativeProfit += (targetPrice - simulatedCost) * simulatedDemand;
                     path.push(cumulativeProfit);
                 }
                 allPaths.push(path);
             }
 
-            // Extract cross-sectional percentiles for the overlay lines
             let p5Path = [0], p50Path = [0], p95Path = [0];
             for (let m = 1; m <= months; m++) {
                 let monthCrossSection = allPaths.map(p => p[m]).sort((a, b) => a - b);
@@ -389,8 +422,7 @@
                                 color: '#1a2433'
                             }
                         },
-                        tooltip: { enabled: false }, // Too messy with 100 lines overlapping
-                        datalabels: { display: false }
+                        tooltip: { enabled: false } // Too messy with 100 lines overlapping
                     },
                     scales: {
                         y: {
