@@ -24,13 +24,17 @@
             color: #333;
             font-size: 10.5pt;
             line-height: 1.6;
-            max-width: 10.5in; /* Kept wider for map dashboard layout */
+            max-width: 10.5in; 
             margin: 0 auto;
             padding: 40px 20px;
             background-color: var(--bg-color);
         }
 
-        /* PDF HEADER STYLING */
+        /* PORTFOLIO NAVIGATION */
+        .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
+        .back-link:hover { text-decoration: underline; }
+
+        /* HEADER STYLING */
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
@@ -45,7 +49,7 @@
 
         /* Typography */
         h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        h3 { font-family: 'Segoe UI', sans-serif; font-size: 12pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+        h3 { font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
         p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
         ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
         li { margin-bottom: 8px; }
@@ -90,6 +94,8 @@
 </head>
 <body>
 
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
     <div class="doc-header">
         <div class="doc-tagline">Geospatial Intelligence & Data Science</div>
         <div class="doc-title">Predictive VIO Market Capture & Topological Threat Modeling</div>
@@ -103,43 +109,43 @@
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Spatial Algorithms, Topological Risk, ACES/PIES/VIO Data Joins, Market Penetration</span>
+                <span class="meta-value">Spatial Algorithms, TAM vs. SOM, ACES/PIES/VIO Integrations</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">JavaScript, Maps API, Experian VIO Datasets, Haversine Distance Matrices</span>
+                <span class="meta-value">JavaScript, Maps API, Experian VIO Datasets, Haversine Matrices</span>
             </td>
         </tr>
     </table>
 
     <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live branch coordinates, localized POS revenue figures, and proprietary Experian VIO datasets have been replaced with randomized proxies across a generalized regional map. The algorithmic logic remains a reflection of the production environment, <em>with the public caveat that the live enterprise engine utilizes API-driven Isochrone (drive-time) polygons rather than Haversine radials, and zip-code weighted VIO density rather than flat regional percentages.</em>
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live branch coordinates, localized POS revenue figures, and proprietary Experian VIO datasets have been replaced with randomized proxies across a generalized regional map. The algorithmic logic remains a reflection of the production environment, <em>with the public caveat that the live enterprise engine utilizes API-driven Isochrone (drive-time) polygons rather than Haversine radials to map accurate Serviceable Obtainable Market (SOM).</em>
     </div>
 
-    <h2>1. The Problem: "Territorial Blindness" in Distribution</h2>
-    <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories. This creates a fatal strategic blind spot: the assumption that geographic area equals revenue potential. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor. Furthermore, mapping competitor locations without quantifying the actual *human and vehicular cost* caught in the crossfire leaves Pricing and Sales leadership reacting to margin erosion only after the volume has already been lost.</p>
-    <p>To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine. This tool strips away "territorial blindness" by cross-referencing live market threats against highly specific demographic vehicle data.</p>
+    <h2>1. Situation & Task: The Illusion of Geometric Territories</h2>
+    <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories. This creates a fatal strategic blind spot: the assumption that geographic area equates to revenue potential. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor.</p>
+    <p><strong>The Task:</strong> We needed to transition from descriptive analytics (identifying where competitors exist) to prescriptive revenue capture (quantifying exact market share risk). Mapping competitors without quantifying the actual <strong>Vehicles in Operation (VIO)</strong> caught in the crossfire leaves Pricing and Sales leadership reacting to margin erosion only after the volume has already been lost.</p>
 
-    <h2>2. Architectural Methodology & System Mechanics</h2>
-    <p>The engine operating underneath the dashboard UI utilizes four distinct algorithmic pillars to calculate live market vulnerability and generate automated action protocols:</p>
+    <h2>2. Action: Geospatial Architecture & System Mechanics</h2>
+    <p>To eliminate "territorial blindness," I architected a multi-layered Geospatial Intelligence Engine. This tool cross-references physical asset locations against hyper-specific demographic data to calculate <strong>TAM (Total Addressable Market)</strong> and <strong>SOM (Serviceable Obtainable Market)</strong> in real-time.</p>
 
     <h3>A. The Haversine Distance Matrix</h3>
-    <p>Rather than relying on flat geometric projections, the engine calculates the true "as-the-crow-flies" spherical distance between our physical assets (Hubs and Accounts) and active competitors. Every time the dashboard parameters are adjusted, the system recalculates the matrix using the Haversine formula:</p>
+    <p>Rather than relying on flat geometric projections, the engine calculates the true spherical distance between our physical assets and active competitors. Every time the dashboard parameters are adjusted, the system recalculates the spatial matrix using the Haversine formula:</p>
     <div class="math-block">
         $$d = 2r \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta\phi}{2}\right) + \cos\phi_1\cos\phi_2\sin^2\left(\frac{\Delta\lambda}{2}\right)}\right)$$
     </div>
 
-    <h3>B. The Topological Friction Engine</h3>
-    <p>A global elasticity radius is mathematically warped based on demographic density. Hubs and accounts are assigned a Topology Index (Urban, Suburban, Rural). Urban centers enforce a severe friction penalty (multiplying the radius by 0.3 to reflect dense driving conditions), while Rural assets utilize a low-friction expansion multiplier (1.5x) to acknowledge that rural commercial accounts will source parts from significantly further away.</p>
+    <h3>B. Isochrone Approximation via Topological Friction</h3>
+    <p>Standard Euclidean radiuses fail in the real world. To simulate true "drive-time" Isochrones without incurring heavy third-party API costs for every render, the engine utilizes a <strong>Topological Friction Engine</strong>. Hubs and accounts are assigned a Topology Index. Urban centers enforce a severe friction penalty (multiplying the effective radius by 0.3 to reflect dense driving conditions), while Rural assets utilize a low-friction multiplier (1.5x) to acknowledge that commercial accounts will source parts from significantly further away.</p>
 
     <h3>C. Competitor Threat Weighting</h3>
-    <p>Not all competitors are equal. The algorithm assigns distinct mathematical penalties to active market players. A standard regional competitor carries a 1.0x baseline, while a known "Aggressive Discounter" carries a 2.5x threat penalty. If a discounter enters a territory, the Vulnerability Index spikes exponentially faster than standard market intrusion.</p>
+    <p>Not all competitors impact our SOM equally. The algorithm assigns distinct mathematical penalties to active market players. A standard regional competitor carries a 1.0x baseline, while a known "Aggressive Discounter" carries a 2.5x threat penalty. If a discounter breaches an asset's radius, the Vulnerability Index spikes exponentially.</p>
 
-    <h3>D. VIO (Vehicles in Operation) Overlay & Market Capture</h3>
-    <p>The ultimate goal is revenue mapping. The algorithm calculates the total population trapped within an asset's effective radius and extracts a 14.2% demographic modifier representing the "Aging Fleet" (e.g., 2011–2016 model year pickup trucks). By comparing this highly specific local VIO target against our active Point of Sale (POS) transaction volume, the engine generates an instant <strong>Market Capture Percentage</strong>.</p>
+    <h3>D. VIO Overlay & Market Capture Conversion</h3>
+    <p>The ultimate goal is revenue mapping. The algorithm calculates the total population trapped within an asset's effective radius and extracts a 14.2% demographic modifier representing the "Aging Fleet" (e.g., 2011–2016 model year light/medium duty vehicles). By comparing this highly specific <strong>TAM</strong> target against our active Point of Sale (POS) transaction volume, the engine generates an instant <strong>Market Capture Percentage</strong>.</p>
 
-    <h2>3. Interactive Defense & VIO Dashboard</h2>
-    <p><em>Adjust the Global Base Radius slider below to initialize the calculations. The engine will dynamically warp the physical threat rings based on the Topological Index, extract the target VIO within those perimeters, and recommend explicit Margin and Retention protocols based on competitor density.</em></p>
+    <h2>3. Interactive Intelligence Dashboard</h2>
+    <p><em>Adjust the Global Base Radius slider below to initialize the calculations. The engine will dynamically warp the physical threat rings based on Topological Friction, extract the target VIO within those perimeters, and prescribe explicit Margin and Retention protocols.</em></p>
 
     <div class="sim-container">
         <div class="sim-sidebar">
@@ -154,7 +160,7 @@
             
             <div class="sidebar-controls">
                 <label style="color: #1a2433;"><input type="checkbox" id="chk-branches" checked> Our Hubs (Dark Circles)</label>
-                <label style="color: #27ae60;"><input type="checkbox" id="chk-top20" checked> Top 20% Fleet Accounts (Green Circles)</label>
+                <label style="color: #27ae60;"><input type="checkbox" id="chk-top20" checked> Top 20% Fleet Accounts (Green)</label>
                 <div style="height: 5px;"></div>
                 <label style="color: #b32525;"><input type="checkbox" id="chk-compA" checked> Comp A (Generalist Stars)</label>
                 <label style="color: #e67e22;"><input type="checkbox" id="chk-compB" checked> Comp B (Regional Triangles)</label>
@@ -175,7 +181,7 @@
                 <div class="logic-row"><strong>Suburban Friction:</strong> <span>Radius x 0.6</span></div>
                 <div class="logic-row"><strong>Rural Friction:</strong> <span>Radius x 1.5</span></div>
                 <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1;">
-                    <strong>VIO Target:</strong> 14.2% of Pop. (10yr+)
+                    <strong>VIO Target (TAM):</strong> 14.2% of Pop. (10yr+)
                 </div>
                 <div style="margin-top: 8px; color: #b32525; font-style: italic;" id="dynamic-logic-text">
                     At 40 miles, Urban rings are 12mi, Rural rings are 60mi.
@@ -195,7 +201,7 @@
                 <div class="table-wrapper">
                     <table class="raw-data-table" id="branch-threat-table">
                         <thead>
-                            <tr><th>Hub Region</th><th>Eff. Radius</th><th>Target VIO (10yr+)</th><th>Est. Capture</th><th>Threats</th><th>System Action Protocol</th></tr>
+                            <tr><th>Hub Region</th><th>Eff. Radius</th><th>Target VIO (TAM)</th><th>Est. Capture</th><th>Threats</th><th>System Action Protocol</th></tr>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -205,7 +211,7 @@
                 <div class="table-wrapper" style="border-bottom: none; margin-bottom: 0;">
                     <table class="raw-data-table" id="account-threat-table">
                         <thead>
-                            <tr><th>Account Location</th><th>Eff. Radius</th><th>Target VIO (10yr+)</th><th>Est. Capture</th><th>Threats</th><th>Retention Protocol</th></tr>
+                            <tr><th>Account Location</th><th>Eff. Radius</th><th>Target VIO (TAM)</th><th>Est. Capture</th><th>Threats</th><th>Retention Protocol</th></tr>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -215,8 +221,8 @@
         </div>
     </div>
 
-    <h2>4. Cross-Functional Strategic ROI</h2>
-    <p>This deployment transforms raw coordinate and demographic data into a dynamic "Force Multiplier" for multiple enterprise departments:</p>
+    <h2>4. Result: Cross-Functional Strategic ROI</h2>
+    <p>This deployment transforms raw coordinate and demographic data into a dynamic "Force Multiplier" for multiple enterprise divisions, creating immediate, measurable business impact:</p>
 
     <table class="strategy-table">
         <tr>
@@ -225,20 +231,20 @@
         </tr>
         <tr>
             <td><strong>Pricing & Margin Defense</strong></td>
-            <td>Acts as an early-warning radar system. By visualizing price elasticity against live competitor proximity, the Pricing team can proactively lock Tier-1 margins or initiate localized "price fighting" campaigns before the competitor successfully fractures our established volume.</td>
+            <td>Acts as an early-warning radar system. By visualizing price elasticity against live competitor proximity, the Pricing team can proactively lock Tier-1 margins or initiate localized "price fighting" campaigns before an aggressive discounter successfully fractures established volume.</td>
         </tr>
         <tr>
             <td><strong>Sales Enablement</strong></td>
-            <td>Highlights immediate flight-risk for high-value fleet accounts. If an aggressive discounter encroaches on a Top 20% account, the engine triggers an explicit retention protocol, ensuring outside sales representatives prioritize defensive relationship-building rather than chasing low-probability cold calls.</td>
+            <td>Highlights immediate flight-risk for high-value fleet accounts. If a competitor encroaches on a Top 20% account, the engine triggers an explicit retention protocol, ensuring outside sales representatives prioritize defensive relationship-building rather than chasing low-probability cold calls.</td>
         </tr>
         <tr>
-            <td><strong>Network Expansion (M&A)</strong></td>
-            <td>Identifies pure geographic "voids" or "greenfields." By locating regions with dense populations of aging target vehicles but minimal competitor footprint, the engine provides executive leadership with exact GPS coordinates for safe, highly profitable new branch expansions or acquisitions.</td>
+            <td><strong>M&A / Network Expansion</strong></td>
+            <td>Identifies pure geographic "greenfields" while defending against <strong>Cannibalization</strong>. By locating regions with high VIO (TAM) but minimal competitor footprint—and ensuring the new radius doesn't overlap excessively with our own hubs—the engine provides executive leadership with exact GPS coordinates for highly profitable network expansion.</td>
         </tr>
     </table>
 
     <div class="impact-footer">
-        STRATEGIC CORE COMPETENCY VALIDATION: This deployment acts as a definitive verification of advanced systems architecture—demonstrating the ability to synthesize raw coordinate mapping, demographic friction indexes, and third-party VIO market-capture mechanics into a unified, executive-level predictive risk engine.
+        STRATEGIC CORE COMPETENCY VALIDATION: This deployment acts as a definitive verification of advanced spatial data science—demonstrating the ability to synthesize raw coordinate mapping, topological friction indexes, and third-party VIO market-capture mechanics into a unified, prescriptive revenue engine.
     </div>
 
     <script>
@@ -376,16 +382,17 @@
             
             let actionText = '';
             
+            // Upgraded Action Protocols for Executive Narrative
             if (threatsInRange.length === 0 && marketCapture < 15) {
-                 actionText = '<span style="color:#27ae60; font-weight:bold;">Aggressive Greenfield Expansion</span>';
+                 actionText = '<span style="color:#27ae60; font-weight:bold;">M&A Target: Greenfield Expansion (High TAM)</span>';
             } else if (riskScore >= 7.5 && marketCapture >= 20) {
-                 actionText = '<span style="color:#b32525; font-weight:bold;">Defensive Margin Lock (High VIO At Risk)</span>';
+                 actionText = '<span style="color:#b32525; font-weight:bold;">Defend SOM: Lock Core Margins Immediately</span>';
             } else if (riskScore >= 7.5) {
-                 actionText = 'Deploy preemptive volume rebates.';
+                 actionText = '<span style="color:#e67e22; font-weight:bold;">Deploy Preemptive Retention Rebates</span>';
             } else if (riskScore >= 4.0) {
-                 actionText = 'Target Comp Accounts.';
+                 actionText = 'Initiate Localized Conquest Campaigns.';
             } else {
-                 actionText = 'Raise Margin Floor (+2.5%).';
+                 actionText = 'Maximize Yield: Raise Margin Floor (+2.5%).';
             }
 
             return `<tr>
