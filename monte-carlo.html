@@ -3,311 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Study 02: Python Monte Carlo Margin Risk Simulation - Austin Sonny Stethem</title>
+    <title>Python Monte Carlo Margin Risk | Case Study</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --dark-slate-blue: #1a2433; --alert-red: #b32525; --success-green: #27ae60; --bg-color: #fbfbfb; }
-        body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 950px; margin: 0 auto; padding: 40px 20px; background-color: var(--bg-color); }
-        .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
-        .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
-        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
-        .meta-cell:last-child { border-right: none; }
-        .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .meta-value { color: #1e293b; font-weight: 500; }
-        .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
-        h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        p { text-align: justify; margin-bottom: 15px; color: #334155; }
-        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
-        li { margin-bottom: 8px; }
-        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
-        .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; }
-        .sim-main { flex: 1; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
-        .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
-        .control-group { margin-bottom: 25px; }
-        .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
-        .val-readout { color: var(--alert-red); font-family: monospace; font-size: 11pt; font-weight: bold;}
-        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--alert-red); }
-        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
-        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 20px; text-align: center; border-radius: 4px; border-top: 4px solid var(--dark-slate-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-        .kpi-value { font-size: 24pt; font-family: monospace; font-weight: bold; color: var(--dark-slate-blue); }
-        .kpi-sub { font-size: 8.5pt; font-style: italic; color: #94a3b8; margin-top: 5px;}
-        .chart-container { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 4px; border-top: 4px solid #0369a1; margin-bottom: 20px;}
-        .chart-box { position: relative; height: 260px; width: 100%; }
-        .status-safe { color: var(--success-green) !important; border-top-color: var(--success-green) !important; }
-        .status-warn { color: #e67e22 !important; border-top-color: #e67e22 !important; }
-        .status-critical { color: var(--alert-red) !important; border-top-color: var(--alert-red) !important; }
-        .log-table { width: 100%; border-collapse: collapse; font-size: 9pt; background: white; border: 1px solid #e2e8f0;}
-        .log-table th { background: var(--dark-slate-blue); color: white; padding: 12px 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt;}
-        .log-table td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; font-size: 10pt; color: #334155;}
-        .btn-run { background: var(--alert-red); color: white; border: none; padding: 12px; width: 100%; font-family: 'Segoe UI'; font-weight: bold; text-transform: uppercase; cursor: pointer; margin-top: 10px; letter-spacing: 1px; transition: background 0.2s, color 0.2s;}
-        .btn-run:hover { background: #8e1c1c; }
-        .btn-run:disabled { background: #e67e22; cursor: not-allowed; opacity: 0.9; }
-        .badge-lock { background: var(--alert-red); color: white; padding: 3px 6px; border-radius: 3px; font-size: 7.5pt; font-weight: bold; font-family: 'Segoe UI'; letter-spacing: 0.5px;}
-        .badge-safe { background: var(--success-green); color: white; padding: 3px 6px; border-radius: 3px; font-size: 7.5pt; font-weight: bold; font-family: 'Segoe UI'; letter-spacing: 0.5px;}
-        .badge-elastic { background: #e67e22; color: white; padding: 3px 6px; border-radius: 3px; font-size: 7.5pt; font-weight: bold; font-family: 'Segoe UI'; letter-spacing: 0.5px;}
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 40px 20px; background: #fbfbfb; }
+        .back-link { color: #b32525; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+        
+        h1 { color: #1a2433; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-top: 20px; }
+        h2 { color: #1a2433; margin-top: 30px; font-size: 1.4rem; }
+        p { color: #475569; }
+
+        /* Blue Control Box styling */
+        .blue-control-box {
+            background-color: #f0f4f8; 
+            border: 1px solid #cce3f6;
+            border-left: 4px solid #2563eb; 
+            padding: 25px;
+            border-radius: 6px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr; 
+            gap: 30px;
+            align-items: center;
+            margin: 30px 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .slider-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1e293b;
+            display: block;
+            margin-bottom: 8px;
+            margin-top: 15px;
+        }
+        .slider-group label:first-child { margin-top: 0; }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+            margin-bottom: 5px;
+            accent-color: #2563eb;
+        }
+        
+        .slider-val { font-size: 0.85rem; color: #64748b; font-weight: bold; float: right; }
+
+        .explanation-text h4 {
+            margin-top: 0;
+            color: #0f172a;
+            font-size: 1.05rem;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .explanation-text p {
+            font-size: 0.9rem;
+            color: #334155;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .chart-container {
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-top: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-top: 3px solid #10b981;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .metric-card.warning { border-top-color: #f59e0b; }
+        .metric-card.danger { border-top-color: #ef4444; }
+        .metric-card h5 { margin: 0; color: #64748b; font-size: 0.8rem; text-transform: uppercase; }
+        .metric-card .value { font-size: 1.5rem; font-weight: bold; color: #0f172a; margin-top: 5px; }
+
     </style>
 </head>
 <body>
 
-    <div class="doc-header">
-        <div class="doc-tagline">Systems Architecture & Analytics Portfolio Case Study</div>
-        <div class="doc-title">Python Monte Carlo Margin Risk Simulation</div>
-    </div>
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+    
+    <h1>Python Monte Carlo Margin Risk Simulation</h1>
+    <p>A stochastic modeling engine designed to run 50,000 randomized permutations, stress-testing margin vulnerability against freight spikes to mathematically protect the P95 worst-case floor.</p>
 
-    <table class="meta-table">
-        <tr>
-            <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
-            </td>
-            <td class="meta-cell">
-                <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Stochastic Modeling, P-Tier Tolerance, Seasonal Indexing</span>
-            </td>
-            <td class="meta-cell">
-                <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">Python, Monte Carlo Algorithms, ERP Data Stratification</span>
-            </td>
-        </tr>
-    </table>
-
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary margin targets, and exact landed-cost arrays have been replaced with randomized proxies. The algorithmic logic—including the 10/40/50 KVI portfolio split and the stochastic variance architecture—remains an exact reflection of the production environment.
-    </div>
-
-    <h2>1. The Strategic Blindspot: Reactive Margin Bleed</h2>
-    <p>In legacy distribution models, price updates are largely reactive—driven by the "loudest voice" heuristic where field managers complain about lost quotes, or finance notices margin erosion after the fact. When a vendor issues a sudden price increase or seasonal demand shifts, standard ERP systems often apply a blanket markup across the board. This creates massive risk: it instantly bleeds volume on highly sensitive anchor items while leaving margin on the table for elastic, low-risk parts.</p>
-
-    <h2>2. System Architecture: P-Tier Waterfall Stratification</h2>
-    <p>To transition pricing from reactive complaint-management to proactive forecasting, I architected an automated KVI Stratification engine integrated directly into a Python-based Monte Carlo stochastic model. Instead of evaluating SKUs in a vacuum, the system calculates the <strong>Blended Portfolio Margin</strong> by processing millions of SKUs simultaneously across the multi-echelon ERP Waterfall (P-Tiers):</p>
-    <ul>
-        <li><strong>Group A (10% Volume - P2/P3 Base):</strong> Ultra-sensitive Known Value Items (KVIs). Because tiers like P2 (Cash/Walk-In) make up the bulk of standard transactional velocity, these items are mathematically locked to a maximum 3% variance to defend market perception.</li>
-        <li><strong>Group B (40% Volume - Core Waterfall):</strong> Standard competitive parts. Allowed up to a 20% variance before the system hard-locks the price to prevent volume erosion.</li>
-        <li><strong>Group C (50% Volume - High Tolerance):</strong> Blind or captive items, often weighted toward P4 (Heavy Jobber) accounts which secure bulk commitments and can tolerate wider index shifts. Permitted up to 70% variance, this group absorbs the shock of market spikes, subsidizing the margin lost by defending Group A.</li>
-    </ul>
-
-    <h2>3. Proactive Seasonal Simulation & Actionable Defense</h2>
-    <p>Crucially, this model is deployed proactively against 12-month rolling demand cycles. Rather than waiting for a cost issue to arise, we use this engine to preemptively simulate seasonal peaks (e.g., executing margin adjustments ahead of heavy Q2 brake and rotor demand). When seasonal volatility or freight spikes trigger the engine, it runs 50,000 randomized permutations against the 10/40/50 split. The output explicitly calculates the "P95 Worst-Case" blended margin floor to ensure total enterprise EBITDA targets are mathematically protected.</p>
-
-    <div class="sim-container">
-        <div class="sim-sidebar">
-            <div class="sidebar-header">System Controls</div>
+    <div class="blue-control-box">
+        <div class="slider-group">
+            <label for="freight-slider">Simulated Freight Spike (%) <span class="slider-val" id="freight-val">15%</span></label>
+            <input type="range" id="freight-slider" min="0" max="50" value="15">
             
-            <div class="control-group">
-                <label><span>Global Freight Spike (%):</span> <span class="val-readout" id="val-freight">0%</span></label>
-                <input type="range" id="slider-freight" min="0" max="35" value="0">
-            </div>
-
-            <div class="control-group">
-                <label><span>Comp. Deflation Risk (%):</span> <span class="val-readout" id="val-comp">0%</span></label>
-                <input type="range" id="slider-comp" min="0" max="15" value="0">
-            </div>
-
-            <div class="control-group">
-                <label><span>Network QOH (Days Supply):</span> <span class="val-readout" id="val-qoh">45 Days</span></label>
-                <input type="range" id="slider-qoh" min="0" max="120" step="15" value="45">
-            </div>
-
-            <div style="font-size: 8.5pt; color: #94a3b8; font-style: italic; line-height: 1.4; margin-bottom: 20px;">
-                *Stage the disruption variables and physical inventory depth above. Clicking 'Execute' triggers a 50,000-permutation stochastic test across the 10/40/50 portfolio split.
-            </div>
-
-            <button class="btn-run" id="btn-execute" onclick="triggerSimulation()">Execute Portfolio Stress Test</button>
+            <label for="elasticity-slider">Group C Spillover Threshold (%) <span class="slider-val" id="elasticity-val">15%</span></label>
+            <input type="range" id="elasticity-slider" min="5" max="40" value="15">
         </div>
 
-        <div class="sim-main">
-            <div class="kpi-grid">
-                <div class="kpi-card" id="card-median">
-                    <div class="kpi-title">Replacement Margin</div>
-                    <div class="kpi-value" id="out-median">--%</div>
-                    <div class="kpi-sub">Theoretical Future State</div>
-                </div>
-                <div class="kpi-card" id="card-p95">
-                    <div class="kpi-title">Blended P95 Worst-Case</div>
-                    <div class="kpi-value" id="out-p95">--%</div>
-                    <div class="kpi-sub">95th Percentile Floor Risk</div>
-                </div>
-                <div class="kpi-card" id="card-action">
-                    <div class="kpi-title">Realized Q1 P&L (FIFO Buffer)</div>
-                    <div class="kpi-value" id="out-action" style="font-size: 20pt; color: var(--success-green);">--%</div>
-                    <div class="kpi-sub" id="out-action-sub">Awaiting inputs</div>
-                </div>
-            </div>
-
-            <div class="chart-container">
-                <div class="kpi-title" style="margin-bottom: 10px;">Portfolio Variance Bridge (Margin Walkdown)</div>
-                <div class="chart-box">
-                    <canvas id="waterfallChart"></canvas>
-                </div>
-            </div>
-
-            <div class="sidebar-header" style="color: var(--dark-slate-blue); border-bottom: 2px solid #cbd5e1; margin-bottom: 10px;">Concurrent Stratification Matrix</div>
-            <table class="log-table" id="log-table">
-                <thead>
-                    <tr>
-                        <th>Stratification Tier</th>
-                        <th>Volume Split</th>
-                        <th>Base Margin</th>
-                        <th>Var. Lock Limit</th>
-                        <th>Simulated Margin</th>
-                        <th>Algorithm Action</th>
-                    </tr>
-                </thead>
-                <tbody id="matrix-body">
-                    <tr><td colspan="6" style="text-align: center; color: #94a3b8; font-style: italic; font-family: 'Segoe UI';">Awaiting execution prompt...</td></tr>
-                </tbody>
-            </table>
+        <div class="explanation-text">
+            <h4>Algorithm Parameters & Logic</h4>
+            <p>Adjusting the parameters dynamically alters the simulated freight overhead across the database.</p>
+            <p><strong>The model employs a bottom-up volatility absorption algorithm to ensure P95 risk floors are maintained without triggering price adjustments on top-tier KVIs.</strong></p>
+            <p><em>Execution:</em> Margin leakage is injected into Group C inventory first. Once Group C reaches its maximum price-elasticity threshold, the remaining cost burden spills over into Group B, shielding Group A volume-drivers for as long as mathematically viable.</p>
         </div>
+    </div>
+
+    <h2>Live Simulation Output: Volatility Absorption</h2>
+    
+    <div class="metrics-grid">
+        <div class="metric-card" id="metric-a">
+            <h5>Group A (High KVI) Protection</h5>
+            <div class="value" id="val-a">100%</div>
+        </div>
+        <div class="metric-card warning" id="metric-b">
+            <h5>Group B Absorption</h5>
+            <div class="value" id="val-b">0%</div>
+        </div>
+        <div class="metric-card danger" id="metric-c">
+            <h5>Group C Price Inflation</h5>
+            <div class="value" id="val-c">15%</div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="marginChart" height="100"></canvas>
     </div>
 
     <script>
-        const sliderFreight = document.getElementById('slider-freight');
-        const sliderComp = document.getElementById('slider-comp');
-        const sliderQoh = document.getElementById('slider-qoh');
-        const valFreight = document.getElementById('val-freight');
-        const valComp = document.getElementById('val-comp');
-        const valQoh = document.getElementById('val-qoh');
-        const btnExecute = document.getElementById('btn-execute');
-        let chartInstance = null;
-
-        const groups = [
-            { id: 'A', title: 'Group A (Anchors)', weight: 0.10, baseMargin: 28.5, maxVar: 0.03 },
-            { id: 'B', title: 'Group B (Core)', weight: 0.40, baseMargin: 35.0, maxVar: 0.20 },
-            { id: 'C', title: 'Group C (Elastic)', weight: 0.50, baseMargin: 48.0, maxVar: 0.70 }
-        ];
-
-        const initialBlendedMargin = groups.reduce((acc, g) => acc + (g.baseMargin * g.weight), 0);
-
-        sliderFreight.addEventListener('input', (e) => { valFreight.innerText = `+${e.target.value}%`; });
-        sliderComp.addEventListener('input', (e) => { valComp.innerText = `-${e.target.value}%`; });
-        sliderQoh.addEventListener('input', (e) => { valQoh.innerText = `${e.target.value} Days`; });
-
-        document.getElementById('out-median').innerText = initialBlendedMargin.toFixed(1) + "%";
-        document.getElementById('out-p95').innerText = initialBlendedMargin.toFixed(1) + "%";
-        document.getElementById('out-action').innerText = initialBlendedMargin.toFixed(1) + "%";
+        // DOM Elements
+        const freightSlider = document.getElementById('freight-slider');
+        const elasticitySlider = document.getElementById('elasticity-slider');
+        const freightVal = document.getElementById('freight-val');
+        const elasticityVal = document.getElementById('elasticity-val');
         
-        renderWaterfallChart(initialBlendedMargin, 0, 0, 0, initialBlendedMargin);
-        
-        let initTableHTML = "";
-        groups.forEach(g => {
-            initTableHTML += `<tr><td style="font-weight: 700;">${g.title}</td><td>${g.weight * 100}%</td><td>${g.baseMargin.toFixed(1)}%</td><td>${g.maxVar * 100}%</td><td style="color:#94a3b8;">--%</td><td><span style="color:#94a3b8; font-size:7.5pt; font-weight:bold;">AWAITING EXECUTION</span></td></tr>`;
-        });
-        document.getElementById('matrix-body').innerHTML = initTableHTML;
+        const valA = document.getElementById('val-a');
+        const valB = document.getElementById('val-b');
+        const valC = document.getElementById('val-c');
+        const metricA = document.getElementById('metric-a');
 
-        function triggerSimulation() {
-            btnExecute.disabled = true;
-            btnExecute.innerText = "Running 50,000 Permutations...";
-            setTimeout(() => {
-                runSimulation();
-                btnExecute.disabled = false;
-                btnExecute.innerText = "Execute Portfolio Stress Test";
-            }, 850);
-        }
-
-        function runSimulation() {
-            const fSpike = parseFloat(sliderFreight.value) / 100;
-            const cDrop = parseFloat(sliderComp.value) / 100;
-            const qohDays = parseInt(sliderQoh.value);
-
-            const rawHit = (fSpike * 0.4) + (cDrop * 1.2); 
-            
-            let blendedMedianAccumulator = 0;
-            let tableHTML = "";
-            let deltas = [];
-
-            groups.forEach(g => {
-                let actualShift = rawHit;
-                let isLocked = false;
-                let badgeHTML = "";
-
-                if (actualShift > g.maxVar) {
-                    actualShift = g.maxVar;
-                    isLocked = true;
+        // Chart Initialization
+        const ctx = document.getElementById('marginChart').getContext('2d');
+        const marginChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Group C (Low Velocity)', 'Group B (Mid Velocity)', 'Group A (Top KVIs)'],
+                datasets: [{
+                    label: 'Applied Price Increase (%) to Absorb Freight Hit',
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)',  // Red for C
+                        'rgba(245, 158, 11, 0.8)', // Yellow for B
+                        'rgba(16, 185, 129, 0.8)'  // Green for A
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 50,
+                        title: { display: true, text: 'Price Inflation (%)' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toFixed(1) + '% Price Increase';
+                            }
+                        }
+                    }
                 }
+            }
+        });
 
-                const newMargin = g.baseMargin - (actualShift * 100);
-                blendedMedianAccumulator += (newMargin * g.weight);
-                const groupDelta = (newMargin - g.baseMargin) * g.weight;
-                deltas.push(groupDelta);
-
-                if (isLocked) { badgeHTML = `<span class="badge-lock">HARD LOCK APPLIED</span>`; } 
-                else if (rawHit > 0.05 && g.id === 'C') { badgeHTML = `<span class="badge-elastic">ABSORBING SHOCK</span>`; } 
-                else { badgeHTML = `<span class="badge-safe">WITHIN TOLERANCE</span>`; }
-
-                tableHTML += `<tr><td style="font-weight: 700;">${g.title}</td><td>${g.weight * 100}%</td><td>${g.baseMargin.toFixed(1)}%</td><td>${g.maxVar * 100}%</td><td style="font-weight:bold; color: ${isLocked && g.id === 'A' ? 'var(--alert-red)' : 'var(--dark-slate-blue)'}">${newMargin.toFixed(1)}%</td><td>${badgeHTML}</td></tr>`;
-            });
-
-            document.getElementById('matrix-body').innerHTML = tableHTML;
-
-            const volatilityRNG = (fSpike > 0 || cDrop > 0) ? (Math.random() * (1.5 - 0.5) + 0.5) : 0; 
-            const blendedP95 = blendedMedianAccumulator - volatilityRNG - (fSpike * 3); 
-
-            document.getElementById('out-median').innerText = blendedMedianAccumulator.toFixed(1) + "%";
-            const p95El = document.getElementById('out-p95');
-            p95El.innerText = blendedP95.toFixed(1) + "%";
-
-            // FIFO Windfall Calculation for 90-day Q1 perspective
-            const costSpikeAbsolute = fSpike * 40; // abstracted cost value
-            const windfallMargin = blendedMedianAccumulator + costSpikeAbsolute; 
-            const ratioOldStock = Math.min(qohDays / 90, 1.0);
-            const ratioNewStock = 1.0 - ratioOldStock;
-            const realizedQ1 = (windfallMargin * ratioOldStock) + (blendedMedianAccumulator * ratioNewStock);
+        // The Engine: C -> B -> A Spillover Logic
+        function updateSimulation() {
+            const freightHit = parseFloat(freightSlider.value);
+            const cThreshold = parseFloat(elasticitySlider.value);
             
-            const cardAction = document.getElementById('card-action');
-            const actionEl = document.getElementById('out-action');
-            const subEl = document.getElementById('out-action-sub');
+            // Update UI Labels
+            freightVal.innerText = freightHit + '%';
+            elasticityVal.innerText = cThreshold + '%';
 
-            actionEl.innerText = realizedQ1.toFixed(1) + "%";
-            cardAction.className = "kpi-card";
+            // Assumptions for mathematical weighting (simulating portfolio scale)
+            // Group C has 50% of the SKUs but 10% of revenue weight.
+            // Group B has 30% of the SKUs and 30% of revenue weight.
+            // Group A has 20% of the SKUs but 60% of revenue weight.
+            const weightC = 0.10;
+            const weightB = 0.30;
+            const weightA = 0.60;
 
-            if (qohDays > 0 && fSpike > 0) {
-                cardAction.classList.add("status-safe");
-                actionEl.classList.add("status-safe");
-                subEl.innerText = `${qohDays} days of FIFO inventory driving short-term windfall before replacement cost realization.`;
-                subEl.style.color = "var(--success-green)";
-            } else {
-                cardAction.classList.add("status-warn");
-                actionEl.style.color = "var(--dark-slate-blue)";
-                subEl.innerText = `Zero inventory buffer. Immediate exposure to replacement cost.`;
-                subEl.style.color = "#e67e22";
+            // Required gross margin recovery needed across the board
+            let remainingRecovery = freightHit;
+
+            // 1. Hit Group C First
+            let hitC = Math.min(remainingRecovery / weightC, cThreshold);
+            let recoveredByC = hitC * weightC;
+            remainingRecovery = Math.max(0, remainingRecovery - recoveredByC);
+
+            // 2. Spillover to Group B
+            let bThreshold = cThreshold * 0.75; // B is naturally less elastic than C
+            let hitB = 0;
+            if (remainingRecovery > 0) {
+                hitB = Math.min(remainingRecovery / weightB, bThreshold);
+                let recoveredByB = hitB * weightB;
+                remainingRecovery = Math.max(0, remainingRecovery - recoveredByB);
             }
 
-            const cardP95 = document.getElementById('card-p95');
-            cardP95.className = "kpi-card"; 
-            if (blendedP95 < 32.0) { cardP95.classList.add("status-critical"); p95El.classList.add("status-critical"); } 
-            else if (blendedP95 < 35.0) { cardP95.classList.add("status-warn"); p95El.classList.add("status-warn"); } 
-            else { cardP95.classList.add("status-safe"); p95El.classList.add("status-safe"); }
+            // 3. Ultimate spillover to Group A (The KVI failure state)
+            let hitA = 0;
+            if (remainingRecovery > 0) {
+                hitA = remainingRecovery / weightA;
+            }
 
-            renderWaterfallChart(initialBlendedMargin, deltas[0], deltas[1], deltas[2], blendedMedianAccumulator);
+            // Update Chart Data
+            marginChart.data.datasets[0].data = [hitC, hitB, hitA];
+            marginChart.update();
+
+            // Update Metric Cards
+            valC.innerText = hitC.toFixed(1) + '%';
+            valB.innerText = hitB.toFixed(1) + '%';
+            
+            if (hitA > 0) {
+                valA.innerText = 'BREACHED (' + hitA.toFixed(1) + '%)';
+                valA.style.color = '#ef4444';
+                metricA.style.borderTopColor = '#ef4444';
+            } else {
+                valA.innerText = '100% Shielded';
+                valA.style.color = '#0f172a';
+                metricA.style.borderTopColor = '#10b981';
+            }
         }
 
-        function renderWaterfallChart(start, d1, d2, d3, final) {
-            const ctx = document.getElementById('waterfallChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
+        // Event Listeners
+        freightSlider.addEventListener('input', updateSimulation);
+        elasticitySlider.addEventListener('input', updateSimulation);
 
-            const step1 = start + d1; const step2 = step1 + d2; const step3 = step2 + d3; 
-
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Baseline Total', 'Group A Variance', 'Group B Variance', 'Group C Variance', 'Simulated Total'],
-                    datasets: [{
-                        label: 'Margin Variance Walkdown',
-                        data: [[0, start], [start, step1], [step1, step2], [step2, step3], [0, final]],
-                        backgroundColor: ['#1a2433', '#b32525', '#e67e22', '#27ae60', '#1a2433'],
-                        borderRadius: 3
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { const raw = context.raw; if (Array.isArray(raw)) { if (context.dataIndex === 0 || context.dataIndex === 4) { return raw[1].toFixed(2) + '% Total Blended Margin'; } else { const diff = raw[1] - raw[0]; return diff.toFixed(2) + '% Impact on Portfolio Total'; } } return raw; } } } },
-                    scales: { y: { beginAtZero: false, min: 20, ticks: { callback: function(value) { return value + '%'; } }, grid: { color: '#e2e8f0' } }, x: { grid: { display: false } } }
-                }
-            });
-        }
+        // Initial Load
+        updateSimulation();
     </script>
 </body>
 </html>
