@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Case Study 03: Stochastic Margin Optimization - Austin Sonny Stethem</title>
+    <title>Stochastic Margin Optimization - Austin Sonny Stethem</title>
     <!-- Chart.js Core -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -25,6 +25,8 @@
         .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
         h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         p { text-align: justify; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
+        li { margin-bottom: 8px; }
         
         .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); align-items: stretch; flex-wrap: wrap;}
         .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; display: flex; flex-direction: column; }
@@ -58,6 +60,12 @@
         .code-string { color: #98c379; }
         .code-number { color: #d19a66; }
 
+        /* New Impact Box Styling */
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
+        .impact-box ul { font-size: 10pt; }
+
         @media (max-width: 768px) {
             .sim-sidebar { width: 100%; }
         }
@@ -84,7 +92,7 @@
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">Data Science, Python, NumPy, Monte Carlo Methods</span>
+                <span class="meta-value">Data Science, Python (NumPy), Monte Carlo Methods</span>
             </td>
         </tr>
     </table>
@@ -93,13 +101,16 @@
         <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, specific SKU attributes, and true margin arrays have been replaced with randomized abstractions. The stochastic optimization architecture and Box-Muller transform generation reflect production-grade data science environments.
     </div>
 
-    <h2>1. The Illusion of the "Perfect Price"</h2>
-    <p>In standard pricing strategy, teams often search for the "exact break point" of a SKU—a single, magical number that maximizes yield. This is a fundamental flaw. The market is not a static environment; it is a chaotic system. Freight costs fluctuate weekly, competitor deflations hit unannounced, and demand curves bend unexpectedly.</p>
-    <p>A deterministic model can calculate margin based on assumptions, but to extract every drop of margin without accidentally crushing sales volume, we must transition into <strong>Data Science</strong>. We must abandon the idea of a fixed price and instead solve for <strong>Expected Profit ($E[P]$)</strong> using probability distributions.</p>
+    <h2>1. Situation: The Flaw of Averages</h2>
+    <p><strong>The Context:</strong> In standard pricing strategy, teams often rely on single-point historical averages to set target margins. However, the supply chain is a chaotic system. When you price a SKU based on the "average" freight cost and "average" demand, you fall victim to the Flaw of Averages: a strategy that works 50% of the time, and blows up the other 50%. If global freight costs spike 30% for a single quarter, a static markup strategy can instantly wipe out a category's annual EBITDA.</p>
 
-    <h2>2. The Stochastic Optimizer</h2>
-    <p>To optimize margin accurately, I architected a true Monte Carlo Simulation. Instead of feeding the engine flat variables (e.g., "$15 freight cost"), the algorithm is fed a distribution curve. The engine simulates thousands of alternate realities for a single SKU. In each reality, it randomizes the incoming cost based on shipping volatility, and it randomizes the market demand based on the elasticity curve.</p>
-    <p>By plotting the results of 5,000 permutations on a histogram, the algorithm mathematically identifies the exact target retail price that yields the highest Median Expected Profit, while explicitly calculating the P5 (5th Percentile) worst-case scenario to ensure we never fall below our operational floor.</p>
+    <h2>2. Task: Shifting to Probabilistic Risk Modeling</h2>
+    <p><strong>The Problem:</strong> To extract maximum margin without exposing the enterprise to catastrophic losses during supply chain shocks, I needed to transition the pricing model from <em>Deterministic</em> (guessing a single fixed number) to <em>Stochastic</em> (mapping the probability of thousands of potential futures).</p>
+    <p><strong>The Objective:</strong> Build a true Monte Carlo "Random Walk" simulator. Rather than solving for a single margin percentage, the engine must simulate thousands of daily and monthly compounding realities to visualize the expanding "cone of risk" over a 12-month projection.</p>
+
+    <h2>3. Action: The Monte Carlo Random Walk Engine</h2>
+    <p>Instead of feeding the engine flat variables, the algorithm generates a geometric random walk. Over a 12-month timeline, it injects stochastic noise at every step. In each of the 5,000 simulated realities, cost fluctuates based on logistics volatility curves, and market demand fluctuates based on our defined price elasticity.</p>
+    <p>By rendering these paths on a classic "Spaghetti Chart," we visualize the true density of our risk. The algorithm then mathematically isolates the <strong>P5 (5th Percentile) Worst-Case Trajectory</strong>. This allows us to establish an absolute algorithmic price floor—ensuring we never price ourselves into a loss—while aggressively capturing the <strong>Median Expected Profit (E[P])</strong>.</p>
 
     <div class="sim-container">
         <div class="sim-sidebar">
@@ -139,24 +150,24 @@
         <div class="sim-main">
             <div class="kpi-grid">
                 <div class="kpi-card" id="card-p5">
-                    <div class="kpi-title" style="color: #ef4444;">P5 Worst-Case Risk</div>
+                    <div class="kpi-title" style="color: #ef4444;">12-Mo P5 Risk</div>
                     <div class="kpi-value" id="out-p5" style="color: #ef4444;">$--</div>
                     <div class="kpi-sub">5th Percentile Profit Floor</div>
                 </div>
                 <div class="kpi-card" style="border-top-color: #3b82f6;">
-                    <div class="kpi-title" style="color: #3b82f6;">Expected E[P] Yield</div>
+                    <div class="kpi-title" style="color: #3b82f6;">12-Mo Median E[P]</div>
                     <div class="kpi-value" id="out-median" style="color: #3b82f6;">$--</div>
-                    <div class="kpi-sub">Median Probable Profit</div>
+                    <div class="kpi-sub">Median Probable Yield</div>
                 </div>
                 <div class="kpi-card" id="card-p95">
-                    <div class="kpi-title" style="color: #10b981;">P95 Best-Case Upside</div>
+                    <div class="kpi-title" style="color: #10b981;">12-Mo P95 Upside</div>
                     <div class="kpi-value" id="out-p95" style="color: #10b981;">$--</div>
                     <div class="kpi-sub">95th Percentile Windfall</div>
                 </div>
             </div>
 
             <div class="chart-container">
-                <div class="kpi-title" style="margin-bottom: 10px;">Profit Probability Distribution (5,000 Simulations)</div>
+                <div class="kpi-title" style="margin-bottom: 10px;">Cumulative Profit Trajectories (12-Month Random Walk)</div>
                 <div class="chart-box">
                     <canvas id="histogramChart"></canvas>
                 </div>
@@ -164,40 +175,64 @@
         </div>
     </div>
 
-    <h2>3. Core Engine: Python Optimization Logic</h2>
-    <p>The mathematical backbone of this strategy is executed in Python using NumPy vectorization for rapid permutation processing. The script generates normally distributed market noise via standard deviation scaling and applies demand destruction based on theoretical elasticity curves.</p>
+    <h2>4. Action: Python Time-Series Vectorization</h2>
+    <p>The mathematical backbone is executed in Python using <code>NumPy</code> vectorization to process 60,000 total time-steps (5,000 realities &times; 12 months) in milliseconds. Crucially, before the stochastic engine runs, historical sales data must be sanitized. The code below demonstrates how Interquartile Range (IQR) logic strips promotional anomalies before generating the baseline demand matrix.</p>
     
-    <pre class="code-block"><code><span class="code-comment"># Python Stochastic Margin Optimization (Data Science Module)</span>
+    <pre class="code-block"><code><span class="code-comment"># Python Stochastic Margin Optimization (Time-Series Module)</span>
 <span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+<span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
 
-<span class="code-keyword">def</span> <span class="code-function">run_monte_carlo_optimizer</span>(base_cost, target_price, volatility_factor, elasticity, iterations=<span class="code-number">50000</span>):
-    <span class="code-comment"># 1. Generate stochastic cost arrays (Normally distributed freight variance)</span>
-    cost_array = base_cost * (<span class="code-number">1</span> + np.random.normal(loc=<span class="code-number">0</span>, scale=volatility_factor, size=iterations))
+<span class="code-keyword">def</span> <span class="code-function">sanitize_historical_demand</span>(sales_series):
+    <span class="code-string">"""
+    Data Prep: Removes promotional spikes and stock-outs using IQR logic
+    to ensure the Monte Carlo model trains on true baseline demand.
+    """</span>
+    Q1 = sales_series.quantile(<span class="code-number">0.25</span>)
+    Q3 = sales_series.quantile(<span class="code-number">0.75</span>)
+    IQR = Q3 - Q1
+    capped_series = np.where(sales_series > (Q3 + <span class="code-number">1.5</span> * IQR), Q3, sales_series)
+    <span class="code-keyword">return</span> np.mean(capped_series)
+
+<span class="code-keyword">def</span> <span class="code-function">run_monte_carlo_random_walk</span>(base_cost, target_price, volatility, elasticity, iterations=<span class="code-number">5000</span>, months=<span class="code-number">12</span>):
+    <span class="code-comment"># Initialize cumulative profit matrix: 5,000 realities x 12 months</span>
+    cumulative_profit = np.zeros((iterations, months + <span class="code-number">1</span>))
     
-    <span class="code-comment"># 2. Calculate baseline demand destruction based on elasticity</span>
+    <span class="code-comment"># Calculate demand destruction based on price delta</span>
     price_delta = (target_price - <span class="code-number">65.00</span>) / <span class="code-number">65.00</span>
     base_demand = <span class="code-number">500</span> * (<span class="code-number">1</span> - (price_delta * elasticity))
     
-    <span class="code-comment"># 3. Inject stochastic market noise into physical demand</span>
-    demand_array = np.random.normal(loc=base_demand, scale=<span class="code-number">45</span>, size=iterations)
-    demand_array = np.maximum(demand_array, <span class="code-number">0</span>) <span class="code-comment"># Floor at 0 sales</span>
-    
-    <span class="code-comment"># 4. Vectorized execution of E[P] formula</span>
-    profit_array = (target_price - cost_array) * demand_array
+    <span class="code-comment"># Generate stochastic time-series matrices</span>
+    <span class="code-keyword">for</span> m <span class="code-keyword">in</span> range(<span class="code-number">1</span>, months + <span class="code-number">1</span>):
+        <span class="code-comment"># Random walk for freight/cost volatility</span>
+        cost_step = base_cost * (<span class="code-number">1</span> + np.random.normal(loc=<span class="code-number">0</span>, scale=volatility, size=iterations))
+        
+        <span class="code-comment"># Stochastic market demand noise (Floored at 0)</span>
+        demand_step = np.maximum(np.random.normal(loc=base_demand, scale=<span class="code-number">40</span>, size=iterations), <span class="code-number">0</span>)
+        
+        <span class="code-comment"># Calculate instance profit and accumulate</span>
+        month_profit = (target_price - cost_step) * demand_step
+        cumulative_profit[:, m] = cumulative_profit[:, m-<span class="code-number">1</span>] + month_profit
+        
+    <span class="code-comment"># Extract percentiles for the absolute risk boundaries at Month 12</span>
+    final_outcomes = cumulative_profit[:, -<span class="code-number">1</span>]
     
     <span class="code-keyword">return</span> {
-        <span class="code-string">"p5_risk"</span>: np.percentile(profit_array, <span class="code-number">5</span>),
-        <span class="code-string">"median_ep"</span>: np.median(profit_array),
-        <span class="code-string">"p95_upside"</span>: np.percentile(profit_array, <span class="code-number">95</span>)
+        <span class="code-string">"p5_floor"</span>: np.percentile(final_outcomes, <span class="code-number">5</span>),
+        <span class="code-string">"median_ep"</span>: np.median(final_outcomes),
+        <span class="code-string">"p95_ceiling"</span>: np.percentile(final_outcomes, <span class="code-number">95</span>)
     }</code></pre>
 
-    <h2>4. Phase 2: Machine Learning & Continuous Training Loops</h2>
-    <p>To prevent the algorithm from acting as a static calculator, the ultimate architectural phase transitions this script into a <strong>Supervised Machine Learning Loop</strong>. As the model suggests optimized target prices, it requires boundaries and historical feedback to sharpen its predictive accuracy over time.</p>
-    <ul>
-        <li><strong>Boundary Constraints (The Bumpers):</strong> Unbound algorithms are dangerous. We establish explicit elasticity maximums per P-Tier. If the algorithm mathematically determines that a 400% markup on a spark plug maximizes short-term profit, the boundary constraints intercept the action to prevent catastrophic, long-term volume death.</li>
-        <li><strong>Continuous Feedback Loops:</strong> Once a month, empirical point-of-sale data is fed back into the engine. By measuring the delta between the <em>Simulated Expected Profit</em> and the <em>Actual Realized Profit</em>, the algorithm calculates its own error rate. It uses this delta to automatically adjust its internal elasticity weights, shrinking variance and increasing accuracy month over month.</li>
-        <li><strong>Anomaly Sanitization (Defending Concept Drift):</strong> A primary risk of ML integration is "Data Poisoning." If a local competitor liquidates, causing an unnatural drop in our volume, a raw algorithm will assume the market has become permanently inelastic. To defend against Concept Drift, an anomaly-detection filter sanitizes incoming POS data, ensuring the model ignores statistical outliers and only trains on true market trends.</li>
-    </ul>
+    <h2>5. Result: Boundary Execution & Machine Learning Loop</h2>
+    
+    <div class="impact-box">
+        <h3>Strategic ROI & Continuous Improvement</h3>
+        <p>By abandoning single-point averages and utilizing this time-series probabilistic framework, the pricing organization successfully protected long-term EBITDA while identifying hidden margin opportunities on volatile items. However, a static algorithm eventually degrades. The final architectural step integrates these Monte Carlo outputs into a <strong>Supervised Machine Learning Feedback Loop</strong>.</p>
+        <ul>
+            <li><strong>Dynamic Elasticity Tuning:</strong> Every 30 days, actual Point-of-Sale (POS) data is fed back into the engine. The model calculates the delta between its <em>Predicted P50 Expected Profit</em> and the <em>Realized Profit</em>, automatically micro-adjusting its own internal elasticity weights to shrink the variance.</li>
+            <li><strong>Concept Drift Defense:</strong> Standard algorithms fail when market paradigms abruptly shift (e.g., a local competitor liquidates, temporarily skewing volume). By utilizing anomaly detection within the feedback loop, the engine automatically sanitizes poisoned data, ensuring it only trains on true, long-term market trends.</li>
+        </ul>
+        <p style="margin-bottom: 0; font-weight: bold; color: var(--alert-red);">The Result: A self-correcting pricing engine that grows mathematically sharper and more profitable with every fiscal quarter.</p>
+    </div>
 
     <script>
         const sliderPrice = document.getElementById('slider-price');
@@ -219,7 +254,7 @@
 
         function triggerSimulation() {
             btnExecute.disabled = true;
-            btnExecute.innerText = "Running Monte Carlo Math...";
+            btnExecute.innerText = "Running 5,000 Realities...";
             
             setTimeout(() => {
                 runOptimization();
@@ -237,107 +272,145 @@
             const baselinePrice = 65.00;
             const baselineDemand = 500;
             const iterations = 5000;
+            const months = 12;
             
-            let profits = [];
+            let allPaths = [];
 
             // Calculate demand destruction (deterministic baseline)
             const priceDelta = (targetPrice - baselinePrice) / baselinePrice;
             const adjustedDemandBase = baselineDemand * (1 - (priceDelta * elasticity));
 
-            // Run 5000 Stochastic Permutations
+            // Run 5000 Stochastic Random Walks
             for (let i = 0; i < iterations; i++) {
-                // 1. Randomize Cost (Volatile)
-                let simulatedCost = baseCost * (1 + randomNormal(0, volatility));
+                let cumulativeProfit = 0;
+                let path = [0]; // Month 0 is $0
                 
-                // 2. Randomize Demand (Noise)
-                let simulatedDemand = randomNormal(adjustedDemandBase, 40); 
-                simulatedDemand = Math.max(simulatedDemand, 0); // Can't sell negative items
+                for (let m = 1; m <= months; m++) {
+                    // 1. Randomize Cost (Volatile walk)
+                    let simulatedCost = baseCost * (1 + randomNormal(0, volatility));
+                    
+                    // 2. Randomize Demand (Noise)
+                    let simulatedDemand = randomNormal(adjustedDemandBase, 40); 
+                    simulatedDemand = Math.max(simulatedDemand, 0); // Can't sell negative items
 
-                // 3. Calculate instance profit
-                let instanceProfit = (targetPrice - simulatedCost) * simulatedDemand;
-                profits.push(instanceProfit);
+                    // 3. Calculate instance profit
+                    cumulativeProfit += (targetPrice - simulatedCost) * simulatedDemand;
+                    path.push(cumulativeProfit);
+                }
+                allPaths.push(path);
             }
 
-            // Sort for percentiles
-            profits.sort((a, b) => a - b);
-            
-            const p5 = profits[Math.floor(iterations * 0.05)];
-            const median = profits[Math.floor(iterations * 0.50)];
-            const p95 = profits[Math.floor(iterations * 0.95)];
-
-            // Update DOM
-            document.getElementById('out-p5').innerText = `$${Math.round(p5).toLocaleString()}`;
-            document.getElementById('out-median').innerText = `$${Math.round(median).toLocaleString()}`;
-            document.getElementById('out-p95').innerText = `$${Math.round(p95).toLocaleString()}`;
-
-            // Create Histogram Bins
-            const numBins = 30;
-            const min = profits[0];
-            const max = profits[profits.length - 1];
-            const binSize = (max - min) / numBins;
-            
-            let bins = new Array(numBins).fill(0);
-            let labels = [];
-
-            for (let i = 0; i < numBins; i++) {
-                labels.push(`$${Math.round(min + (i * binSize))}`);
+            // Extract cross-sectional percentiles for the overlay lines
+            let p5Path = [0], p50Path = [0], p95Path = [0];
+            for (let m = 1; m <= months; m++) {
+                let monthCrossSection = allPaths.map(p => p[m]).sort((a, b) => a - b);
+                p5Path.push(monthCrossSection[Math.floor(iterations * 0.05)]);
+                p50Path.push(monthCrossSection[Math.floor(iterations * 0.50)]);
+                p95Path.push(monthCrossSection[Math.floor(iterations * 0.95)]);
             }
 
-            for (let i = 0; i < iterations; i++) {
-                let binIndex = Math.floor((profits[i] - min) / binSize);
-                if (binIndex >= numBins) binIndex = numBins - 1;
-                bins[binIndex]++;
-            }
+            // Update DOM with final Month 12 KPIs
+            document.getElementById('out-p5').innerText = `$${Math.round(p5Path[months]).toLocaleString()}`;
+            document.getElementById('out-median').innerText = `$${Math.round(p50Path[months]).toLocaleString()}`;
+            document.getElementById('out-p95').innerText = `$${Math.round(p95Path[months]).toLocaleString()}`;
 
-            renderHistogram(labels, bins);
+            renderSpaghettiChart(allPaths, p5Path, p50Path, p95Path, months);
         }
 
-        function renderHistogram(labels, data) {
+        function renderSpaghettiChart(allPaths, p5Path, p50Path, p95Path, months) {
             const ctx = document.getElementById('histogramChart').getContext('2d');
             if (chartInstance) chartInstance.destroy();
 
+            // Generate X-Axis Labels
+            let labels = [];
+            for (let m = 0; m <= months; m++) {
+                labels.push(m === 0 ? 'Start' : `Mo ${m}`);
+            }
+
+            // Slice out just 100 paths for the visual "Spaghetti" rendering to keep browser fast
+            let visualDatasets = allPaths.slice(0, 100).map(path => ({
+                data: path,
+                borderColor: 'rgba(148, 163, 184, 0.15)', // Light Slate Gray
+                borderWidth: 1.5,
+                fill: false,
+                pointRadius: 0,
+                tension: 0.2
+            }));
+
+            // Overlay the mathematical Percentile Boundaries
+            visualDatasets.push({
+                label: 'P95 Upside Threshold',
+                data: p95Path,
+                borderColor: '#10b981', // Emerald Green
+                borderWidth: 3,
+                borderDash: [5, 5],
+                pointRadius: 0,
+                tension: 0.2
+            });
+
+            visualDatasets.push({
+                label: 'Median Expected Profit',
+                data: p50Path,
+                borderColor: '#3b82f6', // Blue
+                borderWidth: 4,
+                pointRadius: 0,
+                tension: 0.2
+            });
+
+            visualDatasets.push({
+                label: 'P5 Absolute Risk Floor',
+                data: p5Path,
+                borderColor: '#ef4444', // Red
+                borderWidth: 3,
+                borderDash: [5, 5],
+                pointRadius: 0,
+                tension: 0.2
+            });
+
             chartInstance = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Frequency (Number of Permutations)',
-                        data: data,
-                        backgroundColor: '#3b82f6',
-                        borderColor: '#2563eb',
-                        borderWidth: 1,
-                        barPercentage: 1.0,
-                        categoryPercentage: 1.0
-                    }]
+                    datasets: visualDatasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 600 },
                     plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                title: function(context) { return 'Expected Profit: ' + context[0].label; },
-                                label: function(context) { return context.raw + ' Simulated Realities'; }
+                        legend: { 
+                            display: true, 
+                            labels: {
+                                filter: function(item, chart) {
+                                    // Only show the 3 main boundary lines in the legend
+                                    return item.text !== undefined; 
+                                },
+                                font: { family: "'Segoe UI', sans-serif", size: 11, weight: 'bold' },
+                                color: '#1a2433'
                             }
-                        }
+                        },
+                        tooltip: { enabled: false }, // Too messy with 100 lines overlapping
+                        datalabels: { display: false }
                     },
                     scales: {
                         y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Frequency', font: {size: 11, weight: 'bold'} },
-                            grid: { color: '#e2e8f0' }
+                            title: { display: true, text: 'Cumulative Profit ($)', font: {size: 11, weight: 'bold'} },
+                            grid: { color: '#e2e8f0', borderDash: [4, 4] },
+                            ticks: { 
+                                callback: function(value) { return '$' + (value/1000).toFixed(0) + 'k'; },
+                                font: {size: 10} 
+                            }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { maxTicksLimit: 8, font: {size: 10} }
+                            ticks: { font: {size: 10, weight: 'bold'} }
                         }
                     }
                 }
             });
         }
 
-        // Run once on load to populate the chart
+        // Run once on load
         runOptimization();
     </script>
 </body>
