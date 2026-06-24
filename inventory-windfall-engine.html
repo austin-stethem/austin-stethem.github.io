@@ -33,7 +33,7 @@
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
+        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
         .meta-cell:last-child { border-right: none; }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
@@ -50,8 +50,8 @@
         .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
         
         .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); align-items: stretch; flex-wrap: wrap; overflow: hidden;}
-        .sim-sidebar { width: 320px; flex-shrink: 0; background: #f1f5f9; color: #1e293b; padding: 25px; display: flex; flex-direction: column; border-right: 1px solid #cbd5e1;}
-        .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #ffffff; display: flex; flex-direction: column;}
+        .sim-sidebar { width: 320px; flex-shrink: 0; background: #f1f5f9; color: #1e293b; padding: 25px; display: flex; flex-direction: column; border-right: 1px solid #cbd5e1; box-sizing: border-box;}
+        .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #ffffff; display: flex; flex-direction: column; box-sizing: border-box;}
         .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px; color: #475569;}
         
         .control-group { margin-bottom: 25px; }
@@ -71,14 +71,14 @@
         .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
-        .impact-box ul { font-size: 10pt; }
+        .impact-box ul { font-size: 10pt; margin-bottom: 0; }
 
         .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
         .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
         .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
         
         .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
-        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center;}
+        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;}
         .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
         .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
         .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
@@ -86,6 +86,7 @@
         .nav-btn.next .nav-label { color: #fca5a5; }
         .nav-title { font-size: 11pt; font-weight: bold;}
 
+        /* MOBILE RESPONSIVENESS FIXES */
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
@@ -112,7 +113,7 @@
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -208,7 +209,7 @@
     <div class="impact-box">
         <h3>Turning Inflation into a Revenue Center</h3>
         <p>By shifting the organization's logic from Average Cost to Replacement Cost, the Pricing Department ceased to be a reactive administrative function and became an active revenue center.</p>
-        <p>This strategy demonstrates that true analytical value doesn't just come from building complex machine learning models; it comes from deeply understanding <strong>the mechanics of cash flow</strong>. By leveraging the physical realities of the supply chain against the accounting principles of the General Ledger, I was able to generate verifiable, risk-free EBITDA windfalls month over month, fundamentally padding the corporate bottom line during periods of severe macroeconomic inflation.</p>
+        <p style="margin-bottom: 0;">This strategy demonstrates that true analytical value doesn't just come from building complex machine learning models; it comes from deeply understanding <strong>the mechanics of cash flow</strong>. By leveraging the physical realities of the supply chain against the accounting principles of the General Ledger, I was able to generate verifiable, risk-free EBITDA windfalls month over month, fundamentally padding the corporate bottom line during periods of severe macroeconomic inflation.</p>
     </div>
 
     <div class="next-step-box">
