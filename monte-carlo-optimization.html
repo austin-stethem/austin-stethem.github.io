@@ -14,16 +14,17 @@
         
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
-        .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
+        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box;}
         .meta-cell:last-child { border-right: none; }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
         
         .nda-note { border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
-        h2 { font-family: 'Georgia', serif; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         p { text-align: justify; margin-bottom: 15px; color: #334155; }
         ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
         li { margin-bottom: 8px; }
@@ -32,11 +33,11 @@
         .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
         
         .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
-        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
+        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
         .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
         
         .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
-        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center;}
+        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;}
         .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
         .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
         .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
@@ -44,7 +45,7 @@
         .nav-btn.next .nav-label { color: #fca5a5; }
         .nav-title { font-size: 11pt; font-weight: bold;}
 
-        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); align-items: stretch; flex-wrap: wrap;}
+        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border-radius: 6px; align-items: stretch; flex-wrap: wrap; overflow: hidden;}
         .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; display: flex; flex-direction: column; }
         .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
         .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
@@ -86,7 +87,7 @@
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
             .sim-container { flex-direction: column; }
-            .sim-sidebar { width: 100%; box-sizing: border-box; }
+            .sim-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid #cbd5e1; }
             .sim-main { padding: 15px; box-sizing: border-box; min-width: unset; }
             .project-navigation { flex-direction: column; }
             .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
@@ -108,7 +109,7 @@
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -128,8 +129,8 @@
     <h2>1. Situation: The Flaw of Averages</h2>
     
     <div class="scenario-box">
-        <strong>The Enterprise Scenario (Step 2 of 5)</strong>
-        Continuing from Step 1, we have isolated our highly-competitive battleground territories via geospatial mapping. We still face the impending 15% vendor cost spike. However, before executing a blanket price increase to offset that cost, we must mathematically simulate the risk. If we raise prices on our sensitive Key Value Items (KVIs) in those contested zones, how much volume will we lose to the discounter? We must establish our statistical risk boundaries.
+        <strong>The Enterprise Scenario (Step 3 of 5)</strong>
+        Our deterministic algorithm (Step 2) has successfully mapped the cross-subsidized price floors needed to defend against the 15% cost spike. However, the supply chain is chaotic. Before executing these rigid price floors in the live ERP, we must mathematically simulate their risk. How much volume will we lose to competitors under extreme market volatility? We must establish our statistical risk boundaries.
     </div>
 
     <p><strong>The Context:</strong> In standard pricing strategy, teams often rely on single-point historical averages to set target margins. However, the supply chain is a chaotic system. When you price a SKU based on the "average" freight cost and "average" demand, you fall victim to the Flaw of Averages: a strategy that works 50% of the time, and blows up the other 50%. If global freight costs spike 30% for a single quarter, a static markup strategy can instantly wipe out a category's annual EBITDA.</p>
@@ -271,16 +272,16 @@
     </div>
 
     <div class="next-step-box">
-        <h3>Ecosystem Step 3: Strategy Execution</h3>
-        <p>We now have our geospatial threat map (Step 1) and our absolute probabilistic price floors (Step 2). It is time to execute. We must deploy an algorithm into the ERP that surgically raises prices to offset the 15% cost spike without breaching the risk limits of our core items.</p>
+        <h3>Ecosystem Step 4: Performance Tracking</h3>
+        <p>With our probabilistic risk boundaries validated and the pricing executed safely in the ERP, we must establish a continuous BI feedback loop. We shift from deployment to active surveillance, utilizing Phocas BI to monitor our Key Value Items in real-time.</p>
         <div class="project-navigation">
-            <a href="geospatial.html" class="nav-btn prev">
+            <a href="algorithmic-margin-defense.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Previous Phase</span>
-                <span class="nav-title">Step 1: Market Intelligence</span>
+                <span class="nav-title">Step 2: Strategy Execution</span>
             </a>
-            <a href="algorithmic-margin-defense.html" class="nav-btn next">
+            <a href="phocas-pricing-strategy.html" class="nav-btn next">
                 <span class="nav-label">Next Phase &rarr;</span>
-                <span class="nav-title">Step 3: Strategy Execution</span>
+                <span class="nav-title">Step 4: Performance Tracking</span>
             </a>
         </div>
     </div>
