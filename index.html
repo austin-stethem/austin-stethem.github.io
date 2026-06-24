@@ -59,8 +59,8 @@
         }
         
         .card { 
-            background: #fff; 
-            border: 1px solid #e2e8f0; 
+            background: #f4f4f5; /* Pure neutral gray, no blue tint */
+            border: 1px solid #d4d4d8; 
             padding: 30px; 
             border-radius: 8px; 
             display: flex; 
@@ -68,7 +68,7 @@
             align-items: center; /* Centers items horizontally */
             text-align: center; /* Centers the text */
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04); /* Lifted slightly off the page */
         }
         
         .card:hover { 
@@ -102,7 +102,7 @@
             display: inline-block; 
             align-self: center; /* Centers button in the flex column */
             margin-top: auto; /* Pushes button to the very bottom of the card */
-            background: #f1f5f9; 
+            background: #ffffff; /* Kept white so it pops off the neutral gray card */
             color: #0f172a; 
             border: 1px solid #cbd5e1;
             padding: 10px 20px;
@@ -112,10 +112,11 @@
             font-size: 0.9rem; 
             border-radius: 6px;
             transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02); /* Slight shadow added to button */
         }
         
         .btn:hover { 
-            background: #e2e8f0;
+            background: #f1f5f9;
             border-color: #94a3b8;
             color: #b32525; 
             text-decoration: none; 
