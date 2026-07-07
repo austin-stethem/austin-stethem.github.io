@@ -5,20 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Predictive VIO Market Capture - Austin Stethem</title>
     
+    <!-- Tailwind CSS for rapid UI styling inside the dashboard container -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <!-- Leaflet MarkerCluster CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
+        /* STANDARDIZED PORTFOLIO ROOT VARIABLES */
         :root {
             --dark-slate-blue: #1a2433;
             --alert-red: #b32525;
             --success-green: #27ae60;
             --bg-color: #fbfbfb;
+            --nexus-yellow: #FFCC00;
+            --rich-black: #1D1B1C;
+            --pure-white: #FFFFFF;
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
             color: #334155;
             font-size: 10.5pt;
             line-height: 1.6;
@@ -65,53 +78,103 @@
         .nav-btn.next .nav-label { color: #fca5a5; }
         .nav-title { font-size: 11pt; font-weight: bold;}
 
-        /* Made min-height fluid for mobile stacking */
-        .sim-container { display: flex; min-height: 850px; border: 1px solid #cbd5e1; background: #fff; overflow: hidden; margin-top: 30px; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border-radius: 6px;}
-        .sim-sidebar { width: 300px; flex-shrink: 0; background: #f1f5f9; border-right: 1px solid #cbd5e1; padding: 20px; font-size: 9pt; overflow-y: auto; display: flex; flex-direction: column; box-sizing: border-box;}
-        .sidebar-controls { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; font-size: 9pt; font-weight: 600; color: #1e293b; }
-        .sidebar-controls label { display: flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.2; }
-        .sidebar-controls input[type="range"] { width: 100%; cursor: pointer; margin-top: 5px; accent-color: var(--alert-red); }
-        
-        .logic-key { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-top: 15px; font-size: 8.5pt; color: #475569; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
-        .logic-key h4 { margin: 0 0 8px 0; font-size: 8.5pt; color: #1e293b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;}
-        .logic-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
-        
-        .sim-main { flex: 1; min-width: 0; display: flex; flex-direction: column; box-sizing: border-box; }
-        
-        #map-container { height: 420px; min-height: 420px; flex-shrink: 0; width: 100%; position: relative; z-index: 1; border-bottom: 1px solid #cbd5e1; background-color: #eaeaea; }
-
-        .raw-data-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; background: #fff; min-width: 600px; }
-        .raw-data-table th { background: #f1f5f9; color: #1e293b; padding: 10px; text-align: left; border-bottom: 2px solid #cbd5e1; position: sticky; top: 0; text-transform: uppercase; letter-spacing: 0.5px; z-index: 2;}
-        .raw-data-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; color: #334155; }
-        
-        /* Added overflow-x to prevent mobile spilling */
-        .table-wrapper { max-height: 180px; overflow-y: auto; overflow-x: auto; margin-bottom: 15px; border-bottom: 1px solid #cbd5e1; width: 100%; }
-
-        .badge-urban { background-color: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; white-space: nowrap; }
-        .badge-suburban { background-color: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; white-space: nowrap; }
-        .badge-rural { background-color: #dcfce7; color: #15803d; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: bold; text-transform: uppercase; margin-left: 6px; white-space: nowrap; }
-
-        .strategy-table { width: 100%; border-collapse: collapse; margin: 0; background: #fff; min-width: 600px;}
-        .strategy-table th { background: var(--dark-slate-blue); color: white; padding: 14px; text-align: left; font-size: 9pt; border: 1px solid var(--dark-slate-blue); text-transform: uppercase; letter-spacing: 0.5px;}
-        .strategy-table td { padding: 14px; border: 1px solid #e2e8f0; font-size: 9.5pt; vertical-align: top; color: #334155;}
-        
-        .strategy-wrapper { overflow-x: auto; margin: 25px 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-
-        .impact-footer { border-top: 1px solid #cbd5e1; padding-top: 15px; margin-top: 40px; font-style: italic; font-weight: 600; color: var(--dark-slate-blue); font-size: 10pt; text-align: justify; }
-
         .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; color: #0f172a; box-shadow: 0 1px 2px rgba(0,0,0,0.02); overflow-x: auto;}
+
+        /* DASHBOARD APP STYLING */
+        .dashboard-wrapper { height: 750px; border: 1px solid #cbd5e1; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 30px 0; font-family: 'Inter', sans-serif;}
+        
+        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.5); }
+        .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
+
+        .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
+        .leaflet-popup-content { margin: 0; width: 280px !important; }
+        .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .popup-body { padding: 16px; background: #fff; }
+        .popup-title { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 4px; line-height: 1.2;}
+        .popup-address { font-size: 13px; color: #555; margin-bottom: 12px; font-style: italic; }
+        .popup-coords { font-size: 12px; color: #888; font-family: monospace; }
+        .leaflet-popup-tip { background: #fff; }
+        .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
+
+        .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
+        .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
+
+        .custom-cluster {
+            background: rgba(29, 27, 28, 0.9);
+            color: #FFFFFF;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.8);
+            font-size: 14px;
+        }
+
+        .layer-toggle { display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; }
+        .layer-toggle input { display: none; }
+        .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: white; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+        .layer-toggle input:checked + .custom-checkbox { background: var(--rich-black); border: 2px solid white; }
+        .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
+
+        /* iOS Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--nexus-yellow); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
+        .dashboard-wrapper:not(.light-mode) .theme-icon { fill: #1D1B1C; stroke: #FFFFFF; stroke-width: 2px; }
+        .dashboard-wrapper.light-mode .theme-icon { fill: #FFFFFF; stroke: #1D1B1C; stroke-width: 2px; }
+
+        .theme-bg-main { background-color: var(--rich-black); }
+        .theme-text-main { color: var(--pure-white); }
+        .theme-text-muted { color: #888; }
+        .theme-border { border-color: #333; }
+        .theme-card { background-color: rgba(255,255,255,0.05); }
+        
+        .dashboard-wrapper.light-mode .theme-bg-main { background-color: #F8FAFC; }
+        .dashboard-wrapper.light-mode .theme-text-main { color: #0F172A; }
+        .dashboard-wrapper.light-mode .theme-text-muted { color: #64748B; }
+        .dashboard-wrapper.light-mode .theme-border { border-color: #E2E8F0; }
+        .dashboard-wrapper.light-mode .theme-card { background-color: #FFFFFF; }
+        .dashboard-wrapper.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--nexus-yellow); border-color: var(--nexus-yellow); }
+        .dashboard-wrapper.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--rich-black); }
+        .dashboard-wrapper.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
+
+        /* DYNAMIC LOGO TEXT SHADOW */
+        .logo-text { text-shadow: 0 2px 4px rgba(0,0,0,0.5); transition: color 0.3s ease; }
+        .dashboard-wrapper.light-mode .logo-text { text-shadow: none; }
+
+        /* THE NEW PILL-TOGGLE TABS */
+        .tab-container { display: flex; background: rgba(255,255,255,0.1); padding: 4px; border-radius: 8px; margin-top: 15px; }
+        .dashboard-wrapper.light-mode .tab-container { background: #e2e8f0; }
+        
+        .tab-btn { flex: 1; padding: 10px 12px; font-size: 13px; font-weight: 600; color: #888; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 6px; border: none; background: transparent; cursor: pointer; text-align: center;}
+        .tab-btn:hover:not(.active) { color: #ccc; }
+        .dashboard-wrapper.light-mode .tab-btn:hover:not(.active) { color: #475569; }
+        
+        .tab-btn.active { background: var(--nexus-yellow); color: var(--rich-black); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .dashboard-wrapper.light-mode .tab-btn.active { background: #fff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
+        .dashboard-wrapper.light-mode .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; }
 
         /* MOBILE RESPONSIVENESS FIXES */
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
-            .sim-container { flex-direction: column; min-height: auto; }
-            .sim-sidebar { width: 100%; height: auto; max-height: none; border-right: none; border-bottom: 1px solid #cbd5e1; }
-            #map-container { height: 350px; min-height: 350px; }
-            .table-wrapper { max-height: 250px; }
             .project-navigation { flex-direction: column; }
             .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
             .doc-title { font-size: 22pt; }
+            .dashboard-wrapper { flex-direction: column; height: auto; min-height: 800px; }
+            #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
+            #map { height: 450px; }
         }
     </style>
 </head>
@@ -120,167 +183,153 @@
     <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
 
     <div class="doc-header">
-        <div class="doc-tagline">Geospatial Intelligence & Data Science</div>
-        <div class="doc-title">Predictive VIO Market Capture & Topological Threat Modeling</div>
+        <div class="doc-tagline">Geospatial Intelligence & Machine Learning</div>
+        <div class="doc-title">Predictive VIO Market Capture & K-Means Threat Modeling</div>
     </div>
 
     <table class="meta-table">
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & Master Data Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Spatial Algorithms, Topological Risk, ACES/PIES/VIO Data Joins, Market Penetration</span>
+                <span class="meta-value">Spatial Algorithms, K-Means Clustering, Distance Decay, API Pipelines</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">JavaScript, Maps API, Experian VIO Datasets, Haversine Distance Matrices</span>
+                <span class="meta-value">Python (Pandas, Scikit-Learn), JavaScript, APIs, Leaflet.js</span>
             </td>
         </tr>
     </table>
 
     <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live branch coordinates, localized POS revenue figures, and proprietary Experian VIO datasets have been replaced with randomized proxies across a generalized regional map. The algorithmic logic remains a reflection of the production environment, <em>with the public caveat that the live enterprise engine utilizes API-driven Isochrone (drive-time) polygons rather than Haversine radials, and zip-code weighted VIO density rather than flat regional percentages.</em>
+        <strong>Data Governance Note:</strong> To comply with enterprise confidentiality, live branch coordinates, localized POS revenue figures, and proprietary 3rd-party datasets have been stripped from this demonstration. The interactive dashboard below utilizes an anonymized proxy dataset spanning the Southeast U.S. to safely demonstrate the exact production-grade UI, Marker Clustering, and ETL architecture.
     </div>
 
     <h2>1. Situation & Task: The Territorial Blindspot</h2>
     
     <div class="scenario-box">
         <strong>The Enterprise Scenario (Step 1 of 5)</strong>
-        A tier-1 vendor has announced an impending 15% cost increase across our core product lines. Simultaneously, an aggressive competitor is encroaching on our high-value territories. Before we can mathematically model the financial risk or defend our margins in the ERP, we must first map the battlefield. We need to know exactly <em>where</em> we are exposed and quantify the raw market potential surrounding our physical assets.
+        A tier-1 vendor has announced an impending 15% cost increase across our core product lines. Simultaneously, aggressive competitors are encroaching on our high-value territories. Before we can mathematically model the financial risk or defend our margins in the ERP, we must first map the battlefield. We need to know exactly <em>where</em> we are exposed.
     </div>
 
     <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories. This creates a fatal strategic blind spot: the assumption that geographic area equals revenue potential. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor.</p>
-    <p>Furthermore, mapping competitor locations without quantifying the actual *human and vehicular volume* caught in the crossfire leaves Pricing and Sales leadership reacting to margin erosion only after the volume has already been lost. To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine to strip away this "territorial blindness."</p>
+    <p>To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine to strip away this "territorial blindness," utilizing Python API harvesters to programmatically identify over 1,200 competitor threats.</p>
 
-    <h2>2. Architectural Methodology & System Mechanics</h2>
-    <p>The engine operating underneath the dashboard UI utilizes four distinct algorithmic pillars to calculate live market vulnerability and generate automated action protocols:</p>
+    <h2>2. Interactive Geospatial Dashboard</h2>
+    <p><em>The dashboard below is a live, interactive representation of the front-end application I built for executive leadership. It is engineered with dynamic MarkerClustering to prevent visual data-flooding, an iOS-style dark mode toggle, and custom JSON-driven popup rendering. Use the <strong>Map Filters</strong> tab to isolate specific competitor footprints.</em></p>
 
-    <h3>A. Data Engineering: The VIO/POS Join</h3>
-    <p>Before spatial rendering can occur, raw demographic data must be sanitized. I engineered SQL pipelines to extract internal Point of Sale (POS) volume from our ERP and join it directly against third-party <strong>Experian VIO (Vehicles in Operation)</strong> datasets using ACES/PIES industry standards. This ensures we are only measuring our exact Serviceable Obtainable Market (SOM).</p>
+    <!-- LIVE DASHBOARD INJECTION -->
+    <div class="dashboard-wrapper flex bg-[#1D1B1C]" id="app-dashboard">
+        <!-- Sidebar Command Center -->
+        <div id="sidebar" class="w-[320px] h-full flex flex-col z-10 theme-bg-main theme-border border-r relative transition-colors duration-300">
+            
+            <div class="p-6 pb-2 flex flex-col items-center text-center">
+                <h1 class="text-2xl font-black theme-text-main italic tracking-tighter logo-text">STRATEGIC <span class="text-[#FFCC00]">RADAR</span></h1>
+                
+                <div class="flex items-center justify-center gap-3 mt-2">
+                    <div class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </div>
+                    <span class="text-xs font-semibold tracking-wide text-green-400">PROXY DATA ACTIVE</span>
+                </div>
+            </div>
 
-    <h3>B. The Haversine Distance Matrix</h3>
-    <p>Rather than relying on flat geometric projections, the engine calculates the true "as-the-crow-flies" spherical distance between our physical assets (Hubs and Accounts) and active competitors. Every time the dashboard parameters are adjusted, the system recalculates the matrix using the Haversine formula:</p>
+            <!-- Tabs (New Pill Toggle Style) -->
+            <div class="px-6">
+                <div class="tab-container shadow-inner">
+                    <button onclick="switchTab('metrics')" id="tab-metrics" class="tab-btn active">Live Metrics</button>
+                    <button onclick="switchTab('controls')" id="tab-controls" class="tab-btn">Map Filters</button>
+                </div>
+            </div>
+
+            <!-- Scrollable Content Area -->
+            <div class="flex-1 overflow-y-auto p-6 sidebar-scroll">
+                
+                <!-- TAB 1: METRICS -->
+                <div id="content-metrics" class="block">
+                    <div class="mb-8 text-center">
+                        <h2 class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-2">Simulated Footprint</h2>
+                        <div class="theme-card rounded-lg p-4 border theme-border shadow-inner">
+                            <div class="text-4xl font-black theme-text-main mb-1" id="total-stores">--</div>
+                            <div class="text-xs font-medium theme-text-muted">Total Network Locations</div>
+                        </div>
+                    </div>
+
+                    <div id="market-breakdown-container" class="space-y-3">
+                        <!-- Populated dynamically by JS -->
+                    </div>
+                </div>
+
+                <!-- TAB 2: CONTROLS -->
+                <div id="content-controls" class="hidden">
+                    <div class="flex flex-col items-center mb-6 border-b theme-border pb-4">
+                        <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-3">Dashboard Environment</div>
+                        <div class="flex items-center gap-3 mt-1">
+                            <span id="moon-icon" style="opacity: 1; transition: opacity 0.3s ease;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                            </span>
+                            <label class="switch">
+                                <input type="checkbox" id="themeToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="sun-icon" style="opacity: 0.5; transition: opacity 0.3s ease;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 border-b theme-border pb-4 flex flex-col gap-2">
+                        <label class="layer-toggle !mb-0">
+                            <input type="radio" name="basemap" value="tactical" checked onchange="changeBasemap(this.value)">
+                            <div class="custom-checkbox rounded-full"></div>
+                            <span class="text-sm font-medium theme-text-main">Tactical View</span>
+                        </label>
+                        <label class="layer-toggle !mb-0">
+                            <input type="radio" name="basemap" value="satellite" onchange="changeBasemap(this.value)">
+                            <div class="custom-checkbox rounded-full"></div>
+                            <span class="text-sm font-medium theme-text-main">Satellite View</span>
+                        </label>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-4 cursor-pointer group">
+                        <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider">Map Layers</div>
+                        <button id="master-toggle" onclick="toggleAllLayers()" class="text-[10px] border theme-border theme-text-muted px-2 py-1 rounded hover:bg-gray-700 transition-colors uppercase font-bold">Hide All</button>
+                    </div>
+
+                    <div id="dynamic-layer-toggles" class="flex flex-col gap-1 pb-4">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="flex-1 relative h-full">
+            <div id="map" class="w-full h-full"></div>
+        </div>
+    </div>
+    <!-- END DASHBOARD -->
+
+    <h2>3. The Machine Learning Gravity Engine</h2>
+    <p>Mapping raw points is only the first step. To translate geography into actual pricing strategy, I architected a <strong>POS Gravity Engine</strong>. By extracting 12 months of Point-of-Sale data (LTM Revenue) and Customer Ship-To addresses from the ERP, the Python engine mathematically measured the exact "as-the-crow-flies" distance between our fulfilling hubs and the customers generating the revenue.</p>
+    
+    <p>This process established the <strong>Distance Decay Matrix</strong>, proving empirically that an urban branch might generate 90% of its revenue within a 5-mile radius, while a rural hub's revenue stretches across a 50-mile radius.</p>
+
     <div class="math-block">
-        $$d = 2r \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta\phi}{2}\right) + \cos\phi_1\cos\phi_2\sin^2\left(\frac{\Delta\lambda}{2}\right)}\right)$$
+        $$V = V_0 \cdot e^{-\beta d}$$
+        <em>(The Gravity Model: Where V is projected sales volume, d is distance, and &beta; is the Friction Coefficient determined by the POS data).</em>
     </div>
 
-    <h3>C. The Topological Friction Engine</h3>
-    <p>Standard Euclidean radiuses fail in the real world. To simulate true "drive-time" Isochrones without incurring heavy third-party API costs for every render, the engine utilizes a <strong>Topological Friction Engine</strong>. Hubs and accounts are assigned a Topology Index. Urban centers enforce a severe friction penalty (multiplying the effective radius by 0.3 to reflect dense driving conditions), while Rural assets utilize a low-friction multiplier (1.5x) to acknowledge that commercial accounts will source parts from significantly further away.</p>
-
-    <h3>D. Competitor Threat Weighting</h3>
-    <p>Not all competitors impact our SOM equally. The algorithm assigns distinct mathematical penalties to active market players. A standard regional competitor carries a 1.0x baseline, while a known "Aggressive Discounter" carries a 2.5x threat penalty. If a discounter breaches an asset's radius, the Vulnerability Index spikes exponentially.</p>
-
-    <h2>3. Interactive Defense & VIO Dashboard</h2>
-    <p><em>Adjust the Global Base Radius slider below to initialize the calculations. The engine will dynamically warp the physical threat rings based on the Topological Index, extract the target VIO within those perimeters, and recommend explicit Margin and Retention protocols based on competitor density.</em></p>
-
-    <div class="sim-container">
-        <div class="sim-sidebar">
-            <div style="font-weight: bold; margin-bottom: 12px; color: #1a2433; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">ENVIRONMENT</div>
-            <div style="color: #b32525; font-weight: bold; margin-bottom: 8px;">&#9660; vio_engine_v11_prod</div>
-            <div style="padding-left: 10px; margin-bottom: 8px; color: #475569;">&#9654; erp_pos_volumes.json</div>
-            <div style="padding-left: 10px; margin-bottom: 8px; color: #475569;">&#9654; experian_vio_10yr.csv</div>
-            <div style="padding-left: 10px; margin-bottom: 15px; color: #475569;">&#9654; density_index.py</div>
-            
-            <div style="font-weight: bold; margin-bottom: 10px; color: #1a2433; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">DATA FILTERS</div>
-            <div style="color: #64748b; margin-bottom: 15px; font-size: 8.5pt; line-height: 1.4;">Toggle layers to isolate threats. Targets scale automatically via the density matrix.</div>
-            
-            <div class="sidebar-controls">
-                <label style="color: #1a2433;"><input type="checkbox" id="chk-branches" checked> Our Hubs (Dark Circles)</label>
-                <label style="color: #27ae60;"><input type="checkbox" id="chk-top20" checked> Top 20% Fleet Accounts (Green Circles)</label>
-                <div style="height: 5px;"></div>
-                <label style="color: #b32525;"><input type="checkbox" id="chk-compA" checked> Comp A (Generalist Stars)</label>
-                <label style="color: #e67e22;"><input type="checkbox" id="chk-compB" checked> Comp B (Regional Triangles)</label>
-                <label style="color: #8e44ad;"><input type="checkbox" id="chk-compC" checked> Comp C (Discounter Squares)</label>
-                
-                <div style="margin-top: 15px; border-top: 1px solid #cbd5e1; padding-top: 15px;">
-                    <label style="color: #1a2433; margin-bottom: 5px; display:flex; justify-content:space-between;">
-                        <span>Global Base Radius:</span>
-                        <span id="radius-val" style="color: #b32525;">40 mi</span>
-                    </label>
-                    <input type="range" id="radius-slider" min="10" max="100" value="40">
-                </div>
-            </div>
-
-            <div class="logic-key">
-                <h4>System Logic Key</h4>
-                <div class="logic-row"><strong>Urban Friction:</strong> <span>Radius x 0.3</span></div>
-                <div class="logic-row"><strong>Suburban Friction:</strong> <span>Radius x 0.6</span></div>
-                <div class="logic-row"><strong>Rural Friction:</strong> <span>Radius x 1.5</span></div>
-                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1;">
-                    <strong>VIO Target:</strong> 14.2% of Pop. (10yr+)
-                </div>
-                <div style="margin-top: 8px; color: #b32525; font-style: italic;" id="dynamic-logic-text">
-                    At 40 miles, Urban rings are 12mi, Rural rings are 60mi.
-                </div>
-                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 7.5pt; color: #64748b; font-style: italic;">
-                    *Friction multipliers (0.3x / 1.5x) derived via back-testing 36 months of historical ERP delivery logs against localized net-margin erosion.
-                </div>
-            </div>
-        </div>
-
-        <div class="sim-main">
-            <div id="map-container"></div>
-            
-            <div style="padding: 15px; overflow-y: hidden; background: #ffffff; flex: 1; display: flex; flex-direction: column;">
-                
-                <div style="font-size: 8pt; font-weight: bold; color: #1a2433; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Physical Asset (Hub) Market Capture Matrix</div>
-                <div class="table-wrapper">
-                    <table class="raw-data-table" id="branch-threat-table">
-                        <thead>
-                            <tr><th>Hub Region</th><th>Eff. Radius</th><th>Target VIO (10yr+)</th><th>Est. Capture</th><th>Threats</th><th>System Action Protocol</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-                <div style="font-size: 8pt; font-weight: bold; color: #27ae60; margin-bottom: 5px; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px;">Top 20% Account Retention Matrix</div>
-                <div class="table-wrapper" style="border-bottom: none; margin-bottom: 0;">
-                    <table class="raw-data-table" id="account-threat-table">
-                        <thead>
-                            <tr><th>Account Location</th><th>Eff. Radius</th><th>Target VIO (10yr+)</th><th>Est. Capture</th><th>Threats</th><th>Retention Protocol</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <h2>4. Cross-Functional Strategic ROI</h2>
-    <p>This deployment transforms raw coordinate and demographic data into a dynamic "Force Multiplier" for multiple enterprise departments:</p>
-
-    <div class="strategy-wrapper">
-        <table class="strategy-table">
-            <tr>
-                <th style="width: 25%;">Enterprise Division</th>
-                <th>Direct Application & Business ROI</th>
-            </tr>
-            <tr>
-                <td><strong>Pricing & Margin Defense</strong></td>
-                <td>Acts as an early-warning radar system. By visualizing price elasticity against live competitor proximity, the Pricing team can proactively lock Tier-1 margins or initiate localized "price fighting" campaigns before the competitor successfully fractures our established volume.</td>
-            </tr>
-            <tr>
-                <td><strong>Sales Enablement</strong></td>
-                <td>Highlights immediate flight-risk for high-value fleet accounts. If an aggressive discounter encroaches on a Top 20% account, the engine triggers an explicit retention protocol, ensuring outside sales representatives prioritize defensive relationship-building rather than chasing low-probability cold calls.</td>
-            </tr>
-            <tr>
-                <td><strong>Network Expansion (M&A)</strong></td>
-                <td>Identifies pure geographic "voids" or "greenfields." By locating regions with dense populations of aging target vehicles but minimal competitor footprint, the engine provides executive leadership with exact GPS coordinates to prevent <strong>Cannibalization</strong> and launch highly profitable new branch expansions.</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="impact-footer">
-        STRATEGIC CORE COMPETENCY VALIDATION: This deployment acts as a definitive verification of advanced systems architecture—demonstrating the ability to synthesize raw coordinate mapping, demographic friction indexes, and third-party VIO market-capture mechanics into a unified, executive-level predictive risk engine.
-    </div>
+    <h3>K-Means Topology Clustering</h3>
+    <p>Finally, I fed the Distance Decay Matrix into a <strong>K-Means Unsupervised Machine Learning Model</strong> (via `scikit-learn`). The algorithm analyzed the mathematical decay curves of all 80 branches and automatically clustered them into 5 distinct Strategic Topology Tiers. This replaced subjective human guesswork with pure data, dictating exactly which branches could absorb aggressive price increases (Rural Monopolies) and which branches required defensive margin floors (Hyper-Dense Urban).</p>
 
     <div class="next-step-box">
         <h3>Ecosystem Step 2: Strategy Execution</h3>
-        <p>With our vulnerable territories securely mapped, we now know exactly <em>where</em> we are at risk. But before we execute a price increase in those battlegrounds to combat the vendor's 15% hike, we must mathematically simulate the statistical risk of losing volume. How far can we push the price ceiling?</p>
+        <p>With our vulnerable territories mapped and our 5-Tier Topology established by the ML algorithm, we now know exactly <em>where</em> we are at risk. But before we execute a price increase across millions of SKUs, we must build the deterministic logic to safely cross-subsidize our Key Value Items (KVIs).</p>
         <div class="project-navigation">
             <a href="index.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Ecosystem Hub</span>
@@ -294,196 +343,316 @@
     </div>
 
     <script>
-        var map = L.map('map-container', { scrollWheelZoom: false }).setView([46.2, -94.3], 6);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
-        setTimeout(function(){ map.invalidateSize(); }, 250);
+        // --- 1. DUMMY DATA GENERATOR FOR PORTFOLIO (ANONYMIZED SOUTHEAST US) ---
+        function generateDummyData() {
+            const data = {
+                "Nexus Motor Supply": [],
+                "Vanguard Auto": [],
+                "Titan Parts": [],
+                "Omega Automotive": [],
+                "Apex Auto": [],
+                "Velocity Parts": [],
+                "Prime Auto": []
+            };
+            const comps = Object.keys(data).filter(k => k !== "Nexus Motor Supply");
 
-        const branches = [
-            { id: 'b1', name: "Twin Cities Hub", topo: 'Urban', mult: 0.3, popDensity: 2500, basePosVolume: 12500, lat: 44.95, lng: -93.20, circle: null, marker: null },
-            { id: 'b2', name: "Duluth Port Hub", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 4200, lat: 46.78, lng: -92.10, circle: null, marker: null },
-            { id: 'b3', name: "Rochester Hub", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 3800, lat: 44.01, lng: -92.46, circle: null, marker: null },
-            { id: 'b4', name: "Moorhead Hub", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 1800, lat: 46.87, lng: -96.76, circle: null, marker: null },
-            { id: 'b5', name: "Bemidji Hub", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 850, lat: 47.47, lng: -94.88, circle: null, marker: null }
-        ];
+            // Curated Anchor points to simulate realistic human settlement in the Southeast
+            const cityAnchors = [
+                // Urban / High Density (Dialed back competitor count, removed some Nexus Hubs to show they avoid hyper-urban)
+                { name: "Atlanta, GA", lat: 33.7490, lng: -84.3880, type: "urban", hasHub: false },
+                { name: "Charlotte, NC", lat: 35.2271, lng: -80.8431, type: "urban", hasHub: false },
+                { name: "Nashville, TN", lat: 36.1627, lng: -86.7816, type: "urban", hasHub: true },
+                { name: "Birmingham, AL", lat: 33.5186, lng: -86.8104, type: "urban", hasHub: false },
+                { name: "Raleigh, NC", lat: 35.7796, lng: -78.6382, type: "urban", hasHub: false },
+                
+                // Mid-Sized Regional Hubs
+                { name: "Greenville, SC", lat: 34.8526, lng: -82.3940, type: "mid", hasHub: true },
+                { name: "Huntsville, AL", lat: 34.7304, lng: -86.5861, type: "mid", hasHub: true },
+                { name: "Chattanooga, TN", lat: 35.0456, lng: -85.3097, type: "mid", hasHub: false },
+                { name: "Augusta, GA", lat: 33.4735, lng: -81.9778, type: "mid", hasHub: false },
+                { name: "Macon, GA", lat: 32.8407, lng: -83.6324, type: "mid", hasHub: true },
+                { name: "Columbia, SC", lat: 34.0007, lng: -81.0348, type: "mid", hasHub: true },
+                { name: "Knoxville, TN", lat: 35.9606, lng: -83.9207, type: "mid", hasHub: false },
+                { name: "Savannah, GA", lat: 32.0809, lng: -81.0912, type: "mid", hasHub: true },
+                { name: "Montgomery, AL", lat: 33.3768, lng: -86.3006, type: "mid", hasHub: false },
 
-        const topAccounts = [
-            { id: 't1', name: "Agri-Fleet St. Cloud", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 850, lat: 45.56, lng: -94.16, circle: null, marker: null },
-            { id: 't2', name: "Mining Log Hibbing", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 600, lat: 47.42, lng: -92.93, circle: null, marker: null },
-            { id: 't3', name: "Commercial Owatonna", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 950, lat: 44.08, lng: -93.22, circle: null, marker: null },
-            { id: 't4', name: "Fleet TRF", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 420, lat: 48.11, lng: -96.18, circle: null, marker: null },
-            { id: 't5', name: "Transit Mankato", topo: 'Suburban', mult: 0.6, popDensity: 800, basePosVolume: 1100, lat: 44.16, lng: -94.00, circle: null, marker: null },
-            { id: 't6', name: "Distribution Marshall", topo: 'Rural', mult: 1.5, popDensity: 45, basePosVolume: 580, lat: 44.44, lng: -95.78, circle: null, marker: null },
-            { id: 't7', name: "Logistics Minnetonka", topo: 'Urban', mult: 0.3, popDensity: 2500, basePosVolume: 2100, lat: 44.91, lng: -93.47, circle: null, marker: null }
-        ];
+                // Rural / Small Towns (MASSIVELY EXPANDED)
+                { name: "Cookeville, TN", lat: 36.1628, lng: -85.5016, type: "rural", hasHub: true },
+                { name: "Statesville, NC", lat: 35.7826, lng: -80.8873, type: "rural", hasHub: true },
+                { name: "Dalton, GA", lat: 34.7698, lng: -84.9702, type: "rural", hasHub: true },
+                { name: "Florence, AL", lat: 34.7998, lng: -87.6773, type: "rural", hasHub: true },
+                { name: "Spartanburg, SC", lat: 34.9496, lng: -81.9320, type: "rural", hasHub: false },
+                { name: "Asheville, NC", lat: 35.5951, lng: -82.5515, type: "rural", hasHub: true },
+                { name: "Bowling Green, KY", lat: 36.9903, lng: -86.4436, type: "rural", hasHub: true },
+                { name: "Gadsden, AL", lat: 34.0143, lng: -86.0066, type: "rural", hasHub: true },
+                { name: "Athens, GA", lat: 33.9519, lng: -83.3576, type: "rural", hasHub: true },
+                { name: "Jackson, TN", lat: 35.6145, lng: -88.8139, type: "rural", hasHub: true },
+                { name: "Anniston, AL", lat: 33.6598, lng: -85.8316, type: "rural", hasHub: true },
+                { name: "Rome, GA", lat: 34.2570, lng: -85.1647, type: "rural", hasHub: false },
+                
+                // NEW RURAL MARKETS ADDED
+                { name: "Tifton, GA", lat: 31.4505, lng: -83.5085, type: "rural", hasHub: true },
+                { name: "Valdosta, GA", lat: 31.2323, lng: -83.2785, type: "rural", hasHub: true },
+                { name: "Statesboro, GA", lat: 32.4488, lng: -81.7832, type: "rural", hasHub: false },
+                { name: "Waycross, GA", lat: 30.8428, lng: -82.3577, type: "rural", hasHub: true },
+                { name: "Cullman, AL", lat: 34.1748, lng: -86.8436, type: "rural", hasHub: true },
+                { name: "Eufaula, AL", lat: 31.8913, lng: -85.1455, type: "rural", hasHub: false },
+                { name: "Dyersburg, TN", lat: 36.0344, lng: -89.3856, type: "rural", hasHub: true },
+                { name: "Paris, TN", lat: 36.3020, lng: -88.3267, type: "rural", hasHub: true },
+                { name: "McMinnville, TN", lat: 35.6811, lng: -85.7744, type: "rural", hasHub: true },
+                { name: "Crossville, TN", lat: 35.9490, lng: -85.0269, type: "rural", hasHub: true },
+                { name: "Sumter, SC", lat: 33.9204, lng: -80.3415, type: "rural", hasHub: true },
+                { name: "Aiken, SC", lat: 33.5604, lng: -81.7195, type: "rural", hasHub: true },
+                { name: "Boone, NC", lat: 36.2168, lng: -81.6746, type: "rural", hasHub: true },
+                { name: "Hickory, NC", lat: 35.7332, lng: -81.3411, type: "rural", hasHub: true },
+                { name: "Sanford, NC", lat: 35.4799, lng: -79.1805, type: "rural", hasHub: false }
+            ];
 
-        const competitors = [
-            { id: 'cA1', type: 'A', name: "Comp A", lat: 44.98, lng: -93.26, color: '#b32525', shape: 'star', weight: 1.2 },
-            { id: 'cA2', type: 'A', name: "Comp A", lat: 44.95, lng: -93.09, color: '#b32525', shape: 'star', weight: 1.0 },
-            { id: 'cA3', type: 'A', name: "Comp A", lat: 46.79, lng: -92.11, color: '#b32525', shape: 'star', weight: 1.1 },
-            { id: 'cA4', type: 'A', name: "Comp A", lat: 45.55, lng: -94.16, color: '#b32525', shape: 'star', weight: 1.3 },
-            { id: 'cA5', type: 'A', name: "Comp A", lat: 44.16, lng: -94.00, color: '#b32525', shape: 'star', weight: 1.0 },
-            { id: 'cB1', type: 'B', name: "Comp B", lat: 46.86, lng: -96.78, color: '#e67e22', shape: 'triangle', weight: 1.4 },
-            { id: 'cB2', type: 'B', name: "Comp B", lat: 46.35, lng: -94.20, color: '#e67e22', shape: 'triangle', weight: 0.9 },
-            { id: 'cB3', type: 'B', name: "Comp B", lat: 45.88, lng: -95.38, color: '#e67e22', shape: 'triangle', weight: 1.1 },
-            { id: 'cB4', type: 'B', name: "Comp B", lat: 45.12, lng: -95.04, color: '#e67e22', shape: 'triangle', weight: 1.0 },
-            { id: 'cB5', type: 'B', name: "Comp B", lat: 44.44, lng: -95.78, color: '#e67e22', shape: 'triangle', weight: 1.2 },
-            { id: 'cC1', type: 'C', name: "Comp C", lat: 44.02, lng: -92.47, color: '#8e44ad', shape: 'square', weight: 2.8 },
-            { id: 'cC2', type: 'C', name: "Comp C", lat: 44.83, lng: -93.30, color: '#8e44ad', shape: 'square', weight: 2.5 },
-            { id: 'cC3', type: 'C', name: "Comp C", lat: 47.23, lng: -93.53, color: '#8e44ad', shape: 'square', weight: 2.2 },
-            { id: 'cC4', type: 'C', name: "Comp C", lat: 47.48, lng: -94.89, color: '#8e44ad', shape: 'square', weight: 2.6 },
-            { id: 'cC5', type: 'C', name: "Comp C", lat: 44.05, lng: -91.64, color: '#8e44ad', shape: 'square', weight: 2.4 }
-        ];
+            cityAnchors.forEach((city) => {
+                // 1. Place Nexus Hub
+                if(city.hasHub) {
+                    data["Nexus Motor Supply"].push({
+                        name: `Nexus Hub - ${city.name.split(',')[0]}`,
+                        lat: city.lat + (Math.random() - 0.5) * 0.02, 
+                        lng: city.lng + (Math.random() - 0.5) * 0.02,
+                        address: "Classified Portfolio Data"
+                    });
+                }
 
-        function makeShapeIcon(color, size, shape) {
-            let svgPath = '';
-            if (shape === 'star') svgPath = '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>';
-            else if (shape === 'triangle') svgPath = '<path d="M12 2L22 20H2L12 2z"/>';
-            else if (shape === 'square') svgPath = '<rect x="3" y="3" width="18" height="18"/>';
-            else svgPath = '<circle cx="12" cy="12" r="10"/>';
+                // 2. Generate Competitors based on City Topology Density
+                let compCount = 0;
+                let variance = 0;
 
-            return L.divIcon({
-                className: 'custom-shape-icon', 
-                html: `<svg viewBox="0 0 24 24" fill="${color}" width="${size}" height="${size}" style="filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.5)); stroke: white; stroke-width: 1px;">${svgPath}</svg>`, 
-                iconSize: [size, size], iconAnchor: [size/2, size/2]
-            });
-        }
+                if (city.type === "urban") {
+                    compCount = Math.floor(Math.random() * 15) + 20; // Dialed down to 20-35
+                    variance = 0.25; 
+                } else if (city.type === "mid") {
+                    compCount = Math.floor(Math.random() * 8) + 12; // 12-20 stores
+                    variance = 0.12; 
+                } else {
+                    compCount = Math.floor(Math.random() * 3) + 2; // 2-4 stores
+                    variance = 0.04; // Tighter cluster
+                }
 
-        var layers = {
-            branches: L.layerGroup().addTo(map),
-            compA: L.layerGroup().addTo(map),
-            compB: L.layerGroup().addTo(map),
-            compC: L.layerGroup().addTo(map),
-            top20: L.layerGroup().addTo(map) 
-        };
-
-        function getTopoBadge(topo) {
-            const lower = topo.toLowerCase();
-            return `<span class="badge-${lower}">${topo}</span>`;
-        }
-
-        function formatNumber(num) {
-            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-        }
-
-        branches.forEach(b => {
-            L.marker([b.lat, b.lng], {icon: makeShapeIcon('#1a2433', 18, 'circle')}).bindPopup(`<b>${b.name}</b><br>Topology: ${b.topo}`).addTo(layers.branches);
-            b.circle = L.circle([b.lat, b.lng], { color: '#1a2433', fillColor: '#1a2433', fillOpacity: 0.08, weight: 1.5, dashArray: '4, 4' }).addTo(layers.branches);
-        });
-
-        topAccounts.forEach(t => {
-            L.marker([t.lat, t.lng], {icon: makeShapeIcon('#27ae60', 12, 'circle')}).bindPopup(`<b>${t.name}</b><br>Topology: ${t.topo}`).addTo(layers.top20);
-            t.circle = L.circle([t.lat, t.lng], { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5' }).addTo(layers.top20);
-        });
-
-        competitors.forEach(c => {
-            let targetLayer = c.type === 'A' ? layers.compA : c.type === 'B' ? layers.compB : layers.compC;
-            L.marker([c.lat, c.lng], {icon: makeShapeIcon(c.color, 16, c.shape)}).bindPopup(`<b>${c.name}<br>Threat Weight: ${c.weight}x</b>`).addTo(targetLayer);
-        });
-
-        function getDistanceMiles(lat1, lon1, lat2, lon2) {
-            const R = 3958.8;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-        }
-
-        function calculateThreatRow(entity, activeComps, baseRadius) {
-            let riskScore = 0;
-            let threatsInRange = [];
-            
-            let effectiveRadius = baseRadius * entity.mult;
-            let areaSqMiles = Math.PI * Math.pow(effectiveRadius, 2);
-            let estimatedPopulation = areaSqMiles * entity.popDensity;
-            let targetVioCount = Math.round(estimatedPopulation * 0.142);
-            
-            let dynamicServiced = Math.round(entity.basePosVolume * (effectiveRadius / (40 * entity.mult)));
-            if(dynamicServiced > targetVioCount) dynamicServiced = Math.round(targetVioCount * 0.85); 
-            
-            let marketCapture = targetVioCount > 0 ? ((dynamicServiced / targetVioCount) * 100).toFixed(1) : 0;
-
-            activeComps.forEach(comp => {
-                const dist = getDistanceMiles(entity.lat, entity.lng, comp.lat, comp.lng);
-                if (dist <= effectiveRadius) {
-                    threatsInRange.push(comp.type);
-                    riskScore += ((effectiveRadius - dist) / effectiveRadius) * 5 * comp.weight;
+                for(let i = 0; i < compCount; i++) {
+                    let cat = comps[Math.floor(Math.random() * comps.length)];
+                    data[cat].push({
+                        name: `${cat} - ${city.name.split(',')[0]} Sector`,
+                        lat: city.lat + (Math.random() - 0.5) * variance,
+                        lng: city.lng + (Math.random() - 0.5) * variance,
+                        address: "Classified Portfolio Data"
+                    });
                 }
             });
 
-            riskScore = Math.min(riskScore, 10.0).toFixed(1);
-            let threatText = threatsInRange.length > 0 ? `<span style="color:#b32525; font-weight:bold;">${threatsInRange.length} Active</span>` : `<span style="color:#64748b;">0 Active</span>`;
-            
-            let actionText = '';
-            if (threatsInRange.length === 0 && marketCapture < 15) {
-                 actionText = '<span style="color:#27ae60; font-weight:bold;">Aggressive Greenfield Expansion</span>';
-            } else if (riskScore >= 7.5 && marketCapture >= 20) {
-                 actionText = '<span style="color:#b32525; font-weight:bold;">Defensive Margin Lock (High VIO At Risk)</span>';
-            } else if (riskScore >= 7.5) {
-                 actionText = 'Deploy preemptive volume rebates.';
-            } else if (riskScore >= 4.0) {
-                 actionText = 'Target Comp Accounts.';
-            } else {
-                 actionText = 'Raise Margin Floor (+2.5%).';
-            }
-
-            return `<tr>
-                <td style="font-weight: 500;">${entity.name} ${getTopoBadge(entity.topo)}</td>
-                <td style="color:#475569;">${effectiveRadius.toFixed(1)} mi</td>
-                <td style="font-family: monospace; font-size: 9.5pt; font-weight: 600;">${formatNumber(targetVioCount)}</td>
-                <td style="font-family: monospace; font-size: 9.5pt; color: #0369a1; font-weight: 600;">${marketCapture}%</td>
-                <td>${threatText}</td>
-                <td>${actionText}</td>
-            </tr>`;
+            return data;
         }
 
-        function updateDashboard() {
-            const baseRadius = parseInt(document.getElementById('radius-slider').value);
-            const activeComps = competitors.filter(c => document.getElementById(`chk-comp${c.type}`).checked);
-            
-            document.getElementById('dynamic-logic-text').innerText = `At ${baseRadius} miles, Urban rings are ${(baseRadius * 0.3).toFixed(1)}mi, Rural rings are ${(baseRadius * 1.5).toFixed(1)}mi.`;
-            
-            branches.forEach(b => { b.circle.setRadius(baseRadius * b.mult * 1609.34); });
-            topAccounts.forEach(t => { t.circle.setRadius(baseRadius * t.mult * 1609.34); });
+        // --- 2. MAP INITIALIZATION ---
+        // Centered on the Southeast US
+        const map = L.map('map', { zoomControl: false }).setView([34.5, -84.0], 6);
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-            const branchTableBody = document.querySelector('#branch-threat-table tbody');
-            const accountTableBody = document.querySelector('#account-threat-table tbody');
-            
-            branchTableBody.innerHTML = ''; 
-            accountTableBody.innerHTML = ''; 
-
-            if(document.getElementById('chk-branches').checked) {
-                branches.forEach(b => { branchTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(b, activeComps, baseRadius)); });
-            } else {
-                branchTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding: 15px;">Hub Layer Disabled</td></tr>';
-            }
-
-            if(document.getElementById('chk-top20').checked) {
-                topAccounts.forEach(t => { accountTableBody.insertAdjacentHTML('beforeend', calculateThreatRow(t, activeComps, baseRadius)); });
-            } else {
-                accountTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding: 15px;">Account Layer Disabled</td></tr>';
-            }
-        }
-
-        function setupToggle(checkboxId, layerKey) {
-            document.getElementById(checkboxId).addEventListener('change', function(e) {
-                if(e.target.checked) map.addLayer(layers[layerKey]);
-                else map.removeLayer(layers[layerKey]);
-                updateDashboard();
-            });
-        }
-        
-        setupToggle('chk-branches', 'branches');
-        setupToggle('chk-compA', 'compA');
-        setupToggle('chk-compB', 'compB');
-        setupToggle('chk-compC', 'compC');
-        setupToggle('chk-top20', 'top20'); 
-
-        document.getElementById('radius-slider').addEventListener('input', function(e) {
-            document.getElementById('radius-val').innerText = e.target.value + " mi";
-            updateDashboard();
+        const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        });
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri'
         });
 
-        updateDashboard();
+        tacticalLayer.addTo(map);
+        let currentMapStyle = 'tactical';
+        let isDarkMode = true;
+
+        // --- 3. UI TOGGLE LOGIC ---
+        function switchTab(tab) {
+            document.getElementById('content-metrics').classList.add('hidden');
+            document.getElementById('content-controls').classList.add('hidden');
+            document.getElementById('tab-metrics').classList.remove('active');
+            document.getElementById('tab-controls').classList.remove('active');
+            
+            document.getElementById('content-' + tab).classList.remove('hidden');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        document.getElementById('themeToggle').addEventListener('change', function(e) {
+            isDarkMode = !e.target.checked;
+            const dash = document.getElementById('app-dashboard');
+            if (isDarkMode) {
+                dash.classList.remove('light-mode');
+                document.getElementById('moon-icon').style.opacity = '1';
+                document.getElementById('sun-icon').style.opacity = '0.5';
+            } else {
+                dash.classList.add('light-mode');
+                document.getElementById('moon-icon').style.opacity = '0.5';
+                document.getElementById('sun-icon').style.opacity = '1';
+            }
+            applyMapFilters();
+        });
+
+        function changeBasemap(type) {
+            currentMapStyle = type;
+            if (type === 'tactical') {
+                map.removeLayer(satelliteLayer);
+                tacticalLayer.addTo(map);
+            } else {
+                map.removeLayer(tacticalLayer);
+                satelliteLayer.addTo(map);
+            }
+            applyMapFilters();
+        }
+
+        function applyMapFilters() {
+            const mapContainer = document.getElementById('map');
+            mapContainer.classList.remove('tactical-dark-map', 'satellite-dark-map');
+            if (isDarkMode) {
+                if (currentMapStyle === 'tactical') {
+                    mapContainer.classList.add('tactical-dark-map');
+                } else {
+                    mapContainer.classList.add('satellite-dark-map');
+                }
+            }
+        }
+        applyMapFilters();
+
+        // --- 4. MAP DATA RENDERING ---
+        const createColorIcon = (color) => L.divIcon({
+            className: 'custom-color-pin',
+            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8],
+            popupAnchor: [0, -8],
+            tooltipAnchor: [0, -12] 
+        });
+
+        const categoryColors = {
+            "Nexus Motor Supply": '#FFCC00',
+            "Vanguard Auto": '#CC0000',     
+            "Titan Parts": '#F26522', 
+            "Omega Automotive": '#8b5cf6', 
+            "Apex Auto": '#00843D', 
+            "Velocity Parts": '#0039A6', 
+            "Prime Auto": '#ec4899' // Pink
+        };
+        const defaultColor = '#94a3b8';
+
+        const categoryLayers = {};
+
+        function initGeospatialData() {
+            const data = generateDummyData(); // Run our new geographic anchor function
+            
+            let countTotal = 0;
+
+            const toggleContainer = document.getElementById('dynamic-layer-toggles');
+            toggleContainer.innerHTML = '';
+            
+            const breakdownContainer = document.getElementById('market-breakdown-container');
+            breakdownContainer.innerHTML = '<h3 class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-2 text-center">Market Breakdown</h3>';
+
+            // Sort categories so Nexus is always first, then by size
+            const categories = Object.keys(data).sort((a, b) => {
+                if (a === "Nexus Motor Supply") return -1;
+                if (b === "Nexus Motor Supply") return 1;
+                return data[b].length - data[a].length;
+            });
+
+            categories.forEach(category => {
+                const catColor = categoryColors[category] || defaultColor;
+                const items = data[category];
+                
+                const clusterGroup = L.markerClusterGroup({
+                    chunkedLoading: true,
+                    spiderfyOnMaxZoom: false,
+                    showCoverageOnHover: false,
+                    maxClusterRadius: 80, // Increased slightly for cleaner grouping
+                    iconCreateFunction: function(cluster) {
+                        const count = cluster.getChildCount();
+                        const size = count < 10 ? 36 : count < 50 ? 46 : 56; 
+                        return L.divIcon({
+                            html: `<div class="custom-cluster" style="background-color: ${catColor}; width: ${size}px; height: ${size}px;">${count}</div>`,
+                            className: 'custom-cluster-wrapper',
+                            iconSize: L.point(size, size)
+                        });
+                    }
+                });
+
+                items.forEach(item => {
+                    countTotal++;
+
+                    const markerIcon = createColorIcon(catColor);
+                    const marker = L.marker([item.lat, item.lng], { icon: markerIcon })
+                        .bindTooltip(`<b>${item.name}</b>`, { direction: 'top', offset: [0, -10] });
+                    
+                    let headerTextColor = (catColor === '#FFCC00') ? '#1D1B1C' : '#FFFFFF';
+                    let popupHtml = `
+                        <div class="popup-header" style="background-color: ${catColor}; color: ${headerTextColor};">
+                            ${category}
+                        </div>
+                        <div class="popup-body">
+                            <div class="popup-title">${item.name}</div>
+                            <div class="popup-address">${item.address}</div>
+                            <div class="popup-coords">Lat: ${item.lat.toFixed(4)} | Lng: ${item.lng.toFixed(4)}</div>
+                        </div>
+                    `;
+                    
+                    marker.bindPopup(popupHtml);
+                    clusterGroup.addLayer(marker);
+                });
+
+                map.addLayer(clusterGroup);
+                categoryLayers[category] = clusterGroup;
+
+                // Add to dynamic filter toggles
+                const safeCat = category.replace(/'/g, "\\'"); 
+                const toggleHtml = `
+                    <label class="layer-toggle">
+                        <input type="checkbox" class="category-checkbox" data-category="${category.replace(/"/g, '&quot;')}" checked onchange="toggleCategory('${safeCat}', this.checked)">
+                        <div class="custom-checkbox"></div>
+                        <div class="w-3 h-3 rounded-full mr-2 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor};"></div>
+                        <span class="text-sm font-medium theme-text-main">${category} <span class="opacity-50 text-xs">(${items.length})</span></span>
+                    </label>
+                `;
+                toggleContainer.insertAdjacentHTML('beforeend', toggleHtml);
+
+                // Add to leaderboard breakdown
+                const breakdownHtml = `
+                    <div class="flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all hover:bg-opacity-50">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor};"></div>
+                            <span class="text-sm font-semibold theme-text-main">${category}</span>
+                        </div>
+                        <span class="font-bold theme-text-main">${items.length}</span>
+                    </div>
+                `;
+                breakdownContainer.insertAdjacentHTML('beforeend', breakdownHtml);
+            });
+
+            document.getElementById('total-stores').innerText = countTotal.toLocaleString();
+        }
+
+        window.toggleAllLayers = function() {
+            const btn = document.getElementById('master-toggle');
+            const isHiding = btn.innerText === "HIDE ALL";
+            const checkboxes = document.querySelectorAll('.category-checkbox');
+            checkboxes.forEach(cb => {
+                if (cb.checked === isHiding) {
+                    cb.checked = !isHiding;
+                    const cat = cb.getAttribute('data-category');
+                    window.toggleCategory(cat, !isHiding);
+                }
+            });
+            btn.innerText = isHiding ? "SHOW ALL" : "HIDE ALL";
+        };
+
+        window.toggleCategory = function(category, isVisible) {
+            const layer = categoryLayers[category];
+            if (layer) {
+                if (isVisible) map.addLayer(layer);
+                else map.removeLayer(layer);
+            }
+        };
+
+        initGeospatialData();
     </script>
 </body>
 </html>
