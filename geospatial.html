@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Predictive VIO Market Capture - Austin Stethem</title>
     
-    <!-- Tailwind CSS for rapid UI styling inside the dashboard container -->
+    <!-- Tailwind CSS for rapid UI styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Leaflet CSS and JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -16,10 +17,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Chart.js for Deep Dive Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* STANDARDIZED PORTFOLIO ROOT VARIABLES */
         :root {
             --dark-slate-blue: #1a2433;
             --alert-red: #b32525;
@@ -35,10 +36,17 @@
             color: #334155;
             font-size: 10.5pt;
             line-height: 1.6;
-            max-width: 10.5in; 
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            overflow-x: hidden;
+        }
+
+        /* Standard Portfolio Text Container */
+        .portfolio-content {
+            max-width: 10.5in;
             margin: 0 auto;
             padding: 40px 20px;
-            background-color: var(--bg-color);
         }
 
         .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
@@ -57,48 +65,31 @@
         .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
 
         h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        h3 { font-family: 'Inter', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
         p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
-        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
-        li { margin-bottom: 8px; }
 
-        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
-        
-        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
-        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
-        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
-        
-        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
-        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;}
-        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
-        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
-        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
-        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
-        .nav-btn.next .nav-label { color: #fca5a5; }
-        .nav-title { font-size: 11pt; font-weight: bold;}
+        /* DASHBOARD APP STYLING (FULL BLEED) */
+        .dashboard-full-bleed {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            height: 85vh; 
+            min-height: 750px;
+            background: #1D1B1C;
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2) inset;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            overflow: hidden;
+        }
 
-        .math-block { text-align: center; font-size: 11pt; margin: 20px 0; font-style: italic; background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 4px; color: #0f172a; box-shadow: 0 1px 2px rgba(0,0,0,0.02); overflow-x: auto;}
-
-        /* DASHBOARD APP STYLING */
-        .dashboard-wrapper { height: 750px; border: 1px solid #cbd5e1; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 30px 0; font-family: 'Inter', sans-serif;}
-        
+        /* Map Filters */
         .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.5); }
         .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
 
-        .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
-        .leaflet-popup-content { margin: 0; width: 280px !important; }
-        .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .popup-body { padding: 16px; background: #fff; }
-        .popup-title { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 4px; line-height: 1.2;}
-        .popup-address { font-size: 13px; color: #555; margin-bottom: 12px; font-style: italic; }
-        .popup-coords { font-size: 12px; color: #888; font-family: monospace; }
-        .leaflet-popup-tip { background: #fff; }
-        .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
-
-        .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
-        .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
-
+        /* Custom Cluster Markers */
         .custom-cluster {
             background: rgba(29, 27, 28, 0.9);
             color: #FFFFFF;
@@ -111,330 +102,314 @@
             border: 2px solid rgba(255,255,255,0.8);
             font-size: 14px;
         }
+        .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
+        .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
 
+        /* Leaflet Popups */
+        .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
+        .leaflet-popup-content { margin: 0; width: 280px !important; }
+        .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .popup-body { padding: 16px; background: #fff; }
+        .popup-title { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 4px; line-height: 1.2;}
+        .popup-address { font-size: 13px; color: #555; margin-bottom: 12px; font-style: italic; }
+        .leaflet-popup-tip { background: #fff; }
+        .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
+
+        /* Toggles & Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; }
         .layer-toggle input { display: none; }
         .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: white; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
         .layer-toggle input:checked + .custom-checkbox { background: var(--rich-black); border: 2px solid white; }
         .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
 
-        /* iOS Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .3s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--brand-yellow); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
-        .dashboard-wrapper:not(.light-mode) .theme-icon { fill: #1D1B1C; stroke: #FFFFFF; stroke-width: 2px; }
-        .dashboard-wrapper.light-mode .theme-icon { fill: #FFFFFF; stroke: #1D1B1C; stroke-width: 2px; }
-
+        /* Theme Support */
         .theme-bg-main { background-color: var(--rich-black); }
         .theme-text-main { color: var(--pure-white); transition: color 0.3s ease;}
         .theme-text-muted { color: #888; }
         .theme-border { border-color: #333; }
         .theme-card { background-color: rgba(255,255,255,0.05); }
-        
-        .dashboard-wrapper.light-mode .theme-bg-main { background-color: #F8FAFC; }
-        .dashboard-wrapper.light-mode .theme-text-main { color: #0F172A; }
-        .dashboard-wrapper.light-mode .theme-text-muted { color: #64748B; }
-        .dashboard-wrapper.light-mode .theme-border { border-color: #E2E8F0; }
-        .dashboard-wrapper.light-mode .theme-card { background-color: #FFFFFF; }
-        .dashboard-wrapper.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--brand-yellow); border-color: var(--brand-yellow); }
-        .dashboard-wrapper.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--rich-black); }
-        .dashboard-wrapper.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
 
-        /* THE NEW PILL-TOGGLE TABS */
-        .tab-container { display: flex; background: rgba(255,255,255,0.1); padding: 4px; border-radius: 8px; margin-top: 15px; }
-        .dashboard-wrapper.light-mode .tab-container { background: #e2e8f0; }
-        
-        .tab-btn { flex: 1; padding: 10px 12px; font-size: 13px; font-weight: 600; color: #888; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 6px; border: none; background: transparent; cursor: pointer; text-align: center;}
-        .tab-btn:hover:not(.active) { color: #ccc; }
-        .dashboard-wrapper.light-mode .tab-btn:hover:not(.active) { color: #475569; }
-        
-        .tab-btn.active { background: var(--brand-yellow); color: var(--rich-black); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .dashboard-wrapper.light-mode .tab-btn.active { background: #fff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .sidebar-scroll::-webkit-scrollbar { display: none; }
+        .sidebar-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
-        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #555; border-radius: 10px; }
-        .dashboard-wrapper.light-mode .sidebar-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; }
+        /* Analytics Drawer (The 1:1 Replica) */
+        #analytics-panel {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy pop-out */
+            transform: translateX(100%);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+        #analytics-panel.open {
+            transform: translateX(0);
+        }
+        
+        .pulse-instruction {
+            animation: pulse-border 2s infinite;
+            border-left: 4px solid var(--brand-yellow);
+            background: #fffbea;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #854d0e;
+        }
 
-        /* MOBILE RESPONSIVENESS FIXES */
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 204, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+        }
+
+        /* Mobile Fixes */
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
-            .project-navigation { flex-direction: column; }
-            .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
-            .doc-title { font-size: 22pt; }
-            .dashboard-wrapper { flex-direction: column; height: auto; min-height: 800px; }
+            .dashboard-full-bleed { flex-direction: column; height: 1000px; }
             #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
-            #map { height: 450px; }
+            #map { height: 650px; }
+            #analytics-panel { width: 100% !important; z-index: 3000; }
         }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+    <div class="portfolio-content">
+        <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
 
-    <div class="doc-header">
-        <div class="doc-tagline">Geospatial Intelligence & Machine Learning</div>
-        <div class="doc-title">Predictive VIO Market Capture & K-Means Threat Modeling</div>
-    </div>
+        <div class="doc-header">
+            <div class="doc-tagline">Geospatial Intelligence & Machine Learning</div>
+            <div class="doc-title">Predictive VIO Market Capture & K-Means Threat Modeling</div>
+        </div>
 
-    <table class="meta-table">
-        <tr>
-            <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
-            </td>
-            <td class="meta-cell">
-                <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Spatial Algorithms, K-Means Clustering, Distance Decay, API Pipelines</span>
-            </td>
-            <td class="meta-cell">
-                <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">Python (Pandas, Scikit-Learn), JavaScript, APIs, Leaflet.js</span>
-            </td>
-        </tr>
-    </table>
+        <table class="meta-table">
+            <tr>
+                <td class="meta-cell">
+                    <span class="meta-label">Principal Engineer</span>
+                    <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+                </td>
+                <td class="meta-cell">
+                    <span class="meta-label">Core Competencies</span>
+                    <span class="meta-value">Spatial Algorithms, K-Means Clustering, POS Data Drill-down, API Pipelines</span>
+                </td>
+                <td class="meta-cell">
+                    <span class="meta-label">Technical Stack</span>
+                    <span class="meta-value">Python (Pandas, Scikit-Learn), JavaScript, APIs, Leaflet.js, Chart.js</span>
+                </td>
+            </tr>
+        </table>
 
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with enterprise confidentiality, live branch coordinates, localized POS revenue figures, and proprietary 3rd-party datasets have been stripped from this demonstration. The interactive dashboard below utilizes an anonymized proxy dataset spanning the Southeast U.S. to safely demonstrate the exact production-grade UI, Marker Clustering, and ETL architecture.
-    </div>
+        <div class="nda-note">
+            <strong>Data Governance Note:</strong> To comply with enterprise confidentiality, live branch coordinates, localized POS revenue figures, and proprietary datasets have been stripped. This application utilizes an anonymized proxy dataset spanning the Southeast U.S. to safely demonstrate the production-grade ETL architecture, Marker Clustering, and deeply nested POS analytics.
+        </div>
 
-    <h2>1. Situation & Task: The Territorial Blindspot</h2>
-    
-    <div class="scenario-box">
-        <strong>The Enterprise Scenario (Step 1 of 5)</strong>
-        A tier-1 vendor has announced an impending 15% cost increase across our core product lines. Simultaneously, aggressive competitors are encroaching on our high-value territories. Before we can mathematically model the financial risk or defend our margins in the ERP, we must first map the battlefield. We need to know exactly <em>where</em> we are exposed.
-    </div>
+        <h2>1. The Problem: Territorial Blind Spots</h2>
+        <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories (e.g., a "20-mile radius"). This creates a fatal strategic blind spot. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor. To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine to map actual competitor threats against our Hub & Spoke delivery network.</p>
 
-    <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories. This creates a fatal strategic blind spot: the assumption that geographic area equals revenue potential. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor.</p>
-    <p>To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine to strip away this "territorial blindness," utilizing Python API harvesters to programmatically identify over 1,200 competitor threats.</p>
+        <div class="pulse-instruction">
+            👉 INTERACTIVE DEMO: The application below is fully functional. Click on any yellow "Meridian Hub" to slide out the Analytics Engine, then click into specific Accounts and Product Ranges to explore the multi-level data drill-down.
+        </div>
+    </div> <!-- End Constrained Content -->
 
-    <h2>2. Interactive Geospatial Dashboard</h2>
-    <p><em>The dashboard below is a live, interactive representation of the front-end application I built for executive leadership. It is engineered with dynamic MarkerClustering to prevent visual data-flooding, an iOS-style dark mode toggle, and custom JSON-driven popup rendering. Use the <strong>Map Filters</strong> tab to isolate specific competitor footprints.</em></p>
-
-    <!-- LIVE DASHBOARD INJECTION -->
-    <div class="dashboard-wrapper flex bg-[#1D1B1C]" id="app-dashboard">
-        <!-- Sidebar Command Center -->
-        <div id="sidebar" class="w-[320px] h-full flex flex-col z-10 theme-bg-main theme-border border-r relative transition-colors duration-300">
-            
+    <!-- LIVE DASHBOARD (FULL BLEED WIDTH) -->
+    <div class="dashboard-full-bleed" id="app-dashboard">
+        
+        <!-- Left Sidebar: Command Center -->
+        <div id="sidebar" class="w-[380px] shrink-0 h-full flex flex-col z-10 theme-bg-main theme-border border-r relative shadow-2xl">
+            <!-- Branding -->
             <div class="p-6 pb-2 flex flex-col items-center text-center">
-                <h1 class="text-2xl font-black theme-text-main italic tracking-tighter transition-colors duration-300">STRATEGIC <span class="text-[#FFCC00]">RADAR</span></h1>
-                
-                <div class="flex items-center justify-center gap-3 mt-2">
+                <div class="text-sm font-extrabold text-[#FFCC00] tracking-[0.2em] uppercase mb-1">Meridian Parts</div>
+                <h1 class="text-2xl font-black theme-text-main italic tracking-tight">STRATEGIC <span class="text-[#FFCC00]">RADAR</span></h1>
+                <div class="flex items-center justify-center gap-3 mt-3">
                     <div class="relative flex h-3 w-3">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                     </div>
-                    <span class="text-xs font-semibold tracking-wide text-green-400">PROXY DATA ACTIVE</span>
+                    <span class="text-xs font-bold tracking-widest text-green-400">PROXY DATA ACTIVE</span>
                 </div>
             </div>
 
-            <!-- Tabs (New Pill Toggle Style) -->
-            <div class="px-6">
-                <div class="tab-container shadow-inner">
-                    <button onclick="switchTab('metrics')" id="tab-metrics" class="tab-btn active">Live Metrics</button>
-                    <button onclick="switchTab('controls')" id="tab-controls" class="tab-btn">Map Filters</button>
+            <!-- Layer Toggles -->
+            <div class="flex-1 overflow-y-auto p-6 sidebar-scroll border-t theme-border mt-4">
+                <div class="flex justify-between items-center mb-4 border-b theme-border pb-2">
+                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider">Competitive Layers</h3>
+                    <button id="master-toggle" onclick="toggleAllLayers()" class="text-[10px] theme-text-muted border theme-border px-2 py-1 rounded hover:bg-gray-800 transition-colors uppercase font-bold">Hide All</button>
+                </div>
+                <div id="dynamic-layer-toggles" class="space-y-2">
+                    <!-- Populated by JS -->
                 </div>
             </div>
+        </div>
 
-            <!-- Scrollable Content Area -->
+        <!-- Center: Map Container -->
+        <div class="flex-1 relative h-full">
+            <div id="map" class="w-full h-full z-0"></div>
+            
+            <!-- Map Filter Floating Button -->
+            <div class="absolute top-4 right-4 z-[1000]">
+                <button onclick="changeBasemap(currentMapStyle === 'tactical' ? 'satellite' : 'tactical')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-xl border theme-border font-semibold text-xs uppercase tracking-widest hover:opacity-80 transition-opacity flex items-center gap-2">
+                    Toggle Satellite View
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Sidebar: Slide-out Analytics Drawer (The 1:1 Replica) -->
+        <div id="analytics-panel" class="absolute top-0 right-0 h-full w-[450px] z-[2000] theme-bg-main border-l theme-border flex flex-col">
+            <!-- Drawer Header -->
+            <div class="p-6 border-b theme-border flex justify-between items-center bg-[#FFCC00]">
+                <div>
+                    <div id="analytics-subtitle" class="text-[10px] font-black text-[#1D1B1C] uppercase tracking-widest">Hub Diagnostic</div>
+                    <h2 id="analytics-title" class="text-2xl font-black text-[#1D1B1C] tracking-tight leading-none mt-1">Store Name</h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="back-to-hub-btn" onclick="restoreHubView()" class="hidden text-xs font-black text-[#1D1B1C] uppercase tracking-wide hover:underline mr-2">&larr; Back</button>
+                    <button onclick="closeAnalytics()" class="text-[#1D1B1C] hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Drawer Content (Scrollable) -->
             <div class="flex-1 overflow-y-auto p-6 sidebar-scroll">
                 
-                <!-- TAB 1: METRICS -->
-                <div id="content-metrics" class="block">
-                    <div class="mb-8 text-center">
-                        <h2 class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-2">Simulated Footprint</h2>
-                        <div class="theme-card rounded-lg p-4 border theme-border shadow-inner">
-                            <div class="text-4xl font-black theme-text-main mb-1" id="total-stores">--</div>
-                            <div class="text-xs font-medium theme-text-muted">Total Network Locations</div>
-                        </div>
+                <!-- KPI Cards -->
+                <div class="flex gap-3 mb-6">
+                    <div class="theme-card border theme-border rounded-lg p-4 flex-1 text-center shadow-inner">
+                        <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-1">LTM Revenue</div>
+                        <div id="analytics-rev" class="text-xl font-black theme-text-main text-green-400">--</div>
                     </div>
-
-                    <div id="market-breakdown-container" class="space-y-3">
-                        <!-- Populated dynamically by JS -->
+                    <div class="theme-card border theme-border rounded-lg p-4 flex-1 text-center shadow-inner">
+                        <div id="analytics-margin-title" class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-1">True Margin</div>
+                        <div id="analytics-margin" class="text-xl font-black theme-text-main text-blue-400">--</div>
                     </div>
                 </div>
 
-                <!-- TAB 2: CONTROLS -->
-                <div id="content-controls" class="hidden">
-                    <div class="flex flex-col items-center mb-6 border-b theme-border pb-4">
-                        <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-3">Dashboard Environment</div>
-                        <div class="flex items-center gap-3 mt-1">
-                            <span id="moon-icon" style="opacity: 1; transition: opacity 0.3s ease;">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                            </span>
-                            <label class="switch">
-                                <input type="checkbox" id="themeToggle">
-                                <span class="slider"></span>
-                            </label>
-                            <span id="sun-icon" style="opacity: 0.5; transition: opacity 0.3s ease;">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                            </span>
-                        </div>
+                <!-- Chart.js Container -->
+                <div class="mb-8">
+                    <h3 id="chart-title" class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Product Group Velocity (LTM)</h3>
+                    <div class="relative w-full h-[250px]">
+                        <canvas id="pgChart"></canvas>
                     </div>
+                </div>
 
-                    <div class="mb-6 border-b theme-border pb-4 flex flex-col gap-2">
-                        <label class="layer-toggle !mb-0">
-                            <input type="radio" name="basemap" value="tactical" checked onchange="changeBasemap(this.value)">
-                            <div class="custom-checkbox rounded-full"></div>
-                            <span class="text-sm font-medium theme-text-main">Tactical View</span>
-                        </label>
-                        <label class="layer-toggle !mb-0">
-                            <input type="radio" name="basemap" value="satellite" onchange="changeBasemap(this.value)">
-                            <div class="custom-checkbox rounded-full"></div>
-                            <span class="text-sm font-medium theme-text-main">Satellite View</span>
-                        </label>
+                <!-- Top Ranges Table (Hidden by default, shown on Account View) -->
+                <div id="ranges-section" class="mb-8 hidden">
+                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Product Group Ranges</h3>
+                    <div id="top-ranges-list" class="space-y-2 text-sm text-gray-300">
+                        <!-- Populated by JS -->
                     </div>
+                </div>
 
-                    <div class="flex justify-between items-center mb-4 cursor-pointer group">
-                        <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider">Map Layers</div>
-                        <button id="master-toggle" onclick="toggleAllLayers()" class="text-[10px] border theme-border theme-text-muted px-2 py-1 rounded hover:bg-gray-700 transition-colors uppercase font-bold">Hide All</button>
-                    </div>
-
-                    <div id="dynamic-layer-toggles" class="flex flex-col gap-1 pb-4">
+                <!-- Top Accounts List (Shown on Hub View) -->
+                <div id="accounts-section">
+                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top B2B Accounts</h3>
+                    <div id="top-accounts-list" class="space-y-3">
                         <!-- Populated by JS -->
                     </div>
                 </div>
             </div>
         </div>
+    </div> <!-- END FULL BLEED DASHBOARD -->
 
-        <!-- Map Container -->
-        <div class="flex-1 relative h-full">
-            <div id="map" class="w-full h-full"></div>
-        </div>
-    </div>
-    <!-- END DASHBOARD -->
+    <div class="portfolio-content">
+        <h2>2. Machine Learning & K-Means Topology</h2>
+        <p>Mapping raw points is only the first step. To translate geography into actual pricing strategy, I architected a <strong>POS Gravity Engine</strong>. By extracting 12 months of Point-of-Sale data (LTM Revenue) and Customer Ship-To addresses from the ERP, the Python engine mathematically measured the exact "as-the-crow-flies" distance between our fulfilling hubs and the customers generating the revenue.</p>
+        <p>I then fed this Distance Decay Matrix into a <strong>K-Means Unsupervised Machine Learning Model</strong> (via <code>scikit-learn</code>). The algorithm analyzed the mathematical decay curves of all branches and automatically clustered them into 5 distinct Strategic Topology Tiers. This replaced subjective human guesswork with pure data, dictating exactly which branches could absorb aggressive price increases (Rural Monopolies) and which branches required defensive margin floors (Hyper-Dense Urban).</p>
 
-    <h2>3. The Machine Learning Gravity Engine</h2>
-    <p>Mapping raw points is only the first step. To translate geography into actual pricing strategy, I architected a <strong>POS Gravity Engine</strong>. By extracting 12 months of Point-of-Sale data (LTM Revenue) and Customer Ship-To addresses from the ERP, the Python engine mathematically measured the exact "as-the-crow-flies" distance between our fulfilling hubs and the customers generating the revenue.</p>
-    
-    <p>This process established the <strong>Distance Decay Matrix</strong>, proving empirically that an urban branch might generate 90% of its revenue within a 5-mile radius, while a rural hub's revenue stretches across a 50-mile radius.</p>
-
-    <div class="math-block">
-        $$V = V_0 \cdot e^{-\beta d}$$
-        <em>(The Gravity Model: Where V is projected sales volume, d is distance, and &beta; is the Friction Coefficient determined by the POS data).</em>
-    </div>
-
-    <h3>K-Means Topology Clustering</h3>
-    <p>Finally, I fed the Distance Decay Matrix into a <strong>K-Means Unsupervised Machine Learning Model</strong> (via `scikit-learn`). The algorithm analyzed the mathematical decay curves of all 80 branches and automatically clustered them into 5 distinct Strategic Topology Tiers. This replaced subjective human guesswork with pure data, dictating exactly which branches could absorb aggressive price increases (Rural Monopolies) and which branches required defensive margin floors (Hyper-Dense Urban).</p>
-
-    <div class="next-step-box">
-        <h3>Ecosystem Step 2: Strategy Execution</h3>
-        <p>With our vulnerable territories mapped and our 5-Tier Topology established by the ML algorithm, we now know exactly <em>where</em> we are at risk. But before we execute a price increase across millions of SKUs, we must build the deterministic logic to safely cross-subsidize our Key Value Items (KVIs).</p>
-        <div class="project-navigation">
-            <a href="index.html" class="nav-btn prev">
-                <span class="nav-label">&larr; Ecosystem Hub</span>
-                <span class="nav-title">Return to Portfolio</span>
-            </a>
-            <a href="algorithmic-margin-defense.html" class="nav-btn next">
-                <span class="nav-label">Next Phase &rarr;</span>
-                <span class="nav-title">Step 2: Strategy Execution</span>
-            </a>
+        <div style="margin-top: 50px; text-align: center;">
+            <a href="algorithmic-margin-defense.html" style="background: #1a2433; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px;">Next Phase: Algorithmic Margin Defense &rarr;</a>
         </div>
     </div>
 
     <script>
-        // --- 1. DUMMY DATA GENERATOR FOR PORTFOLIO (ANONYMIZED SOUTHEAST US) ---
-        function generateDummyData() {
+        // --- 1. REALISTIC FAKE DATA GENERATOR (WITH NESTED ACCOUNT DNA) ---
+        function generateDeepFakeData() {
             const data = {
-                "Meridian Parts": [],
-                "Vanguard Auto": [],
-                "Titan Parts": [],
-                "Omega Automotive": [],
-                "Apex Auto": [],
-                "Velocity Parts": [],
-                "Prime Auto": []
+                "Meridian Parts": [], "Vanguard Auto": [], "Titan Parts": [], "Omega Automotive": []
             };
             const comps = Object.keys(data).filter(k => k !== "Meridian Parts");
 
-            // Curated Anchor points to simulate realistic human settlement in the Southeast
-            const cityAnchors = [
-                // Urban / High Density 
-                { name: "Atlanta, GA", lat: 33.7490, lng: -84.3880, type: "urban", hasHub: false },
-                { name: "Charlotte, NC", lat: 35.2271, lng: -80.8431, type: "urban", hasHub: false },
-                { name: "Nashville, TN", lat: 36.1627, lng: -86.7816, type: "urban", hasHub: true },
-                { name: "Birmingham, AL", lat: 33.5186, lng: -86.8104, type: "urban", hasHub: false },
-                { name: "Raleigh, NC", lat: 35.7796, lng: -78.6382, type: "urban", hasHub: false },
-                
-                // Mid-Sized Regional Hubs
-                { name: "Greenville, SC", lat: 34.8526, lng: -82.3940, type: "mid", hasHub: true },
-                { name: "Huntsville, AL", lat: 34.7304, lng: -86.5861, type: "mid", hasHub: true },
-                { name: "Chattanooga, TN", lat: 35.0456, lng: -85.3097, type: "mid", hasHub: false },
-                { name: "Augusta, GA", lat: 33.4735, lng: -81.9778, type: "mid", hasHub: false },
-                { name: "Macon, GA", lat: 32.8407, lng: -83.6324, type: "mid", hasHub: true },
-                { name: "Columbia, SC", lat: 34.0007, lng: -81.0348, type: "mid", hasHub: true },
-                { name: "Knoxville, TN", lat: 35.9606, lng: -83.9207, type: "mid", hasHub: false },
-                { name: "Savannah, GA", lat: 32.0809, lng: -81.0912, type: "mid", hasHub: true },
-                { name: "Montgomery, AL", lat: 33.3768, lng: -86.3006, type: "mid", hasHub: false },
+            const pgs = ['Friction / Brakes', 'Filtration', 'Ride Control', 'Electrical', 'Chemicals'];
+            const ranges = {
+                'Friction / Brakes': ['Premium Fleet Pads', 'Coated Rotors', 'SevereDuty Calipers'],
+                'Filtration': ['Heavy Duty Oil Filters', 'Cabin Air', 'Hydraulic Filters'],
+                'Ride Control': ['Monotube Shocks', 'Strut Assemblies'],
+                'Electrical': ['AGM Batteries', 'Alternators'],
+                'Chemicals': ['Bulk DEF', 'Synthetic Oil 5W-30']
+            };
 
-                // Rural / Small Towns
-                { name: "Cookeville, TN", lat: 36.1628, lng: -85.5016, type: "rural", hasHub: true },
-                { name: "Statesville, NC", lat: 35.7826, lng: -80.8873, type: "rural", hasHub: true },
-                { name: "Dalton, GA", lat: 34.7698, lng: -84.9702, type: "rural", hasHub: true },
-                { name: "Florence, AL", lat: 34.7998, lng: -87.6773, type: "rural", hasHub: true },
-                { name: "Spartanburg, SC", lat: 34.9496, lng: -81.9320, type: "rural", hasHub: false },
-                { name: "Asheville, NC", lat: 35.5951, lng: -82.5515, type: "rural", hasHub: true },
-                { name: "Bowling Green, KY", lat: 36.9903, lng: -86.4436, type: "rural", hasHub: true },
-                { name: "Gadsden, AL", lat: 34.0143, lng: -86.0066, type: "rural", hasHub: true },
-                { name: "Athens, GA", lat: 33.9519, lng: -83.3576, type: "rural", hasHub: true },
-                { name: "Jackson, TN", lat: 35.6145, lng: -88.8139, type: "rural", hasHub: true },
-                { name: "Anniston, AL", lat: 33.6598, lng: -85.8316, type: "rural", hasHub: true },
-                { name: "Rome, GA", lat: 34.2570, lng: -85.1647, type: "rural", hasHub: false },
-                { name: "Tifton, GA", lat: 31.4505, lng: -83.5085, type: "rural", hasHub: true },
-                { name: "Valdosta, GA", lat: 31.2323, lng: -83.2785, type: "rural", hasHub: true },
-                { name: "Statesboro, GA", lat: 32.4488, lng: -81.7832, type: "rural", hasHub: false },
-                { name: "Waycross, GA", lat: 30.8428, lng: -82.3577, type: "rural", hasHub: true },
-                { name: "Cullman, AL", lat: 34.1748, lng: -86.8436, type: "rural", hasHub: true },
-                { name: "Eufaula, AL", lat: 31.8913, lng: -85.1455, type: "rural", hasHub: false },
-                { name: "Dyersburg, TN", lat: 36.0344, lng: -89.3856, type: "rural", hasHub: true },
-                { name: "Paris, TN", lat: 36.3020, lng: -88.3267, type: "rural", hasHub: true },
-                { name: "McMinnville, TN", lat: 35.6811, lng: -85.7744, type: "rural", hasHub: true },
-                { name: "Crossville, TN", lat: 35.9490, lng: -85.0269, type: "rural", hasHub: true },
-                { name: "Sumter, SC", lat: 33.9204, lng: -80.3415, type: "rural", hasHub: true },
-                { name: "Aiken, SC", lat: 33.5604, lng: -81.7195, type: "rural", hasHub: true },
-                { name: "Boone, NC", lat: 36.2168, lng: -81.6746, type: "rural", hasHub: true },
-                { name: "Hickory, NC", lat: 35.7332, lng: -81.3411, type: "rural", hasHub: true },
-                { name: "Sanford, NC", lat: 35.4799, lng: -79.1805, type: "rural", hasHub: false }
+            const cityAnchors = [
+                { name: "Atlanta, GA", lat: 33.7490, lng: -84.3880, type: "urban", hasHub: true },
+                { name: "Nashville, TN", lat: 36.1627, lng: -86.7816, type: "urban", hasHub: true },
+                { name: "Greenville, SC", lat: 34.8526, lng: -82.3940, type: "mid", hasHub: true },
+                { name: "Macon, GA", lat: 32.8407, lng: -83.6324, type: "mid", hasHub: true },
+                { name: "Cookeville, TN", lat: 36.1628, lng: -85.5016, type: "rural", hasHub: true }
             ];
 
             cityAnchors.forEach((city) => {
-                // 1. Place Meridian Hub
+                // Generate Meridian Hub with Deep Fake Analytics Data
                 if(city.hasHub) {
+                    let totalHubRev = Math.floor(Math.random() * 3000000) + 1000000;
+                    let accounts = [];
+                    
+                    // Generate 5 Fake B2B Accounts per Hub
+                    for(let j=1; j<=5; j++) {
+                        let accRev = Math.floor(totalHubRev * (Math.random() * 0.15 + 0.05)); // 5-20% of hub rev
+                        let accProfit = accRev * (Math.random() * 0.15 + 0.25); // 25-40% margin
+                        
+                        // Fake PG Mix
+                        let pgMix = {};
+                        let remaining = 100;
+                        for(let i=0; i<4; i++) {
+                            let alloc = Math.floor(Math.random() * (remaining * 0.6));
+                            pgMix[pgs[i]] = alloc;
+                            remaining -= alloc;
+                        }
+                        pgMix[pgs[4]] = remaining;
+
+                        // Fake Ranges
+                        let accRanges = {};
+                        let rangeParts = {};
+                        Object.keys(pgMix).forEach(pg => {
+                            if(pgMix[pg] > 0) {
+                                let topRange = ranges[pg][0];
+                                accRanges[topRange] = accProfit * (pgMix[pg]/100) * 0.8; // Dollar profit proxy
+                                rangeParts[topRange] = {
+                                    [`${topRange.substring(0,3).toUpperCase()}-101`]: 40,
+                                    [`${topRange.substring(0,3).toUpperCase()}-202`]: 35,
+                                    [`${topRange.substring(0,3).toUpperCase()}-303`]: 25
+                                };
+                            }
+                        });
+
+                        accounts.push({
+                            'Customer Name': `Commercial Fleet Services 00${j}`,
+                            'Total LTM Revenue': accRev,
+                            'Total LTM Profit': accProfit,
+                            'True Margin Pct': ((accProfit / accRev) * 100).toFixed(1),
+                            'Product Group DNA': JSON.stringify(pgMix),
+                            'Top MAM Ranges': JSON.stringify(accRanges),
+                            'Range Parts DNA': JSON.stringify(rangeParts)
+                        });
+                    }
+
                     data["Meridian Parts"].push({
                         name: `Meridian Hub - ${city.name.split(',')[0]}`,
                         lat: city.lat + (Math.random() - 0.5) * 0.02, 
                         lng: city.lng + (Math.random() - 0.5) * 0.02,
-                        address: `123 Industrial Pkwy, ${city.name}`
+                        address: `123 Industrial Pkwy, ${city.name}`,
+                        gravity: { 'Total LTM Revenue': totalHubRev },
+                        top_accounts: accounts.sort((a,b) => b['Total LTM Revenue'] - a['Total LTM Revenue'])
                     });
                 }
 
-                // 2. Generate Competitors based on City Topology Density
-                let compCount = 0;
-                let variance = 0;
-
-                if (city.type === "urban") {
-                    compCount = Math.floor(Math.random() * 15) + 20; // Dialed down to 20-35
-                    variance = 0.25; 
-                } else if (city.type === "mid") {
-                    compCount = Math.floor(Math.random() * 8) + 12; // 12-20 stores
-                    variance = 0.12; 
-                } else {
-                    compCount = Math.floor(Math.random() * 3) + 2; // 2-4 stores
-                    variance = 0.04; // Tighter cluster
-                }
-
+                // Generate Competitors
+                let compCount = city.type === "urban" ? 15 : city.type === "mid" ? 8 : 3;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
-                        name: `${cat} - ${city.name.split(',')[0]} Sector`,
-                        lat: city.lat + (Math.random() - 0.5) * variance,
-                        lng: city.lng + (Math.random() - 0.5) * variance,
-                        address: `100 Commercial Dr, ${city.name}`
+                        name: `${cat} - Sector ${i+1}`,
+                        lat: city.lat + (Math.random() - 0.5) * 0.2,
+                        lng: city.lng + (Math.random() - 0.5) * 0.2,
+                        address: `Commercial Dr, ${city.name}`
                     });
                 }
             });
@@ -442,47 +417,19 @@
             return data;
         }
 
-        // --- 2. MAP INITIALIZATION ---
-        // Centered on the Southeast US
-        const map = L.map('map', { zoomControl: false }).setView([34.5, -84.0], 6);
+        // --- 2. STATE VARIABLES ---
+        let currentMapStyle = 'tactical';
+        let pgChartInstance = null;
+        let activeHubName = null;
+        let activeHubRev = null;
+        let activeHubAccounts = [];
+
+        // --- 3. MAP INITIALIZATION ---
+        const map = L.map('map', { zoomControl: false }).setView([33.7490, -84.3880], 7); // Center near Atlanta
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-        const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        });
-        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri'
-        });
-
-        tacticalLayer.addTo(map);
-        let currentMapStyle = 'tactical';
-        let isDarkMode = true;
-
-        // --- 3. UI TOGGLE LOGIC ---
-        function switchTab(tab) {
-            document.getElementById('content-metrics').classList.add('hidden');
-            document.getElementById('content-controls').classList.add('hidden');
-            document.getElementById('tab-metrics').classList.remove('active');
-            document.getElementById('tab-controls').classList.remove('active');
-            
-            document.getElementById('content-' + tab).classList.remove('hidden');
-            document.getElementById('tab-' + tab).classList.add('active');
-        }
-
-        document.getElementById('themeToggle').addEventListener('change', function(e) {
-            isDarkMode = !e.target.checked;
-            const dash = document.getElementById('app-dashboard');
-            if (isDarkMode) {
-                dash.classList.remove('light-mode');
-                document.getElementById('moon-icon').style.opacity = '1';
-                document.getElementById('sun-icon').style.opacity = '0.5';
-            } else {
-                dash.classList.add('light-mode');
-                document.getElementById('moon-icon').style.opacity = '0.5';
-                document.getElementById('sun-icon').style.opacity = '1';
-            }
-            applyMapFilters();
-        });
+        const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
 
         function changeBasemap(type) {
             currentMapStyle = type;
@@ -493,156 +440,94 @@
                 map.removeLayer(tacticalLayer);
                 satelliteLayer.addTo(map);
             }
-            applyMapFilters();
+            document.getElementById('map').className = type === 'tactical' ? 'w-full h-full z-0 tactical-dark-map' : 'w-full h-full z-0 satellite-dark-map';
         }
+        document.getElementById('map').classList.add('tactical-dark-map'); // Init filter
 
-        function applyMapFilters() {
-            const mapContainer = document.getElementById('map');
-            mapContainer.classList.remove('tactical-dark-map', 'satellite-dark-map');
-            if (isDarkMode) {
-                if (currentMapStyle === 'tactical') {
-                    mapContainer.classList.add('tactical-dark-map');
-                } else {
-                    mapContainer.classList.add('satellite-dark-map');
-                }
-            }
-        }
-        applyMapFilters();
-
-        // --- 4. MAP DATA RENDERING ---
-        const createColorIcon = (color) => L.divIcon({
-            className: 'custom-color-pin',
-            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
-            iconSize: [16, 16],
-            iconAnchor: [8, 8],
-            popupAnchor: [0, -8],
-            tooltipAnchor: [0, -12] 
-        });
-
+        // --- 4. RENDER DATA & CLUSTERS ---
         const categoryColors = {
-            "Meridian Parts": '#FFCC00',
-            "Vanguard Auto": '#CC0000',     
-            "Titan Parts": '#F26522', 
-            "Omega Automotive": '#8b5cf6', 
-            "Apex Auto": '#00843D', 
-            "Velocity Parts": '#0039A6', 
-            "Prime Auto": '#ec4899' // Pink
+            "Meridian Parts": '#FFCC00', "Vanguard Auto": '#CC0000', "Titan Parts": '#F26522', "Omega Automotive": '#8b5cf6'
         };
-        const defaultColor = '#94a3b8';
-
         const categoryLayers = {};
 
-        function initGeospatialData() {
-            const data = generateDummyData(); 
-            
-            let countTotal = 0;
+        const data = generateDeepFakeData();
+        const toggleContainer = document.getElementById('dynamic-layer-toggles');
+        let autoTriggerHub = null; // Save one to auto-open
 
-            const toggleContainer = document.getElementById('dynamic-layer-toggles');
-            toggleContainer.innerHTML = '';
+        Object.keys(data).forEach(category => {
+            const catColor = categoryColors[category];
+            const items = data[category];
             
-            const breakdownContainer = document.getElementById('market-breakdown-container');
-            breakdownContainer.innerHTML = '<h3 class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-2 text-center">Market Breakdown</h3>';
-
-            // Sort categories so Meridian is always first, then by size
-            const categories = Object.keys(data).sort((a, b) => {
-                if (a === "Meridian Parts") return -1;
-                if (b === "Meridian Parts") return 1;
-                return data[b].length - data[a].length;
+            const clusterGroup = L.markerClusterGroup({
+                chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, 
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    const size = count < 10 ? 36 : 46; 
+                    return L.divIcon({
+                        html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${catColor === '#FFCC00' ? '#111' : '#fff'}; width: ${size}px; height: ${size}px;">${count}</div>`,
+                        className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
+                    });
+                }
             });
 
-            categories.forEach(category => {
-                const catColor = categoryColors[category] || defaultColor;
-                const items = data[category];
+            items.forEach(item => {
+                const markerIcon = L.divIcon({
+                    className: 'custom-color-pin',
+                    html: `<div style="background-color: ${catColor}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
+                    iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
+                });
+
+                const marker = L.marker([item.lat, item.lng], { icon: markerIcon });
                 
-                const clusterGroup = L.markerClusterGroup({
-                    chunkedLoading: true,
-                    spiderfyOnMaxZoom: false,
-                    showCoverageOnHover: false,
-                    maxClusterRadius: 80, 
-                    iconCreateFunction: function(cluster) {
-                        const count = cluster.getChildCount();
-                        const size = count < 10 ? 36 : count < 50 ? 46 : 56; 
-                        return L.divIcon({
-                            html: `<div class="custom-cluster" style="background-color: ${catColor}; width: ${size}px; height: ${size}px;">${count}</div>`,
-                            className: 'custom-cluster-wrapper',
-                            iconSize: L.point(size, size)
-                        });
-                    }
-                });
-
-                items.forEach(item => {
-                    countTotal++;
-
-                    const markerIcon = createColorIcon(catColor);
-                    const marker = L.marker([item.lat, item.lng], { icon: markerIcon })
-                        .bindTooltip(`<b>${item.name}</b>`, { direction: 'top', offset: [0, -10] });
+                let analyticsButtonHtml = '';
+                if (category === "Meridian Parts") {
+                    let safeName = item.name.replace(/'/g, "\\'");
+                    let rev = item.gravity['Total LTM Revenue'];
+                    window[`hubData_${safeName.replace(/\s+/g, '')}`] = item.top_accounts;
                     
-                    let headerTextColor = (catColor === '#FFCC00') ? '#1D1B1C' : '#FFFFFF';
-                    
-                    let contactHtml = `
-                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; font-size: 12px; line-height: 1.5;">
-                            <div><span style="color: #666; font-weight: 600;">Mgr:</span> xxxxxx</div>
-                            <div><span style="color: #666; font-weight: 600;">Phone:</span> xxx-xxx-xxxx</div>
-                            <div><span style="color: #666; font-weight: 600;">Email:</span> xxxxxxxx</div>
-                        </div>
+                    if(!autoTriggerHub) autoTriggerHub = { name: safeName, rev: rev, lat: item.lat, lng: item.lng };
+
+                    analyticsButtonHtml = `
+                        <button onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1D1B1C; color: #FFCC00; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
+                            Open Hub Analytics &raquo;
+                        </button>
                     `;
+                }
 
-                    let popupHtml = `
-                        <div class="popup-header" style="background-color: ${catColor}; color: ${headerTextColor};">
-                            ${category}
-                        </div>
-                        <div class="popup-body">
-                            <div class="popup-title">${item.name}</div>
-                            <div class="popup-address">${item.address}</div>
-                            ${contactHtml}
-                            <div class="popup-coords" style="margin-top: 10px;">Lat: ${item.lat.toFixed(4)} | Lng: ${item.lng.toFixed(4)}</div>
-                        </div>
-                    `;
-                    
-                    marker.bindPopup(popupHtml);
-                    clusterGroup.addLayer(marker);
-                });
-
-                map.addLayer(clusterGroup);
-                categoryLayers[category] = clusterGroup;
-
-                // Add to dynamic filter toggles
-                const safeCat = category.replace(/'/g, "\\'"); 
-                const toggleHtml = `
-                    <label class="layer-toggle">
-                        <input type="checkbox" class="category-checkbox" data-category="${category.replace(/"/g, '&quot;')}" checked onchange="toggleCategory('${safeCat}', this.checked)">
-                        <div class="custom-checkbox"></div>
-                        <div class="w-3 h-3 rounded-full mr-2 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor};"></div>
-                        <span class="text-sm font-medium theme-text-main">${category} <span class="opacity-50 text-xs">(${items.length})</span></span>
-                    </label>
-                `;
-                toggleContainer.insertAdjacentHTML('beforeend', toggleHtml);
-
-                // Add to leaderboard breakdown
-                const breakdownHtml = `
-                    <div class="flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all hover:bg-opacity-50">
-                        <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 rounded-full" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor};"></div>
-                            <span class="text-sm font-semibold theme-text-main">${category}</span>
-                        </div>
-                        <span class="font-bold theme-text-main">${items.length}</span>
+                let popupHtml = `
+                    <div class="popup-header" style="background-color: ${catColor}; color: ${catColor === '#FFCC00' ? '#1D1B1C' : '#FFFFFF'};">${category}</div>
+                    <div class="popup-body">
+                        <div class="popup-title">${item.name}</div>
+                        <div class="popup-address">${item.address}</div>
+                        ${analyticsButtonHtml}
                     </div>
                 `;
-                breakdownContainer.insertAdjacentHTML('beforeend', breakdownHtml);
+                marker.bindPopup(popupHtml);
+                clusterGroup.addLayer(marker);
             });
 
-            document.getElementById('total-stores').innerText = countTotal.toLocaleString();
-        }
+            map.addLayer(clusterGroup);
+            categoryLayers[category] = clusterGroup;
+
+            const safeCat = category.replace(/'/g, "\\'"); 
+            const toggleHtml = `
+                <label class="layer-toggle">
+                    <input type="checkbox" class="category-checkbox" data-category="${safeCat}" checked onchange="toggleCategory('${safeCat}', this.checked)">
+                    <div class="custom-checkbox"></div>
+                    <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor}; flex-shrink: 0;"></div>
+                    <span class="text-sm font-semibold theme-text-main">${category} <span class="opacity-50 text-xs ml-1">(${items.length})</span></span>
+                </label>
+            `;
+            toggleContainer.insertAdjacentHTML('beforeend', toggleHtml);
+        });
 
         window.toggleAllLayers = function() {
             const btn = document.getElementById('master-toggle');
             const isHiding = btn.innerText === "HIDE ALL";
-            const checkboxes = document.querySelectorAll('.category-checkbox');
-            checkboxes.forEach(cb => {
+            document.querySelectorAll('.category-checkbox').forEach(cb => {
                 if (cb.checked === isHiding) {
                     cb.checked = !isHiding;
-                    const cat = cb.getAttribute('data-category');
-                    window.toggleCategory(cat, !isHiding);
+                    window.toggleCategory(cb.getAttribute('data-category'), !isHiding);
                 }
             });
             btn.innerText = isHiding ? "SHOW ALL" : "HIDE ALL";
@@ -650,13 +535,182 @@
 
         window.toggleCategory = function(category, isVisible) {
             const layer = categoryLayers[category];
-            if (layer) {
-                if (isVisible) map.addLayer(layer);
-                else map.removeLayer(layer);
+            if (isVisible) map.addLayer(layer);
+            else map.removeLayer(layer);
+        };
+
+        window.openAnalytics = function(storeName, totalRev) {
+            activeHubName = storeName;
+            activeHubRev = totalRev;
+            activeHubAccounts = window[`hubData_${storeName.replace(/\s+/g, '')}`] || [];
+
+            document.getElementById('analytics-panel').classList.add('open');
+            document.getElementById('analytics-subtitle').innerText = "Hub Diagnostic";
+            document.getElementById('analytics-title').innerText = storeName;
+            document.getElementById('back-to-hub-btn').classList.add('hidden');
+            document.getElementById('accounts-section').classList.remove('hidden');
+            document.getElementById('ranges-section').classList.add('hidden'); 
+            document.getElementById('chart-title').innerText = "Top Accounts PG Velocity (Proxy Mix)";
+            
+            document.getElementById('analytics-rev').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(totalRev);
+            
+            let totalHubProfit = activeHubAccounts.reduce((sum, acc) => sum + acc['Total LTM Profit'], 0);
+            document.getElementById('analytics-margin').innerText = ((totalHubProfit / totalRev) * 100).toFixed(1) + '%';
+            document.getElementById('analytics-margin-title').innerText = "True Gross Margin";
+
+            // Chart Render
+            let hubPgRawRev = {};
+            let totalHubRevCalculated = 0;
+            activeHubAccounts.forEach(acc => {
+                let pgMix = JSON.parse(acc['Product Group DNA']);
+                for (let [pg, pct] of Object.entries(pgMix)) {
+                    let estRev = (pct / 100) * acc['Total LTM Revenue'];
+                    hubPgRawRev[pg] = (hubPgRawRev[pg] || 0) + estRev;
+                    totalHubRevCalculated += estRev;
+                }
+            });
+
+            let hubPgMix = {};
+            for (let [pg, rev] of Object.entries(hubPgRawRev)) {
+                hubPgMix[pg] = (rev / totalHubRevCalculated) * 100;
+            }
+            renderDynamicDoughnutChart(hubPgMix);
+
+            // Render Accounts
+            const accountsContainer = document.getElementById('top-accounts-list');
+            accountsContainer.innerHTML = ''; 
+            
+            activeHubAccounts.forEach((acc, index) => {
+                let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(acc['Total LTM Profit']);
+                let html = `
+                    <div onclick="openAccountDetails('${acc['Customer Name'].replace(/'/g, "\\'")}', ${index})" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#FFCC00] hover:shadow-md transition-all group">
+                        <div class="overflow-hidden pr-2">
+                            <div class="text-[10px] text-gray-500 font-bold mb-0.5">#${index + 1} Earner</div>
+                            <div class="text-sm font-semibold theme-text-main group-hover:text-[#FFCC00] transition-colors truncate">${acc['Customer Name']}</div>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <div class="font-mono text-sm text-blue-400 font-bold">${profitStr}</div>
+                            <div class="text-[10px] text-gray-500 font-bold">${acc['True Margin Pct']}% Margin</div>
+                        </div>
+                    </div>
+                `;
+                accountsContainer.insertAdjacentHTML('beforeend', html);
+            });
+        };
+
+        window.openAccountDetails = function(accountName, accountIndex) {
+            const accData = activeHubAccounts[accountIndex];
+            
+            document.getElementById('analytics-subtitle').innerText = "Account Profile";
+            document.getElementById('analytics-title').innerText = accountName;
+            document.getElementById('back-to-hub-btn').classList.remove('hidden');
+            document.getElementById('accounts-section').classList.add('hidden'); 
+            document.getElementById('ranges-section').classList.remove('hidden'); 
+            document.getElementById('chart-title').innerText = "Actual Account PG Breakdown";
+
+            document.getElementById('analytics-rev').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(accData['Total LTM Revenue']);
+            document.getElementById('analytics-margin').innerText = accData['True Margin Pct'] + '%'; 
+            document.getElementById('analytics-margin-title').innerText = "Account Margin";
+
+            window.currentAccountPGs = JSON.parse(accData['Product Group DNA']);
+            renderDynamicDoughnutChart(window.currentAccountPGs);
+
+            const rangesContainer = document.getElementById('top-ranges-list');
+            rangesContainer.innerHTML = '';
+            
+            let ranges = JSON.parse(accData['Top MAM Ranges']);
+            window.currentAccountParts = JSON.parse(accData['Range Parts DNA']);
+            window.currentAccountRangesRaw = ranges; 
+
+            let count = 1;
+            for (const [rangeDesc, profit] of Object.entries(ranges)) {
+                let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
+                rangesContainer.innerHTML += `
+                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
+                        <span class="truncate pr-2 group-hover:text-[#FFCC00] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
+                        <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
+                    </div>
+                `;
+                count++;
             }
         };
 
-        initGeospatialData();
+        window.drillDownToRange = function(rangeName) {
+            document.getElementById('chart-title').innerHTML = `
+                Top Parts: ${rangeName} 
+                <button onclick="resetAccountChart()" class="float-right text-[9px] bg-gray-700 text-white px-2 py-1 rounded hover:bg-[#FFCC00] hover:text-black transition-colors tracking-widest">BACK</button>
+            `;
+            renderDynamicDoughnutChart(window.currentAccountParts[rangeName]);
+
+            const listContainer = document.getElementById('top-ranges-list');
+            listContainer.innerHTML = '';
+            let partsData = window.currentAccountParts[rangeName];
+            let rangeTotalProfit = window.currentAccountRangesRaw[rangeName];
+            
+            let count = 1;
+            for (let [partNum, profitPct] of Object.entries(partsData)) {
+                let actualDollarProfit = (profitPct / 100) * rangeTotalProfit;
+                let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(actualDollarProfit);
+                listContainer.innerHTML += `
+                    <div class="flex justify-between items-center py-2 border-b border-gray-800 last:border-0 rounded px-2 group">
+                        <span class="truncate pr-2 text-gray-300 text-sm"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${partNum}</span>
+                        <span class="font-mono text-blue-400 font-semibold text-sm">${profitStr}</span>
+                    </div>
+                `;
+                count++;
+            }
+        };
+
+        window.resetAccountChart = function() {
+            document.getElementById('chart-title').innerText = "Actual Account PG Breakdown";
+            renderDynamicDoughnutChart(window.currentAccountPGs);
+            const rangesContainer = document.getElementById('top-ranges-list');
+            rangesContainer.innerHTML = '';
+            let count = 1;
+            for (const [rangeDesc, profit] of Object.entries(window.currentAccountRangesRaw)) {
+                let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
+                rangesContainer.innerHTML += `
+                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
+                        <span class="truncate pr-2 group-hover:text-[#FFCC00] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
+                        <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
+                    </div>
+                `;
+                count++;
+            }
+        };
+
+        window.restoreHubView = function() { openAnalytics(activeHubName, activeHubRev); };
+        window.closeAnalytics = function() { document.getElementById('analytics-panel').classList.remove('open'); };
+
+        function renderDynamicDoughnutChart(pgDict) {
+            const ctx = document.getElementById('pgChart').getContext('2d');
+            if (pgChartInstance) pgChartInstance.destroy();
+
+            let labels = Object.keys(pgDict);
+            let data = Object.values(pgDict).map(v => v.toFixed(1));
+            const colors = ['#C81E27', '#FFCC00', '#3b82f6', '#10b981', '#8b5cf6', '#f97316', '#06b6d4'];
+
+            pgChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderWidth: 0, hoverOffset: 4 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '65%',
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#e2e8f0', font: { size: 10 } } },
+                        tooltip: { callbacks: { label: function(context) { return ' ' + context.label + ': ' + context.raw + '%'; } } }
+                    }
+                }
+            });
+        }
+
+        // Recruiter Auto-Demo Trigger
+        setTimeout(() => {
+            if(autoTriggerHub) {
+                map.setView([autoTriggerHub.lat, autoTriggerHub.lng], 9);
+                openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
+            }
+        }, 1500);
+
     </script>
 </body>
 </html>
