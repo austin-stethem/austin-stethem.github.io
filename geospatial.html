@@ -20,54 +20,55 @@
     <!-- Chart.js for Deep Dive Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
+        /* Base Brand Colors and Typography */
         :root {
-            --dark-slate-blue: #1a2433;
-            --alert-red: #b32525;
-            --success-green: #27ae60;
-            --bg-color: #fbfbfb;
-            --brand-yellow: #FFCC00;
+            --arnold-yellow: #FFCC00;
+            --arnold-red: #C81E27;
             --rich-black: #1D1B1C;
             --pure-white: #FFFFFF;
+            
+            /* Portfolio Text Colors */
+            --dark-slate-blue: #1a2433;
+            --alert-red: #b32525;
+            --bg-color: #fbfbfb;
         }
 
-        body {
-            font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
-            color: #334155;
-            font-size: 10.5pt;
-            line-height: 1.6;
+        body { 
+            font-family: 'Inter', sans-serif; 
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             overflow-x: hidden;
+            color: #334155;
         }
 
-        /* Standard Portfolio Text Container */
+        /* --- PORTFOLIO SPECIFIC STYLES --- */
         .portfolio-content {
-            max-width: 10.5in;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
+            font-size: 10.5pt;
+            line-height: 1.6;
         }
-
         .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
         .back-link:hover { text-decoration: underline; }
-
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
-        
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
         .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
         .meta-cell:last-child { border-right: none; }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
-        
         .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
+        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
-        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
-
-        /* DASHBOARD APP STYLING (FULL BLEED) */
+        /* --- DASHBOARD FULL BLEED WRAPPER --- */
         .dashboard-full-bleed {
             width: 100vw;
             position: relative;
@@ -85,66 +86,79 @@
             overflow: hidden;
         }
 
-        /* Map Filters */
+        #map { height: 100%; width: 100%; z-index: 1; }
+        
+        /* Tactical Dark Map Filters */
         .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.5); }
         .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
 
-        /* Custom Cluster Markers */
-        .custom-cluster {
-            background: rgba(29, 27, 28, 0.9);
-            color: #FFFFFF;
-            font-weight: bold;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255,255,255,0.8);
-            font-size: 14px;
-        }
-        .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
-        .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
-
-        /* Leaflet Popups */
+        /* Custom Popup Styling */
         .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
         .leaflet-popup-content { margin: 0; width: 280px !important; }
         .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
         .popup-body { padding: 16px; background: #fff; }
         .popup-title { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 4px; line-height: 1.2;}
         .popup-address { font-size: 13px; color: #555; margin-bottom: 12px; font-style: italic; }
+        .popup-coords { font-size: 12px; color: #888; font-family: monospace; }
         .leaflet-popup-tip { background: #fff; }
         .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
 
-        /* Toggles & Checkboxes */
-        .layer-toggle { display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; }
+        /* Custom Pins & Clusters */
+        .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
+        .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
+        .custom-cluster { background: rgba(29, 27, 28, 0.9); color: #FFCC00; border: 2px solid #FFCC00; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+
+        /* Custom Checkboxes */
+        .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
         .layer-toggle input { display: none; }
         .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: white; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
         .layer-toggle input:checked + .custom-checkbox { background: var(--rich-black); border: 2px solid white; }
         .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
 
-        /* Theme Support */
+        /* iOS Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--arnold-yellow); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Theme SVG Icons */
+        .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
+        body:not(.light-mode) .theme-icon { fill: #1D1B1C; stroke: #FFFFFF; stroke-width: 2px; }
+        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1D1B1C; stroke-width: 2px; }
+
+        /* Themes */
         .theme-bg-main { background-color: var(--rich-black); }
-        .theme-text-main { color: var(--pure-white); transition: color 0.3s ease;}
+        .theme-text-main { color: var(--pure-white); }
         .theme-text-muted { color: #888; }
         .theme-border { border-color: #333; }
         .theme-card { background-color: rgba(255,255,255,0.05); }
+        
+        body.light-mode .theme-bg-main { background-color: #F8FAFC; }
+        body.light-mode .theme-text-main { color: #0F172A; }
+        body.light-mode .theme-text-muted { color: #64748B; }
+        body.light-mode .theme-border { border-color: #E2E8F0; }
+        body.light-mode .theme-card { background-color: #FFFFFF; }
+        body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--arnold-yellow); border-color: var(--arnold-yellow); }
+        body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--rich-black); }
+        body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
 
+        /* Scrollbars & Drawer */
         .sidebar-scroll::-webkit-scrollbar { display: none; }
         .sidebar-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Analytics Drawer (The 1:1 Replica) */
         #analytics-panel {
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy pop-out */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform: translateX(100%);
             box-shadow: -10px 0 30px rgba(0,0,0,0.5);
         }
-        #analytics-panel.open {
-            transform: translateX(0);
-        }
-        
+        #analytics-panel.open { transform: translateX(0); }
+
+        /* PORTFOLIO DEMO STYLES */
         .pulse-instruction {
             animation: pulse-border 2s infinite;
-            border-left: 4px solid var(--brand-yellow);
+            border-left: 4px solid var(--arnold-yellow);
             background: #fffbea;
             padding: 15px;
             border-radius: 4px;
@@ -153,7 +167,6 @@
             color: #854d0e;
         }
 
-        /* AUTOPILOT SUBTITLE OVERLAY */
         #demo-subtitle {
             position: absolute;
             bottom: 30px;
@@ -179,7 +192,6 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
         }
 
-        /* Mobile Fixes */
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
@@ -192,6 +204,7 @@
 </head>
 <body>
 
+    <!-- PORTFOLIO HEADER -->
     <div class="portfolio-content">
         <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
 
@@ -232,7 +245,7 @@
                 ▶ Watch Autopilot Demo
             </button>
         </div>
-    </div> <!-- End Constrained Content -->
+    </div> 
 
     <!-- LIVE DASHBOARD (FULL BLEED WIDTH) -->
     <div class="dashboard-full-bleed" id="app-dashboard">
@@ -243,11 +256,13 @@
         </div>
 
         <!-- Left Sidebar: Command Center -->
-        <div id="sidebar" class="w-[380px] shrink-0 h-full flex flex-col z-10 theme-bg-main theme-border border-r relative shadow-2xl">
-            <!-- Branding -->
+        <div id="sidebar" class="w-[380px] shrink-0 h-full flex flex-col z-10 theme-bg-main theme-border border-r relative shadow-2xl transition-colors duration-300">
+            
+            <!-- Header & Logo (Portfolio Proxy Brand) -->
             <div class="p-6 pb-2 flex flex-col items-center text-center">
                 <div class="text-sm font-extrabold text-[#FFCC00] tracking-[0.2em] uppercase mb-1">Meridian Parts</div>
                 <h1 class="text-2xl font-black theme-text-main italic tracking-tight">STRATEGIC <span class="text-[#FFCC00]">RADAR</span></h1>
+                
                 <div class="flex items-center justify-center gap-3 mt-3">
                     <div class="relative flex h-3 w-3">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -257,14 +272,11 @@
                 </div>
             </div>
 
-            <!-- Layer Toggles -->
-            <div class="flex-1 overflow-y-auto p-6 sidebar-scroll border-t theme-border mt-4">
-                <div class="flex justify-between items-center mb-4 border-b theme-border pb-2">
-                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider">Competitive Layers</h3>
-                    <button id="master-toggle" onclick="toggleAllLayers()" class="text-[10px] theme-text-muted border theme-border px-2 py-1 rounded hover:bg-gray-800 transition-colors uppercase font-bold">Hide All</button>
-                </div>
-                <div id="dynamic-layer-toggles" class="space-y-2">
-                    <!-- Populated by JS -->
+            <!-- Static Content Area -->
+            <div class="flex-1 overflow-hidden px-5 pb-6 flex flex-col mt-4 border-t theme-border pt-4">
+                <h3 class="text-xs font-bold theme-text-muted uppercase tracking-widest mb-4 text-center border-b theme-border pb-2">Market Footprint</h3>
+                <div id="market-breakdown-container" class="flex flex-col gap-2 overflow-y-auto sidebar-scroll flex-1 pr-2 pb-4">
+                    <!-- Populated dynamically by JS -->
                 </div>
             </div>
         </div>
@@ -272,27 +284,72 @@
         <!-- Center: Map Container -->
         <div class="flex-1 relative h-full">
             <div id="map" class="w-full h-full z-0"></div>
-            
-            <!-- Map Filter Floating Button -->
-            <div class="absolute top-4 right-4 z-[1000]">
-                <button onclick="changeBasemap(currentMapStyle === 'tactical' ? 'satellite' : 'tactical')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-xl border theme-border font-semibold text-xs uppercase tracking-widest hover:opacity-80 transition-opacity flex items-center gap-2">
-                    Toggle Satellite View
+
+            <!-- Floating Dropdown UI for Filters -->
+            <div class="absolute top-4 right-4 z-[1000] flex flex-col items-end">
+                <button onclick="document.getElementById('filter-dropdown').classList.toggle('hidden')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-lg border theme-border font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                    Map Filters & Controls
                 </button>
+                
+                <div id="filter-dropdown" class="hidden mt-2 bg-[#1D1B1C] border border-gray-700 rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
+                    <!-- Display Mode -->
+                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Environment Settings</h3>
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-sm font-medium theme-text-main">Dark Mode</span>
+                        <div class="flex items-center gap-2">
+                            <span id="sun-icon" style="opacity: 0.5;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                            </span>
+                            <label class="switch">
+                                <input type="checkbox" id="themeToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <span id="moon-icon" style="opacity: 1;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3 mb-8">
+                        <label class="layer-toggle !mb-0">
+                            <input type="radio" name="basemap" value="tactical" checked onchange="changeBasemap(this.value)">
+                            <div class="custom-checkbox rounded-full"></div>
+                            <span class="text-sm font-medium theme-text-main">Tactical Maps (High Contrast)</span>
+                        </label>
+                        <label class="layer-toggle !mb-0">
+                            <input type="radio" name="basemap" value="satellite" onchange="changeBasemap(this.value)">
+                            <div class="custom-checkbox rounded-full"></div>
+                            <span class="text-sm font-medium theme-text-main">Satellite Imagery (Real-world)</span>
+                        </label>
+                    </div>
+
+                    <!-- Competitor Layer Toggles -->
+                    <div class="flex justify-between items-end mb-4 border-b theme-border pb-2">
+                        <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider">Map Layers</h3>
+                        <button id="master-toggle" onclick="toggleAllLayers()" class="text-[10px] theme-text-muted border theme-border px-2 py-1 rounded hover:bg-gray-800 transition-colors uppercase font-bold">Hide All</button>
+                    </div>
+
+                    <div id="dynamic-layer-toggles" class="space-y-1">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Right Sidebar: Slide-out Analytics Drawer (The 1:1 Replica) -->
-        <div id="analytics-panel" class="absolute top-0 right-0 h-full w-[450px] z-[2000] theme-bg-main border-l theme-border flex flex-col">
+        <!-- Right Sidebar: Slide-out Analytics Drawer -->
+        <div id="analytics-panel" class="absolute top-0 right-0 h-full w-[400px] z-[2000] theme-bg-main border-l theme-border flex flex-col">
             <!-- Drawer Header -->
             <div class="p-6 border-b theme-border flex justify-between items-center bg-[#FFCC00]">
                 <div>
                     <div id="analytics-subtitle" class="text-[10px] font-black text-[#1D1B1C] uppercase tracking-widest">Hub Diagnostic</div>
-                    <h2 id="analytics-title" class="text-2xl font-black text-[#1D1B1C] tracking-tight leading-none mt-1">Store Name</h2>
+                    <h2 id="analytics-title" class="text-xl font-black text-[#1D1B1C] tracking-tight">Store Name</h2>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button id="back-to-hub-btn" onclick="restoreHubView()" class="hidden text-xs font-black text-[#1D1B1C] uppercase tracking-wide hover:underline mr-2">&larr; Back</button>
+                    <button id="back-to-hub-btn" onclick="restoreHubView()" class="hidden text-[11px] font-black text-[#1D1B1C] uppercase tracking-wide hover:underline mr-2">&larr; Back</button>
                     <button onclick="closeAnalytics()" class="text-[#1D1B1C] hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
             </div>
@@ -302,13 +359,13 @@
                 
                 <!-- KPI Cards -->
                 <div class="flex gap-3 mb-6">
-                    <div class="theme-card border theme-border rounded-lg p-4 flex-1 text-center shadow-inner">
-                        <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-1">LTM Revenue</div>
-                        <div id="analytics-rev" class="text-xl font-black theme-text-main text-green-400">--</div>
+                    <div class="theme-card border theme-border rounded-lg p-3 flex-1 text-center shadow-inner">
+                        <div class="text-[9px] font-bold theme-text-muted uppercase tracking-wider mb-1">LTM Revenue</div>
+                        <div id="analytics-rev" class="text-lg font-black theme-text-main text-green-400">--</div>
                     </div>
-                    <div class="theme-card border theme-border rounded-lg p-4 flex-1 text-center shadow-inner">
-                        <div id="analytics-margin-title" class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-1">True Margin</div>
-                        <div id="analytics-margin" class="text-xl font-black theme-text-main text-blue-400">--</div>
+                    <div class="theme-card border theme-border rounded-lg p-3 flex-1 text-center shadow-inner">
+                        <div id="analytics-margin-title" class="text-[9px] font-bold theme-text-muted uppercase tracking-wider mb-1">True Gross Margin</div>
+                        <div id="analytics-margin" class="text-lg font-black theme-text-main text-blue-400">--</div>
                     </div>
                 </div>
 
@@ -320,7 +377,7 @@
                     </div>
                 </div>
 
-                <!-- Top Ranges Table (Hidden by default, shown on Account View) -->
+                <!-- Top Ranges Table -->
                 <div id="ranges-section" class="mb-8 hidden">
                     <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Product Group Ranges</h3>
                     <div id="top-ranges-list" class="space-y-2 text-sm text-gray-300">
@@ -328,10 +385,10 @@
                     </div>
                 </div>
 
-                <!-- Top Accounts List (Shown on Hub View) -->
+                <!-- Top Accounts List -->
                 <div id="accounts-section">
-                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top B2B Accounts</h3>
-                    <div id="top-accounts-list" class="space-y-3">
+                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Accounts</h3>
+                    <div id="top-accounts-list" class="space-y-2">
                         <!-- Populated by JS -->
                     </div>
                 </div>
@@ -345,12 +402,12 @@
         <p>I then fed this Distance Decay Matrix into a <strong>K-Means Unsupervised Machine Learning Model</strong> (via <code>scikit-learn</code>). The algorithm analyzed the mathematical decay curves of all branches and automatically clustered them into 5 distinct Strategic Topology Tiers. This replaced subjective human guesswork with pure data, dictating exactly which branches could absorb aggressive price increases (Rural Monopolies) and which branches required defensive margin floors (Hyper-Dense Urban).</p>
 
         <div style="margin-top: 50px; text-align: center;">
-            <a href="algorithmic-margin-defense.html" style="background: #1a2433; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px;">Next Phase: Algorithmic Margin Defense &rarr;</a>
+            <a href="algorithmic-margin-defense.html" style="background: var(--dark-slate-blue); color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background 0.2s;">Next Phase: Algorithmic Margin Defense &rarr;</a>
         </div>
     </div>
 
     <script>
-        // --- 1. REALISTIC FAKE DATA GENERATOR (WITH NESTED ACCOUNT DNA) ---
+        // --- 1. REALISTIC FAKE DATA GENERATOR ---
         function generateDeepFakeData() {
             const data = {
                 "Meridian Parts": [], "Vanguard Auto": [], "Titan Parts": [], "Omega Automotive": []
@@ -371,7 +428,8 @@
                 { name: "Nashville, TN", lat: 36.1627, lng: -86.7816, type: "urban", hasHub: true },
                 { name: "Greenville, SC", lat: 34.8526, lng: -82.3940, type: "mid", hasHub: true },
                 { name: "Macon, GA", lat: 32.8407, lng: -83.6324, type: "mid", hasHub: true },
-                { name: "Cookeville, TN", lat: 36.1628, lng: -85.5016, type: "rural", hasHub: true }
+                { name: "Cookeville, TN", lat: 36.1628, lng: -85.5016, type: "rural", hasHub: true },
+                { name: "Chattanooga, TN", lat: 36.0446, lng: -85.3097, type: "mid", hasHub: false }
             ];
 
             cityAnchors.forEach((city) => {
@@ -401,7 +459,7 @@
                         Object.keys(pgMix).forEach(pg => {
                             if(pgMix[pg] > 0) {
                                 let topRange = ranges[pg][0];
-                                accRanges[topRange] = accProfit * (pgMix[pg]/100) * 0.8; // Dollar profit proxy
+                                accRanges[topRange] = accProfit * (pgMix[pg]/100) * 0.8; 
                                 rangeParts[topRange] = {
                                     [`${topRange.substring(0,3).toUpperCase()}-101`]: 40,
                                     [`${topRange.substring(0,3).toUpperCase()}-202`]: 35,
@@ -426,12 +484,13 @@
                         lat: city.lat + (Math.random() - 0.5) * 0.02, 
                         lng: city.lng + (Math.random() - 0.5) * 0.02,
                         address: `123 Industrial Pkwy, ${city.name}`,
-                        gravity: { 'Total LTM Revenue': totalHubRev },
+                        gravity: { 'Total LTM Revenue': totalHubRev, '0-5 Miles': '45.2%', '5-15 Miles': '22.1%', '15-30 Miles': '15.4%', '30-50 Miles': '12.3%', '50-100 Miles': '5.0%', '100+ Miles': '0.0%' },
+                        topology: { tier: city.type === "urban" ? 4 : city.type === "mid" ? 2 : 1, confidence: "94.2%", status: "Locked" },
                         top_accounts: accounts.sort((a,b) => b['Total LTM Revenue'] - a['Total LTM Revenue'])
                     });
                 }
 
-                // Generate Competitors
+                // Generate Competitors (More in urban, fewer in rural)
                 let compCount = city.type === "urban" ? 15 : city.type === "mid" ? 8 : 3;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
@@ -449,19 +508,39 @@
 
         // --- 2. STATE VARIABLES ---
         let currentMapStyle = 'tactical';
+        let isDarkMode = true;
         let pgChartInstance = null;
         let activeHubName = null;
         let activeHubRev = null;
         let activeHubAccounts = [];
+        let autoTriggerHub = null;
 
         // --- 3. MAP INITIALIZATION ---
-        const map = L.map('map', { zoomControl: false }).setView([33.7490, -84.3880], 7); // Center near Atlanta
+        const map = L.map('map', { zoomControl: false }).setView([35.0, -85.5], 6); 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
         const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
 
-        function changeBasemap(type) {
+        document.getElementById('map').classList.add('tactical-dark-map');
+
+        // Theme Toggle Logic
+        document.getElementById('themeToggle').addEventListener('change', function(e) {
+            isDarkMode = e.target.checked; 
+            if (isDarkMode) {
+                document.body.classList.remove('light-mode');
+                document.getElementById('moon-icon').style.opacity = '1';
+                document.getElementById('sun-icon').style.opacity = '0.5';
+            } else {
+                document.body.classList.add('light-mode');
+                document.getElementById('moon-icon').style.opacity = '0.5';
+                document.getElementById('sun-icon').style.opacity = '1';
+            }
+            applyMapFilters();
+        });
+
+        // Basemap Logic
+        window.changeBasemap = function(type) {
             currentMapStyle = type;
             if (type === 'tactical') {
                 map.removeLayer(satelliteLayer);
@@ -470,86 +549,184 @@
                 map.removeLayer(tacticalLayer);
                 satelliteLayer.addTo(map);
             }
-            document.getElementById('map').className = type === 'tactical' ? 'w-full h-full z-0 tactical-dark-map' : 'w-full h-full z-0 satellite-dark-map';
+            applyMapFilters();
         }
-        document.getElementById('map').classList.add('tactical-dark-map'); // Init filter
+
+        function applyMapFilters() {
+            const mapContainer = document.getElementById('map');
+            mapContainer.classList.remove('tactical-dark-map', 'satellite-dark-map');
+            if (isDarkMode) {
+                if (currentMapStyle === 'tactical') {
+                    mapContainer.classList.add('tactical-dark-map');
+                } else {
+                    mapContainer.classList.add('satellite-dark-map');
+                }
+            }
+        }
 
         // --- 4. RENDER DATA & CLUSTERS ---
+        const createColorIcon = (color) => L.divIcon({
+            className: 'custom-color-pin',
+            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
+            iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
+        });
+
         const categoryColors = {
             "Meridian Parts": '#FFCC00', "Vanguard Auto": '#CC0000', "Titan Parts": '#F26522', "Omega Automotive": '#8b5cf6'
         };
         const categoryLayers = {};
+        const tradeAreaRings = L.layerGroup().addTo(map);
+        let lockedPin = null;
 
-        const data = generateDeepFakeData();
-        const toggleContainer = document.getElementById('dynamic-layer-toggles');
-        let autoTriggerHub = null; // Save one to auto-open
-
-        Object.keys(data).forEach(category => {
-            const catColor = categoryColors[category];
-            const items = data[category];
+        function renderMap() {
+            const data = generateDeepFakeData();
+            const toggleContainer = document.getElementById('dynamic-layer-toggles');
+            const breakdownContainer = document.getElementById('market-breakdown-container');
             
-            const clusterGroup = L.markerClusterGroup({
-                chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, 
-                iconCreateFunction: function(cluster) {
-                    const count = cluster.getChildCount();
-                    const size = count < 10 ? 36 : 46; 
-                    return L.divIcon({
-                        html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${catColor === '#FFCC00' ? '#111' : '#fff'}; width: ${size}px; height: ${size}px;">${count}</div>`,
-                        className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
-                    });
-                }
+            toggleContainer.innerHTML = '';
+            breakdownContainer.innerHTML = '';
+
+            const sortedCategories = Object.keys(data).sort((a, b) => {
+                if (a.includes("Meridian")) return -1;
+                if (b.includes("Meridian")) return 1;
+                return data[b].length - data[a].length;
             });
 
-            items.forEach(item => {
-                const markerIcon = L.divIcon({
-                    className: 'custom-color-pin',
-                    html: `<div style="background-color: ${catColor}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
-                    iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
+            sortedCategories.forEach(category => {
+                const catColor = categoryColors[category];
+                const items = data[category];
+                const clusterTextColor = (catColor === '#FFCC00') ? '#1D1B1C' : '#FFFFFF';
+
+                const clusterGroup = L.markerClusterGroup({
+                    chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, 
+                    iconCreateFunction: function(cluster) {
+                        const count = cluster.getChildCount();
+                        const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
+                        return L.divIcon({
+                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; width: ${size}px; height: ${size}px;">${count}</div>`,
+                            className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
+                        });
+                    }
                 });
 
-                const marker = L.marker([item.lat, item.lng], { icon: markerIcon });
-                
-                let analyticsButtonHtml = '';
-                if (category === "Meridian Parts") {
-                    let safeName = item.name.replace(/'/g, "\\'");
-                    let rev = item.gravity['Total LTM Revenue'];
-                    window[`hubData_${safeName.replace(/\s+/g, '')}`] = item.top_accounts;
-                    
-                    if(!autoTriggerHub) autoTriggerHub = { name: safeName, rev: rev, lat: item.lat, lng: item.lng };
-
-                    analyticsButtonHtml = `
-                        <button onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1D1B1C; color: #FFCC00; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
-                            Open Hub Analytics &raquo;
-                        </button>
-                    `;
-                }
-
-                let popupHtml = `
-                    <div class="popup-header" style="background-color: ${catColor}; color: ${catColor === '#FFCC00' ? '#1D1B1C' : '#FFFFFF'};">${category}</div>
-                    <div class="popup-body">
-                        <div class="popup-title">${item.name}</div>
-                        <div class="popup-address">${item.address}</div>
-                        ${analyticsButtonHtml}
+                // Sidebar Market Breakdown
+                let breakdownHtml = `
+                    <div class="flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all hover:bg-[#2A2829] cursor-default shadow-sm min-h-[35px]">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-3 h-3 rounded-full shrink-0" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor};"></div>
+                            <span class="text-[15px] font-semibold theme-text-main truncate tracking-wide" title="${category}">${category}</span>
+                        </div>
+                        <span class="font-mono font-bold text-[17px] text-gray-200 ml-2">${items.length}</span>
                     </div>
                 `;
-                marker.bindPopup(popupHtml);
-                clusterGroup.addLayer(marker);
+                breakdownContainer.insertAdjacentHTML('beforeend', breakdownHtml);
+
+                items.forEach(item => {
+                    const markerIcon = createColorIcon(catColor);
+                    const marker = L.marker([item.lat, item.lng], { icon: markerIcon });
+                    
+                    let analyticsButtonHtml = '';
+                    let gravityHtml = '';
+                    let topologyHtml = '';
+
+                    if (category === "Meridian Parts") {
+                        let safeName = item.name.replace(/'/g, "\\'");
+                        let rev = item.gravity['Total LTM Revenue'];
+                        window[`hubData_${safeName.replace(/\s+/g, '')}`] = item.top_accounts;
+                        
+                        // Save the Atlanta Hub specifically for the Autopilot Demo
+                        if(!autoTriggerHub && item.name.includes("Atlanta")) {
+                            autoTriggerHub = { name: safeName, rev: rev, lat: item.lat, lng: item.lng };
+                        }
+
+                        let revFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rev);
+                        gravityHtml = `
+                            <div style="margin-top: 12px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
+                                <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Revenue Gravity (LTM)</div>
+                                <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">${revFormatted}</div>
+                                <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                                    <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 3px 0;">0-5 Miles (Core)</td><td style="text-align: right; font-weight: 600; color: #27ae60;">${item.gravity['0-5 Miles']}</td></tr>
+                                    <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 3px 0;">5-15 Miles</td><td style="text-align: right; font-weight: 600;">${item.gravity['5-15 Miles']}</td></tr>
+                                    <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 3px 0;">15-30 Miles</td><td style="text-align: right; font-weight: 600;">${item.gravity['15-30 Miles']}</td></tr>
+                                    <tr><td style="padding: 3px 0;">30+ Miles</td><td style="text-align: right; font-weight: 600;">${item.gravity['30-50 Miles']}</td></tr>
+                                </table>
+                            </div>
+                        `;
+
+                        const tierNames = { 1: "Tier 1: Deep Rural Super-Hub", 2: "Tier 2: Regional Market Center", 4: "Tier 4: Urban Fringe / High Density" };
+                        let tierName = tierNames[item.topology.tier] || `Tier ${item.topology.tier}`;
+                        
+                        topologyHtml = `
+                            <div style="margin-bottom: 12px; padding: 10px; background: #1e293b; color: #f8fafc; border-radius: 6px; border-left: 4px solid #8b5cf6; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 4px;">ML Topology Profile</div>
+                                <div style="font-size: 13px; font-weight: 700; margin-bottom: 6px; color: #fff;">${tierName}</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+                                    <span style="color: #cbd5e1;">Confidence: <strong style="color: #fff;">${item.topology.confidence}</strong></span>
+                                    <span style="background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 9px; text-transform: uppercase;">${item.topology.status}</span>
+                                </div>
+                            </div>
+                        `;
+
+                        analyticsButtonHtml = `
+                            <button onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1D1B1C; color: #FFCC00; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
+                                Open Hub Analytics &raquo;
+                            </button>
+                        `;
+                    }
+
+                    let popupHtml = `
+                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${catColor === '#FFCC00' ? 'none' : '0 1px 3px rgba(0,0,0,0.5)'};">${category}</div>
+                        <div class="popup-body">
+                            ${topologyHtml}
+                            <div class="popup-title">${item.name}</div>
+                            <div class="popup-address">${item.address}</div>
+                            ${gravityHtml}
+                            ${analyticsButtonHtml}
+                        </div>
+                    `;
+                    marker.bindPopup(popupHtml);
+                    
+                    // Ghost Pin Logic
+                    marker.on('click', function() {
+                        tradeAreaRings.clearLayers();
+                        if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; }
+                        marker.closePopup();
+
+                        lockedPin = L.marker([item.lat, item.lng], { icon: markerIcon, zIndexOffset: 10000 }).addTo(map);
+                        lockedPin.bindPopup(popupHtml).openPopup();
+                        
+                        if (item.gravity && category === "Meridian Parts") {
+                            const metersPerMile = 1609.34;
+                            L.circle([item.lat, item.lng], {radius: 50 * metersPerMile, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 1}).addTo(tradeAreaRings);
+                            L.circle([item.lat, item.lng], {radius: 30 * metersPerMile, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 2}).addTo(tradeAreaRings);
+                            L.circle([item.lat, item.lng], {radius: 15 * metersPerMile, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 2}).addTo(tradeAreaRings);
+                            L.circle([item.lat, item.lng], {radius: 5 * metersPerMile, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 2}).addTo(tradeAreaRings);
+                        }
+
+                        lockedPin.on('popupclose', function() {
+                            tradeAreaRings.clearLayers();
+                            if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; }
+                        });
+                    });
+
+                    clusterGroup.addLayer(marker);
+                });
+
+                map.addLayer(clusterGroup);
+                categoryLayers[category] = clusterGroup;
+
+                const safeCat = category.replace(/'/g, "\\'"); 
+                const toggleHtml = `
+                    <label class="layer-toggle">
+                        <input type="checkbox" class="category-checkbox" data-category="${safeCat}" checked onchange="toggleCategory('${safeCat}', this.checked)">
+                        <div class="custom-checkbox"></div>
+                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor}; flex-shrink: 0;"></div>
+                        <span class="text-sm font-semibold theme-text-main truncate">${category} <span class="opacity-50 text-xs ml-1">(${items.length})</span></span>
+                    </label>
+                `;
+                toggleContainer.insertAdjacentHTML('beforeend', toggleHtml);
             });
-
-            map.addLayer(clusterGroup);
-            categoryLayers[category] = clusterGroup;
-
-            const safeCat = category.replace(/'/g, "\\'"); 
-            const toggleHtml = `
-                <label class="layer-toggle">
-                    <input type="checkbox" class="category-checkbox" data-category="${safeCat}" checked onchange="toggleCategory('${safeCat}', this.checked)">
-                    <div class="custom-checkbox"></div>
-                    <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor}; flex-shrink: 0;"></div>
-                    <span class="text-sm font-semibold theme-text-main">${category} <span class="opacity-50 text-xs ml-1">(${items.length})</span></span>
-                </label>
-            `;
-            toggleContainer.insertAdjacentHTML('beforeend', toggleHtml);
-        });
+        }
 
         window.toggleAllLayers = function() {
             const btn = document.getElementById('master-toggle');
@@ -588,7 +765,6 @@
             document.getElementById('analytics-margin').innerText = ((totalHubProfit / totalRev) * 100).toFixed(1) + '%';
             document.getElementById('analytics-margin-title').innerText = "True Gross Margin";
 
-            // Chart Render
             let hubPgRawRev = {};
             let totalHubRevCalculated = 0;
             activeHubAccounts.forEach(acc => {
@@ -606,14 +782,14 @@
             }
             renderDynamicDoughnutChart(hubPgMix);
 
-            // Render Accounts
             const accountsContainer = document.getElementById('top-accounts-list');
             accountsContainer.innerHTML = ''; 
             
             activeHubAccounts.forEach((acc, index) => {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(acc['Total LTM Profit']);
+                let safeName = acc['Customer Name'].replace(/'/g, "\\'");
                 let html = `
-                    <div onclick="openAccountDetails('${acc['Customer Name'].replace(/'/g, "\\'")}', ${index})" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#FFCC00] hover:shadow-md transition-all group">
+                    <div onclick="openAccountDetails('${safeName}', ${index})" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#FFCC00] hover:shadow-md transition-all group">
                         <div class="overflow-hidden pr-2">
                             <div class="text-[10px] text-gray-500 font-bold mb-0.5">#${index + 1} Earner</div>
                             <div class="text-sm font-semibold theme-text-main group-hover:text-[#FFCC00] transition-colors truncate">${acc['Customer Name']}</div>
@@ -712,12 +888,28 @@
         window.restoreHubView = function() { openAnalytics(activeHubName, activeHubRev); };
         window.closeAnalytics = function() { document.getElementById('analytics-panel').classList.remove('open'); };
 
+        function renderEmptyChart() {
+            const ctx = document.getElementById('pgChart').getContext('2d');
+            if (pgChartInstance) pgChartInstance.destroy();
+            pgChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: ['No POS Data Available'], datasets: [{ data: [100], backgroundColor: ['#333'] }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { tooltip: { enabled: false }, legend: { display: false } } }
+            });
+        }
+
         function renderDynamicDoughnutChart(pgDict) {
             const ctx = document.getElementById('pgChart').getContext('2d');
             if (pgChartInstance) pgChartInstance.destroy();
 
-            let labels = Object.keys(pgDict);
-            let data = Object.values(pgDict).map(v => v.toFixed(1));
+            let sortedPgs = Object.entries(pgDict).sort((a,b) => b[1] - a[1]);
+            let top5 = sortedPgs.slice(0, 5);
+            let otherSum = sortedPgs.slice(5).reduce((sum, val) => sum + val[1], 0);
+            
+            let labels = top5.map(val => val[0]);
+            let data = top5.map(val => val[1].toFixed(1));
+            if (otherSum > 0) { labels.push('Other'); data.push(otherSum.toFixed(1)); }
+
             const colors = ['#C81E27', '#FFCC00', '#3b82f6', '#10b981', '#8b5cf6', '#f97316', '#06b6d4'];
 
             pgChartInstance = new Chart(ctx, {
@@ -726,7 +918,7 @@
                 options: {
                     responsive: true, maintainAspectRatio: false, cutout: '65%',
                     plugins: {
-                        legend: { position: 'right', labels: { color: '#e2e8f0', font: { size: 10 } } },
+                        legend: { position: 'right', labels: { color: isDarkMode ? '#e2e8f0' : '#475569', font: { size: 10 } } },
                         tooltip: { callbacks: { label: function(context) { return ' ' + context.label + ': ' + context.raw + '%'; } } }
                     }
                 }
@@ -747,36 +939,47 @@
             const sleep = ms => new Promise(res => setTimeout(res, ms));
             const showText = (txt) => { demoText.innerText = txt; }
 
+            // Ensure drawer is closed to start
+            closeAnalytics();
+
             // Step 1: High Level Scan
             showText("Autopilot: Scanning Southeastern Territory for branch density...");
-            map.flyTo([33.74, -84.38], 6, {duration: 2});
+            map.flyTo([34.0, -84.0], 6, {duration: 2});
             await sleep(3000);
             if(!demoActive) return;
 
             // Step 2: Zoom into Atlanta
             showText("Autopilot: Identifying high-value Meridian Hub in Atlanta...");
-            map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 10, {duration: 2.5});
+            if(autoTriggerHub) {
+                map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 10, {duration: 2.5});
+            }
             await sleep(3500);
             if(!demoActive) return;
 
             // Step 3: Open Hub Analytics
             showText("Autopilot: Interfacing with POS data to extract LTM Revenue metrics...");
-            openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
+            if(autoTriggerHub) {
+                openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
+            }
             await sleep(4000);
             if(!demoActive) return;
 
             // Step 4: Drill into Top Account
             const firstAcc = activeHubAccounts[0];
-            showText(`Autopilot: Drilling into Top Earner (${firstAcc['Customer Name']})...`);
-            openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
+            if(firstAcc) {
+                showText(`Autopilot: Drilling into Top Earner (${firstAcc['Customer Name']})...`);
+                openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
+            }
             await sleep(4000);
             if(!demoActive) return;
 
             // Step 5: Drill into specific Product Range
-            const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
-            const firstRange = Object.keys(ranges)[0];
-            showText(`Autopilot: Isolating specific Part Velocity for [${firstRange}]...`);
-            drillDownToRange(firstRange.replace(/'/g, "\\'"));
+            if(firstAcc) {
+                const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
+                const firstRange = Object.keys(ranges)[0];
+                showText(`Autopilot: Isolating specific Part Velocity for [${firstRange}]...`);
+                drillDownToRange(firstRange.replace(/'/g, "\\'"));
+            }
             await sleep(4500);
             if(!demoActive) return;
 
@@ -796,12 +999,13 @@
             }
         });
 
-        // Auto-Trigger the demo 2 seconds after page load to guarantee they see it
+        // Initialize Map Data & Auto-Trigger
+        renderMap();
         setTimeout(() => {
             if(autoTriggerHub && !demoActive) {
                 runAutopilotDemo();
             }
-        }, 2000);
+        }, 1500);
 
     </script>
 </body>
