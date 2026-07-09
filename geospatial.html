@@ -240,18 +240,18 @@
         <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories (e.g., a "20-mile radius"). This creates a fatal strategic blind spot. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor. To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine to map actual competitor threats against our Hub & Spoke delivery network.</p>
 
         <!-- DEMO BUTTONS SECTION -->
-        <div class="pulse-instruction flex justify-between items-center flex-wrap gap-4">
-            <div>
+        <div class="pulse-instruction flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="flex-1">
                 👉 <strong>INTERACTIVE DEMO:</strong> The application below is fully functional. Click on any yellow "Meridian Hub" to slide out the Analytics Engine, then click into specific Accounts to explore the drill-down.
             </div>
-            <div class="flex gap-2">
+            <div class="flex flex-wrap gap-2 mt-2 md:mt-0 shrink-0">
                 <button id="demo-start-btn" onclick="startOrResumeDemo()" class="bg-[#1D1B1C] text-[#FFCC00] hover:bg-[#FFCC00] hover:text-[#1D1B1C] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-lg border border-[#FFCC00]">
                     ▶ Start Demo
                 </button>
-                <button id="demo-pause-btn" onclick="pauseDemo()" class="hidden bg-gray-800 text-white hover:bg-gray-700 transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600">
+                <button id="demo-pause-btn" onclick="pauseDemo()" disabled class="opacity-50 cursor-not-allowed bg-gray-800 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600">
                     ⏸ Pause
                 </button>
-                <button id="demo-restart-btn" onclick="restartDemo()" class="hidden bg-gray-800 text-white hover:bg-gray-700 transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600">
+                <button id="demo-restart-btn" onclick="restartDemo()" disabled class="opacity-50 cursor-not-allowed bg-gray-800 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600">
                     🔄 Restart
                 </button>
             </div>
@@ -959,20 +959,32 @@
             const pauseBtn = document.getElementById('demo-pause-btn');
             const restartBtn = document.getElementById('demo-restart-btn');
             
+            // Base styles
+            const startBase = "bg-[#1D1B1C] text-[#FFCC00] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-lg border border-[#FFCC00]";
+            const secondaryBase = "bg-gray-800 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600";
+            
+            startBtn.disabled = false;
+            pauseBtn.disabled = false;
+            restartBtn.disabled = false;
+
             if (demoState === 'idle') {
-                startBtn.classList.remove('hidden');
                 startBtn.innerHTML = '▶ Start Demo';
-                pauseBtn.classList.add('hidden');
-                restartBtn.classList.add('hidden');
+                startBtn.className = startBase + " hover:bg-[#FFCC00] hover:text-[#1D1B1C]";
+                pauseBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
+                restartBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
+                pauseBtn.disabled = true;
+                restartBtn.disabled = true;
             } else if (demoState === 'running') {
-                startBtn.classList.add('hidden');
-                pauseBtn.classList.remove('hidden');
-                restartBtn.classList.remove('hidden');
+                startBtn.className = startBase + " opacity-50 cursor-not-allowed";
+                startBtn.disabled = true;
+                pauseBtn.className = secondaryBase + " hover:bg-gray-700";
+                restartBtn.className = secondaryBase + " hover:bg-gray-700";
             } else if (demoState === 'paused') {
-                startBtn.classList.remove('hidden');
                 startBtn.innerHTML = '▶ Resume Demo';
-                pauseBtn.classList.add('hidden');
-                restartBtn.classList.remove('hidden');
+                startBtn.className = startBase + " hover:bg-[#FFCC00] hover:text-[#1D1B1C]";
+                pauseBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
+                pauseBtn.disabled = true;
+                restartBtn.className = secondaryBase + " hover:bg-gray-700";
             }
         }
 
