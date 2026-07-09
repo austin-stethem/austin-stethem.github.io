@@ -142,6 +142,10 @@
         body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--rich-black); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
 
+        /* Sidebar Hover Fixes */
+        .breakdown-row:hover { background-color: #2A2829; }
+        body.light-mode .breakdown-row:hover { background-color: #f1f5f9; }
+
         /* Scrollbars & Drawer */
         .sidebar-scroll::-webkit-scrollbar { display: none; }
         .sidebar-scroll { -ms-overflow-style: none; scrollbar-width: none; }
@@ -239,9 +243,17 @@
             <div>
                 👉 <strong>INTERACTIVE DEMO:</strong> The application below is fully functional. Click on any yellow "Meridian Hub" to slide out the Analytics Engine, then click into specific Accounts to explore the drill-down.
             </div>
-            <button onclick="runAutopilotDemo()" class="bg-[#1D1B1C] text-[#FFCC00] hover:bg-[#FFCC00] hover:text-[#1D1B1C] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-lg border border-[#FFCC00]">
-                ▶ Watch Autopilot Demo
-            </button>
+            <div class="flex gap-2">
+                <button id="demo-start-btn" onclick="startOrResumeDemo()" class="bg-[#1D1B1C] text-[#FFCC00] hover:bg-[#FFCC00] hover:text-[#1D1B1C] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-lg border border-[#FFCC00]">
+                    ▶ Start Demo
+                </button>
+                <button id="demo-pause-btn" onclick="pauseDemo()" class="hidden bg-gray-800 text-white hover:bg-gray-700 transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600">
+                    ⏸ Pause
+                </button>
+                <button id="demo-restart-btn" onclick="restartDemo()" class="hidden bg-gray-800 text-white hover:bg-gray-700 transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600">
+                    🔄 Restart
+                </button>
+            </div>
         </div>
     </div> 
 
@@ -408,7 +420,7 @@
         // --- 1. REALISTIC FAKE DATA GENERATOR ---
         function generateDeepFakeData() {
             const data = {
-                "Meridian Parts": [], "Vanguard Auto": [], "Titan Parts": [], "Omega Automotive": []
+                "Meridian Parts": [], "Vanguard Auto": [], "Titan Parts": [], "Omega Automotive": [], "Apex Distribution": [], "Nova Parts": []
             };
             const comps = Object.keys(data).filter(k => k !== "Meridian Parts");
 
@@ -437,8 +449,10 @@
             const accountPrefixes = ["Commercial Fleet", "Metro Diesel", "City Transit", "Agri-Repair", "Heavy Duty Services", "Express Auto", "Advanced Diagnostics", "Premier Alignment"];
 
             cityAnchors.forEach((city) => {
-                // Generate Meridian Hub with Deep Fake Analytics Data
-                if(city.hasHub) {
+                // Generate Meridian Hubs (Exactly 95 Distributed Hubs)
+                let hubCount = city.hasHub ? (city.type === "urban" ? 18 : city.type === "mid" ? 9 : 5) : 0;
+                
+                for(let h=1; h<=hubCount; h++) {
                     let totalHubRev = Math.floor(Math.random() * 3000000) + 1000000;
                     let accounts = [];
                     
@@ -483,10 +497,14 @@
                         });
                     }
 
+                    // Spread the hubs out realistically across the region
+                    let hLat = city.lat + (Math.random() - 0.5) * 1.5; 
+                    let hLng = city.lng + (Math.random() - 0.5) * 1.5;
+
                     data["Meridian Parts"].push({
-                        name: `Meridian Hub - ${city.name.split(',')[0]}`,
-                        lat: city.lat + (Math.random() - 0.5) * 0.02, 
-                        lng: city.lng + (Math.random() - 0.5) * 0.02,
+                        name: `Meridian Hub - ${city.name.split(',')[0]} #${h}`,
+                        lat: hLat, 
+                        lng: hLng,
                         address: `123 Industrial Pkwy, ${city.name}`,
                         gravity: { 'Total LTM Revenue': totalHubRev, '0-5 Miles': '45.2%', '5-15 Miles': '22.1%', '15-30 Miles': '15.4%', '30-50 Miles': '12.3%', '50-100 Miles': '5.0%', '100+ Miles': '0.0%' },
                         topology: { tier: city.type === "urban" ? 4 : city.type === "mid" ? 2 : 1, confidence: "94.2%", status: "Locked" },
@@ -495,7 +513,7 @@
                 }
 
                 // Generate Competitors (Massive increase in density & spread)
-                let compCount = city.type === "urban" ? 65 : city.type === "mid" ? 30 : 12;
+                let compCount = city.type === "urban" ? 85 : city.type === "mid" ? 40 : 15;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
@@ -578,7 +596,7 @@
         });
 
         const categoryColors = {
-            "Meridian Parts": '#FFCC00', "Vanguard Auto": '#CC0000', "Titan Parts": '#F26522', "Omega Automotive": '#8b5cf6'
+            "Meridian Parts": '#FFCC00', "Vanguard Auto": '#CC0000', "Titan Parts": '#F26522', "Omega Automotive": '#8b5cf6', "Apex Distribution": '#0ea5e9', "Nova Parts": '#ec4899'
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
@@ -617,12 +635,12 @@
 
                 // Sidebar Market Breakdown
                 let breakdownHtml = `
-                    <div class="flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all hover:bg-[#2A2829] cursor-default shadow-sm min-h-[35px]">
+                    <div class="breakdown-row flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all cursor-default shadow-sm min-h-[35px]">
                         <div class="flex items-center gap-3 overflow-hidden">
                             <div class="w-3 h-3 rounded-full shrink-0" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor};"></div>
                             <span class="text-[15px] font-semibold theme-text-main truncate tracking-wide" title="${category}">${category}</span>
                         </div>
-                        <span class="font-mono font-bold text-[17px] text-gray-200 ml-2">${items.length}</span>
+                        <span class="font-mono font-bold text-[17px] theme-text-main ml-2">${items.length}</span>
                     </div>
                 `;
                 breakdownContainer.insertAdjacentHTML('beforeend', breakdownHtml);
@@ -932,115 +950,194 @@
         }
 
         // --- AUTOPILOT DEMO SEQUENCE ---
-        let demoActive = false;
+        let demoState = 'idle'; // idle, running, paused
+        let abortDemo = false;
+
+        function updateDemoButtons() {
+            const startBtn = document.getElementById('demo-start-btn');
+            const pauseBtn = document.getElementById('demo-pause-btn');
+            const restartBtn = document.getElementById('demo-restart-btn');
+            
+            if (demoState === 'idle') {
+                startBtn.classList.remove('hidden');
+                startBtn.innerHTML = '▶ Start Demo';
+                pauseBtn.classList.add('hidden');
+                restartBtn.classList.add('hidden');
+            } else if (demoState === 'running') {
+                startBtn.classList.add('hidden');
+                pauseBtn.classList.remove('hidden');
+                restartBtn.classList.remove('hidden');
+            } else if (demoState === 'paused') {
+                startBtn.classList.remove('hidden');
+                startBtn.innerHTML = '▶ Resume Demo';
+                pauseBtn.classList.add('hidden');
+                restartBtn.classList.remove('hidden');
+            }
+        }
+
+        async function pausableSleep(ms) {
+            let elapsed = 0;
+            const tick = 100;
+            while (elapsed < ms) {
+                if (abortDemo) throw new Error("ABORT");
+                if (demoState === 'paused') {
+                    await new Promise(r => setTimeout(r, tick));
+                    continue; // Don't advance the elapsed timer while paused
+                }
+                await new Promise(r => setTimeout(r, tick));
+                elapsed += tick;
+            }
+        }
+
+        window.startOrResumeDemo = function() {
+            if (demoState === 'paused') {
+                demoState = 'running';
+                updateDemoButtons();
+            } else if (demoState === 'idle') {
+                runAutopilotDemo();
+            }
+        };
+
+        window.pauseDemo = function() {
+            if (demoState === 'running') {
+                demoState = 'paused';
+                updateDemoButtons();
+            }
+        };
+
+        window.restartDemo = function() {
+            abortDemo = true;
+            demoState = 'idle';
+            updateDemoButtons();
+            document.getElementById('demo-subtitle').classList.add('hidden');
+            
+            // Give the abort exception a moment to throw and clean up, then restart
+            setTimeout(() => {
+                abortDemo = false;
+                
+                // Reset map position and UI state
+                closeAnalytics();
+                if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); }
+                map.closePopup();
+                map.setView([35.0, -85.5], 6);
+                
+                // Ensure UI toggles are reset
+                if (!isDarkMode) { document.getElementById('themeToggle').click(); }
+                if (currentMapStyle !== 'tactical') { 
+                    document.querySelector('input[value="tactical"]').checked = true;
+                    window.changeBasemap('tactical');
+                }
+                document.getElementById('filter-dropdown').classList.add('hidden');
+
+                // Launch again
+                runAutopilotDemo();
+            }, 300);
+        };
         
         async function runAutopilotDemo() {
-            if (demoActive) return; // Prevent multiple clicks
-            demoActive = true;
+            demoState = 'running';
+            abortDemo = false;
+            updateDemoButtons();
             
             const subtitle = document.getElementById('demo-subtitle');
             const demoText = document.getElementById('demo-text');
             subtitle.classList.remove('hidden');
 
-            const sleep = ms => new Promise(res => setTimeout(res, ms));
             const showText = (txt) => { demoText.innerText = txt; }
 
-            // Ensure drawer is closed to start
-            closeAnalytics();
+            try {
+                // Ensure drawer is closed to start
+                closeAnalytics();
 
-            // Step 1: High Level Scan
-            showText("Autopilot: Scanning Southeastern Territory for branch density...");
-            map.flyTo([34.0, -82.0], 6, {duration: 2});
-            await sleep(6000);
-            if(!demoActive) return;
+                // Step 1: High Level Scan
+                showText("Autopilot: Scanning Southeastern Territory for branch density...");
+                map.flyTo([34.0, -82.0], 6, {duration: 2});
+                await pausableSleep(6000);
 
-            // Step 1.5: UI Features
-            showText("Autopilot: Testing Environment & Map Filter UI...");
-            document.getElementById('filter-dropdown').classList.remove('hidden');
-            await sleep(3000);
-            if(!demoActive) return;
+                // Step 1.5: UI Features
+                showText("Autopilot: Testing Environment & Map Filter UI...");
+                document.getElementById('filter-dropdown').classList.remove('hidden');
+                await pausableSleep(3000);
 
-            showText("Autopilot: Engaging Light Mode Protocol...");
-            document.getElementById('themeToggle').click();
-            await sleep(3000);
-            if(!demoActive) return;
+                showText("Autopilot: Engaging Light Mode Protocol...");
+                document.getElementById('themeToggle').click();
+                await pausableSleep(3000);
 
-            showText("Autopilot: Reverting to Dark Mode...");
-            document.getElementById('themeToggle').click();
-            await sleep(3000);
-            if(!demoActive) return;
+                showText("Autopilot: Reverting to Dark Mode...");
+                document.getElementById('themeToggle').click();
+                await pausableSleep(3000);
 
-            showText("Autopilot: Switching to High-Resolution Satellite Imagery...");
-            document.querySelector('input[value="satellite"]').checked = true;
-            window.changeBasemap('satellite');
-            await sleep(4000);
-            if(!demoActive) return;
+                showText("Autopilot: Switching to High-Resolution Satellite Imagery...");
+                document.querySelector('input[value="satellite"]').checked = true;
+                window.changeBasemap('satellite');
+                await pausableSleep(4000);
 
-            showText("Autopilot: Reverting to Tactical Basemap...");
-            document.querySelector('input[value="tactical"]').checked = true;
-            window.changeBasemap('tactical');
-            document.getElementById('filter-dropdown').classList.add('hidden');
-            await sleep(3000);
-            if(!demoActive) return;
+                showText("Autopilot: Reverting to Tactical Basemap...");
+                document.querySelector('input[value="tactical"]').checked = true;
+                window.changeBasemap('tactical');
+                document.getElementById('filter-dropdown').classList.add('hidden');
+                await pausableSleep(3000);
 
-            // Step 2: Zoom into Atlanta
-            showText("Autopilot: Identifying high-value Meridian Hub in Atlanta...");
-            if(autoTriggerHub) {
-                map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 10, {duration: 2.5});
+                // Step 2: Zoom into Atlanta
+                showText("Autopilot: Identifying high-value Meridian Hub in Atlanta...");
+                if(autoTriggerHub) {
+                    map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 10, {duration: 2.5});
+                }
+                await pausableSleep(7000);
+
+                // Step 3: Open Hub Analytics
+                showText("Autopilot: Interfacing with POS data to extract LTM Revenue metrics...");
+                if(autoTriggerHub) {
+                    openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
+                }
+                await pausableSleep(8000);
+
+                // Step 4: Drill into Top Account
+                const firstAcc = activeHubAccounts[0];
+                if(firstAcc) {
+                    showText(`Autopilot: Drilling into Top Earner (${firstAcc['Customer Name']})...`);
+                    openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
+                }
+                await pausableSleep(8000);
+
+                // Step 5: Drill into specific Product Range
+                if(firstAcc) {
+                    const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
+                    const firstRange = Object.keys(ranges)[0];
+                    showText(`Autopilot: Isolating specific Part Velocity for [${firstRange}]...`);
+                    drillDownToRange(firstRange.replace(/'/g, "\\'"));
+                }
+                await pausableSleep(8000);
+
+                // Step 6: Conclude
+                showText("Autopilot: Sequence complete. Handing control back to user.");
+                await pausableSleep(3500);
+                
+                subtitle.classList.add('hidden');
+                demoState = 'idle';
+                updateDemoButtons();
+
+            } catch (e) {
+                if (e.message === "ABORT") {
+                    console.log("Autopilot manually aborted/restarted.");
+                } else {
+                    console.error("Autopilot error:", e);
+                }
             }
-            await sleep(7000);
-            if(!demoActive) return;
-
-            // Step 3: Open Hub Analytics
-            showText("Autopilot: Interfacing with POS data to extract LTM Revenue metrics...");
-            if(autoTriggerHub) {
-                openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
-            }
-            await sleep(8000);
-            if(!demoActive) return;
-
-            // Step 4: Drill into Top Account
-            const firstAcc = activeHubAccounts[0];
-            if(firstAcc) {
-                showText(`Autopilot: Drilling into Top Earner (${firstAcc['Customer Name']})...`);
-                openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
-            }
-            await sleep(8000);
-            if(!demoActive) return;
-
-            // Step 5: Drill into specific Product Range
-            if(firstAcc) {
-                const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
-                const firstRange = Object.keys(ranges)[0];
-                showText(`Autopilot: Isolating specific Part Velocity for [${firstRange}]...`);
-                drillDownToRange(firstRange.replace(/'/g, "\\'"));
-            }
-            await sleep(8000);
-            if(!demoActive) return;
-
-            // Step 6: Conclude
-            showText("Autopilot: Sequence complete. Handing control back to user.");
-            await sleep(3500);
-            
-            subtitle.classList.add('hidden');
-            demoActive = false;
         }
 
-        // Interrupt demo if user clicks the map
+        // Interrupt demo if user clicks the map manually
         map.on('mousedown', () => {
-            if (demoActive) {
-                demoActive = false;
+            if (demoState !== 'idle') {
+                abortDemo = true;
+                demoState = 'idle';
+                updateDemoButtons();
                 document.getElementById('demo-subtitle').classList.add('hidden');
             }
         });
 
-        // Initialize Map Data & Auto-Trigger
+        // Initialize Map Data
         renderMap();
-        setTimeout(() => {
-            if(autoTriggerHub && !demoActive) {
-                runAutopilotDemo();
-            }
-        }, 1500);
 
     </script>
 </body>
