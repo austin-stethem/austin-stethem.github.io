@@ -623,7 +623,7 @@
                 const clusterTextColor = (catColor === '#FFCC00') ? '#1D1B1C' : '#FFFFFF';
 
                 const clusterGroup = L.markerClusterGroup({
-                    chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, 
+                    chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
                     iconCreateFunction: function(cluster) {
                         const count = cluster.getChildCount();
                         const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
@@ -1094,8 +1094,8 @@
                 // Step 2: Zoom into Atlanta
                 showText("Autopilot: Identifying high-value Meridian Hub in Atlanta...");
                 if(autoTriggerHub) {
-                    // Zoom level 13 to force the clusters to "burst" open visually
-                    map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 13, {duration: 3.5});
+                    // Zoom level 11 shows the rings & competitors perfectly, and the cluster override prevents it from merging back
+                    map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 11, {duration: 3.5});
                 }
                 await pausableSleep(5000);
 
