@@ -519,10 +519,10 @@
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
                         name: `${cat} - Sector ${i+1}`,
-                        // Widened the coordinate spread (0.6) to cover the entire regional map
-                        lat: city.lat + (Math.random() - 0.5) * 0.6,
-                        lng: city.lng + (Math.random() - 0.5) * 0.6,
-                        address: `Commercial Dr, ${city.name}`
+                        // INCREASING SPREAD TO 2.5 FOR A MASSIVE RURAL "SHOTGUN" SPREAD
+                        lat: city.lat + (Math.random() - 0.5) * 2.5,
+                        lng: city.lng + (Math.random() - 0.5) * 2.5,
+                        address: `Commercial Dr, ${city.name.split(',')[1].trim()}`
                     });
                 }
             });
@@ -659,9 +659,9 @@
                         let rev = item.gravity['Total LTM Revenue'];
                         window[`hubData_${safeName.replace(/\s+/g, '')}`] = item.top_accounts;
                         
-                        // Save the Atlanta Hub specifically for the Autopilot Demo
+                        // Save the Atlanta Hub specifically for the Autopilot Demo (INCLUDING THE MARKER)
                         if(!autoTriggerHub && item.name.includes("Atlanta")) {
-                            autoTriggerHub = { name: safeName, rev: rev, lat: item.lat, lng: item.lng };
+                            autoTriggerHub = { name: safeName, rev: rev, lat: item.lat, lng: item.lng, marker: marker };
                         }
 
                         let revFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rev);
@@ -1094,9 +1094,18 @@
                 // Step 2: Zoom into Atlanta
                 showText("Autopilot: Identifying high-value Meridian Hub in Atlanta...");
                 if(autoTriggerHub) {
-                    map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 10, {duration: 2.5});
+                    // Zoom level 13 to force the clusters to "burst" open visually
+                    map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 13, {duration: 3.5});
                 }
-                await pausableSleep(7000);
+                await pausableSleep(5000);
+
+                // Step 2.5: Click the pin to show the Trade Area Rings
+                showText("Autopilot: Calculating trade area friction rings...");
+                if(autoTriggerHub && autoTriggerHub.marker) {
+                    // Simulate a physical click on the pin
+                    autoTriggerHub.marker.fire('click');
+                }
+                await pausableSleep(5000);
 
                 // Step 3: Open Hub Analytics
                 showText("Autopilot: Interfacing with POS data to extract LTM Revenue metrics...");
