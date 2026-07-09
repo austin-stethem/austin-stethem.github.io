@@ -68,22 +68,20 @@
         .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
-        /* --- DASHBOARD FULL BLEED WRAPPER --- */
-        .dashboard-full-bleed {
-            width: 100vw;
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
+        /* --- DASHBOARD WRAPPER --- */
+        .dashboard-container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 40px auto;
             height: 85vh; 
             min-height: 750px;
             background: #1D1B1C;
             display: flex;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2) inset;
-            border-top: 1px solid #333;
-            border-bottom: 1px solid #333;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border: 1px solid #333;
+            border-radius: 12px;
             overflow: hidden;
+            position: relative;
         }
 
         #map { height: 100%; width: 100%; z-index: 1; }
@@ -195,7 +193,7 @@
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
-            .dashboard-full-bleed { flex-direction: column; height: 1000px; }
+            .dashboard-container { flex-direction: column; height: 1000px; width: 100%; border-radius: 0; margin: 20px 0; }
             #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
             #map { height: 650px; }
             #analytics-panel { width: 100% !important; z-index: 3000; }
@@ -247,8 +245,8 @@
         </div>
     </div> 
 
-    <!-- LIVE DASHBOARD (FULL BLEED WIDTH) -->
-    <div class="dashboard-full-bleed" id="app-dashboard">
+    <!-- LIVE DASHBOARD -->
+    <div class="dashboard-container" id="app-dashboard">
         
         <!-- Autopilot Subtitle -->
         <div id="demo-subtitle" class="hidden">
@@ -426,11 +424,17 @@
             const cityAnchors = [
                 { name: "Atlanta, GA", lat: 33.7490, lng: -84.3880, type: "urban", hasHub: true },
                 { name: "Nashville, TN", lat: 36.1627, lng: -86.7816, type: "urban", hasHub: true },
+                { name: "Charlotte, NC", lat: 35.2271, lng: -80.8431, type: "urban", hasHub: true },
+                { name: "Birmingham, AL", lat: 33.5186, lng: -86.8104, type: "mid", hasHub: true },
                 { name: "Greenville, SC", lat: 34.8526, lng: -82.3940, type: "mid", hasHub: true },
+                { name: "Knoxville, TN", lat: 35.9606, lng: -83.9207, type: "mid", hasHub: true },
                 { name: "Macon, GA", lat: 32.8407, lng: -83.6324, type: "mid", hasHub: true },
                 { name: "Cookeville, TN", lat: 36.1628, lng: -85.5016, type: "rural", hasHub: true },
-                { name: "Chattanooga, TN", lat: 36.0446, lng: -85.3097, type: "mid", hasHub: false }
+                { name: "Chattanooga, TN", lat: 36.0446, lng: -85.3097, type: "mid", hasHub: false },
+                { name: "Augusta, GA", lat: 33.4735, lng: -81.9748, type: "mid", hasHub: false }
             ];
+
+            const accountPrefixes = ["Commercial Fleet", "Metro Diesel", "City Transit", "Agri-Repair", "Heavy Duty Services", "Express Auto", "Advanced Diagnostics", "Premier Alignment"];
 
             cityAnchors.forEach((city) => {
                 // Generate Meridian Hub with Deep Fake Analytics Data
@@ -438,9 +442,9 @@
                     let totalHubRev = Math.floor(Math.random() * 3000000) + 1000000;
                     let accounts = [];
                     
-                    // Generate 5 Fake B2B Accounts per Hub
-                    for(let j=1; j<=5; j++) {
-                        let accRev = Math.floor(totalHubRev * (Math.random() * 0.15 + 0.05)); // 5-20% of hub rev
+                    // Generate 8 Fake B2B Accounts per Hub
+                    for(let j=1; j<=8; j++) {
+                        let accRev = Math.floor(totalHubRev * (Math.random() * 0.15 + 0.02)); // 2-15% of hub rev
                         let accProfit = accRev * (Math.random() * 0.15 + 0.25); // 25-40% margin
                         
                         // Fake PG Mix
@@ -469,7 +473,7 @@
                         });
 
                         accounts.push({
-                            'Customer Name': `Commercial Fleet Services 00${j}`,
+                            'Customer Name': `${accountPrefixes[j-1]} 00${j}`,
                             'Total LTM Revenue': accRev,
                             'Total LTM Profit': accProfit,
                             'True Margin Pct': ((accProfit / accRev) * 100).toFixed(1),
@@ -490,14 +494,15 @@
                     });
                 }
 
-                // Generate Competitors (More in urban, fewer in rural)
-                let compCount = city.type === "urban" ? 15 : city.type === "mid" ? 8 : 3;
+                // Generate Competitors (Massive increase in density & spread)
+                let compCount = city.type === "urban" ? 65 : city.type === "mid" ? 30 : 12;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
                         name: `${cat} - Sector ${i+1}`,
-                        lat: city.lat + (Math.random() - 0.5) * 0.2,
-                        lng: city.lng + (Math.random() - 0.5) * 0.2,
+                        // Widened the coordinate spread (0.6) to cover the entire regional map
+                        lat: city.lat + (Math.random() - 0.5) * 0.6,
+                        lng: city.lng + (Math.random() - 0.5) * 0.6,
                         address: `Commercial Dr, ${city.name}`
                     });
                 }
@@ -516,7 +521,8 @@
         let autoTriggerHub = null;
 
         // --- 3. MAP INITIALIZATION ---
-        const map = L.map('map', { zoomControl: false }).setView([35.0, -85.5], 6); 
+        // Added scrollWheelZoom: false to prevent scroll-trapping the user on the portfolio page
+        const map = L.map('map', { zoomControl: false, scrollWheelZoom: false }).setView([35.0, -85.5], 6); 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
         const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -791,11 +797,11 @@
                 let html = `
                     <div onclick="openAccountDetails('${safeName}', ${index})" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#FFCC00] hover:shadow-md transition-all group">
                         <div class="overflow-hidden pr-2">
-                            <div class="text-[10px] text-gray-500 font-bold mb-0.5">#${index + 1} Earner</div>
-                            <div class="text-sm font-semibold theme-text-main group-hover:text-[#FFCC00] transition-colors truncate">${acc['Customer Name']}</div>
+                            <div class="text-[10px] text-gray-500 font-bold mb-0.5 tracking-wider uppercase">#${index + 1} Earner</div>
+                            <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#FFCC00] transition-colors truncate" style="font-family: 'Inter', sans-serif; letter-spacing: -0.3px;">${acc['Customer Name']}</div>
                         </div>
                         <div class="text-right shrink-0">
-                            <div class="font-mono text-sm text-blue-400 font-bold">${profitStr}</div>
+                            <div class="font-mono text-[15px] text-blue-400 font-bold">${profitStr}</div>
                             <div class="text-[10px] text-gray-500 font-bold">${acc['True Margin Pct']}% Margin</div>
                         </div>
                     </div>
@@ -944,7 +950,36 @@
 
             // Step 1: High Level Scan
             showText("Autopilot: Scanning Southeastern Territory for branch density...");
-            map.flyTo([34.0, -84.0], 6, {duration: 2});
+            map.flyTo([34.0, -82.0], 6, {duration: 2});
+            await sleep(6000);
+            if(!demoActive) return;
+
+            // Step 1.5: UI Features
+            showText("Autopilot: Testing Environment & Map Filter UI...");
+            document.getElementById('filter-dropdown').classList.remove('hidden');
+            await sleep(3000);
+            if(!demoActive) return;
+
+            showText("Autopilot: Engaging Light Mode Protocol...");
+            document.getElementById('themeToggle').click();
+            await sleep(3000);
+            if(!demoActive) return;
+
+            showText("Autopilot: Reverting to Dark Mode...");
+            document.getElementById('themeToggle').click();
+            await sleep(3000);
+            if(!demoActive) return;
+
+            showText("Autopilot: Switching to High-Resolution Satellite Imagery...");
+            document.querySelector('input[value="satellite"]').checked = true;
+            window.changeBasemap('satellite');
+            await sleep(4000);
+            if(!demoActive) return;
+
+            showText("Autopilot: Reverting to Tactical Basemap...");
+            document.querySelector('input[value="tactical"]').checked = true;
+            window.changeBasemap('tactical');
+            document.getElementById('filter-dropdown').classList.add('hidden');
             await sleep(3000);
             if(!demoActive) return;
 
@@ -953,7 +988,7 @@
             if(autoTriggerHub) {
                 map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 10, {duration: 2.5});
             }
-            await sleep(3500);
+            await sleep(7000);
             if(!demoActive) return;
 
             // Step 3: Open Hub Analytics
@@ -961,7 +996,7 @@
             if(autoTriggerHub) {
                 openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
             }
-            await sleep(4000);
+            await sleep(8000);
             if(!demoActive) return;
 
             // Step 4: Drill into Top Account
@@ -970,7 +1005,7 @@
                 showText(`Autopilot: Drilling into Top Earner (${firstAcc['Customer Name']})...`);
                 openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
             }
-            await sleep(4000);
+            await sleep(8000);
             if(!demoActive) return;
 
             // Step 5: Drill into specific Product Range
@@ -980,12 +1015,12 @@
                 showText(`Autopilot: Isolating specific Part Velocity for [${firstRange}]...`);
                 drillDownToRange(firstRange.replace(/'/g, "\\'"));
             }
-            await sleep(4500);
+            await sleep(8000);
             if(!demoActive) return;
 
             // Step 6: Conclude
             showText("Autopilot: Sequence complete. Handing control back to user.");
-            await sleep(2000);
+            await sleep(3500);
             
             subtitle.classList.add('hidden');
             demoActive = false;
