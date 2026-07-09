@@ -153,6 +153,26 @@
             color: #854d0e;
         }
 
+        /* AUTOPILOT SUBTITLE OVERLAY */
+        #demo-subtitle {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid #3b82f6;
+            color: #f8fafc;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            font-weight: bold;
+            z-index: 4000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 15px rgba(59, 130, 246, 0.3);
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
         @keyframes pulse-border {
             0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(255, 204, 0, 0); }
@@ -204,14 +224,24 @@
         <h2>1. The Problem: Territorial Blind Spots</h2>
         <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories (e.g., a "20-mile radius"). This creates a fatal strategic blind spot. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor. To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine to map actual competitor threats against our Hub & Spoke delivery network.</p>
 
-        <div class="pulse-instruction">
-            👉 INTERACTIVE DEMO: The application below is fully functional. Click on any yellow "Meridian Hub" to slide out the Analytics Engine, then click into specific Accounts and Product Ranges to explore the multi-level data drill-down.
+        <div class="pulse-instruction flex justify-between items-center flex-wrap gap-4">
+            <div>
+                👉 <strong>INTERACTIVE DEMO:</strong> The application below is fully functional. Click on any yellow "Meridian Hub" to slide out the Analytics Engine, then click into specific Accounts to explore the drill-down.
+            </div>
+            <button onclick="runAutopilotDemo()" class="bg-[#1D1B1C] text-[#FFCC00] hover:bg-[#FFCC00] hover:text-[#1D1B1C] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-lg border border-[#FFCC00]">
+                ▶ Watch Autopilot Demo
+            </button>
         </div>
     </div> <!-- End Constrained Content -->
 
     <!-- LIVE DASHBOARD (FULL BLEED WIDTH) -->
     <div class="dashboard-full-bleed" id="app-dashboard">
         
+        <!-- Autopilot Subtitle -->
+        <div id="demo-subtitle" class="hidden">
+            <span class="animate-pulse mr-2 text-red-500">🔴</span> <span id="demo-text">Initializing Autopilot...</span>
+        </div>
+
         <!-- Left Sidebar: Command Center -->
         <div id="sidebar" class="w-[380px] shrink-0 h-full flex flex-col z-10 theme-bg-main theme-border border-r relative shadow-2xl">
             <!-- Branding -->
@@ -703,13 +733,75 @@
             });
         }
 
-        // Recruiter Auto-Demo Trigger
-        setTimeout(() => {
-            if(autoTriggerHub) {
-                map.setView([autoTriggerHub.lat, autoTriggerHub.lng], 9);
-                openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
+        // --- AUTOPILOT DEMO SEQUENCE ---
+        let demoActive = false;
+        
+        async function runAutopilotDemo() {
+            if (demoActive) return; // Prevent multiple clicks
+            demoActive = true;
+            
+            const subtitle = document.getElementById('demo-subtitle');
+            const demoText = document.getElementById('demo-text');
+            subtitle.classList.remove('hidden');
+
+            const sleep = ms => new Promise(res => setTimeout(res, ms));
+            const showText = (txt) => { demoText.innerText = txt; }
+
+            // Step 1: High Level Scan
+            showText("Autopilot: Scanning Southeastern Territory for branch density...");
+            map.flyTo([33.74, -84.38], 6, {duration: 2});
+            await sleep(3000);
+            if(!demoActive) return;
+
+            // Step 2: Zoom into Atlanta
+            showText("Autopilot: Identifying high-value Meridian Hub in Atlanta...");
+            map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 10, {duration: 2.5});
+            await sleep(3500);
+            if(!demoActive) return;
+
+            // Step 3: Open Hub Analytics
+            showText("Autopilot: Interfacing with POS data to extract LTM Revenue metrics...");
+            openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
+            await sleep(4000);
+            if(!demoActive) return;
+
+            // Step 4: Drill into Top Account
+            const firstAcc = activeHubAccounts[0];
+            showText(`Autopilot: Drilling into Top Earner (${firstAcc['Customer Name']})...`);
+            openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
+            await sleep(4000);
+            if(!demoActive) return;
+
+            // Step 5: Drill into specific Product Range
+            const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
+            const firstRange = Object.keys(ranges)[0];
+            showText(`Autopilot: Isolating specific Part Velocity for [${firstRange}]...`);
+            drillDownToRange(firstRange.replace(/'/g, "\\'"));
+            await sleep(4500);
+            if(!demoActive) return;
+
+            // Step 6: Conclude
+            showText("Autopilot: Sequence complete. Handing control back to user.");
+            await sleep(2000);
+            
+            subtitle.classList.add('hidden');
+            demoActive = false;
+        }
+
+        // Interrupt demo if user clicks the map
+        map.on('mousedown', () => {
+            if (demoActive) {
+                demoActive = false;
+                document.getElementById('demo-subtitle').classList.add('hidden');
             }
-        }, 1500);
+        });
+
+        // Auto-Trigger the demo 2 seconds after page load to guarantee they see it
+        setTimeout(() => {
+            if(autoTriggerHub && !demoActive) {
+                runAutopilotDemo();
+            }
+        }, 2000);
 
     </script>
 </body>
