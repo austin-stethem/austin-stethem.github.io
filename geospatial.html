@@ -26,15 +26,11 @@
     <style>
         /* Base Brand Colors and Typography */
         :root {
-            --arnold-yellow: #FFCC00;
-            --arnold-red: #C81E27;
-            --rich-black: #1D1B1C;
-            --pure-white: #FFFFFF;
-            
             /* Portfolio Text Colors */
             --dark-slate-blue: #1a2433;
             --alert-red: #b32525;
             --bg-color: #fbfbfb;
+            --pure-white: #FFFFFF;
         }
 
         body { 
@@ -75,10 +71,10 @@
             margin: 40px auto;
             height: 85vh; 
             min-height: 750px;
-            background: #1D1B1C;
+            background: var(--dark-slate-blue);
             display: flex;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border: 1px solid #333;
+            border: 1px solid #334155;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
@@ -104,7 +100,7 @@
         /* Custom Pins & Clusters */
         .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
         .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
-        .custom-cluster { background: rgba(29, 27, 28, 0.9); color: #FFCC00; border: 2px solid #FFCC00; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .custom-cluster { background: rgba(26, 36, 51, 0.9); color: var(--pure-white); border: 2px solid rgba(255, 255, 255, 0.6); font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
         /* Custom Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
@@ -118,19 +114,19 @@
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .3s; border-radius: 24px; }
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--arnold-yellow); }
+        input:checked + .slider { background-color: var(--alert-red); }
         input:checked + .slider:before { transform: translateX(20px); }
 
         /* Theme SVG Icons */
         .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
         body:not(.light-mode) .theme-icon { fill: #1D1B1C; stroke: #FFFFFF; stroke-width: 2px; }
-        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1D1B1C; stroke-width: 2px; }
+        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1a2433; stroke-width: 2px; }
 
         /* Themes */
-        .theme-bg-main { background-color: var(--rich-black); }
+        .theme-bg-main { background-color: var(--dark-slate-blue); }
         .theme-text-main { color: var(--pure-white); }
-        .theme-text-muted { color: #888; }
-        .theme-border { border-color: #333; }
+        .theme-text-muted { color: #94a3b8; }
+        .theme-border { border-color: #334155; }
         .theme-card { background-color: rgba(255,255,255,0.05); }
         
         body.light-mode .theme-bg-main { background-color: #F8FAFC; }
@@ -138,12 +134,12 @@
         body.light-mode .theme-text-muted { color: #64748B; }
         body.light-mode .theme-border { border-color: #E2E8F0; }
         body.light-mode .theme-card { background-color: #FFFFFF; }
-        body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--arnold-yellow); border-color: var(--arnold-yellow); }
-        body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--rich-black); }
+        body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
+        body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
 
         /* Sidebar Hover Fixes */
-        .breakdown-row:hover { background-color: #2A2829; }
+        .breakdown-row:hover { background-color: rgba(255,255,255,0.08); }
         body.light-mode .breakdown-row:hover { background-color: #f1f5f9; }
 
         /* Scrollbars & Drawer */
@@ -160,13 +156,14 @@
         /* PORTFOLIO DEMO STYLES */
         .pulse-instruction {
             animation: pulse-border 2s infinite;
-            border-left: 4px solid var(--arnold-yellow);
-            background: #fffbea;
+            border-left: 4px solid var(--alert-red);
+            background: #f8fafc;
             padding: 15px;
             border-radius: 4px;
             margin: 20px 0;
-            font-weight: 600;
-            color: #854d0e;
+            font-weight: 500;
+            color: #334155;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         #demo-subtitle {
@@ -189,9 +186,9 @@
         }
 
         @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 204, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(179, 37, 37, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0); }
         }
 
         @media (max-width: 800px) {
@@ -204,7 +201,7 @@
         }
     </style>
 </head>
-<body>
+<body class="light-mode">
 
     <!-- PORTFOLIO HEADER -->
     <div class="portfolio-content">
@@ -242,17 +239,17 @@
         <!-- DEMO BUTTONS SECTION -->
         <div class="pulse-instruction flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div class="flex-1">
-                👉 <strong>INTERACTIVE DEMO:</strong> The application below is fully functional. Click on any yellow "Meridian Hub" to slide out the Analytics Engine, then click into specific Accounts to explore the drill-down.
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block text-[#b32525] mr-1 mb-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <strong>INTERACTIVE DEMO:</strong> The application below is fully functional. Click on any red "Meridian Hub" to slide out the Analytics Engine, then click into specific Accounts to explore the drill-down.
             </div>
             <div class="flex flex-wrap gap-2 mt-2 md:mt-0 shrink-0">
-                <button id="demo-start-btn" onclick="startOrResumeDemo()" class="bg-[#1D1B1C] text-[#FFCC00] hover:bg-[#FFCC00] hover:text-[#1D1B1C] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-lg border border-[#FFCC00]">
-                    ▶ Start Demo
+                <button id="demo-start-btn" onclick="startOrResumeDemo()" class="bg-[#1a2433] text-white hover:bg-[#b32525] border-[#1a2433] hover:border-[#b32525] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Start Demo
                 </button>
-                <button id="demo-pause-btn" onclick="pauseDemo()" disabled class="opacity-50 cursor-not-allowed bg-gray-800 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600">
-                    ⏸ Pause
+                <button id="demo-pause-btn" onclick="pauseDemo()" disabled class="opacity-50 cursor-not-allowed bg-gray-700 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-sm border border-gray-600 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> Pause
                 </button>
-                <button id="demo-restart-btn" onclick="restartDemo()" disabled class="opacity-50 cursor-not-allowed bg-gray-800 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600">
-                    🔄 Restart
+                <button id="demo-restart-btn" onclick="restartDemo()" disabled class="opacity-50 cursor-not-allowed bg-gray-700 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-sm border border-gray-600 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg> Restart
                 </button>
             </div>
         </div>
@@ -262,8 +259,8 @@
     <div class="dashboard-container" id="app-dashboard">
         
         <!-- Autopilot Subtitle -->
-        <div id="demo-subtitle" class="hidden">
-            <span class="animate-pulse mr-2 text-red-500">🔴</span> <span id="demo-text">Initializing Autopilot...</span>
+        <div id="demo-subtitle" class="hidden flex items-center">
+            <span class="relative flex h-3 w-3 mr-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span> <span id="demo-text">Initializing Autopilot...</span>
         </div>
 
         <!-- Left Sidebar: Command Center -->
@@ -271,8 +268,8 @@
             
             <!-- Header & Logo (Portfolio Proxy Brand) -->
             <div class="p-6 pb-2 flex flex-col items-center text-center">
-                <div class="text-sm font-extrabold text-[#FFCC00] tracking-[0.2em] uppercase mb-1">Meridian Parts</div>
-                <h1 class="text-2xl font-black theme-text-main italic tracking-tight">STRATEGIC <span class="text-[#FFCC00]">RADAR</span></h1>
+                <div class="text-sm font-extrabold text-[#b32525] tracking-[0.2em] uppercase mb-1">Meridian Parts</div>
+                <h1 class="text-2xl font-black theme-text-main italic tracking-tight">STRATEGIC <span class="text-[#b32525]">RADAR</span></h1>
                 
                 <div class="flex items-center justify-center gap-3 mt-3">
                     <div class="relative flex h-3 w-3">
@@ -303,21 +300,21 @@
                     Map Filters & Controls
                 </button>
                 
-                <div id="filter-dropdown" class="hidden mt-2 bg-[#1D1B1C] border border-gray-700 rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
+                <div id="filter-dropdown" class="hidden mt-2 bg-[#1a2433] border border-gray-700 rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
                     <!-- Display Mode -->
                     <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Environment Settings</h3>
                     
                     <div class="flex items-center justify-between mb-6">
                         <span class="text-sm font-medium theme-text-main">Dark Mode</span>
                         <div class="flex items-center gap-2">
-                            <span id="sun-icon" style="opacity: 0.5;">
+                            <span id="sun-icon" style="opacity: 1;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             </span>
                             <label class="switch">
-                                <input type="checkbox" id="themeToggle" checked>
+                                <input type="checkbox" id="themeToggle">
                                 <span class="slider"></span>
                             </label>
-                            <span id="moon-icon" style="opacity: 1;">
+                            <span id="moon-icon" style="opacity: 0.5;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                             </span>
                         </div>
@@ -352,14 +349,14 @@
         <!-- Right Sidebar: Slide-out Analytics Drawer -->
         <div id="analytics-panel" class="absolute top-0 right-0 h-full w-[400px] z-[2000] theme-bg-main border-l theme-border flex flex-col">
             <!-- Drawer Header -->
-            <div class="p-6 border-b theme-border flex justify-between items-center bg-[#FFCC00]">
+            <div class="p-6 border-b theme-border flex justify-between items-center bg-[#b32525]">
                 <div>
-                    <div id="analytics-subtitle" class="text-[10px] font-black text-[#1D1B1C] uppercase tracking-widest">Hub Diagnostic</div>
-                    <h2 id="analytics-title" class="text-xl font-black text-[#1D1B1C] tracking-tight">Store Name</h2>
+                    <div id="analytics-subtitle" class="text-[10px] font-black text-white uppercase tracking-widest">Hub Diagnostic</div>
+                    <h2 id="analytics-title" class="text-xl font-black text-white tracking-tight">Store Name</h2>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button id="back-to-hub-btn" onclick="restoreHubView()" class="hidden text-[11px] font-black text-[#1D1B1C] uppercase tracking-wide hover:underline mr-2">&larr; Back</button>
-                    <button onclick="closeAnalytics()" class="text-[#1D1B1C] hover:scale-110 transition-transform">
+                    <button id="back-to-hub-btn" onclick="restoreHubView()" class="hidden text-[11px] font-black text-white uppercase tracking-wide hover:underline mr-2">&larr; Back</button>
+                    <button onclick="closeAnalytics()" class="text-white hover:scale-110 transition-transform">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
@@ -532,7 +529,7 @@
 
         // --- 2. STATE VARIABLES ---
         let currentMapStyle = 'tactical';
-        let isDarkMode = true;
+        let isDarkMode = false;
         let pgChartInstance = null;
         let activeHubName = null;
         let activeHubRev = null;
@@ -547,7 +544,8 @@
         const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
 
-        document.getElementById('map').classList.add('tactical-dark-map');
+        // Initialize Map Filters based on default state
+        applyMapFilters();
 
         // Theme Toggle Logic
         document.getElementById('themeToggle').addEventListener('change', function(e) {
@@ -597,7 +595,7 @@
         });
 
         const categoryColors = {
-            "Meridian Parts": '#FFCC00', "Vanguard Auto": '#CC0000', "Titan Parts": '#F26522', "Omega Automotive": '#8b5cf6', "Apex Distribution": '#0ea5e9', "Nova Parts": '#ec4899'
+            "Meridian Parts": '#b32525', "Vanguard Auto": '#D97706', "Titan Parts": '#0D9488', "Omega Automotive": '#4F46E5', "Apex Distribution": '#EAB308', "Nova Parts": '#78716C'
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
@@ -617,10 +615,13 @@
                 return data[b].length - data[a].length;
             });
 
+            // --- ADDED JITTER TRACKER HERE ---
+            let seenOrigins = {}; 
+
             sortedCategories.forEach(category => {
                 const catColor = categoryColors[category];
                 const items = data[category];
-                const clusterTextColor = (catColor === '#FFCC00') ? '#1D1B1C' : '#FFFFFF';
+                const clusterTextColor = (catColor === '#EAB308') ? '#1a2433' : '#FFFFFF'; // Dark text for the yellow clusters
 
                 const clusterGroup = L.markerClusterGroup({
                     chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
@@ -647,8 +648,30 @@
                 breakdownContainer.insertAdjacentHTML('beforeend', breakdownHtml);
 
                 items.forEach(item => {
+                    let itemLat = parseFloat(item.lat);
+                    let itemLng = parseFloat(item.lng);
+
+                    // --- JITTER LOGIC: Unstack overlapping hubs ---
+                    if (!isNaN(itemLat) && !isNaN(itemLng)) {
+                        let coordKey = `${itemLat.toFixed(4)},${itemLng.toFixed(4)}`;
+                        if (seenOrigins[coordKey] === undefined) {
+                            seenOrigins[coordKey] = 0;
+                        }
+                        
+                        let count = seenOrigins[coordKey];
+                        if (count > 0) {
+                            // Arrange overlapping pins in a tight geometric 'flower' pattern
+                            let angle = count * (Math.PI * 2 / 6); // Space up to 6 pins in a circle
+                            let radius = 0.0015; // Offset by ~1/10th of a mile
+                            itemLat += Math.sin(angle) * radius;
+                            itemLng += Math.cos(angle) * radius;
+                        }
+                        seenOrigins[coordKey]++;
+                    }
+                    // ----------------------------------------------
+
                     const markerIcon = createColorIcon(catColor);
-                    const marker = L.marker([item.lat, item.lng], { icon: markerIcon });
+                    const marker = L.marker([itemLat, itemLng], { icon: markerIcon });
                     
                     let analyticsButtonHtml = '';
                     let gravityHtml = '';
@@ -661,7 +684,7 @@
                         
                         // Save the Atlanta Hub specifically for the Autopilot Demo (INCLUDING THE MARKER)
                         if(!autoTriggerHub && item.name.includes("Atlanta")) {
-                            autoTriggerHub = { name: safeName, rev: rev, lat: item.lat, lng: item.lng, marker: marker };
+                            autoTriggerHub = { name: safeName, rev: rev, lat: itemLat, lng: itemLng, marker: marker };
                         }
 
                         let revFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rev);
@@ -693,14 +716,14 @@
                         `;
 
                         analyticsButtonHtml = `
-                            <button onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1D1B1C; color: #FFCC00; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
+                            <button onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1a2433; color: #ffffff; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
                                 Open Hub Analytics &raquo;
                             </button>
                         `;
                     }
 
                     let popupHtml = `
-                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${catColor === '#FFCC00' ? 'none' : '0 1px 3px rgba(0,0,0,0.5)'};">${category}</div>
+                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${catColor === '#EAB308' ? 'none' : '0 1px 3px rgba(0,0,0,0.5)'};">${category}</div>
                         <div class="popup-body">
                             ${topologyHtml}
                             <div class="popup-title">${item.name}</div>
@@ -717,15 +740,15 @@
                         if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; }
                         marker.closePopup();
 
-                        lockedPin = L.marker([item.lat, item.lng], { icon: markerIcon, zIndexOffset: 10000 }).addTo(map);
+                        lockedPin = L.marker([itemLat, itemLng], { icon: markerIcon, zIndexOffset: 10000 }).addTo(map);
                         lockedPin.bindPopup(popupHtml).openPopup();
                         
                         if (item.gravity && category === "Meridian Parts") {
                             const metersPerMile = 1609.34;
-                            L.circle([item.lat, item.lng], {radius: 50 * metersPerMile, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 1}).addTo(tradeAreaRings);
-                            L.circle([item.lat, item.lng], {radius: 30 * metersPerMile, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 2}).addTo(tradeAreaRings);
-                            L.circle([item.lat, item.lng], {radius: 15 * metersPerMile, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 2}).addTo(tradeAreaRings);
-                            L.circle([item.lat, item.lng], {radius: 5 * metersPerMile, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 2}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 50 * metersPerMile, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 1}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 30 * metersPerMile, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 2}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 15 * metersPerMile, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 2}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 5 * metersPerMile, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 2}).addTo(tradeAreaRings);
                         }
 
                         lockedPin.on('popupclose', function() {
@@ -918,7 +941,7 @@
             if (pgChartInstance) pgChartInstance.destroy();
             pgChartInstance = new Chart(ctx, {
                 type: 'doughnut',
-                data: { labels: ['No POS Data Available'], datasets: [{ data: [100], backgroundColor: ['#333'] }] },
+                data: { labels: ['No POS Data Available'], datasets: [{ data: [100], backgroundColor: ['#64748b'] }] },
                 options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { tooltip: { enabled: false }, legend: { display: false } } }
             });
         }
@@ -935,7 +958,7 @@
             let data = top5.map(val => val[1].toFixed(1));
             if (otherSum > 0) { labels.push('Other'); data.push(otherSum.toFixed(1)); }
 
-            const colors = ['#C81E27', '#FFCC00', '#3b82f6', '#10b981', '#8b5cf6', '#f97316', '#06b6d4'];
+            const colors = ['#b32525', '#78716C', '#D97706', '#0D9488', '#4F46E5', '#EAB308'];
 
             pgChartInstance = new Chart(ctx, {
                 type: 'doughnut',
@@ -960,31 +983,36 @@
             const restartBtn = document.getElementById('demo-restart-btn');
             
             // Base styles
-            const startBase = "bg-[#1D1B1C] text-[#FFCC00] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-lg border border-[#FFCC00]";
-            const secondaryBase = "bg-gray-800 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-lg border border-gray-600";
+            const startBase = "bg-[#1a2433] text-white transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border border-[#1a2433] flex items-center gap-2";
+            const secondaryBase = "bg-gray-700 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-sm border border-gray-600 flex items-center gap-2";
+            const playSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+            const pauseSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+            const restartSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>';
             
             startBtn.disabled = false;
             pauseBtn.disabled = false;
             restartBtn.disabled = false;
 
             if (demoState === 'idle') {
-                startBtn.innerHTML = '▶ Start Demo';
-                startBtn.className = startBase + " hover:bg-[#FFCC00] hover:text-[#1D1B1C]";
+                startBtn.innerHTML = playSvg + ' Start Demo';
+                startBtn.className = startBase + " hover:bg-[#b32525] hover:border-[#b32525]";
                 pauseBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
                 restartBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
+                pauseBtn.innerHTML = pauseSvg + ' Pause';
+                restartBtn.innerHTML = restartSvg + ' Restart';
                 pauseBtn.disabled = true;
                 restartBtn.disabled = true;
             } else if (demoState === 'running') {
                 startBtn.className = startBase + " opacity-50 cursor-not-allowed";
                 startBtn.disabled = true;
-                pauseBtn.className = secondaryBase + " hover:bg-gray-700";
-                restartBtn.className = secondaryBase + " hover:bg-gray-700";
+                pauseBtn.className = secondaryBase + " hover:bg-gray-600";
+                restartBtn.className = secondaryBase + " hover:bg-gray-600";
             } else if (demoState === 'paused') {
-                startBtn.innerHTML = '▶ Resume Demo';
-                startBtn.className = startBase + " hover:bg-[#FFCC00] hover:text-[#1D1B1C]";
+                startBtn.innerHTML = playSvg + ' Resume Demo';
+                startBtn.className = startBase + " hover:bg-[#b32525] hover:border-[#b32525]";
                 pauseBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
                 pauseBtn.disabled = true;
-                restartBtn.className = secondaryBase + " hover:bg-gray-700";
+                restartBtn.className = secondaryBase + " hover:bg-gray-600";
             }
         }
 
