@@ -24,7 +24,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
-        /* Base Brand Colors and Typography */
         :root {
             /* Portfolio Text Colors */
             --dark-slate-blue: #1a2433;
@@ -55,11 +54,12 @@
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
-        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
-        .meta-cell:last-child { border-right: none; }
+        
+        .meta-container { display: flex; gap: 20px; width: 100%; margin: 0 auto 30px auto; }
+        .meta-card { flex: 1; background: #fff; border: 2px solid #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
+        
         .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
         .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
@@ -71,10 +71,10 @@
             margin: 40px auto;
             height: 85vh; 
             min-height: 750px;
-            background: var(--dark-slate-blue);
+            background: #1D1B1C;
             display: flex;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border: 1px solid #334155;
+            border: 1px solid #333;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
@@ -83,7 +83,7 @@
         #map { height: 100%; width: 100%; z-index: 1; }
         
         /* Tactical Dark Map Filters */
-        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.5); }
+        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) grayscale(1) brightness(0.5); }
         .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
 
         /* Custom Popup Styling */
@@ -106,7 +106,7 @@
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
         .layer-toggle input { display: none; }
         .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: white; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
-        .layer-toggle input:checked + .custom-checkbox { background: var(--rich-black); border: 2px solid white; }
+        .layer-toggle input:checked + .custom-checkbox { background: #1D1B1C; border: 2px solid white; }
         .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
 
         /* iOS Toggle Switch */
@@ -120,20 +120,21 @@
         /* Theme SVG Icons */
         .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
         body:not(.light-mode) .theme-icon { fill: #1D1B1C; stroke: #FFFFFF; stroke-width: 2px; }
-        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1a2433; stroke-width: 2px; }
+        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1D1B1C; stroke-width: 2px; }
 
         /* Themes */
-        .theme-bg-main { background-color: var(--dark-slate-blue); }
+        .theme-bg-main { background-color: #1D1B1C; } 
         .theme-text-main { color: var(--pure-white); }
-        .theme-text-muted { color: #94a3b8; }
-        .theme-border { border-color: #334155; }
+        .theme-text-muted { color: #888888; } /* Perfect Neutral Gray */
+        .theme-border { border-color: #333; } 
         .theme-card { background-color: rgba(255,255,255,0.05); }
         
         body.light-mode .theme-bg-main { background-color: #F8FAFC; }
         body.light-mode .theme-text-main { color: #0F172A; }
-        body.light-mode .theme-text-muted { color: #64748B; }
+        body.light-mode .theme-text-muted { color: #555555; } /* Perfect Neutral Dark Gray */
         body.light-mode .theme-border { border-color: #E2E8F0; }
-        body.light-mode .theme-card { background-color: #FFFFFF; }
+        body.light-mode .theme-card { background-color: #FFFFFF; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        body.light-mode .breakdown-row { border-color: #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
@@ -192,8 +193,7 @@
         }
 
         @media (max-width: 800px) {
-            .meta-table tr { display: flex; flex-direction: column; }
-            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
+            .meta-container { flex-direction: column; gap: 15px; }
             .dashboard-container { flex-direction: column; height: 1000px; width: 100%; border-radius: 0; margin: 20px 0; }
             #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
             #map { height: 650px; }
@@ -201,7 +201,7 @@
         }
     </style>
 </head>
-<body class="light-mode">
+<body>
 
     <!-- PORTFOLIO HEADER -->
     <div class="portfolio-content">
@@ -212,22 +212,21 @@
             <div class="doc-title">Predictive VIO Market Capture & K-Means Threat Modeling</div>
         </div>
 
-        <table class="meta-table">
-            <tr>
-                <td class="meta-cell">
-                    <span class="meta-label">Principal Engineer</span>
-                    <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
-                </td>
-                <td class="meta-cell">
-                    <span class="meta-label">Core Competencies</span>
-                    <span class="meta-value">Spatial Algorithms, K-Means Clustering, POS Data Drill-down, API Pipelines</span>
-                </td>
-                <td class="meta-cell">
-                    <span class="meta-label">Technical Stack</span>
-                    <span class="meta-value">Python (Pandas, Scikit-Learn), JavaScript, APIs, Leaflet.js, Chart.js</span>
-                </td>
-            </tr>
-        </table>
+        <!-- OUTLINED META CARDS -->
+        <div class="meta-container">
+            <div class="meta-card">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+            </div>
+            <div class="meta-card">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Spatial Algorithms, K-Means Clustering, POS Data Drill-down, API Pipelines</span>
+            </div>
+            <div class="meta-card">
+                <span class="meta-label">Technical Stack</span>
+                <span class="meta-value">Python (Pandas, Scikit-Learn), JavaScript, APIs, Leaflet.js, Chart.js</span>
+            </div>
+        </div>
 
         <div class="nda-note">
             <strong>Data Governance Note:</strong> To comply with enterprise confidentiality, live branch coordinates, localized POS revenue figures, and proprietary datasets have been stripped. This application utilizes an anonymized proxy dataset spanning the Southeast U.S. to safely demonstrate the production-grade ETL architecture, Marker Clustering, and deeply nested POS analytics.
@@ -300,21 +299,21 @@
                     Map Filters & Controls
                 </button>
                 
-                <div id="filter-dropdown" class="hidden mt-2 bg-[#1a2433] border border-gray-700 rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
+                <div id="filter-dropdown" class="hidden mt-2 bg-[#1D1B1C] border border-gray-700 rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
                     <!-- Display Mode -->
                     <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Environment Settings</h3>
                     
                     <div class="flex items-center justify-between mb-6">
                         <span class="text-sm font-medium theme-text-main">Dark Mode</span>
                         <div class="flex items-center gap-2">
-                            <span id="sun-icon" style="opacity: 1;">
+                            <span id="sun-icon" style="opacity: 0.5;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             </span>
                             <label class="switch">
-                                <input type="checkbox" id="themeToggle">
+                                <input type="checkbox" id="themeToggle" checked>
                                 <span class="slider"></span>
                             </label>
-                            <span id="moon-icon" style="opacity: 0.5;">
+                            <span id="moon-icon" style="opacity: 1;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                             </span>
                         </div>
@@ -529,7 +528,7 @@
 
         // --- 2. STATE VARIABLES ---
         let currentMapStyle = 'tactical';
-        let isDarkMode = false;
+        let isDarkMode = true; // Starts in dark mode
         let pgChartInstance = null;
         let activeHubName = null;
         let activeHubRev = null;
@@ -594,8 +593,14 @@
             iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
         });
 
+        // Heat & Stone Palette mapping
         const categoryColors = {
-            "Meridian Parts": '#b32525', "Vanguard Auto": '#D97706', "Titan Parts": '#0D9488', "Omega Automotive": '#4F46E5', "Apex Distribution": '#EAB308', "Nova Parts": '#78716C'
+            "Meridian Parts": '#DC2626',
+            "Vanguard Auto": '#F97316',
+            "Titan Parts": '#FCD34D',
+            "Omega Automotive": '#FFFFFF',
+            "Apex Distribution": '#A8A29E',
+            "Nova Parts": '#57534E'
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
@@ -621,7 +626,9 @@
             sortedCategories.forEach(category => {
                 const catColor = categoryColors[category];
                 const items = data[category];
-                const clusterTextColor = (catColor === '#EAB308') ? '#1a2433' : '#FFFFFF'; // Dark text for the yellow clusters
+                // Text color contrast adjustment
+                const clusterTextColor = (['#FCD34D', '#FFFFFF', '#A8A29E'].includes(catColor)) ? '#1a2433' : '#FFFFFF';
+                const closeButtonShadow = (['#FCD34D', '#FFFFFF', '#A8A29E'].includes(catColor)) ? 'none' : '0 1px 3px rgba(0,0,0,0.5)';
 
                 const clusterGroup = L.markerClusterGroup({
                     chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
@@ -715,15 +722,16 @@
                             </div>
                         `;
 
+                        // Changed button styling to match Red
                         analyticsButtonHtml = `
-                            <button onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1a2433; color: #ffffff; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
+                            <button onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1D1B1C; color: #ffffff; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
                                 Open Hub Analytics &raquo;
                             </button>
                         `;
                     }
 
                     let popupHtml = `
-                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${catColor === '#EAB308' ? 'none' : '0 1px 3px rgba(0,0,0,0.5)'};">${category}</div>
+                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${closeButtonShadow};">${category}</div>
                         <div class="popup-body">
                             ${topologyHtml}
                             <div class="popup-title">${item.name}</div>
@@ -837,10 +845,10 @@
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(acc['Total LTM Profit']);
                 let safeName = acc['Customer Name'].replace(/'/g, "\\'");
                 let html = `
-                    <div onclick="openAccountDetails('${safeName}', ${index})" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#FFCC00] hover:shadow-md transition-all group">
+                    <div onclick="openAccountDetails('${safeName}', ${index})" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#DC2626] hover:shadow-md transition-all group">
                         <div class="overflow-hidden pr-2">
                             <div class="text-[10px] text-gray-500 font-bold mb-0.5 tracking-wider uppercase">#${index + 1} Earner</div>
-                            <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#FFCC00] transition-colors truncate" style="font-family: 'Inter', sans-serif; letter-spacing: -0.3px;">${acc['Customer Name']}</div>
+                            <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#DC2626] transition-colors truncate" style="font-family: 'Inter', sans-serif; letter-spacing: -0.3px;">${acc['Customer Name']}</div>
                         </div>
                         <div class="text-right shrink-0">
                             <div class="font-mono text-[15px] text-blue-400 font-bold">${profitStr}</div>
@@ -881,7 +889,7 @@
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
                 rangesContainer.innerHTML += `
                     <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
-                        <span class="truncate pr-2 group-hover:text-[#FFCC00] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
+                        <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
                 `;
@@ -892,7 +900,7 @@
         window.drillDownToRange = function(rangeName) {
             document.getElementById('chart-title').innerHTML = `
                 Top Parts: ${rangeName} 
-                <button onclick="resetAccountChart()" class="float-right text-[9px] bg-gray-700 text-white px-2 py-1 rounded hover:bg-[#FFCC00] hover:text-black transition-colors tracking-widest">BACK</button>
+                <button onclick="resetAccountChart()" class="float-right text-[9px] bg-gray-700 text-white px-2 py-1 rounded hover:bg-[#DC2626] hover:text-white transition-colors tracking-widest">BACK</button>
             `;
             renderDynamicDoughnutChart(window.currentAccountParts[rangeName]);
 
@@ -925,7 +933,7 @@
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
                 rangesContainer.innerHTML += `
                     <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
-                        <span class="truncate pr-2 group-hover:text-[#FFCC00] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
+                        <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
                 `;
@@ -958,7 +966,8 @@
             let data = top5.map(val => val[1].toFixed(1));
             if (otherSum > 0) { labels.push('Other'); data.push(otherSum.toFixed(1)); }
 
-            const colors = ['#b32525', '#78716C', '#D97706', '#0D9488', '#4F46E5', '#EAB308'];
+            // Using Heat & Stone Palette for charts
+            const colors = ['#DC2626', '#F97316', '#FCD34D', '#FFFFFF', '#A8A29E', '#57534E'];
 
             pgChartInstance = new Chart(ctx, {
                 type: 'doughnut',
