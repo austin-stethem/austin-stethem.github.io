@@ -24,6 +24,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
+        /* Base Brand Colors and Typography */
         :root {
             /* Portfolio Text Colors */
             --dark-slate-blue: #1a2433;
@@ -56,7 +57,7 @@
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
         .meta-container { display: flex; gap: 20px; width: 100%; margin: 0 auto 30px auto; }
-        .meta-card { flex: 1; background: #fff; border: 2px solid #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .meta-card { flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
         
@@ -593,14 +594,14 @@
             iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
         });
 
-        // Heat & Stone Palette mapping
+        // Heat & Stone Palette mapping (Yellow -> White -> Dark Gray)
         const categoryColors = {
-            "Meridian Parts": '#DC2626',
-            "Vanguard Auto": '#F97316',
-            "Titan Parts": '#FCD34D',
-            "Omega Automotive": '#FFFFFF',
-            "Apex Distribution": '#A8A29E',
-            "Nova Parts": '#57534E'
+            "Meridian Parts": '#DC2626',   // Red
+            "Vanguard Auto": '#F97316',    // Orange
+            "Titan Parts": '#FCD34D',      // Yellow
+            "Omega Automotive": '#DDDDDD', // Light Gray (Whiteish)
+            "Apex Distribution": '#999999',// Mid Gray
+            "Nova Parts": '#555555'        // Dark Gray
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
@@ -614,10 +615,18 @@
             toggleContainer.innerHTML = '';
             breakdownContainer.innerHTML = '';
 
+            // Lock the sorting order so the visual cascade remains perfect every refresh
+            const categoryOrder = [
+                "Meridian Parts",
+                "Vanguard Auto",
+                "Titan Parts",
+                "Omega Automotive",
+                "Apex Distribution",
+                "Nova Parts"
+            ];
+            
             const sortedCategories = Object.keys(data).sort((a, b) => {
-                if (a.includes("Meridian")) return -1;
-                if (b.includes("Meridian")) return 1;
-                return data[b].length - data[a].length;
+                return categoryOrder.indexOf(a) - categoryOrder.indexOf(b);
             });
 
             // --- ADDED JITTER TRACKER HERE ---
@@ -626,9 +635,11 @@
             sortedCategories.forEach(category => {
                 const catColor = categoryColors[category];
                 const items = data[category];
-                // Text color contrast adjustment
-                const clusterTextColor = (['#FCD34D', '#FFFFFF', '#A8A29E'].includes(catColor)) ? '#1a2433' : '#FFFFFF';
-                const closeButtonShadow = (['#FCD34D', '#FFFFFF', '#A8A29E'].includes(catColor)) ? 'none' : '0 1px 3px rgba(0,0,0,0.5)';
+                
+                // Text color contrast adjustment for lighter pins
+                const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
+                const clusterTextColor = lightColors.includes(catColor) ? '#1a2433' : '#FFFFFF';
+                const closeButtonShadow = lightColors.includes(catColor) ? 'none' : '0 1px 3px rgba(0,0,0,0.5)';
 
                 const clusterGroup = L.markerClusterGroup({
                     chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
@@ -966,8 +977,8 @@
             let data = top5.map(val => val[1].toFixed(1));
             if (otherSum > 0) { labels.push('Other'); data.push(otherSum.toFixed(1)); }
 
-            // Using Heat & Stone Palette for charts
-            const colors = ['#DC2626', '#F97316', '#FCD34D', '#FFFFFF', '#A8A29E', '#57534E'];
+            // Updated explicitly to the Yellow -> Light Gray -> Dark Gray palette
+            const colors = ['#DC2626', '#F97316', '#FCD34D', '#DDDDDD', '#999999', '#555555'];
 
             pgChartInstance = new Chart(ctx, {
                 type: 'doughnut',
