@@ -56,10 +56,10 @@
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
-        .meta-container { display: flex; gap: 20px; width: 100%; margin: 0 auto 30px auto; flex-wrap: wrap; }
-        .meta-card { flex: 1; min-width: 250px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .meta-container { display: flex; gap: 20px; width: 100%; margin: 0 auto 30px auto; }
+        .meta-card { flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .meta-value { color: #1e293b; font-weight: 600; }
+        .meta-value { color: #1e293b; font-weight: 500; }
         
         .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
         .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
@@ -72,10 +72,10 @@
             margin: 40px auto;
             height: 85vh; 
             min-height: 750px;
-            background: var(--dark-slate-blue);
+            background: #1D1B1C;
             display: flex;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border: 1px solid #334155;
+            border: 1px solid #333;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
@@ -84,7 +84,7 @@
         #map { height: 100%; width: 100%; z-index: 1; }
         
         /* Tactical Dark Map Filters */
-        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.5); }
+        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) grayscale(1) brightness(0.5); }
         .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
 
         /* Custom Popup Styling */
@@ -100,14 +100,16 @@
 
         /* Custom Pins & Clusters */
         .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
+        .custom-color-pin.dark-outline { border: 2px solid #1a2433; box-shadow: 0 0 6px rgba(255,255,255,0.3); }
         .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
         .custom-cluster { background: rgba(26, 36, 51, 0.9); color: var(--pure-white); border: 2px solid rgba(255, 255, 255, 0.6); font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .custom-cluster.dark-outline { border: 2px solid #1a2433; }
 
         /* Custom Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
         .layer-toggle input { display: none; }
         .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: white; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
-        .layer-toggle input:checked + .custom-checkbox { background: var(--rich-black); border: 2px solid white; }
+        .layer-toggle input:checked + .custom-checkbox { background: #1D1B1C; border: 2px solid white; }
         .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
 
         /* iOS Toggle Switch */
@@ -124,17 +126,18 @@
         body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1a2433; stroke-width: 2px; }
 
         /* Themes */
-        .theme-bg-main { background-color: var(--dark-slate-blue); }
+        .theme-bg-main { background-color: #1D1B1C; } 
         .theme-text-main { color: var(--pure-white); }
-        .theme-text-muted { color: #94a3b8; }
-        .theme-border { border-color: #334155; }
+        .theme-text-muted { color: #888888; } /* Perfect Neutral Gray */
+        .theme-border { border-color: #333; } 
         .theme-card { background-color: rgba(255,255,255,0.05); }
         
         body.light-mode .theme-bg-main { background-color: #F8FAFC; }
         body.light-mode .theme-text-main { color: #0F172A; }
-        body.light-mode .theme-text-muted { color: #64748B; }
+        body.light-mode .theme-text-muted { color: #555555; } /* Perfect Neutral Dark Gray */
         body.light-mode .theme-border { border-color: #E2E8F0; }
-        body.light-mode .theme-card { background-color: #FFFFFF; }
+        body.light-mode .theme-card { background-color: #FFFFFF; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        body.light-mode .breakdown-row { border-color: #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
@@ -167,23 +170,46 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        #demo-subtitle {
+        /* GUIDED TOUR UI (NEW) */
+        #tour-blocker {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 4999;
+            display: none;
+        }
+
+        #ghost-cursor {
             position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid #3b82f6;
-            color: #f8fafc;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            font-weight: bold;
-            z-index: 4000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5), 0 0 15px rgba(59, 130, 246, 0.3);
+            z-index: 5000;
+            width: 35px;
+            height: 35px;
             pointer-events: none;
-            transition: opacity 0.3s;
+            opacity: 0;
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+            transform: translate(-100px, -100px);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+        }
+
+        /* The clicking animation */
+        .cursor-click {
+            transform: scale(0.8);
+            transition: transform 0.15s ease !important;
+        }
+
+        #tour-bubble {
+            position: absolute;
+            z-index: 5001;
+            background: #1a2433;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+            max-width: 320px;
+            border-left: 4px solid #b32525;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+            transform: translate(-100px, -100px);
         }
 
         @keyframes pulse-border {
@@ -193,6 +219,8 @@
         }
 
         @media (max-width: 800px) {
+            .meta-table tr { display: flex; flex-direction: column; }
+            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
             .dashboard-container { flex-direction: column; height: 1000px; width: 100%; border-radius: 0; margin: 20px 0; }
             #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
             #map { height: 650px; }
@@ -200,7 +228,7 @@
         }
     </style>
 </head>
-<body class="light-mode">
+<body>
 
     <!-- PORTFOLIO HEADER -->
     <div class="portfolio-content">
@@ -237,17 +265,11 @@
         <!-- DEMO BUTTONS SECTION -->
         <div class="pulse-instruction flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div class="flex-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block text-[#b32525] mr-1 mb-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <strong>INTERACTIVE DEMO:</strong> The application below is fully functional. Click on any red "Meridian Hub" to slide out the Analytics Engine, then click into specific Accounts to explore the drill-down.
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block text-[#b32525] mr-1 mb-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <strong>INTERACTIVE DEMO:</strong> The application below is fully functional. Click "Start Guided Tour" to launch an interactive, step-by-step walkthrough of how the predictive modeling engine is utilized in production.
             </div>
             <div class="flex flex-wrap gap-2 mt-2 md:mt-0 shrink-0">
-                <button id="demo-start-btn" onclick="startOrResumeDemo()" class="bg-[#1a2433] text-white hover:bg-[#b32525] border-[#1a2433] hover:border-[#b32525] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Start Demo
-                </button>
-                <button id="demo-pause-btn" onclick="pauseDemo()" disabled class="opacity-50 cursor-not-allowed bg-gray-700 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-sm border border-gray-600 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> Pause
-                </button>
-                <button id="demo-restart-btn" onclick="restartDemo()" disabled class="opacity-50 cursor-not-allowed bg-gray-700 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-sm border border-gray-600 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg> Restart
+                <button id="demo-start-btn" onclick="startTour()" class="bg-[#1a2433] text-white hover:bg-[#b32525] border-[#1a2433] hover:border-[#b32525] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Start Guided Tour
                 </button>
             </div>
         </div>
@@ -256,9 +278,27 @@
     <!-- LIVE DASHBOARD -->
     <div class="dashboard-container" id="app-dashboard">
         
-        <!-- Autopilot Subtitle -->
-        <div id="demo-subtitle" class="hidden flex items-center">
-            <span class="relative flex h-3 w-3 mr-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span> <span id="demo-text">Initializing Autopilot...</span>
+        <!-- GUIDED TOUR ELEMENTS -->
+        <div id="tour-blocker"></div>
+        
+        <!-- The Ghost Cursor -->
+        <div id="ghost-cursor">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="white" stroke="#1D1B1C" stroke-width="1.5">
+                <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.42c.45 0 .67-.54.35-.85L5.85 3.21a.5.5 0 0 0-.35-.15Z"/>
+            </svg>
+        </div>
+
+        <!-- The Speech Bubble -->
+        <div id="tour-bubble">
+            <div class="flex justify-between items-start mb-2">
+                <h4 id="tour-title" class="font-bold text-[#FFCC00] text-xs uppercase tracking-widest">Step 1</h4>
+                <span id="tour-step-count" class="text-[10px] font-mono text-gray-400">1 of 5</span>
+            </div>
+            <p id="tour-text" class="text-sm mb-5 text-gray-200 leading-relaxed">Text goes here.</p>
+            <div class="flex justify-between items-center border-t border-gray-700 pt-3">
+                <button onclick="endTour()" class="text-[11px] font-bold text-gray-400 hover:text-white transition-colors uppercase tracking-wider">End Tour</button>
+                <button id="tour-next-btn" onclick="tourNext()" class="bg-[#b32525] hover:bg-red-600 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider shadow-md transition-colors">Next &rarr;</button>
+            </div>
         </div>
 
         <!-- Left Sidebar: Command Center -->
@@ -293,7 +333,7 @@
 
             <!-- Floating Dropdown UI for Filters -->
             <div class="absolute top-4 right-4 z-[1000] flex flex-col items-end">
-                <button onclick="document.getElementById('filter-dropdown').classList.toggle('hidden')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-lg border theme-border font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <button id="filter-btn-main" onclick="document.getElementById('filter-dropdown').classList.toggle('hidden')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-lg border theme-border font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                     Map Filters & Controls
                 </button>
@@ -309,7 +349,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             </span>
                             <label class="switch">
-                                <input type="checkbox" id="themeToggle">
+                                <input type="checkbox" id="themeToggle" checked>
                                 <span class="slider"></span>
                             </label>
                             <span id="moon-icon" style="opacity: 0.5;">
@@ -324,7 +364,7 @@
                             <div class="custom-checkbox rounded-full"></div>
                             <span class="text-sm font-medium theme-text-main">Tactical Maps (High Contrast)</span>
                         </label>
-                        <label class="layer-toggle !mb-0">
+                        <label class="layer-toggle !mb-0" id="satellite-toggle-btn">
                             <input type="radio" name="basemap" value="satellite" onchange="changeBasemap(this.value)">
                             <div class="custom-checkbox rounded-full"></div>
                             <span class="text-sm font-medium theme-text-main">Satellite Imagery (Real-world)</span>
@@ -493,9 +533,9 @@
                         });
                     }
 
-                    // Spread the hubs out realistically across the region
-                    let hLat = city.lat + (Math.random() - 0.5) * 1.5; 
-                    let hLng = city.lng + (Math.random() - 0.5) * 1.5;
+                    // Spread the hubs out realistically across the metro region (Tighter spread)
+                    let hLat = city.lat + (Math.random() - 0.5) * 0.3; 
+                    let hLng = city.lng + (Math.random() - 0.5) * 0.3;
 
                     data["Meridian Parts"].push({
                         name: `Meridian Hub - ${city.name.split(',')[0]} #${h}`,
@@ -508,16 +548,16 @@
                     });
                 }
 
-                // Generate Competitors (Massive increase in density & spread)
+                // Generate Competitors (Regional spread)
                 let compCount = city.type === "urban" ? 85 : city.type === "mid" ? 40 : 15;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
                         name: `${cat} - Sector ${i+1}`,
-                        // INCREASING SPREAD TO 2.5 FOR A MASSIVE RURAL "SHOTGUN" SPREAD
-                        lat: city.lat + (Math.random() - 0.5) * 2.5,
-                        lng: city.lng + (Math.random() - 0.5) * 2.5,
-                        address: `Commercial Dr, ${city.name.split(',')[1].trim()}`
+                        // Reduced spread to keep them within the regional market
+                        lat: city.lat + (Math.random() - 0.5) * 1.2,
+                        lng: city.lng + (Math.random() - 0.5) * 1.2,
+                        address: `Commercial Dr, ${city.name.split(',')[0]}`
                     });
                 }
             });
@@ -527,7 +567,7 @@
 
         // --- 2. STATE VARIABLES ---
         let currentMapStyle = 'tactical';
-        let isDarkMode = false;
+        let isDarkMode = true; // Starts in dark mode
         let pgChartInstance = null;
         let activeHubName = null;
         let activeHubRev = null;
@@ -535,7 +575,6 @@
         let autoTriggerHub = null;
 
         // --- 3. MAP INITIALIZATION ---
-        // Added scrollWheelZoom: false to prevent scroll-trapping the user on the portfolio page
         const map = L.map('map', { zoomControl: false, scrollWheelZoom: false }).setView([35.0, -85.5], 6); 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -586,14 +625,23 @@
         }
 
         // --- 4. RENDER DATA & CLUSTERS ---
-        const createColorIcon = (color) => L.divIcon({
-            className: 'custom-color-pin',
-            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
-            iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
-        });
+        const createColorIcon = (color, borderColor, isLight) => {
+            const classMods = isLight ? 'custom-color-pin dark-outline' : 'custom-color-pin';
+            return L.divIcon({
+                className: classMods,
+                html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%; border: 2px solid ${borderColor}; box-sizing: border-box;"></div>`,
+                iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
+            });
+        };
 
+        // Heat & Stone Palette mapping
         const categoryColors = {
-            "Meridian Parts": '#b32525', "Vanguard Auto": '#D97706', "Titan Parts": '#0D9488', "Omega Automotive": '#4F46E5', "Apex Distribution": '#EAB308', "Nova Parts": '#78716C'
+            "Meridian Parts": '#DC2626',   // Red
+            "Vanguard Auto": '#F97316',    // Orange
+            "Titan Parts": '#FCD34D',      // Yellow
+            "Omega Automotive": '#DDDDDD', // Light Gray (Whiteish)
+            "Apex Distribution": '#999999',// Mid Gray
+            "Nova Parts": '#555555'        // Dark Gray
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
@@ -607,19 +655,29 @@
             toggleContainer.innerHTML = '';
             breakdownContainer.innerHTML = '';
 
+            // Lock the sorting order
+            const categoryOrder = [
+                "Meridian Parts", "Vanguard Auto", "Titan Parts", "Omega Automotive", "Apex Distribution", "Nova Parts"
+            ];
+            
             const sortedCategories = Object.keys(data).sort((a, b) => {
-                if (a.includes("Meridian")) return -1;
-                if (b.includes("Meridian")) return 1;
-                return data[b].length - data[a].length;
+                return categoryOrder.indexOf(a) - categoryOrder.indexOf(b);
             });
 
-            // --- ADDED JITTER TRACKER HERE ---
             let seenOrigins = {}; 
 
             sortedCategories.forEach(category => {
                 const catColor = categoryColors[category];
                 const items = data[category];
-                const clusterTextColor = (catColor === '#EAB308') ? '#1a2433' : '#FFFFFF'; // Dark text for the yellow clusters
+                
+                // Identify "Light" colors for dynamic borders
+                const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
+                const isLight = lightColors.includes(catColor);
+                
+                const clusterTextColor = isLight ? '#1a2433' : '#FFFFFF';
+                const dynamicBorderColor = isLight ? '#1a2433' : '#FFFFFF';
+                const clusterClass = isLight ? 'custom-cluster dark-outline' : 'custom-cluster';
+                const closeButtonShadow = isLight ? 'none' : '0 1px 3px rgba(0,0,0,0.5)';
 
                 const clusterGroup = L.markerClusterGroup({
                     chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
@@ -627,7 +685,7 @@
                         const count = cluster.getChildCount();
                         const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
                         return L.divIcon({
-                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; width: ${size}px; height: ${size}px;">${count}</div>`,
+                            html: `<div class="${clusterClass}" style="background-color: ${catColor}; color: ${clusterTextColor}; width: ${size}px; height: ${size}px;"> ${count}</div>`,
                             className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
                         });
                     }
@@ -637,7 +695,7 @@
                 let breakdownHtml = `
                     <div class="breakdown-row flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all cursor-default shadow-sm min-h-[35px]">
                         <div class="flex items-center gap-3 overflow-hidden">
-                            <div class="w-3 h-3 rounded-full shrink-0" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor};"></div>
+                            <div class="w-3 h-3 rounded-full shrink-0" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor}; border: 1px solid ${dynamicBorderColor};"></div>
                             <span class="text-[15px] font-semibold theme-text-main truncate tracking-wide" title="${category}">${category}</span>
                         </div>
                         <span class="font-mono font-bold text-[17px] theme-text-main ml-2">${items.length}</span>
@@ -649,26 +707,22 @@
                     let itemLat = parseFloat(item.lat);
                     let itemLng = parseFloat(item.lng);
 
-                    // --- JITTER LOGIC: Unstack overlapping hubs ---
+                    // JITTER LOGIC: Unstack overlapping hubs
                     if (!isNaN(itemLat) && !isNaN(itemLng)) {
                         let coordKey = `${itemLat.toFixed(4)},${itemLng.toFixed(4)}`;
-                        if (seenOrigins[coordKey] === undefined) {
-                            seenOrigins[coordKey] = 0;
-                        }
+                        if (seenOrigins[coordKey] === undefined) { seenOrigins[coordKey] = 0; }
                         
                         let count = seenOrigins[coordKey];
                         if (count > 0) {
-                            // Arrange overlapping pins in a tight geometric 'flower' pattern
-                            let angle = count * (Math.PI * 2 / 6); // Space up to 6 pins in a circle
-                            let radius = 0.0015; // Offset by ~1/10th of a mile
+                            let angle = count * (Math.PI * 2 / 6); 
+                            let radius = 0.0015; 
                             itemLat += Math.sin(angle) * radius;
                             itemLng += Math.cos(angle) * radius;
                         }
                         seenOrigins[coordKey]++;
                     }
-                    // ----------------------------------------------
 
-                    const markerIcon = createColorIcon(catColor);
+                    const markerIcon = createColorIcon(catColor, dynamicBorderColor, isLight);
                     const marker = L.marker([itemLat, itemLng], { icon: markerIcon });
                     
                     let analyticsButtonHtml = '';
@@ -680,7 +734,7 @@
                         let rev = item.gravity['Total LTM Revenue'];
                         window[`hubData_${safeName.replace(/\s+/g, '')}`] = item.top_accounts;
                         
-                        // Save the Atlanta Hub specifically for the Autopilot Demo (INCLUDING THE MARKER)
+                        // Save the Atlanta Hub specifically for the Guided Tour Demo
                         if(!autoTriggerHub && item.name.includes("Atlanta")) {
                             autoTriggerHub = { name: safeName, rev: rev, lat: itemLat, lng: itemLng, marker: marker };
                         }
@@ -713,16 +767,16 @@
                             </div>
                         `;
 
-                        // Changed button styling to match Red
+                        // ADDED ID FOR TOUR TARGETING
                         analyticsButtonHtml = `
-                            <button onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1D1B1C; color: #ffffff; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
+                            <button id="open-analytics-btn-popup" onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1a2433; color: #ffffff; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
                                 Open Hub Analytics &raquo;
                             </button>
                         `;
                     }
 
                     let popupHtml = `
-                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${catColor === '#EAB308' ? 'none' : '0 1px 3px rgba(0,0,0,0.5)'};">${category}</div>
+                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${closeButtonShadow};">${category}</div>
                         <div class="popup-body">
                             ${topologyHtml}
                             <div class="popup-title">${item.name}</div>
@@ -767,7 +821,7 @@
                     <label class="layer-toggle">
                         <input type="checkbox" class="category-checkbox" data-category="${safeCat}" checked onchange="toggleCategory('${safeCat}', this.checked)">
                         <div class="custom-checkbox"></div>
-                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor}; flex-shrink: 0;"></div>
+                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor}; border: 1px solid ${dynamicBorderColor}; flex-shrink: 0;"></div>
                         <span class="text-sm font-semibold theme-text-main truncate">${category} <span class="opacity-50 text-xs ml-1">(${items.length})</span></span>
                     </label>
                 `;
@@ -835,8 +889,10 @@
             activeHubAccounts.forEach((acc, index) => {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(acc['Total LTM Profit']);
                 let safeName = acc['Customer Name'].replace(/'/g, "\\'");
+                
+                // ADDED CLASS .account-drill-row FOR TOUR
                 let html = `
-                    <div onclick="openAccountDetails('${safeName}', ${index})" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#DC2626] hover:shadow-md transition-all group">
+                    <div onclick="openAccountDetails('${safeName}', ${index})" class="account-drill-row flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#DC2626] hover:shadow-md transition-all group">
                         <div class="overflow-hidden pr-2">
                             <div class="text-[10px] text-gray-500 font-bold mb-0.5 tracking-wider uppercase">#${index + 1} Earner</div>
                             <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#DC2626] transition-colors truncate" style="font-family: 'Inter', sans-serif; letter-spacing: -0.3px;">${acc['Customer Name']}</div>
@@ -878,8 +934,10 @@
             let count = 1;
             for (const [rangeDesc, profit] of Object.entries(ranges)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
+                
+                // ADDED CLASS .range-drill-row FOR TOUR
                 rangesContainer.innerHTML += `
-                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
+                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="range-drill-row flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
                         <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
@@ -923,7 +981,7 @@
             for (const [rangeDesc, profit] of Object.entries(window.currentAccountRangesRaw)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
                 rangesContainer.innerHTML += `
-                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
+                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="range-drill-row flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
                         <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
@@ -957,7 +1015,6 @@
             let data = top5.map(val => val[1].toFixed(1));
             if (otherSum > 0) { labels.push('Other'); data.push(otherSum.toFixed(1)); }
 
-            // Updated explicitly to the Yellow -> Light Gray -> Dark Gray palette
             const colors = ['#DC2626', '#F97316', '#FCD34D', '#DDDDDD', '#999999', '#555555'];
 
             pgChartInstance = new Chart(ctx, {
@@ -973,218 +1030,222 @@
             });
         }
 
-        // --- AUTOPILOT DEMO SEQUENCE ---
-        let demoState = 'idle'; // idle, running, paused
-        let abortDemo = false;
+        // --- GUIDED TOUR WIZARD ---
+        let currentTourStep = 0;
+        let isTourActive = false;
 
-        function updateDemoButtons() {
-            const startBtn = document.getElementById('demo-start-btn');
-            const pauseBtn = document.getElementById('demo-pause-btn');
-            const restartBtn = document.getElementById('demo-restart-btn');
-            
-            // Base styles
-            const startBase = "bg-[#1a2433] text-white transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border border-[#1a2433] flex items-center gap-2";
-            const secondaryBase = "bg-gray-700 text-white transition-colors font-bold uppercase tracking-wider text-xs px-4 py-2 rounded shadow-sm border border-gray-600 flex items-center gap-2";
-            const playSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
-            const pauseSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
-            const restartSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>';
-            
-            startBtn.disabled = false;
-            pauseBtn.disabled = false;
-            restartBtn.disabled = false;
-
-            if (demoState === 'idle') {
-                startBtn.innerHTML = playSvg + ' Start Demo';
-                startBtn.className = startBase + " hover:bg-[#b32525] hover:border-[#b32525]";
-                pauseBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
-                restartBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
-                pauseBtn.innerHTML = pauseSvg + ' Pause';
-                restartBtn.innerHTML = restartSvg + ' Restart';
-                pauseBtn.disabled = true;
-                restartBtn.disabled = true;
-            } else if (demoState === 'running') {
-                startBtn.className = startBase + " opacity-50 cursor-not-allowed";
-                startBtn.disabled = true;
-                pauseBtn.className = secondaryBase + " hover:bg-gray-600";
-                restartBtn.className = secondaryBase + " hover:bg-gray-600";
-            } else if (demoState === 'paused') {
-                startBtn.innerHTML = playSvg + ' Resume Demo';
-                startBtn.className = startBase + " hover:bg-[#b32525] hover:border-[#b32525]";
-                pauseBtn.className = secondaryBase + " opacity-50 cursor-not-allowed";
-                pauseBtn.disabled = true;
-                restartBtn.className = secondaryBase + " hover:bg-gray-600";
-            }
-        }
-
-        async function pausableSleep(ms) {
-            let elapsed = 0;
-            const tick = 100;
-            while (elapsed < ms) {
-                if (abortDemo) throw new Error("ABORT");
-                if (demoState === 'paused') {
-                    await new Promise(r => setTimeout(r, tick));
-                    continue; // Don't advance the elapsed timer while paused
+        const tourSteps = [
+            {
+                title: "1. Market Overview",
+                text: "Welcome to the Strategic Radar. This dashboard ingests POS data to map competitor density and our own fulfilling hubs. First, let's explore the map controls.",
+                target: () => ({ x: window.innerWidth / 2, y: window.innerHeight / 2 }),
+                action: () => {}
+            },
+            {
+                title: "2. Tactical Environment",
+                text: "We open the map filters to toggle environment variables. Notice how we can swap from the default 'Tactical' view to real-world Satellite imagery.",
+                target: () => {
+                    const btn = document.getElementById('filter-btn-main'); 
+                    const rect = btn.getBoundingClientRect();
+                    return { x: rect.left + (rect.width/2), y: rect.top + (rect.height/2) };
+                },
+                action: () => {
+                    document.getElementById('filter-dropdown').classList.remove('hidden');
+                    // Simulate clicking the satellite radio button
+                    setTimeout(() => {
+                        document.getElementById('satellite-toggle-btn').click();
+                        document.querySelector('input[value="satellite"]').checked = true;
+                        window.changeBasemap('satellite');
+                    }, 500);
                 }
-                await new Promise(r => setTimeout(r, tick));
-                elapsed += tick;
-            }
-        }
-
-        window.startOrResumeDemo = function() {
-            if (demoState === 'paused') {
-                demoState = 'running';
-                updateDemoButtons();
-            } else if (demoState === 'idle') {
-                runAutopilotDemo();
-            }
-        };
-
-        window.pauseDemo = function() {
-            if (demoState === 'running') {
-                demoState = 'paused';
-                updateDemoButtons();
-            }
-        };
-
-        window.restartDemo = function() {
-            abortDemo = true;
-            demoState = 'idle';
-            updateDemoButtons();
-            document.getElementById('demo-subtitle').classList.add('hidden');
-            
-            // Give the abort exception a moment to throw and clean up, then restart
-            setTimeout(() => {
-                abortDemo = false;
-                
-                // Reset map position and UI state
-                closeAnalytics();
-                if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); }
-                map.closePopup();
-                map.setView([35.0, -85.5], 6);
-                
-                // Ensure UI toggles are reset
-                if (!isDarkMode) { document.getElementById('themeToggle').click(); }
-                if (currentMapStyle !== 'tactical') { 
+            },
+            {
+                title: "3. Finding a Target Hub",
+                text: "To execute prescriptive strategy, we must locate a high-value asset. Let's zoom the map directly into the core Atlanta hub.",
+                target: () => {
+                    const dropdown = document.getElementById('filter-dropdown');
+                    const rect = dropdown.getBoundingClientRect();
+                    return { x: rect.left + 50, y: rect.top + 50 }; 
+                },
+                action: () => {
+                    document.getElementById('filter-dropdown').classList.add('hidden');
+                    // Reset to tactical for better contrast during the demo
                     document.querySelector('input[value="tactical"]').checked = true;
                     window.changeBasemap('tactical');
-                }
-                document.getElementById('filter-dropdown').classList.add('hidden');
 
-                // Launch again
-                runAutopilotDemo();
-            }, 300);
-        };
-        
-        async function runAutopilotDemo() {
-            demoState = 'running';
-            abortDemo = false;
-            updateDemoButtons();
+                    if(autoTriggerHub) {
+                        map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 11, {duration: 2});
+                    }
+                },
+                waitAfterAction: 2200 // wait for the map to finish flying
+            },
+            {
+                title: "4. Trade Area Friction",
+                text: "By pulling 12 months of Point-of-Sale data and calculating distance decay, we generate exact 'Friction Rings' to map how far our drivers travel to capture market share.",
+                target: () => {
+                    if(autoTriggerHub) {
+                        const pt = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
+                        const mapRect = document.getElementById('map').getBoundingClientRect();
+                        return { x: mapRect.left + pt.x, y: mapRect.top + pt.y };
+                    }
+                    return { x: window.innerWidth/2, y: window.innerHeight/2 };
+                },
+                action: () => {
+                    if(autoTriggerHub && autoTriggerHub.marker) {
+                        autoTriggerHub.marker.fire('click');
+                    }
+                }
+            },
+            {
+                title: "5. Financial Analytics",
+                text: "Now we extract the LTM Revenue and True Gross Margin for this specific location. We click to slide out the Hub Analytics Engine.",
+                target: () => {
+                    const btn = document.getElementById('open-analytics-btn-popup');
+                    if(btn) {
+                        const rect = btn.getBoundingClientRect();
+                        return { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+                    }
+                    return { x: window.innerWidth/2, y: window.innerHeight/2 };
+                },
+                action: () => {
+                    if(autoTriggerHub) openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
+                }
+            },
+            {
+                title: "6. Account Drill-down",
+                text: "The engine isolates the specific B2B accounts driving the hub's profit. We click the #1 Earner to dive deeper into their purchasing DNA.",
+                target: () => {
+                    const accRow = document.querySelector('.account-drill-row'); 
+                    if(accRow) {
+                        const rect = accRow.getBoundingClientRect();
+                        return { x: rect.left + 50, y: rect.top + 20 };
+                    }
+                    return { x: window.innerWidth - 200, y: 200 };
+                },
+                action: () => {
+                    const firstAcc = activeHubAccounts[0];
+                    if(firstAcc) openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
+                }
+            },
+            {
+                title: "7. Category Velocity",
+                text: "Finally, we isolate exactly which part numbers are generating margin for this account. The guided tour is complete—feel free to explore the interactive dashboard yourself!",
+                target: () => {
+                    const rangeRow = document.querySelector('.range-drill-row');
+                    if(rangeRow) {
+                        const rect = rangeRow.getBoundingClientRect();
+                        return { x: rect.left + 50, y: rect.top + 20 };
+                    }
+                    return { x: window.innerWidth - 200, y: 400 };
+                },
+                action: () => {
+                    const firstAcc = activeHubAccounts[0];
+                    if(firstAcc) {
+                        const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
+                        const firstRange = Object.keys(ranges)[0];
+                        drillDownToRange(firstRange.replace(/'/g, "\\'"));
+                    }
+                    document.getElementById('tour-next-btn').innerText = "Finish";
+                }
+            }
+        ];
+
+        window.startTour = function() {
+            if(isTourActive) return;
+            isTourActive = true;
             
-            const subtitle = document.getElementById('demo-subtitle');
-            const demoText = document.getElementById('demo-text');
-            subtitle.classList.remove('hidden');
+            // Setup UI for tour
+            document.getElementById('tour-blocker').style.display = 'block';
+            
+            // Clean slate
+            closeAnalytics();
+            if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); }
+            map.closePopup();
+            map.setView([35.0, -85.5], 6);
+            document.getElementById('filter-dropdown').classList.add('hidden');
+            
+            currentTourStep = 0;
+            document.getElementById('tour-next-btn').innerText = "Next \u2192";
+            
+            playTourStep(currentTourStep);
+        };
 
-            const showText = (txt) => { demoText.innerText = txt; }
-
-            try {
-                // Ensure drawer is closed to start
-                closeAnalytics();
-
-                // Step 1: High Level Scan
-                showText("Autopilot: Scanning Southeastern Territory for branch density...");
-                map.flyTo([34.0, -82.0], 6, {duration: 2});
-                await pausableSleep(6000);
-
-                // Step 1.5: UI Features
-                showText("Autopilot: Testing Environment & Map Filter UI...");
-                document.getElementById('filter-dropdown').classList.remove('hidden');
-                await pausableSleep(3000);
-
-                showText("Autopilot: Engaging Light Mode Protocol...");
-                document.getElementById('themeToggle').click();
-                await pausableSleep(3000);
-
-                showText("Autopilot: Reverting to Dark Mode...");
-                document.getElementById('themeToggle').click();
-                await pausableSleep(3000);
-
-                showText("Autopilot: Switching to High-Resolution Satellite Imagery...");
-                document.querySelector('input[value="satellite"]').checked = true;
-                window.changeBasemap('satellite');
-                await pausableSleep(4000);
-
-                showText("Autopilot: Reverting to Tactical Basemap...");
-                document.querySelector('input[value="tactical"]').checked = true;
-                window.changeBasemap('tactical');
-                document.getElementById('filter-dropdown').classList.add('hidden');
-                await pausableSleep(3000);
-
-                // Step 2: Zoom into Atlanta
-                showText("Autopilot: Identifying high-value Meridian Hub in Atlanta...");
-                if(autoTriggerHub) {
-                    // Zoom level 11 shows the rings & competitors perfectly, and the cluster override prevents it from merging back
-                    map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 11, {duration: 3.5});
-                }
-                await pausableSleep(5000);
-
-                // Step 2.5: Click the pin to show the Trade Area Rings
-                showText("Autopilot: Calculating trade area friction rings...");
-                if(autoTriggerHub && autoTriggerHub.marker) {
-                    // Simulate a physical click on the pin
-                    autoTriggerHub.marker.fire('click');
-                }
-                await pausableSleep(5000);
-
-                // Step 3: Open Hub Analytics
-                showText("Autopilot: Interfacing with POS data to extract LTM Revenue metrics...");
-                if(autoTriggerHub) {
-                    openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
-                }
-                await pausableSleep(8000);
-
-                // Step 4: Drill into Top Account
-                const firstAcc = activeHubAccounts[0];
-                if(firstAcc) {
-                    showText(`Autopilot: Drilling into Top Earner (${firstAcc['Customer Name']})...`);
-                    openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
-                }
-                await pausableSleep(8000);
-
-                // Step 5: Drill into specific Product Range
-                if(firstAcc) {
-                    const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
-                    const firstRange = Object.keys(ranges)[0];
-                    showText(`Autopilot: Isolating specific Part Velocity for [${firstRange}]...`);
-                    drillDownToRange(firstRange.replace(/'/g, "\\'"));
-                }
-                await pausableSleep(8000);
-
-                // Step 6: Conclude
-                showText("Autopilot: Sequence complete. Handing control back to user.");
-                await pausableSleep(3500);
-                
-                subtitle.classList.add('hidden');
-                demoState = 'idle';
-                updateDemoButtons();
-
-            } catch (e) {
-                if (e.message === "ABORT") {
-                    console.log("Autopilot manually aborted/restarted.");
-                } else {
-                    console.error("Autopilot error:", e);
-                }
+        window.tourNext = function() {
+            currentTourStep++;
+            if(currentTourStep >= tourSteps.length) {
+                endTour();
+            } else {
+                playTourStep(currentTourStep);
             }
+        };
+
+        window.endTour = function() {
+            isTourActive = false;
+            document.getElementById('tour-blocker').style.display = 'none';
+            document.getElementById('ghost-cursor').classList.remove('opacity-100');
+            document.getElementById('ghost-cursor').classList.add('opacity-0');
+            
+            const bubble = document.getElementById('tour-bubble');
+            bubble.classList.remove('opacity-100', 'pointer-events-auto');
+            bubble.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        async function playTourStep(index) {
+            const step = tourSteps[index];
+            const cursor = document.getElementById('ghost-cursor');
+            const bubble = document.getElementById('tour-bubble');
+
+            // 1. Hide bubble while moving
+            bubble.classList.remove('opacity-100', 'pointer-events-auto');
+            bubble.classList.add('opacity-0', 'pointer-events-none');
+
+            // 2. Perform any pre-action wait time (like map panning)
+            if (step.action && index === 2) { 
+                step.action(); 
+                await new Promise(r => setTimeout(r, step.waitAfterAction || 0));
+            }
+
+            // 3. Calculate target coordinates dynamically
+            const targetPos = step.target();
+
+            // 4. Move Cursor
+            cursor.classList.remove('opacity-0');
+            cursor.classList.add('opacity-100');
+            cursor.style.transform = `translate(${targetPos.x}px, ${targetPos.y}px)`;
+
+            // Wait for cursor transit time (1.2s CSS transition)
+            await new Promise(r => setTimeout(r, 1200));
+
+            // 5. Execute Fake Click Animation
+            cursor.classList.add('cursor-click');
+            await new Promise(r => setTimeout(r, 150));
+            cursor.classList.remove('cursor-click');
+
+            // 6. Execute Main Action (if not done in pre-action)
+            if (step.action && index !== 2) {
+                step.action();
+            }
+
+            // Wait a moment for UI changes (popups, drawers)
+            await new Promise(r => setTimeout(r, 400));
+
+            // 7. Position & Show the Speech Bubble
+            // Keep bubble on screen bounds
+            let bubbleX = targetPos.x + 30;
+            let bubbleY = targetPos.y + 30;
+            
+            if (bubbleX > window.innerWidth - 350) bubbleX = window.innerWidth - 350;
+            if (bubbleY > window.innerHeight - 250) bubbleY = window.innerHeight - 250;
+
+            bubble.style.transform = `translate(${bubbleX}px, ${bubbleY}px)`;
+            
+            document.getElementById('tour-title').innerText = step.title;
+            document.getElementById('tour-text').innerText = step.text;
+            document.getElementById('tour-step-count').innerText = `${index + 1} of ${tourSteps.length}`;
+            
+            bubble.classList.remove('opacity-0', 'pointer-events-none');
+            bubble.classList.add('opacity-100', 'pointer-events-auto');
         }
-
-        // Interrupt demo if user clicks the map manually
-        map.on('mousedown', () => {
-            if (demoState !== 'idle') {
-                abortDemo = true;
-                demoState = 'idle';
-                updateDemoButtons();
-                document.getElementById('demo-subtitle').classList.add('hidden');
-            }
-        });
 
         // Initialize Map Data
         renderMap();
