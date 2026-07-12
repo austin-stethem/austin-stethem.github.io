@@ -56,10 +56,10 @@
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
-        .meta-container { display: flex; gap: 20px; width: 100%; margin: 0 auto 30px auto; }
-        .meta-card { flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .meta-container { display: flex; gap: 20px; width: 100%; margin: 0 auto 30px auto; flex-wrap: wrap; }
+        .meta-card { flex: 1; min-width: 250px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .meta-value { color: #1e293b; font-weight: 500; }
+        .meta-value { color: #1e293b; font-weight: 600; }
         
         .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
         .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
@@ -72,10 +72,10 @@
             margin: 40px auto;
             height: 85vh; 
             min-height: 750px;
-            background: #1D1B1C;
+            background: var(--dark-slate-blue);
             display: flex;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border: 1px solid #333;
+            border: 1px solid #334155;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
@@ -84,7 +84,7 @@
         #map { height: 100%; width: 100%; z-index: 1; }
         
         /* Tactical Dark Map Filters */
-        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) grayscale(1) brightness(0.5); }
+        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.5); }
         .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
 
         /* Custom Popup Styling */
@@ -99,15 +99,15 @@
         .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
 
         /* Custom Pins & Clusters */
-        .custom-color-pin { border-radius: 50%; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
+        .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
         .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
-        .custom-cluster { background: rgba(26, 36, 51, 0.9); color: var(--pure-white); font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .custom-cluster { background: rgba(26, 36, 51, 0.9); color: var(--pure-white); border: 2px solid rgba(255, 255, 255, 0.6); font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
         /* Custom Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
         .layer-toggle input { display: none; }
         .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: white; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
-        .layer-toggle input:checked + .custom-checkbox { background: #1D1B1C; border: 2px solid white; }
+        .layer-toggle input:checked + .custom-checkbox { background: var(--rich-black); border: 2px solid white; }
         .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
 
         /* iOS Toggle Switch */
@@ -121,21 +121,20 @@
         /* Theme SVG Icons */
         .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
         body:not(.light-mode) .theme-icon { fill: #1D1B1C; stroke: #FFFFFF; stroke-width: 2px; }
-        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1D1B1C; stroke-width: 2px; }
+        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1a2433; stroke-width: 2px; }
 
         /* Themes */
-        .theme-bg-main { background-color: #1D1B1C; } 
+        .theme-bg-main { background-color: var(--dark-slate-blue); }
         .theme-text-main { color: var(--pure-white); }
-        .theme-text-muted { color: #888888; } /* Perfect Neutral Gray */
-        .theme-border { border-color: #333; } 
+        .theme-text-muted { color: #94a3b8; }
+        .theme-border { border-color: #334155; }
         .theme-card { background-color: rgba(255,255,255,0.05); }
         
         body.light-mode .theme-bg-main { background-color: #F8FAFC; }
         body.light-mode .theme-text-main { color: #0F172A; }
-        body.light-mode .theme-text-muted { color: #555555; } /* Perfect Neutral Dark Gray */
+        body.light-mode .theme-text-muted { color: #64748B; }
         body.light-mode .theme-border { border-color: #E2E8F0; }
-        body.light-mode .theme-card { background-color: #FFFFFF; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-        body.light-mode .breakdown-row { border-color: #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        body.light-mode .theme-card { background-color: #FFFFFF; }
         body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
@@ -194,7 +193,6 @@
         }
 
         @media (max-width: 800px) {
-            .meta-container { flex-direction: column; gap: 15px; }
             .dashboard-container { flex-direction: column; height: 1000px; width: 100%; border-radius: 0; margin: 20px 0; }
             #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
             #map { height: 650px; }
@@ -202,7 +200,7 @@
         }
     </style>
 </head>
-<body>
+<body class="light-mode">
 
     <!-- PORTFOLIO HEADER -->
     <div class="portfolio-content">
@@ -300,21 +298,21 @@
                     Map Filters & Controls
                 </button>
                 
-                <div id="filter-dropdown" class="hidden mt-2 bg-[#1D1B1C] border border-gray-700 rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
+                <div id="filter-dropdown" class="hidden mt-2 bg-[#1a2433] border border-gray-700 rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
                     <!-- Display Mode -->
                     <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Environment Settings</h3>
                     
                     <div class="flex items-center justify-between mb-6">
                         <span class="text-sm font-medium theme-text-main">Dark Mode</span>
                         <div class="flex items-center gap-2">
-                            <span id="sun-icon" style="opacity: 0.5;">
+                            <span id="sun-icon" style="opacity: 1;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             </span>
                             <label class="switch">
-                                <input type="checkbox" id="themeToggle" checked>
+                                <input type="checkbox" id="themeToggle">
                                 <span class="slider"></span>
                             </label>
-                            <span id="moon-icon" style="opacity: 1;">
+                            <span id="moon-icon" style="opacity: 0.5;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                             </span>
                         </div>
@@ -529,7 +527,7 @@
 
         // --- 2. STATE VARIABLES ---
         let currentMapStyle = 'tactical';
-        let isDarkMode = true; // Starts in dark mode
+        let isDarkMode = false;
         let pgChartInstance = null;
         let activeHubName = null;
         let activeHubRev = null;
@@ -588,24 +586,14 @@
         }
 
         // --- 4. RENDER DATA & CLUSTERS ---
-        const createColorIcon = (color) => {
-            const isLight = ['#FCD34D', '#DDDDDD', '#999999'].includes(color);
-            const borderColor = isLight ? '#1D1B1C' : '#ffffff';
-            return L.divIcon({
-                className: 'custom-color-pin',
-                html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%; border: 2px solid ${borderColor}; box-sizing: border-box;"></div>`,
-                iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
-            });
-        };
+        const createColorIcon = (color) => L.divIcon({
+            className: 'custom-color-pin',
+            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
+            iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
+        });
 
-        // Heat & Stone Palette mapping (Yellow -> White -> Dark Gray)
         const categoryColors = {
-            "Meridian Parts": '#DC2626',   // Red
-            "Vanguard Auto": '#F97316',    // Orange
-            "Titan Parts": '#FCD34D',      // Yellow
-            "Omega Automotive": '#DDDDDD', // Light Gray (Whiteish)
-            "Apex Distribution": '#999999',// Mid Gray
-            "Nova Parts": '#555555'        // Dark Gray
+            "Meridian Parts": '#b32525', "Vanguard Auto": '#D97706', "Titan Parts": '#0D9488', "Omega Automotive": '#4F46E5', "Apex Distribution": '#EAB308', "Nova Parts": '#78716C'
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
@@ -619,18 +607,10 @@
             toggleContainer.innerHTML = '';
             breakdownContainer.innerHTML = '';
 
-            // Lock the sorting order so the visual cascade remains perfect every refresh
-            const categoryOrder = [
-                "Meridian Parts",
-                "Vanguard Auto",
-                "Titan Parts",
-                "Omega Automotive",
-                "Apex Distribution",
-                "Nova Parts"
-            ];
-            
             const sortedCategories = Object.keys(data).sort((a, b) => {
-                return categoryOrder.indexOf(a) - categoryOrder.indexOf(b);
+                if (a.includes("Meridian")) return -1;
+                if (b.includes("Meridian")) return 1;
+                return data[b].length - data[a].length;
             });
 
             // --- ADDED JITTER TRACKER HERE ---
@@ -639,12 +619,7 @@
             sortedCategories.forEach(category => {
                 const catColor = categoryColors[category];
                 const items = data[category];
-                
-                // Text color contrast adjustment for lighter pins
-                const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
-                const clusterTextColor = lightColors.includes(catColor) ? '#1a2433' : '#FFFFFF';
-                const clusterBorderColor = lightColors.includes(catColor) ? '#1a2433' : 'rgba(255, 255, 255, 0.6)';
-                const closeButtonShadow = lightColors.includes(catColor) ? 'none' : '0 1px 3px rgba(0,0,0,0.5)';
+                const clusterTextColor = (catColor === '#EAB308') ? '#1a2433' : '#FFFFFF'; // Dark text for the yellow clusters
 
                 const clusterGroup = L.markerClusterGroup({
                     chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
@@ -652,7 +627,7 @@
                         const count = cluster.getChildCount();
                         const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
                         return L.divIcon({
-                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; border: 2px solid ${clusterBorderColor}; width: ${size}px; height: ${size}px;">${count}</div>`,
+                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; width: ${size}px; height: ${size}px;">${count}</div>`,
                             className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
                         });
                     }
@@ -747,7 +722,7 @@
                     }
 
                     let popupHtml = `
-                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${closeButtonShadow};">${category}</div>
+                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${catColor === '#EAB308' ? 'none' : '0 1px 3px rgba(0,0,0,0.5)'};">${category}</div>
                         <div class="popup-body">
                             ${topologyHtml}
                             <div class="popup-title">${item.name}</div>
@@ -792,7 +767,7 @@
                     <label class="layer-toggle">
                         <input type="checkbox" class="category-checkbox" data-category="${safeCat}" checked onchange="toggleCategory('${safeCat}', this.checked)">
                         <div class="custom-checkbox"></div>
-                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor}; border: 1px solid ${clusterBorderColor}; flex-shrink: 0;"></div>
+                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor}; flex-shrink: 0;"></div>
                         <span class="text-sm font-semibold theme-text-main truncate">${category} <span class="opacity-50 text-xs ml-1">(${items.length})</span></span>
                     </label>
                 `;
