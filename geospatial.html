@@ -105,6 +105,9 @@
         .custom-cluster { background: rgba(26, 36, 51, 0.9); color: var(--pure-white); border: 2px solid rgba(255, 255, 255, 0.6); font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         .custom-cluster.dark-outline { border: 2px solid #1a2433; }
 
+        /* Map Ring Labels */
+        .ring-label-icon { pointer-events: none !important; z-index: 400 !important; }
+
         /* Custom Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
         .layer-toggle input { display: none; }
@@ -170,48 +173,6 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        /* GUIDED TOUR UI (NEW) */
-        #tour-blocker {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            z-index: 4999;
-            display: none;
-        }
-
-        #ghost-cursor {
-            position: absolute;
-            z-index: 5000;
-            width: 35px;
-            height: 35px;
-            pointer-events: none;
-            opacity: 0;
-            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
-            transform: translate(-100px, -100px);
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
-        }
-
-        /* The clicking animation */
-        .cursor-click {
-            transform: scale(0.8);
-            transition: transform 0.15s ease !important;
-        }
-
-        #tour-bubble {
-            position: absolute;
-            z-index: 5001;
-            background: #1a2433;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
-            max-width: 320px;
-            border-left: 4px solid #b32525;
-            opacity: 0;
-            pointer-events: none;
-            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
-            transform: translate(-100px, -100px);
-        }
-
         @keyframes pulse-border {
             0% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(179, 37, 37, 0); }
@@ -219,8 +180,7 @@
         }
 
         @media (max-width: 800px) {
-            .meta-table tr { display: flex; flex-direction: column; }
-            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
+            .meta-container { flex-direction: column; gap: 15px; }
             .dashboard-container { flex-direction: column; height: 1000px; width: 100%; border-radius: 0; margin: 20px 0; }
             #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
             #map { height: 650px; }
@@ -277,29 +237,6 @@
 
     <!-- LIVE DASHBOARD -->
     <div class="dashboard-container" id="app-dashboard">
-        
-        <!-- GUIDED TOUR ELEMENTS -->
-        <div id="tour-blocker"></div>
-        
-        <!-- The Ghost Cursor -->
-        <div id="ghost-cursor">
-            <svg viewBox="0 0 24 24" width="32" height="32" fill="white" stroke="#1D1B1C" stroke-width="1.5">
-                <path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.42c.45 0 .67-.54.35-.85L5.85 3.21a.5.5 0 0 0-.35-.15Z"/>
-            </svg>
-        </div>
-
-        <!-- The Speech Bubble -->
-        <div id="tour-bubble">
-            <div class="flex justify-between items-start mb-2">
-                <h4 id="tour-title" class="font-bold text-[#FFCC00] text-xs uppercase tracking-widest">Step 1</h4>
-                <span id="tour-step-count" class="text-[10px] font-mono text-gray-400">1 of 5</span>
-            </div>
-            <p id="tour-text" class="text-sm mb-5 text-gray-200 leading-relaxed">Text goes here.</p>
-            <div class="flex justify-between items-center border-t border-gray-700 pt-3">
-                <button onclick="endTour()" class="text-[11px] font-bold text-gray-400 hover:text-white transition-colors uppercase tracking-wider">End Tour</button>
-                <button id="tour-next-btn" onclick="tourNext()" class="bg-[#b32525] hover:bg-red-600 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider shadow-md transition-colors">Next &rarr;</button>
-            </div>
-        </div>
 
         <!-- Left Sidebar: Command Center -->
         <div id="sidebar" class="w-[380px] shrink-0 h-full flex flex-col z-10 theme-bg-main theme-border border-r relative shadow-2xl transition-colors duration-300">
@@ -333,7 +270,7 @@
 
             <!-- Floating Dropdown UI for Filters -->
             <div class="absolute top-4 right-4 z-[1000] flex flex-col items-end">
-                <button id="filter-btn-main" onclick="document.getElementById('filter-dropdown').classList.toggle('hidden')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-lg border theme-border font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <button onclick="document.getElementById('filter-dropdown').classList.toggle('hidden')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-lg border theme-border font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                     Map Filters & Controls
                 </button>
@@ -345,14 +282,14 @@
                     <div class="flex items-center justify-between mb-6">
                         <span class="text-sm font-medium theme-text-main">Dark Mode</span>
                         <div class="flex items-center gap-2">
-                            <span id="sun-icon" style="opacity: 1;">
+                            <span id="sun-icon" style="opacity: 0.5;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             </span>
                             <label class="switch">
                                 <input type="checkbox" id="themeToggle" checked>
                                 <span class="slider"></span>
                             </label>
-                            <span id="moon-icon" style="opacity: 0.5;">
+                            <span id="moon-icon" style="opacity: 1;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                             </span>
                         </div>
@@ -364,7 +301,7 @@
                             <div class="custom-checkbox rounded-full"></div>
                             <span class="text-sm font-medium theme-text-main">Tactical Maps (High Contrast)</span>
                         </label>
-                        <label class="layer-toggle !mb-0" id="satellite-toggle-btn">
+                        <label class="layer-toggle !mb-0">
                             <input type="radio" name="basemap" value="satellite" onchange="changeBasemap(this.value)">
                             <div class="custom-checkbox rounded-full"></div>
                             <span class="text-sm font-medium theme-text-main">Satellite Imagery (Real-world)</span>
@@ -485,7 +422,7 @@
             const accountPrefixes = ["Commercial Fleet", "Metro Diesel", "City Transit", "Agri-Repair", "Heavy Duty Services", "Express Auto", "Advanced Diagnostics", "Premier Alignment"];
 
             cityAnchors.forEach((city) => {
-                // Generate Meridian Hubs (Exactly 95 Distributed Hubs)
+                // Generate Meridian Hubs
                 let hubCount = city.hasHub ? (city.type === "urban" ? 18 : city.type === "mid" ? 9 : 5) : 0;
                 
                 for(let h=1; h<=hubCount; h++) {
@@ -494,10 +431,9 @@
                     
                     // Generate 8 Fake B2B Accounts per Hub
                     for(let j=1; j<=8; j++) {
-                        let accRev = Math.floor(totalHubRev * (Math.random() * 0.15 + 0.02)); // 2-15% of hub rev
-                        let accProfit = accRev * (Math.random() * 0.15 + 0.25); // 25-40% margin
+                        let accRev = Math.floor(totalHubRev * (Math.random() * 0.15 + 0.02)); 
+                        let accProfit = accRev * (Math.random() * 0.15 + 0.25); 
                         
-                        // Fake PG Mix
                         let pgMix = {};
                         let remaining = 100;
                         for(let i=0; i<4; i++) {
@@ -507,7 +443,6 @@
                         }
                         pgMix[pgs[4]] = remaining;
 
-                        // Fake Ranges
                         let accRanges = {};
                         let rangeParts = {};
                         Object.keys(pgMix).forEach(pg => {
@@ -533,7 +468,7 @@
                         });
                     }
 
-                    // Spread the hubs out realistically across the metro region (Tighter spread)
+                    // Spread the hubs out locally
                     let hLat = city.lat + (Math.random() - 0.5) * 0.3; 
                     let hLng = city.lng + (Math.random() - 0.5) * 0.3;
 
@@ -548,13 +483,12 @@
                     });
                 }
 
-                // Generate Competitors (Regional spread)
+                // Generate Competitors (Spread across region)
                 let compCount = city.type === "urban" ? 85 : city.type === "mid" ? 40 : 15;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
                         name: `${cat} - Sector ${i+1}`,
-                        // Reduced spread to keep them within the regional market
                         lat: city.lat + (Math.random() - 0.5) * 1.2,
                         lng: city.lng + (Math.random() - 0.5) * 1.2,
                         address: `Commercial Dr, ${city.name.split(',')[0]}`
@@ -567,7 +501,7 @@
 
         // --- 2. STATE VARIABLES ---
         let currentMapStyle = 'tactical';
-        let isDarkMode = true; // Starts in dark mode
+        let isDarkMode = true; 
         let pgChartInstance = null;
         let activeHubName = null;
         let activeHubRev = null;
@@ -581,10 +515,19 @@
         const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
 
-        // Initialize Map Filters based on default state
+        function applyMapFilters() {
+            const mapContainer = document.getElementById('map');
+            mapContainer.classList.remove('tactical-dark-map', 'satellite-dark-map');
+            if (isDarkMode) {
+                if (currentMapStyle === 'tactical') {
+                    mapContainer.classList.add('tactical-dark-map');
+                } else {
+                    mapContainer.classList.add('satellite-dark-map');
+                }
+            }
+        }
         applyMapFilters();
 
-        // Theme Toggle Logic
         document.getElementById('themeToggle').addEventListener('change', function(e) {
             isDarkMode = e.target.checked; 
             if (isDarkMode) {
@@ -599,7 +542,6 @@
             applyMapFilters();
         });
 
-        // Basemap Logic
         window.changeBasemap = function(type) {
             currentMapStyle = type;
             if (type === 'tactical') {
@@ -612,18 +554,6 @@
             applyMapFilters();
         }
 
-        function applyMapFilters() {
-            const mapContainer = document.getElementById('map');
-            mapContainer.classList.remove('tactical-dark-map', 'satellite-dark-map');
-            if (isDarkMode) {
-                if (currentMapStyle === 'tactical') {
-                    mapContainer.classList.add('tactical-dark-map');
-                } else {
-                    mapContainer.classList.add('satellite-dark-map');
-                }
-            }
-        }
-
         // --- 4. RENDER DATA & CLUSTERS ---
         const createColorIcon = (color, borderColor, isLight) => {
             const classMods = isLight ? 'custom-color-pin dark-outline' : 'custom-color-pin';
@@ -634,14 +564,8 @@
             });
         };
 
-        // Heat & Stone Palette mapping
         const categoryColors = {
-            "Meridian Parts": '#DC2626',   // Red
-            "Vanguard Auto": '#F97316',    // Orange
-            "Titan Parts": '#FCD34D',      // Yellow
-            "Omega Automotive": '#DDDDDD', // Light Gray (Whiteish)
-            "Apex Distribution": '#999999',// Mid Gray
-            "Nova Parts": '#555555'        // Dark Gray
+            "Meridian Parts": '#DC2626', "Vanguard Auto": '#F97316', "Titan Parts": '#FCD34D', "Omega Automotive": '#DDDDDD', "Apex Distribution": '#999999', "Nova Parts": '#555555'
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
@@ -655,14 +579,8 @@
             toggleContainer.innerHTML = '';
             breakdownContainer.innerHTML = '';
 
-            // Lock the sorting order
-            const categoryOrder = [
-                "Meridian Parts", "Vanguard Auto", "Titan Parts", "Omega Automotive", "Apex Distribution", "Nova Parts"
-            ];
-            
-            const sortedCategories = Object.keys(data).sort((a, b) => {
-                return categoryOrder.indexOf(a) - categoryOrder.indexOf(b);
-            });
+            const categoryOrder = ["Meridian Parts", "Vanguard Auto", "Titan Parts", "Omega Automotive", "Apex Distribution", "Nova Parts"];
+            const sortedCategories = Object.keys(data).sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
 
             let seenOrigins = {}; 
 
@@ -670,10 +588,8 @@
                 const catColor = categoryColors[category];
                 const items = data[category];
                 
-                // Identify "Light" colors for dynamic borders
                 const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
                 const isLight = lightColors.includes(catColor);
-                
                 const clusterTextColor = isLight ? '#1a2433' : '#FFFFFF';
                 const dynamicBorderColor = isLight ? '#1a2433' : '#FFFFFF';
                 const clusterClass = isLight ? 'custom-cluster dark-outline' : 'custom-cluster';
@@ -691,7 +607,6 @@
                     }
                 });
 
-                // Sidebar Market Breakdown
                 let breakdownHtml = `
                     <div class="breakdown-row flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all cursor-default shadow-sm min-h-[35px]">
                         <div class="flex items-center gap-3 overflow-hidden">
@@ -707,11 +622,9 @@
                     let itemLat = parseFloat(item.lat);
                     let itemLng = parseFloat(item.lng);
 
-                    // JITTER LOGIC: Unstack overlapping hubs
                     if (!isNaN(itemLat) && !isNaN(itemLng)) {
                         let coordKey = `${itemLat.toFixed(4)},${itemLng.toFixed(4)}`;
                         if (seenOrigins[coordKey] === undefined) { seenOrigins[coordKey] = 0; }
-                        
                         let count = seenOrigins[coordKey];
                         if (count > 0) {
                             let angle = count * (Math.PI * 2 / 6); 
@@ -734,8 +647,12 @@
                         let rev = item.gravity['Total LTM Revenue'];
                         window[`hubData_${safeName.replace(/\s+/g, '')}`] = item.top_accounts;
                         
-                        // Save the Atlanta Hub specifically for the Guided Tour Demo
-                        if(!autoTriggerHub && item.name.includes("Atlanta")) {
+                        // Safety Fallback: Assign the very first Meridian Hub we process
+                        if(!autoTriggerHub) {
+                            autoTriggerHub = { name: safeName, rev: rev, lat: itemLat, lng: itemLng, marker: marker };
+                        }
+                        // Preferred Target: Assign Atlanta if we find it
+                        if(item.name.includes("Atlanta")) {
                             autoTriggerHub = { name: safeName, rev: rev, lat: itemLat, lng: itemLng, marker: marker };
                         }
 
@@ -767,9 +684,8 @@
                             </div>
                         `;
 
-                        // ADDED ID FOR TOUR TARGETING
                         analyticsButtonHtml = `
-                            <button id="open-analytics-btn-popup" onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1a2433; color: #ffffff; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
+                            <button class="open-analytics-btn" onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1a2433; color: #ffffff; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
                                 Open Hub Analytics &raquo;
                             </button>
                         `;
@@ -787,7 +703,6 @@
                     `;
                     marker.bindPopup(popupHtml);
                     
-                    // Ghost Pin Logic
                     marker.on('click', function() {
                         tradeAreaRings.clearLayers();
                         if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; }
@@ -802,6 +717,23 @@
                             L.circle([itemLat, itemLng], {radius: 30 * metersPerMile, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 2}).addTo(tradeAreaRings);
                             L.circle([itemLat, itemLng], {radius: 15 * metersPerMile, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 2}).addTo(tradeAreaRings);
                             L.circle([itemLat, itemLng], {radius: 5 * metersPerMile, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 2}).addTo(tradeAreaRings);
+
+                            // Dynamically generate distance tags along the rings
+                            const addRingLabel = (miles, text, color) => {
+                                const latOffset = miles / 69.0;
+                                const labelIcon = L.divIcon({
+                                    className: 'ring-label-icon',
+                                    html: `<div style="color: ${color}; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-shadow: 0 1px 3px #000, 0 0 6px #000; white-space: nowrap; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid ${color}40;">${text}</div>`,
+                                    iconSize: null,
+                                    iconAnchor: [25, 10] 
+                                });
+                                L.marker([itemLat + latOffset, itemLng], {icon: labelIcon, interactive: false}).addTo(tradeAreaRings);
+                            };
+
+                            addRingLabel(50, '30-50 Miles', '#3b82f6');
+                            addRingLabel(30, '15-30 Miles', '#22c55e');
+                            addRingLabel(15, '5-15 Miles', '#f97316');
+                            addRingLabel(5, '0-5 Miles (Core)', '#ef4444');
                         }
 
                         lockedPin.on('popupclose', function() {
@@ -890,7 +822,6 @@
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(acc['Total LTM Profit']);
                 let safeName = acc['Customer Name'].replace(/'/g, "\\'");
                 
-                // ADDED CLASS .account-drill-row FOR TOUR
                 let html = `
                     <div onclick="openAccountDetails('${safeName}', ${index})" class="account-drill-row flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#DC2626] hover:shadow-md transition-all group">
                         <div class="overflow-hidden pr-2">
@@ -935,7 +866,6 @@
             for (const [rangeDesc, profit] of Object.entries(ranges)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
                 
-                // ADDED CLASS .range-drill-row FOR TOUR
                 rangesContainer.innerHTML += `
                     <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="range-drill-row flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
                         <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
@@ -1030,9 +960,41 @@
             });
         }
 
-        // --- GUIDED TOUR WIZARD ---
+        // --- GUIDED TOUR WIZARD (BULLETPROOF EDITION) ---
         let currentTourStep = 0;
         let isTourActive = false;
+
+        // Dynamic UI Injection function to bypass any CSS specificity or JIT issues
+        function injectTourUI() {
+            if(document.getElementById('tour-blocker')) return;
+            
+            const blocker = document.createElement('div');
+            blocker.id = 'tour-blocker';
+            blocker.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); z-index: 99990; display: none;';
+            document.body.appendChild(blocker);
+
+            const cursor = document.createElement('div');
+            cursor.id = 'ghost-cursor';
+            cursor.style.cssText = 'position: fixed; top: 0; left: 0; width: 35px; height: 35px; z-index: 99999; opacity: 0; pointer-events: none; transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease; transform: translate(-100px, -100px) scale(1); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));';
+            cursor.innerHTML = `<svg viewBox="0 0 24 24" width="32" height="32" fill="white" stroke="#1D1B1C" stroke-width="1.5"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.42c.45 0 .67-.54.35-.85L5.85 3.21a.5.5 0 0 0-.35-.15Z"/></svg>`;
+            document.body.appendChild(cursor);
+
+            const bubble = document.createElement('div');
+            bubble.id = 'tour-bubble';
+            bubble.style.cssText = 'position: fixed; top: 0; left: 0; z-index: 99995; opacity: 0; pointer-events: none; background: #1a2433; color: white; padding: 20px; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1); max-width: 320px; border-left: 4px solid #b32525; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease; transform: translate(-100px, -100px);';
+            bubble.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <h4 id="tour-title" class="font-bold text-[#FFCC00] text-xs uppercase tracking-widest">Step</h4>
+                    <span id="tour-step-count" class="text-[10px] font-mono text-gray-400"></span>
+                </div>
+                <p id="tour-text" class="text-sm mb-5 text-gray-200 leading-relaxed"></p>
+                <div class="flex justify-between items-center border-t border-gray-700 pt-3">
+                    <button onclick="endTour()" class="text-[11px] font-bold text-gray-400 hover:text-white transition-colors uppercase tracking-wider">End Tour</button>
+                    <button id="tour-next-btn" onclick="tourNext()" class="bg-[#b32525] hover:bg-red-600 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Next &rarr;</button>
+                </div>
+            `;
+            document.body.appendChild(bubble);
+        }
 
         const tourSteps = [
             {
@@ -1042,34 +1004,41 @@
                 action: () => {}
             },
             {
-                title: "2. Tactical Environment",
-                text: "We open the map filters to toggle environment variables. Notice how we can swap from the default 'Tactical' view to real-world Satellite imagery.",
+                title: "2. Map Filters",
+                text: "We open the map filters to access environment variables and layer controls.",
                 target: () => {
-                    const btn = document.getElementById('filter-btn-main'); 
-                    const rect = btn.getBoundingClientRect();
-                    return { x: rect.left + (rect.width/2), y: rect.top + (rect.height/2) };
+                    const btn = document.querySelector('button[onclick*="filter-dropdown"]'); 
+                    if (btn) {
+                        const rect = btn.getBoundingClientRect();
+                        return { x: rect.left + (rect.width/2), y: rect.top + (rect.height/2) };
+                    }
+                    return { x: window.innerWidth - 100, y: 100 };
                 },
                 action: () => {
                     document.getElementById('filter-dropdown').classList.remove('hidden');
-                    // Simulate clicking the satellite radio button
-                    setTimeout(() => {
-                        document.getElementById('satellite-toggle-btn').click();
-                        document.querySelector('input[value="satellite"]').checked = true;
-                        window.changeBasemap('satellite');
-                    }, 500);
                 }
             },
             {
-                title: "3. Finding a Target Hub",
-                text: "To execute prescriptive strategy, we must locate a high-value asset. Let's zoom the map directly into the core Atlanta hub.",
+                title: "3. Tactical Environment",
+                text: "Notice how we can swap from the default 'Tactical' view to real-world Satellite imagery to inspect physical real estate.",
                 target: () => {
-                    const dropdown = document.getElementById('filter-dropdown');
-                    const rect = dropdown.getBoundingClientRect();
-                    return { x: rect.left + 50, y: rect.top + 50 }; 
+                    const satInput = document.querySelector('input[value="satellite"]');
+                    if (satInput && satInput.parentElement) {
+                        const rect = satInput.parentElement.getBoundingClientRect();
+                        return { x: rect.left + 20, y: rect.top + (rect.height/2) };
+                    }
+                    return { x: window.innerWidth - 150, y: 200 };
                 },
                 action: () => {
+                    document.querySelector('input[value="satellite"]').checked = true;
+                    window.changeBasemap('satellite');
+                }
+            },
+            {
+                title: "4. Finding a Target Hub",
+                text: "To execute prescriptive strategy, we must locate a high-value asset. Let's zoom the map directly into the core Atlanta hub.",
+                preAction: () => {
                     document.getElementById('filter-dropdown').classList.add('hidden');
-                    // Reset to tactical for better contrast during the demo
                     document.querySelector('input[value="tactical"]').checked = true;
                     window.changeBasemap('tactical');
 
@@ -1077,11 +1046,7 @@
                         map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 11, {duration: 2});
                     }
                 },
-                waitAfterAction: 2200 // wait for the map to finish flying
-            },
-            {
-                title: "4. Trade Area Friction",
-                text: "By pulling 12 months of Point-of-Sale data and calculating distance decay, we generate exact 'Friction Rings' to map how far our drivers travel to capture market share.",
+                waitBeforeMove: 2200,
                 target: () => {
                     if(autoTriggerHub) {
                         const pt = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
@@ -1097,10 +1062,42 @@
                 }
             },
             {
-                title: "5. Financial Analytics",
+                title: "5. ML Topology Assessment",
+                text: "Once selected, the K-Means Machine Learning model instantly evaluates the hub. It assigns a Strategic Tier (e.g., Tier 4 Urban Fringe) and a Confidence score based on competitive density and revenue gravity. This mathematical rating dictates our margin tolerance.",
+                target: () => {
+                    const popup = document.querySelector('.leaflet-popup-content-wrapper');
+                    if(popup) {
+                        const rect = popup.getBoundingClientRect();
+                        return { x: rect.left + 50, y: rect.top + 50 }; 
+                    }
+                    return { x: window.innerWidth/2, y: window.innerHeight/2 };
+                },
+                action: () => {}
+            },
+            {
+                title: "6. Trade Area Friction",
+                text: "We then zoom out to visualize the actual distance decay. These 'Friction Rings' map exactly how far drivers travel to capture market share, allowing us to see if we are burning fuel to service accounts outside our optimal footprint.",
+                preAction: () => {
+                    if(autoTriggerHub) {
+                        map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 9, {duration: 1.5});
+                    }
+                },
+                waitBeforeMove: 1600,
+                target: () => {
+                    if(autoTriggerHub) {
+                        const pt = map.latLngToContainerPoint([autoTriggerHub.lat + (15/69.0), autoTriggerHub.lng]); 
+                        const mapRect = document.getElementById('map').getBoundingClientRect();
+                        return { x: mapRect.left + pt.x, y: mapRect.top + pt.y };
+                    }
+                    return { x: window.innerWidth/2, y: window.innerHeight/2 };
+                },
+                action: () => {}
+            },
+            {
+                title: "7. Financial Analytics",
                 text: "Now we extract the LTM Revenue and True Gross Margin for this specific location. We click to slide out the Hub Analytics Engine.",
                 target: () => {
-                    const btn = document.getElementById('open-analytics-btn-popup');
+                    const btn = document.querySelector('.open-analytics-btn');
                     if(btn) {
                         const rect = btn.getBoundingClientRect();
                         return { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
@@ -1108,11 +1105,11 @@
                     return { x: window.innerWidth/2, y: window.innerHeight/2 };
                 },
                 action: () => {
-                    if(autoTriggerHub) openAnalytics(autoTriggerHub.name, autoTriggerHub.rev);
+                    if(autoTriggerHub) openAnalytics(autoTriggerHub.name.replace(/\\'/g, "'"), autoTriggerHub.rev);
                 }
             },
             {
-                title: "6. Account Drill-down",
+                title: "8. Account Drill-down",
                 text: "The engine isolates the specific B2B accounts driving the hub's profit. We click the #1 Earner to dive deeper into their purchasing DNA.",
                 target: () => {
                     const accRow = document.querySelector('.account-drill-row'); 
@@ -1128,7 +1125,7 @@
                 }
             },
             {
-                title: "7. Category Velocity",
+                title: "9. Category Velocity",
                 text: "Finally, we isolate exactly which part numbers are generating margin for this account. The guided tour is complete—feel free to explore the interactive dashboard yourself!",
                 target: () => {
                     const rangeRow = document.querySelector('.range-drill-row');
@@ -1145,7 +1142,8 @@
                         const firstRange = Object.keys(ranges)[0];
                         drillDownToRange(firstRange.replace(/'/g, "\\'"));
                     }
-                    document.getElementById('tour-next-btn').innerText = "Finish";
+                    const nextBtn = document.getElementById('tour-next-btn');
+                    if(nextBtn) nextBtn.innerText = "Finish";
                 }
             }
         ];
@@ -1154,10 +1152,11 @@
             if(isTourActive) return;
             isTourActive = true;
             
-            // Setup UI for tour
+            // Guarantee DOM elements exist before executing
+            injectTourUI();
+            
             document.getElementById('tour-blocker').style.display = 'block';
             
-            // Clean slate
             closeAnalytics();
             if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); }
             map.closePopup();
@@ -1165,7 +1164,8 @@
             document.getElementById('filter-dropdown').classList.add('hidden');
             
             currentTourStep = 0;
-            document.getElementById('tour-next-btn').innerText = "Next \u2192";
+            const nextBtn = document.getElementById('tour-next-btn');
+            if(nextBtn) nextBtn.innerText = "Next \u2192";
             
             playTourStep(currentTourStep);
         };
@@ -1181,70 +1181,101 @@
 
         window.endTour = function() {
             isTourActive = false;
-            document.getElementById('tour-blocker').style.display = 'none';
-            document.getElementById('ghost-cursor').classList.remove('opacity-100');
-            document.getElementById('ghost-cursor').classList.add('opacity-0');
+            const blocker = document.getElementById('tour-blocker');
+            if(blocker) blocker.style.display = 'none';
+            
+            const cursor = document.getElementById('ghost-cursor');
+            if(cursor) {
+                cursor.style.opacity = '0';
+                cursor.style.pointerEvents = 'none';
+            }
             
             const bubble = document.getElementById('tour-bubble');
-            bubble.classList.remove('opacity-100', 'pointer-events-auto');
-            bubble.classList.add('opacity-0', 'pointer-events-none');
+            if(bubble) {
+                bubble.style.opacity = '0';
+                bubble.style.pointerEvents = 'none';
+            }
+            
+            const nextBtn = document.getElementById('tour-next-btn');
+            if(nextBtn) nextBtn.innerText = "Next \u2192";
         };
 
         async function playTourStep(index) {
-            const step = tourSteps[index];
-            const cursor = document.getElementById('ghost-cursor');
-            const bubble = document.getElementById('tour-bubble');
+            try {
+                const nextBtn = document.getElementById('tour-next-btn');
+                if(nextBtn) nextBtn.disabled = true;
 
-            // 1. Hide bubble while moving
-            bubble.classList.remove('opacity-100', 'pointer-events-auto');
-            bubble.classList.add('opacity-0', 'pointer-events-none');
+                const step = tourSteps[index];
+                const cursor = document.getElementById('ghost-cursor');
+                const bubble = document.getElementById('tour-bubble');
 
-            // 2. Perform any pre-action wait time (like map panning)
-            if (step.action && index === 2) { 
-                step.action(); 
-                await new Promise(r => setTimeout(r, step.waitAfterAction || 0));
+                if(!cursor || !bubble) return; // Safety check
+
+                // Hide bubble while moving
+                bubble.style.opacity = '0';
+                bubble.style.pointerEvents = 'none';
+
+                if (step.preAction) { step.preAction(); }
+                
+                if (step.waitBeforeMove) {
+                    await new Promise(r => setTimeout(r, step.waitBeforeMove));
+                }
+
+                // Safety fallback for target positioning
+                let targetPos = step.target();
+                if(!targetPos || typeof targetPos.x === 'undefined') {
+                    targetPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+                }
+
+                // Show cursor and move
+                cursor.style.opacity = '1';
+                cursor.style.transform = `translate(${targetPos.x}px, ${targetPos.y}px) scale(1)`;
+
+                await new Promise(r => setTimeout(r, 1200));
+
+                if (step.action) {
+                    cursor.style.transform = `translate(${targetPos.x}px, ${targetPos.y}px) scale(0.8)`;
+                    await new Promise(r => setTimeout(r, 150));
+                    cursor.style.transform = `translate(${targetPos.x}px, ${targetPos.y}px) scale(1)`;
+                    step.action();
+                }
+
+                await new Promise(r => setTimeout(r, 400));
+
+                let bubbleX = targetPos.x + 30;
+                let bubbleY = targetPos.y + 30;
+                
+                if (bubbleX > window.innerWidth - 350) bubbleX = window.innerWidth - 350;
+                if (bubbleY > window.innerHeight - 250) bubbleY = window.innerHeight - 250;
+
+                bubble.style.transform = `translate(${bubbleX}px, ${bubbleY}px)`;
+                
+                const titleEl = document.getElementById('tour-title');
+                const textEl = document.getElementById('tour-text');
+                const countEl = document.getElementById('tour-step-count');
+                
+                if(titleEl) titleEl.innerText = step.title;
+                if(textEl) textEl.innerText = step.text;
+                if(countEl) countEl.innerText = `${index + 1} of ${tourSteps.length}`;
+                
+                // Show bubble
+                bubble.style.opacity = '1';
+                bubble.style.pointerEvents = 'auto';
+                
+                if(nextBtn) nextBtn.disabled = false;
+                
+            } catch (err) {
+                console.error("Tour Step Error:", err);
+                const bubble = document.getElementById('tour-bubble');
+                if (bubble) {
+                    bubble.style.opacity = '1';
+                    bubble.style.pointerEvents = 'auto';
+                    const textEl = document.getElementById('tour-text');
+                    if(textEl) textEl.innerText = "The tour encountered a slight glitch here. Feel free to click 'Next' to continue or 'End Tour' to explore manually.";
+                    const nextBtn = document.getElementById('tour-next-btn');
+                    if(nextBtn) nextBtn.disabled = false;
+                }
             }
-
-            // 3. Calculate target coordinates dynamically
-            const targetPos = step.target();
-
-            // 4. Move Cursor
-            cursor.classList.remove('opacity-0');
-            cursor.classList.add('opacity-100');
-            cursor.style.transform = `translate(${targetPos.x}px, ${targetPos.y}px)`;
-
-            // Wait for cursor transit time (1.2s CSS transition)
-            await new Promise(r => setTimeout(r, 1200));
-
-            // 5. Execute Fake Click Animation
-            cursor.classList.add('cursor-click');
-            await new Promise(r => setTimeout(r, 150));
-            cursor.classList.remove('cursor-click');
-
-            // 6. Execute Main Action (if not done in pre-action)
-            if (step.action && index !== 2) {
-                step.action();
-            }
-
-            // Wait a moment for UI changes (popups, drawers)
-            await new Promise(r => setTimeout(r, 400));
-
-            // 7. Position & Show the Speech Bubble
-            // Keep bubble on screen bounds
-            let bubbleX = targetPos.x + 30;
-            let bubbleY = targetPos.y + 30;
-            
-            if (bubbleX > window.innerWidth - 350) bubbleX = window.innerWidth - 350;
-            if (bubbleY > window.innerHeight - 250) bubbleY = window.innerHeight - 250;
-
-            bubble.style.transform = `translate(${bubbleX}px, ${bubbleY}px)`;
-            
-            document.getElementById('tour-title').innerText = step.title;
-            document.getElementById('tour-text').innerText = step.text;
-            document.getElementById('tour-step-count').innerText = `${index + 1} of ${tourSteps.length}`;
-            
-            bubble.classList.remove('opacity-0', 'pointer-events-none');
-            bubble.classList.add('opacity-100', 'pointer-events-auto');
         }
 
         // Initialize Map Data
