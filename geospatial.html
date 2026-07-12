@@ -26,7 +26,6 @@
     <style>
         /* Base Brand Colors and Typography */
         :root {
-            /* Portfolio Text Colors */
             --dark-slate-blue: #1a2433;
             --alert-red: #b32525;
             --bg-color: #fbfbfb;
@@ -35,21 +34,11 @@
 
         body { 
             font-family: 'Inter', sans-serif; 
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            overflow-x: hidden;
-            color: #334155;
+            margin: 0; padding: 0; background-color: var(--bg-color); overflow-x: hidden; color: #334155;
         }
 
         /* --- PORTFOLIO SPECIFIC STYLES --- */
-        .portfolio-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            font-size: 10.5pt;
-            line-height: 1.6;
-        }
+        .portfolio-content { max-width: 1000px; margin: 0 auto; padding: 40px 20px; font-size: 10.5pt; line-height: 1.6; }
         .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
         .back-link:hover { text-decoration: underline; }
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
@@ -67,18 +56,8 @@
 
         /* --- DASHBOARD WRAPPER --- */
         .dashboard-container {
-            width: 95%;
-            max-width: 1400px;
-            margin: 40px auto;
-            height: 85vh; 
-            min-height: 750px;
-            background: #1D1B1C;
-            display: flex;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border: 1px solid #333;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
+            width: 95%; max-width: 1400px; margin: 40px auto; height: 85vh; min-height: 750px;
+            background: #1D1B1C; display: flex; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 12px; overflow: hidden; position: relative;
         }
 
         #map { height: 100%; width: 100%; z-index: 1; }
@@ -91,28 +70,19 @@
         .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
         .leaflet-popup-content { margin: 0; width: 280px !important; }
         .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .popup-body { padding: 16px; background: #fff; }
-        .popup-title { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 4px; line-height: 1.2;}
-        .popup-address { font-size: 13px; color: #555; margin-bottom: 12px; font-style: italic; }
-        .popup-coords { font-size: 12px; color: #888; font-family: monospace; }
-        .leaflet-popup-tip { background: #fff; }
+        .popup-body { padding: 16px; } /* Removed hardcoded white bg */
+        .leaflet-popup-tip { background: var(--bg-color); }
         .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
 
         /* Custom Pins & Clusters */
-        .custom-color-pin { border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
-        .custom-color-pin.dark-outline { border: 2px solid #1a2433; box-shadow: 0 0 6px rgba(255,255,255,0.3); }
+        .custom-color-pin { border-radius: 50%; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
         .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
-        .custom-cluster { background: rgba(26, 36, 51, 0.9); color: var(--pure-white); border: 2px solid rgba(255, 255, 255, 0.6); font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .custom-cluster.dark-outline { border: 2px solid #1a2433; }
-
-        /* Map Ring Labels */
-        .ring-label-icon { pointer-events: none !important; z-index: 400 !important; }
+        .custom-cluster { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
         /* Custom Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
         .layer-toggle input { display: none; }
-        .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: white; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
-        .layer-toggle input:checked + .custom-checkbox { background: #1D1B1C; border: 2px solid white; }
+        .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: transparent; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; border: 2px solid #555;}
         .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
 
         /* iOS Toggle Switch */
@@ -126,24 +96,25 @@
         /* Theme SVG Icons */
         .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
         body:not(.light-mode) .theme-icon { fill: #1D1B1C; stroke: #FFFFFF; stroke-width: 2px; }
-        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1a2433; stroke-width: 2px; }
+        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1D1B1C; stroke-width: 2px; }
 
         /* Themes */
         .theme-bg-main { background-color: #1D1B1C; } 
         .theme-text-main { color: var(--pure-white); }
-        .theme-text-muted { color: #888888; } /* Perfect Neutral Gray */
+        .theme-text-muted { color: #888888; } 
         .theme-border { border-color: #333; } 
         .theme-card { background-color: rgba(255,255,255,0.05); }
         
         body.light-mode .theme-bg-main { background-color: #F8FAFC; }
         body.light-mode .theme-text-main { color: #0F172A; }
-        body.light-mode .theme-text-muted { color: #555555; } /* Perfect Neutral Dark Gray */
+        body.light-mode .theme-text-muted { color: #555555; } 
         body.light-mode .theme-border { border-color: #E2E8F0; }
         body.light-mode .theme-card { background-color: #FFFFFF; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         body.light-mode .breakdown-row { border-color: #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
+        body.light-mode .leaflet-popup-tip { background: #fff; }
 
         /* Sidebar Hover Fixes */
         .breakdown-row:hover { background-color: rgba(255,255,255,0.08); }
@@ -162,21 +133,39 @@
 
         /* PORTFOLIO DEMO STYLES */
         .pulse-instruction {
-            animation: pulse-border 2s infinite;
-            border-left: 4px solid var(--alert-red);
-            background: #f8fafc;
-            padding: 15px;
-            border-radius: 4px;
-            margin: 20px 0;
-            font-weight: 500;
-            color: #334155;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            animation: pulse-border 2s infinite; border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; border-radius: 4px; margin: 20px 0; font-weight: 500; color: #334155; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         @keyframes pulse-border {
             0% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(179, 37, 37, 0); }
             100% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0); }
+        }
+        
+        /* Wizard Elements (Hardcoded to bypass Tailwind JIT Bug) */
+        #wizard-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999990; opacity: 0; pointer-events: none; transition: opacity 0.5s;
+        }
+        #ghost-cursor {
+            position: absolute; width: 24px; height: 24px; z-index: 999999; opacity: 0; pointer-events: none; transition: all 2.0s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: top left;
+        }
+        #ghost-cursor.clicking { transform: scale(0.8); }
+        #tour-bubble {
+            position: absolute; width: 320px; z-index: 999995; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 2.0s cubic-bezier(0.25, 1, 0.5, 1); padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-col; gap: 12px;
+        }
+        
+        /* The Click Ripple Effect */
+        .cursor-ripple {
+            position: absolute; top: -8px; left: -8px; width: 40px; height: 40px; background: rgba(255, 204, 0, 0.5); border-radius: 50%; pointer-events: none; opacity: 0;
+        }
+        .cursor-ripple.animate-ripple {
+            animation: ripple-ping 0.8s ease-out forwards;
+        }
+        @keyframes ripple-ping { 0% { transform: scale(0.1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+
+        /* Map Labels */
+        .ring-label {
+            background: rgba(15, 23, 42, 0.8); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); pointer-events: none; white-space: nowrap;
         }
 
         @media (max-width: 800px) {
@@ -199,7 +188,6 @@
             <div class="doc-title">Predictive VIO Market Capture & K-Means Threat Modeling</div>
         </div>
 
-        <!-- OUTLINED META CARDS -->
         <div class="meta-container">
             <div class="meta-card">
                 <span class="meta-label">Principal Engineer</span>
@@ -225,10 +213,10 @@
         <!-- DEMO BUTTONS SECTION -->
         <div class="pulse-instruction flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div class="flex-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block text-[#b32525] mr-1 mb-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <strong>INTERACTIVE DEMO:</strong> The application below is fully functional. Click "Start Guided Tour" to launch an interactive, step-by-step walkthrough of how the predictive modeling engine is utilized in production.
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block text-[#b32525] mr-1 mb-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <strong>INTERACTIVE DEMO:</strong> Click "Start Guided Tour" to follow an automated walk-through of the ML clustering, or explore the dashboard freely by clicking the hubs and layers yourself.
             </div>
             <div class="flex flex-wrap gap-2 mt-2 md:mt-0 shrink-0">
-                <button id="demo-start-btn" onclick="startTour()" class="bg-[#1a2433] text-white hover:bg-[#b32525] border-[#1a2433] hover:border-[#b32525] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border flex items-center gap-2">
+                <button id="demo-start-btn" onclick="startGuidedTour()" class="bg-[#1a2433] text-white hover:bg-[#b32525] border-[#1a2433] hover:border-[#b32525] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Start Guided Tour
                 </button>
             </div>
@@ -237,11 +225,10 @@
 
     <!-- LIVE DASHBOARD -->
     <div class="dashboard-container" id="app-dashboard">
-
+        
         <!-- Left Sidebar: Command Center -->
         <div id="sidebar" class="w-[380px] shrink-0 h-full flex flex-col z-10 theme-bg-main theme-border border-r relative shadow-2xl transition-colors duration-300">
             
-            <!-- Header & Logo (Portfolio Proxy Brand) -->
             <div class="p-6 pb-2 flex flex-col items-center text-center">
                 <div class="text-sm font-extrabold text-[#b32525] tracking-[0.2em] uppercase mb-1">Meridian Parts</div>
                 <h1 class="text-2xl font-black theme-text-main italic tracking-tight">STRATEGIC <span class="text-[#b32525]">RADAR</span></h1>
@@ -270,18 +257,18 @@
 
             <!-- Floating Dropdown UI for Filters -->
             <div class="absolute top-4 right-4 z-[1000] flex flex-col items-end">
-                <button onclick="document.getElementById('filter-dropdown').classList.toggle('hidden')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-lg border theme-border font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <button id="filter-btn" onclick="document.getElementById('filter-dropdown').classList.toggle('hidden')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-lg border theme-border font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
                     Map Filters & Controls
                 </button>
                 
-                <div id="filter-dropdown" class="hidden mt-2 bg-[#1a2433] border border-gray-700 rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
+                <div id="filter-dropdown" class="hidden mt-2 border rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
                     <!-- Display Mode -->
                     <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Environment Settings</h3>
                     
                     <div class="flex items-center justify-between mb-6">
                         <span class="text-sm font-medium theme-text-main">Dark Mode</span>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2" id="theme-toggle-container">
                             <span id="sun-icon" style="opacity: 0.5;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             </span>
@@ -296,14 +283,14 @@
                     </div>
 
                     <div class="flex flex-col gap-3 mb-8">
-                        <label class="layer-toggle !mb-0">
+                        <label class="layer-toggle !mb-0" id="tactical-btn">
                             <input type="radio" name="basemap" value="tactical" checked onchange="changeBasemap(this.value)">
-                            <div class="custom-checkbox rounded-full"></div>
+                            <div class="custom-checkbox rounded-full border-2 theme-border"></div>
                             <span class="text-sm font-medium theme-text-main">Tactical Maps (High Contrast)</span>
                         </label>
-                        <label class="layer-toggle !mb-0">
+                        <label class="layer-toggle !mb-0" id="satellite-btn">
                             <input type="radio" name="basemap" value="satellite" onchange="changeBasemap(this.value)">
-                            <div class="custom-checkbox rounded-full"></div>
+                            <div class="custom-checkbox rounded-full border-2 theme-border"></div>
                             <span class="text-sm font-medium theme-text-main">Satellite Imagery (Real-world)</span>
                         </label>
                     </div>
@@ -319,63 +306,86 @@
                     </div>
                 </div>
             </div>
-        </div>
+            
+            <!-- Right Sidebar: Slide-out Analytics Drawer -->
+            <div id="analytics-panel" class="absolute top-0 right-0 h-full w-[400px] z-[2000] theme-bg-main border-l theme-border flex flex-col">
+                <!-- Drawer Header -->
+                <div class="p-6 border-b theme-border flex justify-between items-center bg-[#b32525]">
+                    <div>
+                        <div id="analytics-subtitle" class="text-[10px] font-black text-white uppercase tracking-widest">Hub Diagnostic</div>
+                        <h2 id="analytics-title" class="text-xl font-black text-white tracking-tight">Store Name</h2>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="back-to-hub-btn" onclick="restoreHubView()" class="hidden text-[11px] font-black text-white uppercase tracking-wide hover:underline mr-2">&larr; Back</button>
+                        <button onclick="closeAnalytics()" class="text-white hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Drawer Content (Scrollable) -->
+                <div class="flex-1 overflow-y-auto p-6 sidebar-scroll">
+                    
+                    <!-- KPI Cards -->
+                    <div class="flex gap-3 mb-6">
+                        <div class="theme-card border theme-border rounded-lg p-3 flex-1 text-center shadow-inner">
+                            <div class="text-[9px] font-bold theme-text-muted uppercase tracking-wider mb-1">LTM Revenue</div>
+                            <div id="analytics-rev" class="text-lg font-black theme-text-main text-green-400">--</div>
+                        </div>
+                        <div class="theme-card border theme-border rounded-lg p-3 flex-1 text-center shadow-inner">
+                            <div id="analytics-margin-title" class="text-[9px] font-bold theme-text-muted uppercase tracking-wider mb-1">True Gross Margin</div>
+                            <div id="analytics-margin" class="text-lg font-black theme-text-main text-blue-400">--</div>
+                        </div>
+                    </div>
 
-        <!-- Right Sidebar: Slide-out Analytics Drawer -->
-        <div id="analytics-panel" class="absolute top-0 right-0 h-full w-[400px] z-[2000] theme-bg-main border-l theme-border flex flex-col">
-            <!-- Drawer Header -->
-            <div class="p-6 border-b theme-border flex justify-between items-center bg-[#b32525]">
-                <div>
-                    <div id="analytics-subtitle" class="text-[10px] font-black text-white uppercase tracking-widest">Hub Diagnostic</div>
-                    <h2 id="analytics-title" class="text-xl font-black text-white tracking-tight">Store Name</h2>
+                    <!-- Chart.js Container -->
+                    <div class="mb-8">
+                        <h3 id="chart-title" class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Product Group Velocity (LTM)</h3>
+                        <div class="relative w-full h-[250px]">
+                            <canvas id="pgChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Ranges Table -->
+                    <div id="ranges-section" class="mb-8 hidden">
+                        <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Product Group Ranges</h3>
+                        <div id="top-ranges-list" class="space-y-2 text-sm theme-text-main">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Top Accounts List -->
+                    <div id="accounts-section">
+                        <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Accounts</h3>
+                        <div id="top-accounts-list" class="space-y-2">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <button id="back-to-hub-btn" onclick="restoreHubView()" class="hidden text-[11px] font-black text-white uppercase tracking-wide hover:underline mr-2">&larr; Back</button>
-                    <button onclick="closeAnalytics()" class="text-white hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-                </div>
+            </div>
+
+            <!-- THE GUIDED WIZARD ELEMENTS (Hardcoded) -->
+            <div id="wizard-overlay"></div>
+            
+            <div id="ghost-cursor">
+                <div class="cursor-ripple" id="cursor-ripple"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="#000" stroke-width="1.5" style="filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); transform: rotate(-15deg);">
+                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+                    <path d="M13 13l6 6"></path>
+                </svg>
             </div>
             
-            <!-- Drawer Content (Scrollable) -->
-            <div class="flex-1 overflow-y-auto p-6 sidebar-scroll">
-                
-                <!-- KPI Cards -->
-                <div class="flex gap-3 mb-6">
-                    <div class="theme-card border theme-border rounded-lg p-3 flex-1 text-center shadow-inner">
-                        <div class="text-[9px] font-bold theme-text-muted uppercase tracking-wider mb-1">LTM Revenue</div>
-                        <div id="analytics-rev" class="text-lg font-black theme-text-main text-green-400">--</div>
-                    </div>
-                    <div class="theme-card border theme-border rounded-lg p-3 flex-1 text-center shadow-inner">
-                        <div id="analytics-margin-title" class="text-[9px] font-bold theme-text-muted uppercase tracking-wider mb-1">True Gross Margin</div>
-                        <div id="analytics-margin" class="text-lg font-black theme-text-main text-blue-400">--</div>
-                    </div>
-                </div>
-
-                <!-- Chart.js Container -->
-                <div class="mb-8">
-                    <h3 id="chart-title" class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Product Group Velocity (LTM)</h3>
-                    <div class="relative w-full h-[250px]">
-                        <canvas id="pgChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Top Ranges Table -->
-                <div id="ranges-section" class="mb-8 hidden">
-                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Product Group Ranges</h3>
-                    <div id="top-ranges-list" class="space-y-2 text-sm text-gray-300">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-
-                <!-- Top Accounts List -->
-                <div id="accounts-section">
-                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Accounts</h3>
-                    <div id="top-accounts-list" class="space-y-2">
-                        <!-- Populated by JS -->
+            <div id="tour-bubble" class="theme-bg-main theme-border theme-text-main border">
+                <div class="text-sm font-semibold leading-relaxed" id="tour-text"></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t theme-border">
+                    <span class="text-xs font-bold theme-text-muted" id="tour-step">Step 1 of X</span>
+                    <div class="flex gap-2">
+                        <button id="tour-back-btn" class="bg-gray-200 text-gray-800 hover:bg-gray-300 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="prevTourStep()">Back</button>
+                        <button id="tour-next-btn" class="bg-[#b32525] text-white hover:bg-red-700 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="nextTourStep()">Next</button>
                     </div>
                 </div>
             </div>
+
         </div>
     </div> <!-- END FULL BLEED DASHBOARD -->
 
@@ -392,9 +402,7 @@
     <script>
         // --- 1. REALISTIC FAKE DATA GENERATOR ---
         function generateDeepFakeData() {
-            const data = {
-                "Meridian Parts": [], "Vanguard Auto": [], "Titan Parts": [], "Omega Automotive": [], "Apex Distribution": [], "Nova Parts": []
-            };
+            const data = { "Meridian Parts": [], "Vanguard Auto": [], "Titan Parts": [], "Omega Automotive": [], "Apex Distribution": [], "Nova Parts": [] };
             const comps = Object.keys(data).filter(k => k !== "Meridian Parts");
 
             const pgs = ['Friction / Brakes', 'Filtration', 'Ride Control', 'Electrical', 'Chemicals'];
@@ -422,29 +430,24 @@
             const accountPrefixes = ["Commercial Fleet", "Metro Diesel", "City Transit", "Agri-Repair", "Heavy Duty Services", "Express Auto", "Advanced Diagnostics", "Premier Alignment"];
 
             cityAnchors.forEach((city) => {
-                // Generate Meridian Hubs
                 let hubCount = city.hasHub ? (city.type === "urban" ? 18 : city.type === "mid" ? 9 : 5) : 0;
                 
                 for(let h=1; h<=hubCount; h++) {
                     let totalHubRev = Math.floor(Math.random() * 3000000) + 1000000;
                     let accounts = [];
                     
-                    // Generate 8 Fake B2B Accounts per Hub
                     for(let j=1; j<=8; j++) {
                         let accRev = Math.floor(totalHubRev * (Math.random() * 0.15 + 0.02)); 
                         let accProfit = accRev * (Math.random() * 0.15 + 0.25); 
                         
-                        let pgMix = {};
-                        let remaining = 100;
+                        let pgMix = {}; let remaining = 100;
                         for(let i=0; i<4; i++) {
                             let alloc = Math.floor(Math.random() * (remaining * 0.6));
-                            pgMix[pgs[i]] = alloc;
-                            remaining -= alloc;
+                            pgMix[pgs[i]] = alloc; remaining -= alloc;
                         }
                         pgMix[pgs[4]] = remaining;
 
-                        let accRanges = {};
-                        let rangeParts = {};
+                        let accRanges = {}; let rangeParts = {};
                         Object.keys(pgMix).forEach(pg => {
                             if(pgMix[pg] > 0) {
                                 let topRange = ranges[pg][0];
@@ -459,49 +462,41 @@
 
                         accounts.push({
                             'Customer Name': `${accountPrefixes[j-1]} 00${j}`,
-                            'Total LTM Revenue': accRev,
-                            'Total LTM Profit': accProfit,
+                            'Total LTM Revenue': accRev, 'Total LTM Profit': accProfit,
                             'True Margin Pct': ((accProfit / accRev) * 100).toFixed(1),
-                            'Product Group DNA': JSON.stringify(pgMix),
-                            'Top MAM Ranges': JSON.stringify(accRanges),
-                            'Range Parts DNA': JSON.stringify(rangeParts)
+                            'Product Group DNA': JSON.stringify(pgMix), 'Top MAM Ranges': JSON.stringify(accRanges), 'Range Parts DNA': JSON.stringify(rangeParts)
                         });
                     }
 
-                    // Spread the hubs out locally
-                    let hLat = city.lat + (Math.random() - 0.5) * 0.3; 
-                    let hLng = city.lng + (Math.random() - 0.5) * 0.3;
+                    // Tighter Hub Offset for accuracy
+                    let hLat = city.lat + (Math.random() - 0.5) * 0.2; 
+                    let hLng = city.lng + (Math.random() - 0.5) * 0.2;
 
                     data["Meridian Parts"].push({
                         name: `Meridian Hub - ${city.name.split(',')[0]} #${h}`,
-                        lat: hLat, 
-                        lng: hLng,
-                        address: `123 Industrial Pkwy, ${city.name}`,
+                        lat: hLat, lng: hLng, address: `123 Industrial Pkwy, ${city.name}`,
                         gravity: { 'Total LTM Revenue': totalHubRev, '0-5 Miles': '45.2%', '5-15 Miles': '22.1%', '15-30 Miles': '15.4%', '30-50 Miles': '12.3%', '50-100 Miles': '5.0%', '100+ Miles': '0.0%' },
                         topology: { tier: city.type === "urban" ? 4 : city.type === "mid" ? 2 : 1, confidence: "94.2%", status: "Locked" },
                         top_accounts: accounts.sort((a,b) => b['Total LTM Revenue'] - a['Total LTM Revenue'])
                     });
                 }
 
-                // Generate Competitors (Spread across region)
                 let compCount = city.type === "urban" ? 85 : city.type === "mid" ? 40 : 15;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
                         name: `${cat} - Sector ${i+1}`,
-                        lat: city.lat + (Math.random() - 0.5) * 1.2,
-                        lng: city.lng + (Math.random() - 0.5) * 1.2,
-                        address: `Commercial Dr, ${city.name.split(',')[0]}`
+                        lat: city.lat + (Math.random() - 0.5) * 2.5, lng: city.lng + (Math.random() - 0.5) * 2.5,
+                        address: `Commercial Dr, ${city.name.split(',')[1].trim()}`
                     });
                 }
             });
-
             return data;
         }
 
         // --- 2. STATE VARIABLES ---
         let currentMapStyle = 'tactical';
-        let isDarkMode = true; 
+        let isDarkMode = true;
         let pgChartInstance = null;
         let activeHubName = null;
         let activeHubRev = null;
@@ -519,11 +514,8 @@
             const mapContainer = document.getElementById('map');
             mapContainer.classList.remove('tactical-dark-map', 'satellite-dark-map');
             if (isDarkMode) {
-                if (currentMapStyle === 'tactical') {
-                    mapContainer.classList.add('tactical-dark-map');
-                } else {
-                    mapContainer.classList.add('satellite-dark-map');
-                }
+                if (currentMapStyle === 'tactical') mapContainer.classList.add('tactical-dark-map');
+                else mapContainer.classList.add('satellite-dark-map');
             }
         }
         applyMapFilters();
@@ -544,40 +536,31 @@
 
         window.changeBasemap = function(type) {
             currentMapStyle = type;
-            if (type === 'tactical') {
-                map.removeLayer(satelliteLayer);
-                tacticalLayer.addTo(map);
-            } else {
-                map.removeLayer(tacticalLayer);
-                satelliteLayer.addTo(map);
-            }
+            if (type === 'tactical') { map.removeLayer(satelliteLayer); tacticalLayer.addTo(map); } 
+            else { map.removeLayer(tacticalLayer); satelliteLayer.addTo(map); }
             applyMapFilters();
         }
 
         // --- 4. RENDER DATA & CLUSTERS ---
-        const createColorIcon = (color, borderColor, isLight) => {
-            const classMods = isLight ? 'custom-color-pin dark-outline' : 'custom-color-pin';
-            return L.divIcon({
-                className: classMods,
-                html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%; border: 2px solid ${borderColor}; box-sizing: border-box;"></div>`,
-                iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
-            });
-        };
+        const createColorIcon = (color) => L.divIcon({
+            className: 'custom-color-pin',
+            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
+            iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
+        });
 
         const categoryColors = {
             "Meridian Parts": '#DC2626', "Vanguard Auto": '#F97316', "Titan Parts": '#FCD34D', "Omega Automotive": '#DDDDDD', "Apex Distribution": '#999999', "Nova Parts": '#555555'
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
+        const ringLabels = L.layerGroup().addTo(map); // Store text labels
         let lockedPin = null;
 
         function renderMap() {
             const data = generateDeepFakeData();
             const toggleContainer = document.getElementById('dynamic-layer-toggles');
             const breakdownContainer = document.getElementById('market-breakdown-container');
-            
-            toggleContainer.innerHTML = '';
-            breakdownContainer.innerHTML = '';
+            toggleContainer.innerHTML = ''; breakdownContainer.innerHTML = '';
 
             const categoryOrder = ["Meridian Parts", "Vanguard Auto", "Titan Parts", "Omega Automotive", "Apex Distribution", "Nova Parts"];
             const sortedCategories = Object.keys(data).sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
@@ -589,28 +572,14 @@
                 const items = data[category];
                 
                 const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
-                const isLight = lightColors.includes(catColor);
-                const clusterTextColor = isLight ? '#1a2433' : '#FFFFFF';
-                const dynamicBorderColor = isLight ? '#1a2433' : '#FFFFFF';
-                const clusterClass = isLight ? 'custom-cluster dark-outline' : 'custom-cluster';
-                const closeButtonShadow = isLight ? 'none' : '0 1px 3px rgba(0,0,0,0.5)';
-
-                const clusterGroup = L.markerClusterGroup({
-                    chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
-                    iconCreateFunction: function(cluster) {
-                        const count = cluster.getChildCount();
-                        const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
-                        return L.divIcon({
-                            html: `<div class="${clusterClass}" style="background-color: ${catColor}; color: ${clusterTextColor}; width: ${size}px; height: ${size}px;"> ${count}</div>`,
-                            className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
-                        });
-                    }
-                });
-
+                const clusterTextColor = lightColors.includes(catColor) ? '#1a2433' : '#FFFFFF';
+                const clusterBorder = lightColors.includes(catColor) ? '#1a2433' : 'rgba(255, 255, 255, 0.6)';
+                
+                // Sidebar Market Breakdown
                 let breakdownHtml = `
-                    <div class="breakdown-row flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all cursor-default shadow-sm min-h-[35px]">
+                    <div class="breakdown-row flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all cursor-default min-h-[35px]">
                         <div class="flex items-center gap-3 overflow-hidden">
-                            <div class="w-3 h-3 rounded-full shrink-0" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor}; border: 1px solid ${dynamicBorderColor};"></div>
+                            <div class="w-3 h-3 rounded-full shrink-0 border" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor}; border-color: ${lightColors.includes(catColor) ? '#1a2433' : 'transparent'};"></div>
                             <span class="text-[15px] font-semibold theme-text-main truncate tracking-wide" title="${category}">${category}</span>
                         </div>
                         <span class="font-mono font-bold text-[17px] theme-text-main ml-2">${items.length}</span>
@@ -618,13 +587,25 @@
                 `;
                 breakdownContainer.insertAdjacentHTML('beforeend', breakdownHtml);
 
+                const clusterGroup = L.markerClusterGroup({
+                    chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
+                    iconCreateFunction: function(cluster) {
+                        const count = cluster.getChildCount();
+                        const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
+                        return L.divIcon({
+                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; border-color: ${clusterBorder}; width: ${size}px; height: ${size}px;">${count}</div>`,
+                            className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
+                        });
+                    }
+                });
+
                 items.forEach(item => {
                     let itemLat = parseFloat(item.lat);
                     let itemLng = parseFloat(item.lng);
 
                     if (!isNaN(itemLat) && !isNaN(itemLng)) {
                         let coordKey = `${itemLat.toFixed(4)},${itemLng.toFixed(4)}`;
-                        if (seenOrigins[coordKey] === undefined) { seenOrigins[coordKey] = 0; }
+                        if (seenOrigins[coordKey] === undefined) seenOrigins[coordKey] = 0;
                         let count = seenOrigins[coordKey];
                         if (count > 0) {
                             let angle = count * (Math.PI * 2 / 6); 
@@ -635,37 +616,35 @@
                         seenOrigins[coordKey]++;
                     }
 
-                    const markerIcon = createColorIcon(catColor, dynamicBorderColor, isLight);
+                    // Dynamically apply a dark border to light pins so they pop on satellite
+                    const pinBorderColor = lightColors.includes(catColor) ? '#1a2433' : '#fff';
+                    const customPinHtml = `<div style="background-color: ${catColor}; width: 100%; height: 100%; border-radius: 50%; border: 2px solid ${pinBorderColor};"></div>`;
+                    const markerIcon = L.divIcon({ className: 'custom-color-pin', html: customPinHtml, iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8] });
+                    
                     const marker = L.marker([itemLat, itemLng], { icon: markerIcon });
                     
-                    let analyticsButtonHtml = '';
-                    let gravityHtml = '';
-                    let topologyHtml = '';
+                    let analyticsButtonHtml = ''; let gravityHtml = ''; let topologyHtml = '';
 
                     if (category === "Meridian Parts") {
                         let safeName = item.name.replace(/'/g, "\\'");
                         let rev = item.gravity['Total LTM Revenue'];
                         window[`hubData_${safeName.replace(/\s+/g, '')}`] = item.top_accounts;
                         
-                        // Safety Fallback: Assign the very first Meridian Hub we process
-                        if(!autoTriggerHub) {
-                            autoTriggerHub = { name: safeName, rev: rev, lat: itemLat, lng: itemLng, marker: marker };
-                        }
-                        // Preferred Target: Assign Atlanta if we find it
-                        if(item.name.includes("Atlanta")) {
+                        if(!autoTriggerHub && item.name.includes("Atlanta")) {
                             autoTriggerHub = { name: safeName, rev: rev, lat: itemLat, lng: itemLng, marker: marker };
                         }
 
                         let revFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rev);
+                        // Theme-aware inline styles instead of hardcoded white
                         gravityHtml = `
-                            <div style="margin-top: 12px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
-                                <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">Revenue Gravity (LTM)</div>
-                                <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">${revFormatted}</div>
-                                <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
-                                    <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 3px 0;">0-5 Miles (Core)</td><td style="text-align: right; font-weight: 600; color: #27ae60;">${item.gravity['0-5 Miles']}</td></tr>
-                                    <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 3px 0;">5-15 Miles</td><td style="text-align: right; font-weight: 600;">${item.gravity['5-15 Miles']}</td></tr>
-                                    <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 3px 0;">15-30 Miles</td><td style="text-align: right; font-weight: 600;">${item.gravity['15-30 Miles']}</td></tr>
-                                    <tr><td style="padding: 3px 0;">30+ Miles</td><td style="text-align: right; font-weight: 600;">${item.gravity['30-50 Miles']}</td></tr>
+                            <div class="theme-card theme-border mt-3 p-2.5 rounded-md border shadow-sm">
+                                <div class="text-[11px] font-extrabold theme-text-muted uppercase mb-1.5 tracking-wider">Revenue Gravity (LTM)</div>
+                                <div class="text-sm font-bold theme-text-main mb-2">${revFormatted}</div>
+                                <table class="w-full text-xs collapse theme-text-main">
+                                    <tr class="border-b theme-border"><td class="py-1">0-5 Miles (Core)</td><td class="text-right font-semibold text-green-500">${item.gravity['0-5 Miles']}</td></tr>
+                                    <tr class="border-b theme-border"><td class="py-1">5-15 Miles</td><td class="text-right font-semibold">${item.gravity['5-15 Miles']}</td></tr>
+                                    <tr class="border-b theme-border"><td class="py-1">15-30 Miles</td><td class="text-right font-semibold">${item.gravity['15-30 Miles']}</td></tr>
+                                    <tr><td class="py-1">30-50 Miles</td><td class="text-right font-semibold">${item.gravity['30-50 Miles']}</td></tr>
                                 </table>
                             </div>
                         `;
@@ -674,29 +653,29 @@
                         let tierName = tierNames[item.topology.tier] || `Tier ${item.topology.tier}`;
                         
                         topologyHtml = `
-                            <div style="margin-bottom: 12px; padding: 10px; background: #1e293b; color: #f8fafc; border-radius: 6px; border-left: 4px solid #8b5cf6; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                                <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 4px;">ML Topology Profile</div>
-                                <div style="font-size: 13px; font-weight: 700; margin-bottom: 6px; color: #fff;">${tierName}</div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
-                                    <span style="color: #cbd5e1;">Confidence: <strong style="color: #fff;">${item.topology.confidence}</strong></span>
-                                    <span style="background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 9px; text-transform: uppercase;">${item.topology.status}</span>
+                            <div class="topology-box mb-3 p-2.5 bg-indigo-900/90 text-white rounded-md border-l-4 border-indigo-400 shadow-md backdrop-blur-sm">
+                                <div class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-200 mb-1">ML Topology Profile</div>
+                                <div class="text-sm font-bold mb-1.5">${tierName}</div>
+                                <div class="flex justify-between items-center text-[11px]">
+                                    <span class="text-indigo-100">Confidence: <strong class="text-white">${item.topology.confidence}</strong></span>
+                                    <span class="bg-emerald-500 text-white px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide">${item.topology.status}</span>
                                 </div>
                             </div>
                         `;
 
                         analyticsButtonHtml = `
-                            <button class="open-analytics-btn" onclick="openAnalytics('${safeName}', ${rev})" style="width: 100%; margin-top: 15px; padding: 10px; background-color: #1a2433; color: #ffffff; border: none; border-radius: 6px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; cursor: pointer; transition: opacity 0.2s;">
+                            <button id="open-analytics-btn" onclick="openAnalytics('${safeName}', ${rev})" class="w-full mt-4 p-2.5 bg-[#b32525] hover:bg-red-700 text-white border-none rounded-md font-extrabold uppercase tracking-wider text-[11px] cursor-pointer transition-colors shadow-md">
                                 Open Hub Analytics &raquo;
                             </button>
                         `;
                     }
 
                     let popupHtml = `
-                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor}; text-shadow: ${closeButtonShadow};">${category}</div>
-                        <div class="popup-body">
+                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor};">${category}</div>
+                        <div class="popup-body theme-bg-main theme-text-main theme-border border-b">
                             ${topologyHtml}
-                            <div class="popup-title">${item.name}</div>
-                            <div class="popup-address">${item.address}</div>
+                            <div class="popup-title theme-text-main">${item.name}</div>
+                            <div class="text-xs theme-text-muted italic mb-2">${item.address}</div>
                             ${gravityHtml}
                             ${analyticsButtonHtml}
                         </div>
@@ -705,6 +684,7 @@
                     
                     marker.on('click', function() {
                         tradeAreaRings.clearLayers();
+                        ringLabels.clearLayers();
                         if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; }
                         marker.closePopup();
 
@@ -712,32 +692,26 @@
                         lockedPin.bindPopup(popupHtml).openPopup();
                         
                         if (item.gravity && category === "Meridian Parts") {
-                            const metersPerMile = 1609.34;
-                            L.circle([itemLat, itemLng], {radius: 50 * metersPerMile, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 1}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 30 * metersPerMile, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 2}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 15 * metersPerMile, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 2}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 5 * metersPerMile, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 2}).addTo(tradeAreaRings);
-
-                            // Dynamically generate distance tags along the rings
-                            const addRingLabel = (miles, text, color) => {
-                                const latOffset = miles / 69.0;
-                                const labelIcon = L.divIcon({
-                                    className: 'ring-label-icon',
-                                    html: `<div style="color: ${color}; font-size: 10px; font-weight: 900; letter-spacing: 0.5px; text-shadow: 0 1px 3px #000, 0 0 6px #000; white-space: nowrap; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid ${color}40;">${text}</div>`,
-                                    iconSize: null,
-                                    iconAnchor: [25, 10] 
-                                });
-                                L.marker([itemLat + latOffset, itemLng], {icon: labelIcon, interactive: false}).addTo(tradeAreaRings);
-                            };
-
-                            addRingLabel(50, '30-50 Miles', '#3b82f6');
-                            addRingLabel(30, '15-30 Miles', '#22c55e');
-                            addRingLabel(15, '5-15 Miles', '#f97316');
-                            addRingLabel(5, '0-5 Miles (Core)', '#ef4444');
+                            const mpm = 1609.34;
+                            const dLat = 0.01449275; // Approx degrees per mile
+                            
+                            // 30% Thinner Rings applied here:
+                            L.circle([itemLat, itemLng], {radius: 50 * mpm, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 0.7, dashArray: '5, 5'}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 30 * mpm, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 1.4}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 15 * mpm, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 1.4}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 5 * mpm, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 1.4}).addTo(tradeAreaRings);
+                            
+                            // Add Distance Text Labels to the top edge of each ring
+                            const labelStyles = "className: 'ring-label', iconSize: [null, null]";
+                            L.marker([itemLat + (5 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-red-500 border-red-500">0-5 Miles (Core)</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
+                            L.marker([itemLat + (15 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-orange-500 border-orange-500">5-15 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
+                            L.marker([itemLat + (30 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-green-500 border-green-500">15-30 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
+                            L.marker([itemLat + (50 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-blue-500 border-blue-500">30-50 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
                         }
 
                         lockedPin.on('popupclose', function() {
                             tradeAreaRings.clearLayers();
+                            ringLabels.clearLayers();
                             if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; }
                         });
                     });
@@ -752,8 +726,8 @@
                 const toggleHtml = `
                     <label class="layer-toggle">
                         <input type="checkbox" class="category-checkbox" data-category="${safeCat}" checked onchange="toggleCategory('${safeCat}', this.checked)">
-                        <div class="custom-checkbox"></div>
-                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}]" style="background-color: ${catColor}; border: 1px solid ${dynamicBorderColor}; flex-shrink: 0;"></div>
+                        <div class="custom-checkbox border-2 ${lightColors.includes(catColor) ? 'theme-border' : 'border-gray-500'}"></div>
+                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}] border" style="background-color: ${catColor}; border-color: ${pinBorderColor}; flex-shrink: 0;"></div>
                         <span class="text-sm font-semibold theme-text-main truncate">${category} <span class="opacity-50 text-xs ml-1">(${items.length})</span></span>
                     </label>
                 `;
@@ -779,6 +753,7 @@
             else map.removeLayer(layer);
         };
 
+        // --- 5. ANALYTICS DRAWER & CHART LOGIC ---
         window.openAnalytics = function(storeName, totalRev) {
             activeHubName = storeName;
             activeHubRev = totalRev;
@@ -810,9 +785,7 @@
             });
 
             let hubPgMix = {};
-            for (let [pg, rev] of Object.entries(hubPgRawRev)) {
-                hubPgMix[pg] = (rev / totalHubRevCalculated) * 100;
-            }
+            for (let [pg, rev] of Object.entries(hubPgRawRev)) { hubPgMix[pg] = (rev / totalHubRevCalculated) * 100; }
             renderDynamicDoughnutChart(hubPgMix);
 
             const accountsContainer = document.getElementById('top-accounts-list');
@@ -821,12 +794,11 @@
             activeHubAccounts.forEach((acc, index) => {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(acc['Total LTM Profit']);
                 let safeName = acc['Customer Name'].replace(/'/g, "\\'");
-                
                 let html = `
-                    <div onclick="openAccountDetails('${safeName}', ${index})" class="account-drill-row flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#DC2626] hover:shadow-md transition-all group">
+                    <div onclick="openAccountDetails('${safeName}', ${index})" id="account-btn-${index}" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#DC2626] hover:shadow-md transition-all group">
                         <div class="overflow-hidden pr-2">
                             <div class="text-[10px] text-gray-500 font-bold mb-0.5 tracking-wider uppercase">#${index + 1} Earner</div>
-                            <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#DC2626] transition-colors truncate" style="font-family: 'Inter', sans-serif; letter-spacing: -0.3px;">${acc['Customer Name']}</div>
+                            <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#DC2626] transition-colors truncate">${acc['Customer Name']}</div>
                         </div>
                         <div class="text-right shrink-0">
                             <div class="font-mono text-[15px] text-blue-400 font-bold">${profitStr}</div>
@@ -865,10 +837,9 @@
             let count = 1;
             for (const [rangeDesc, profit] of Object.entries(ranges)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
-                
                 rangesContainer.innerHTML += `
-                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="range-drill-row flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
-                        <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
+                    <div id="range-btn-${count}" onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
+                        <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
                 `;
@@ -879,7 +850,7 @@
         window.drillDownToRange = function(rangeName) {
             document.getElementById('chart-title').innerHTML = `
                 Top Parts: ${rangeName} 
-                <button onclick="resetAccountChart()" class="float-right text-[9px] bg-gray-700 text-white px-2 py-1 rounded hover:bg-[#DC2626] hover:text-white transition-colors tracking-widest">BACK</button>
+                <button onclick="resetAccountChart()" class="float-right text-[9px] bg-gray-700 text-white px-2 py-1 rounded hover:bg-[#DC2626] transition-colors tracking-widest">BACK</button>
             `;
             renderDynamicDoughnutChart(window.currentAccountParts[rangeName]);
 
@@ -893,8 +864,8 @@
                 let actualDollarProfit = (profitPct / 100) * rangeTotalProfit;
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(actualDollarProfit);
                 listContainer.innerHTML += `
-                    <div class="flex justify-between items-center py-2 border-b border-gray-800 last:border-0 rounded px-2 group">
-                        <span class="truncate pr-2 text-gray-300 text-sm"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${partNum}</span>
+                    <div class="flex justify-between items-center py-2 border-b theme-border last:border-0 rounded px-2 group">
+                        <span class="truncate pr-2 theme-text-main text-sm"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${partNum}</span>
                         <span class="font-mono text-blue-400 font-semibold text-sm">${profitStr}</span>
                     </div>
                 `;
@@ -911,8 +882,8 @@
             for (const [rangeDesc, profit] of Object.entries(window.currentAccountRangesRaw)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
                 rangesContainer.innerHTML += `
-                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="range-drill-row flex justify-between items-center py-2.5 border-b border-gray-800 last:border-0 cursor-pointer hover:bg-gray-800 hover:shadow-sm rounded px-2 transition-all group">
-                        <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
+                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
+                        <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
                 `;
@@ -922,16 +893,6 @@
 
         window.restoreHubView = function() { openAnalytics(activeHubName, activeHubRev); };
         window.closeAnalytics = function() { document.getElementById('analytics-panel').classList.remove('open'); };
-
-        function renderEmptyChart() {
-            const ctx = document.getElementById('pgChart').getContext('2d');
-            if (pgChartInstance) pgChartInstance.destroy();
-            pgChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: { labels: ['No POS Data Available'], datasets: [{ data: [100], backgroundColor: ['#64748b'] }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { tooltip: { enabled: false }, legend: { display: false } } }
-            });
-        }
 
         function renderDynamicDoughnutChart(pgDict) {
             const ctx = document.getElementById('pgChart').getContext('2d');
@@ -960,323 +921,232 @@
             });
         }
 
-        // --- GUIDED TOUR WIZARD (BULLETPROOF EDITION) ---
-        let currentTourStep = 0;
-        let isTourActive = false;
 
-        // Dynamic UI Injection function to bypass any CSS specificity or JIT issues
-        function injectTourUI() {
-            if(document.getElementById('tour-blocker')) return;
-            
-            const blocker = document.createElement('div');
-            blocker.id = 'tour-blocker';
-            blocker.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.2); z-index: 99990; display: none;';
-            document.body.appendChild(blocker);
-
-            const cursor = document.createElement('div');
-            cursor.id = 'ghost-cursor';
-            cursor.style.cssText = 'position: fixed; top: 0; left: 0; width: 35px; height: 35px; z-index: 99999; opacity: 0; pointer-events: none; transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease; transform: translate(-100px, -100px) scale(1); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));';
-            cursor.innerHTML = `<svg viewBox="0 0 24 24" width="32" height="32" fill="white" stroke="#1D1B1C" stroke-width="1.5"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.42c.45 0 .67-.54.35-.85L5.85 3.21a.5.5 0 0 0-.35-.15Z"/></svg>`;
-            document.body.appendChild(cursor);
-
-            const bubble = document.createElement('div');
-            bubble.id = 'tour-bubble';
-            bubble.style.cssText = 'position: fixed; top: 0; left: 0; z-index: 99995; opacity: 0; pointer-events: none; background: #1a2433; color: white; padding: 20px; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1); max-width: 320px; border-left: 4px solid #b32525; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease; transform: translate(-100px, -100px);';
-            bubble.innerHTML = `
-                <div class="flex justify-between items-start mb-2">
-                    <h4 id="tour-title" class="font-bold text-[#FFCC00] text-xs uppercase tracking-widest">Step</h4>
-                    <span id="tour-step-count" class="text-[10px] font-mono text-gray-400"></span>
-                </div>
-                <p id="tour-text" class="text-sm mb-5 text-gray-200 leading-relaxed"></p>
-                <div class="flex justify-between items-center border-t border-gray-700 pt-3">
-                    <button onclick="endTour()" class="text-[11px] font-bold text-gray-400 hover:text-white transition-colors uppercase tracking-wider">End Tour</button>
-                    <button id="tour-next-btn" onclick="tourNext()" class="bg-[#b32525] hover:bg-red-600 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider shadow-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Next &rarr;</button>
-                </div>
-            `;
-            document.body.appendChild(bubble);
-        }
-
+        // --- 6. THE GUIDED WIZARD ONBOARDING ENGINE ---
+        let currentStep = -1;
+        let tourActive = false;
+        
+        // Definition of all tour steps and their actions
         const tourSteps = [
             {
-                title: "1. Market Overview",
-                text: "Welcome to the Strategic Radar. This dashboard ingests POS data to map competitor density and our own fulfilling hubs. First, let's explore the map controls.",
-                target: () => ({ x: window.innerWidth / 2, y: window.innerHeight / 2 }),
-                action: () => {}
+                text: "Welcome to the Strategic Radar. Let's test the UI environment settings first.",
+                targetId: "filter-btn",
+                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 0,
+                action: () => { 
+                    if(document.getElementById('filter-dropdown').classList.contains('hidden')) {
+                        document.getElementById('filter-dropdown').classList.remove('hidden'); 
+                    }
+                },
+                preAction: () => { closeAnalytics(); map.setView([35.0, -85.5], 6); }
             },
             {
-                title: "2. Map Filters",
-                text: "We open the map filters to access environment variables and layer controls.",
-                target: () => {
-                    const btn = document.querySelector('button[onclick*="filter-dropdown"]'); 
-                    if (btn) {
-                        const rect = btn.getBoundingClientRect();
-                        return { x: rect.left + (rect.width/2), y: rect.top + (rect.height/2) };
-                    }
-                    return { x: window.innerWidth - 100, y: 100 };
-                },
-                action: () => {
-                    document.getElementById('filter-dropdown').classList.remove('hidden');
+                text: "The engine supports rapid theming. Flipping to Light Mode...",
+                targetId: "themeToggle",
+                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 20,
+                action: () => { if(isDarkMode) document.getElementById('themeToggle').click(); }
+            },
+            {
+                text: "Switching basemaps to high-resolution Satellite imagery...",
+                targetId: "satellite-btn",
+                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 20,
+                action: () => { document.querySelector('input[value="satellite"]').checked = true; window.changeBasemap('satellite'); }
+            },
+            {
+                text: "Reverting to Tactical Dark Map. Now let's dive into the data.",
+                targetId: "tactical-btn",
+                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 20,
+                action: () => { 
+                    document.querySelector('input[value="tactical"]').checked = true; window.changeBasemap('tactical'); 
+                    if(!isDarkMode) document.getElementById('themeToggle').click();
                 }
             },
             {
-                title: "3. Tactical Environment",
-                text: "Notice how we can swap from the default 'Tactical' view to real-world Satellite imagery to inspect physical real estate.",
-                target: () => {
-                    const satInput = document.querySelector('input[value="satellite"]');
-                    if (satInput && satInput.parentElement) {
-                        const rect = satInput.parentElement.getBoundingClientRect();
-                        return { x: rect.left + 20, y: rect.top + (rect.height/2) };
-                    }
-                    return { x: window.innerWidth - 150, y: 200 };
+                text: "Clicking a Hub isolates its specific Trade Area. I'll zoom into our Atlanta Hub.",
+                targetMap: true,
+                offsetX: 0, offsetY: 0, bubbleX: 50, bubbleY: -50,
+                action: () => { 
+                    document.getElementById('filter-dropdown').classList.add('hidden');
+                    if(autoTriggerHub && autoTriggerHub.marker) autoTriggerHub.marker.fire('click');
                 },
-                action: () => {
-                    document.querySelector('input[value="satellite"]').checked = true;
-                    window.changeBasemap('satellite');
-                }
-            },
-            {
-                title: "4. Finding a Target Hub",
-                text: "To execute prescriptive strategy, we must locate a high-value asset. Let's zoom the map directly into the core Atlanta hub.",
                 preAction: () => {
                     document.getElementById('filter-dropdown').classList.add('hidden');
-                    document.querySelector('input[value="tactical"]').checked = true;
-                    window.changeBasemap('tactical');
-
-                    if(autoTriggerHub) {
-                        map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 11, {duration: 2});
-                    }
-                },
-                waitBeforeMove: 2200,
-                target: () => {
-                    if(autoTriggerHub) {
-                        const pt = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
-                        const mapRect = document.getElementById('map').getBoundingClientRect();
-                        return { x: mapRect.left + pt.x, y: mapRect.top + pt.y };
-                    }
-                    return { x: window.innerWidth/2, y: window.innerHeight/2 };
-                },
-                action: () => {
-                    if(autoTriggerHub && autoTriggerHub.marker) {
-                        autoTriggerHub.marker.fire('click');
-                    }
+                    if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 11, {duration: 1.5});
                 }
             },
             {
-                title: "5. ML Topology Assessment",
-                text: "Once selected, the K-Means Machine Learning model instantly evaluates the hub. It assigns a Strategic Tier (e.g., Tier 4 Urban Fringe) and a Confidence score based on competitive density and revenue gravity. This mathematical rating dictates our margin tolerance.",
-                target: () => {
-                    const popup = document.querySelector('.leaflet-popup-content-wrapper');
-                    if(popup) {
-                        const rect = popup.getBoundingClientRect();
-                        return { x: rect.left + 50, y: rect.top + 50 }; 
-                    }
-                    return { x: window.innerWidth/2, y: window.innerHeight/2 };
-                },
-                action: () => {}
+                text: "The Machine Learning engine evaluates friction and assigns this Hub to a Strategic Tier, setting defensive margin floors.",
+                targetClass: "topology-box", // Targets the box inside the popup
+                offsetX: 0, offsetY: 0, bubbleX: -380, bubbleY: 0,
+                action: () => { } 
             },
             {
-                title: "6. Trade Area Friction",
-                text: "We then zoom out to visualize the actual distance decay. These 'Friction Rings' map exactly how far drivers travel to capture market share, allowing us to see if we are burning fuel to service accounts outside our optimal footprint.",
-                preAction: () => {
-                    if(autoTriggerHub) {
-                        map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 9, {duration: 1.5});
-                    }
-                },
-                waitBeforeMove: 1600,
-                target: () => {
-                    if(autoTriggerHub) {
-                        const pt = map.latLngToContainerPoint([autoTriggerHub.lat + (15/69.0), autoTriggerHub.lng]); 
-                        const mapRect = document.getElementById('map').getBoundingClientRect();
-                        return { x: mapRect.left + pt.x, y: mapRect.top + pt.y };
-                    }
-                    return { x: window.innerWidth/2, y: window.innerHeight/2 };
-                },
-                action: () => {}
+                text: "Zooming out reveals the Hub's Distance Decay Rings, showing exactly where LTM revenue drops off.",
+                targetMap: true, zoomOut: true,
+                offsetX: 0, offsetY: 50, bubbleX: 50, bubbleY: -50,
+                action: () => { },
+                preAction: () => { if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 9, {duration: 1.5}); }
             },
             {
-                title: "7. Financial Analytics",
-                text: "Now we extract the LTM Revenue and True Gross Margin for this specific location. We click to slide out the Hub Analytics Engine.",
-                target: () => {
-                    const btn = document.querySelector('.open-analytics-btn');
-                    if(btn) {
-                        const rect = btn.getBoundingClientRect();
-                        return { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
-                    }
-                    return { x: window.innerWidth/2, y: window.innerHeight/2 };
-                },
-                action: () => {
-                    if(autoTriggerHub) openAnalytics(autoTriggerHub.name.replace(/\\'/g, "'"), autoTriggerHub.rev);
-                }
+                text: "Let's open the Analytics Drawer to view the raw POS data generating this Hub.",
+                targetId: "open-analytics-btn",
+                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 0,
+                action: () => { if(autoTriggerHub) openAnalytics(autoTriggerHub.name, autoTriggerHub.rev); },
+                preAction: () => { closeAnalytics(); }
             },
             {
-                title: "8. Account Drill-down",
-                text: "The engine isolates the specific B2B accounts driving the hub's profit. We click the #1 Earner to dive deeper into their purchasing DNA.",
-                target: () => {
-                    const accRow = document.querySelector('.account-drill-row'); 
-                    if(accRow) {
-                        const rect = accRow.getBoundingClientRect();
-                        return { x: rect.left + 50, y: rect.top + 20 };
-                    }
-                    return { x: window.innerWidth - 200, y: 200 };
-                },
-                action: () => {
-                    const firstAcc = activeHubAccounts[0];
-                    if(firstAcc) openAccountDetails(firstAcc['Customer Name'].replace(/'/g, "\\'"), 0);
-                }
+                text: "We can drill down into the Top Earner to view their specific margin yield and Product Group DNA.",
+                targetId: "account-btn-0",
+                offsetX: 0, offsetY: 0, bubbleX: -360, bubbleY: 20,
+                action: () => { openAccountDetails(activeHubAccounts[0]['Customer Name'].replace(/'/g, "\\'"), 0); },
+                preAction: () => { restoreHubView(); }
             },
             {
-                title: "9. Category Velocity",
-                text: "Finally, we isolate exactly which part numbers are generating margin for this account. The guided tour is complete—feel free to explore the interactive dashboard yourself!",
-                target: () => {
-                    const rangeRow = document.querySelector('.range-drill-row');
-                    if(rangeRow) {
-                        const rect = rangeRow.getBoundingClientRect();
-                        return { x: rect.left + 50, y: rect.top + 20 };
-                    }
-                    return { x: window.innerWidth - 200, y: 400 };
-                },
-                action: () => {
+                text: "Finally, we isolate specific Part Velocity to identify highly profitable SKUs within this account.",
+                targetId: "range-btn-1",
+                offsetX: 0, offsetY: 0, bubbleX: -360, bubbleY: -20,
+                action: () => { 
                     const firstAcc = activeHubAccounts[0];
                     if(firstAcc) {
                         const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
                         const firstRange = Object.keys(ranges)[0];
                         drillDownToRange(firstRange.replace(/'/g, "\\'"));
                     }
-                    const nextBtn = document.getElementById('tour-next-btn');
-                    if(nextBtn) nextBtn.innerText = "Finish";
-                }
+                },
+                preAction: () => { resetAccountChart(); }
             }
         ];
 
-        window.startTour = function() {
-            if(isTourActive) return;
-            isTourActive = true;
+        window.startGuidedTour = function() {
+            if (tourActive) return;
+            tourActive = true;
+            currentStep = -1;
             
-            // Guarantee DOM elements exist before executing
-            injectTourUI();
+            document.getElementById('wizard-overlay').style.opacity = '1';
+            document.getElementById('wizard-overlay').style.pointerEvents = 'auto';
+            document.getElementById('ghost-cursor').style.opacity = '1';
+            document.getElementById('tour-bubble').style.opacity = '1';
             
-            document.getElementById('tour-blocker').style.display = 'block';
-            
+            // Close UI to prep
+            document.getElementById('filter-dropdown').classList.add('hidden');
             closeAnalytics();
-            if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); }
+            
+            document.getElementById('demo-start-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            nextTourStep();
+        };
+
+        window.endGuidedTour = function() {
+            tourActive = false;
+            document.getElementById('wizard-overlay').style.opacity = '0';
+            document.getElementById('wizard-overlay').style.pointerEvents = 'none';
+            document.getElementById('ghost-cursor').style.opacity = '0';
+            document.getElementById('tour-bubble').style.opacity = '0';
+            document.getElementById('demo-start-btn').classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            // Clean up UI
+            closeAnalytics();
+            if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); ringLabels.clearLayers(); }
             map.closePopup();
             map.setView([35.0, -85.5], 6);
-            document.getElementById('filter-dropdown').classList.add('hidden');
-            
-            currentTourStep = 0;
-            const nextBtn = document.getElementById('tour-next-btn');
-            if(nextBtn) nextBtn.innerText = "Next \u2192";
-            
-            playTourStep(currentTourStep);
         };
 
-        window.tourNext = function() {
-            currentTourStep++;
-            if(currentTourStep >= tourSteps.length) {
-                endTour();
-            } else {
-                playTourStep(currentTourStep);
-            }
-        };
-
-        window.endTour = function() {
-            isTourActive = false;
-            const blocker = document.getElementById('tour-blocker');
-            if(blocker) blocker.style.display = 'none';
-            
-            const cursor = document.getElementById('ghost-cursor');
-            if(cursor) {
-                cursor.style.opacity = '0';
-                cursor.style.pointerEvents = 'none';
-            }
-            
-            const bubble = document.getElementById('tour-bubble');
-            if(bubble) {
-                bubble.style.opacity = '0';
-                bubble.style.pointerEvents = 'none';
-            }
-            
-            const nextBtn = document.getElementById('tour-next-btn');
-            if(nextBtn) nextBtn.innerText = "Next \u2192";
-        };
-
-        async function playTourStep(index) {
-            try {
-                const nextBtn = document.getElementById('tour-next-btn');
-                if(nextBtn) nextBtn.disabled = true;
-
-                const step = tourSteps[index];
-                const cursor = document.getElementById('ghost-cursor');
-                const bubble = document.getElementById('tour-bubble');
-
-                if(!cursor || !bubble) return; // Safety check
-
-                // Hide bubble while moving
-                bubble.style.opacity = '0';
-                bubble.style.pointerEvents = 'none';
-
-                if (step.preAction) { step.preAction(); }
-                
-                if (step.waitBeforeMove) {
-                    await new Promise(r => setTimeout(r, step.waitBeforeMove));
-                }
-
-                // Safety fallback for target positioning
-                let targetPos = step.target();
-                if(!targetPos || typeof targetPos.x === 'undefined') {
-                    targetPos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-                }
-
-                // Show cursor and move
-                cursor.style.opacity = '1';
-                cursor.style.transform = `translate(${targetPos.x}px, ${targetPos.y}px) scale(1)`;
-
-                await new Promise(r => setTimeout(r, 1200));
-
-                if (step.action) {
-                    cursor.style.transform = `translate(${targetPos.x}px, ${targetPos.y}px) scale(0.8)`;
-                    await new Promise(r => setTimeout(r, 150));
-                    cursor.style.transform = `translate(${targetPos.x}px, ${targetPos.y}px) scale(1)`;
-                    step.action();
-                }
-
-                await new Promise(r => setTimeout(r, 400));
-
-                let bubbleX = targetPos.x + 30;
-                let bubbleY = targetPos.y + 30;
-                
-                if (bubbleX > window.innerWidth - 350) bubbleX = window.innerWidth - 350;
-                if (bubbleY > window.innerHeight - 250) bubbleY = window.innerHeight - 250;
-
-                bubble.style.transform = `translate(${bubbleX}px, ${bubbleY}px)`;
-                
-                const titleEl = document.getElementById('tour-title');
-                const textEl = document.getElementById('tour-text');
-                const countEl = document.getElementById('tour-step-count');
-                
-                if(titleEl) titleEl.innerText = step.title;
-                if(textEl) textEl.innerText = step.text;
-                if(countEl) countEl.innerText = `${index + 1} of ${tourSteps.length}`;
-                
-                // Show bubble
-                bubble.style.opacity = '1';
-                bubble.style.pointerEvents = 'auto';
-                
-                if(nextBtn) nextBtn.disabled = false;
-                
-            } catch (err) {
-                console.error("Tour Step Error:", err);
-                const bubble = document.getElementById('tour-bubble');
-                if (bubble) {
-                    bubble.style.opacity = '1';
-                    bubble.style.pointerEvents = 'auto';
-                    const textEl = document.getElementById('tour-text');
-                    if(textEl) textEl.innerText = "The tour encountered a slight glitch here. Feel free to click 'Next' to continue or 'End Tour' to explore manually.";
-                    const nextBtn = document.getElementById('tour-next-btn');
-                    if(nextBtn) nextBtn.disabled = false;
-                }
+        window.prevTourStep = function() {
+            if (currentStep > 0 && !document.getElementById('tour-next-btn').disabled) {
+                currentStep -= 2; // Subtract 2 because nextTourStep will add 1
+                nextTourStep();
             }
         }
+
+        window.nextTourStep = async function() {
+            if (!tourActive) return;
+            currentStep++;
+            
+            if (currentStep >= tourSteps.length) {
+                endGuidedTour();
+                return;
+            }
+
+            const step = tourSteps[currentStep];
+            const btnNext = document.getElementById('tour-next-btn');
+            const btnBack = document.getElementById('tour-back-btn');
+            
+            // Lock buttons during animation
+            btnNext.disabled = true; btnNext.classList.add('opacity-50');
+            btnBack.disabled = true; btnBack.classList.add('opacity-50');
+            
+            // 1. Run Pre-Action (e.g. flying the map)
+            if (step.preAction) {
+                step.preAction();
+                await new Promise(r => setTimeout(r, 1600)); // Wait for flyTo
+            }
+
+            // 2. Find target coordinates
+            let targetX = window.innerWidth / 2;
+            let targetY = window.innerHeight / 2;
+            
+            try {
+                if (step.targetId) {
+                    const el = document.getElementById(step.targetId);
+                    if (el) {
+                        const rect = el.getBoundingClientRect();
+                        targetX = rect.left + (rect.width / 2) + step.offsetX;
+                        targetY = rect.top + (rect.height / 2) + step.offsetY;
+                    }
+                } else if (step.targetClass) {
+                    const el = document.querySelector('.' + step.targetClass);
+                    if (el) {
+                        const rect = el.getBoundingClientRect();
+                        targetX = rect.left + (rect.width / 2) + step.offsetX;
+                        targetY = rect.top + (rect.height / 2) + step.offsetY;
+                    }
+                } else if (step.targetMap && autoTriggerHub) {
+                    const point = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
+                    targetX = point.x + step.offsetX;
+                    targetY = point.y + step.offsetY;
+                }
+            } catch (e) { console.log("Tour targeting fallback used."); }
+
+            // 3. Move Cursor and Bubble
+            const cursor = document.getElementById('ghost-cursor');
+            const bubble = document.getElementById('tour-bubble');
+            
+            cursor.style.transform = `translate(${targetX}px, ${targetY}px)`;
+            
+            // Position bubble relative to cursor
+            let bX = targetX + step.bubbleX;
+            let bY = targetY + step.bubbleY;
+            // Constrain bubble to screen
+            bX = Math.max(20, Math.min(bX, window.innerWidth - 340));
+            bY = Math.max(20, Math.min(bY, window.innerHeight - 150));
+            bubble.style.transform = `translate(${bX}px, ${bY}px)`;
+            
+            // Wait for cursor travel
+            await new Promise(r => setTimeout(r, 2000));
+
+            // 4. Update Bubble Text
+            document.getElementById('tour-text').innerText = step.text;
+            document.getElementById('tour-step').innerText = `Step ${currentStep + 1} of ${tourSteps.length}`;
+            if (currentStep === tourSteps.length - 1) btnNext.innerText = "Finish";
+            else btnNext.innerText = "Next";
+
+            // 5. The "Click" Ripple Animation
+            cursor.classList.add('clicking');
+            const ripple = document.getElementById('cursor-ripple');
+            ripple.classList.remove('animate-ripple');
+            void ripple.offsetWidth; // trigger reflow
+            ripple.classList.add('animate-ripple');
+            
+            await new Promise(r => setTimeout(r, 200));
+            cursor.classList.remove('clicking');
+            
+            // 6. Execute Action
+            if (step.action) {
+                try { step.action(); } catch(e) {}
+            }
+            
+            // Unlock buttons
+            btnNext.disabled = false; btnNext.classList.remove('opacity-50');
+            if (currentStep > 0) { btnBack.disabled = false; btnBack.classList.remove('opacity-50'); }
+        };
 
         // Initialize Map Data
         renderMap();
