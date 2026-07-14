@@ -70,7 +70,7 @@
         .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
         .leaflet-popup-content { margin: 0; width: 280px !important; }
         .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .popup-body { padding: 16px; } /* Removed hardcoded white bg */
+        .popup-body { padding: 16px; } 
         .leaflet-popup-tip { background: var(--bg-color); }
         .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
 
@@ -142,16 +142,17 @@
             100% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0); }
         }
         
-        /* Wizard Elements (Hardcoded to bypass Tailwind JIT Bug) */
+        /* Wizard Elements (Locked to Fixed Viewport for immunity to scrolling) */
         #wizard-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999990; opacity: 0; pointer-events: none; transition: opacity 0.5s;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 999990; opacity: 0; pointer-events: none; transition: opacity 0.5s;
         }
         #ghost-cursor {
-            position: absolute; width: 24px; height: 24px; z-index: 999999; opacity: 0; pointer-events: none; transition: all 2.0s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: top left;
+            position: fixed; width: 24px; height: 24px; z-index: 999999; opacity: 0; pointer-events: none; transition: all 2.0s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: top left;
         }
         #ghost-cursor.clicking { transform: scale(0.8); }
+        
         #tour-bubble {
-            position: absolute; width: 320px; z-index: 999995; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 2.0s cubic-bezier(0.25, 1, 0.5, 1); padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-col; gap: 12px;
+            position: fixed; width: 320px; z-index: 999995; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 2.0s cubic-bezier(0.25, 1, 0.5, 1); padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 12px;
         }
         
         /* The Click Ripple Effect */
@@ -363,29 +364,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- THE GUIDED WIZARD ELEMENTS (Hardcoded) -->
-            <div id="wizard-overlay"></div>
-            
-            <div id="ghost-cursor">
-                <div class="cursor-ripple" id="cursor-ripple"></div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="#000" stroke-width="1.5" style="filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); transform: rotate(-15deg);">
-                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
-                    <path d="M13 13l6 6"></path>
-                </svg>
-            </div>
-            
-            <div id="tour-bubble" class="theme-bg-main theme-border theme-text-main border">
-                <div class="text-sm font-semibold leading-relaxed" id="tour-text"></div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t theme-border">
-                    <span class="text-xs font-bold theme-text-muted" id="tour-step">Step 1 of X</span>
-                    <div class="flex gap-2">
-                        <button id="tour-back-btn" class="bg-gray-200 text-gray-800 hover:bg-gray-300 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="prevTourStep()">Back</button>
-                        <button id="tour-next-btn" class="bg-[#b32525] text-white hover:bg-red-700 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="nextTourStep()">Next</button>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div> <!-- END FULL BLEED DASHBOARD -->
 
@@ -396,6 +374,28 @@
 
         <div style="margin-top: 50px; text-align: center;">
             <a href="algorithmic-margin-defense.html" style="background: var(--dark-slate-blue); color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background 0.2s;">Next Phase: Algorithmic Margin Defense &rarr;</a>
+        </div>
+    </div>
+
+    <!-- THE GUIDED WIZARD ELEMENTS (Moved to root Body to fix scrolling bugs) -->
+    <div id="wizard-overlay"></div>
+    
+    <div id="ghost-cursor">
+        <div class="cursor-ripple" id="cursor-ripple"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="#000" stroke-width="1.5" style="filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); transform: rotate(-15deg);">
+            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+            <path d="M13 13l6 6"></path>
+        </svg>
+    </div>
+    
+    <div id="tour-bubble" class="theme-bg-main theme-border theme-text-main border">
+        <div class="text-sm font-semibold leading-relaxed" id="tour-text"></div>
+        <div class="flex justify-between items-center mt-3 pt-3 border-t theme-border">
+            <span class="text-xs font-bold theme-text-muted" id="tour-step">Step 1 of X</span>
+            <div class="flex gap-2">
+                <button id="tour-back-btn" class="bg-gray-200 text-gray-800 hover:bg-gray-300 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="prevTourStep()">Back</button>
+                <button id="tour-next-btn" class="bg-[#b32525] text-white hover:bg-red-700 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="nextTourStep()">Next</button>
+            </div>
         </div>
     </div>
 
@@ -481,12 +481,15 @@
                     });
                 }
 
-                let compCount = city.type === "urban" ? 85 : city.type === "mid" ? 40 : 15;
+                // Generous competitor generation to fill the map
+                let compCount = city.type === "urban" ? 180 : city.type === "mid" ? 80 : 30;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
                         name: `${cat} - Sector ${i+1}`,
-                        lat: city.lat + (Math.random() - 0.5) * 2.5, lng: city.lng + (Math.random() - 0.5) * 2.5,
+                        // DENSE SPAWN RATE: 0.8 keeps them clustered inside the 50 mile rings!
+                        lat: city.lat + (Math.random() - 0.5) * 0.8, 
+                        lng: city.lng + (Math.random() - 0.5) * 0.8,
                         address: `Commercial Dr, ${city.name.split(',')[1].trim()}`
                     });
                 }
@@ -567,6 +570,7 @@
 
             let seenOrigins = {}; 
 
+            // THE CRITICAL FIX: Define colors outside the loop so the Sidebar HTML string can read them without crashing!
             sortedCategories.forEach(category => {
                 const catColor = categoryColors[category];
                 const items = data[category];
@@ -574,6 +578,7 @@
                 const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
                 const clusterTextColor = lightColors.includes(catColor) ? '#1a2433' : '#FFFFFF';
                 const clusterBorder = lightColors.includes(catColor) ? '#1a2433' : 'rgba(255, 255, 255, 0.6)';
+                const pinBorderColor = lightColors.includes(catColor) ? '#1a2433' : '#fff'; // SCOPE FIX
                 
                 // Sidebar Market Breakdown
                 let breakdownHtml = `
@@ -593,7 +598,7 @@
                         const count = cluster.getChildCount();
                         const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
                         return L.divIcon({
-                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; border-color: ${clusterBorder}; width: ${size}px; height: ${size}px;">${count}</div>`,
+                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; border: 2px solid ${clusterBorder}; width: ${size}px; height: ${size}px;">${count}</div>`,
                             className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
                         });
                     }
@@ -616,8 +621,6 @@
                         seenOrigins[coordKey]++;
                     }
 
-                    // Dynamically apply a dark border to light pins so they pop on satellite
-                    const pinBorderColor = lightColors.includes(catColor) ? '#1a2433' : '#fff';
                     const customPinHtml = `<div style="background-color: ${catColor}; width: 100%; height: 100%; border-radius: 50%; border: 2px solid ${pinBorderColor};"></div>`;
                     const markerIcon = L.divIcon({ className: 'custom-color-pin', html: customPinHtml, iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8] });
                     
@@ -653,11 +656,11 @@
                         let tierName = tierNames[item.topology.tier] || `Tier ${item.topology.tier}`;
                         
                         topologyHtml = `
-                            <div class="topology-box mb-3 p-2.5 bg-indigo-900/90 text-white rounded-md border-l-4 border-indigo-400 shadow-md backdrop-blur-sm">
-                                <div class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-200 mb-1">ML Topology Profile</div>
-                                <div class="text-sm font-bold mb-1.5">${tierName}</div>
+                            <div class="topology-box mb-3 p-2.5 theme-card theme-border rounded-md border shadow-sm">
+                                <div class="text-[10px] font-extrabold uppercase tracking-widest theme-text-muted mb-1">ML Topology Profile</div>
+                                <div class="text-sm font-bold theme-text-main mb-1.5">${tierName}</div>
                                 <div class="flex justify-between items-center text-[11px]">
-                                    <span class="text-indigo-100">Confidence: <strong class="text-white">${item.topology.confidence}</strong></span>
+                                    <span class="theme-text-muted">Confidence: <strong class="theme-text-main">${item.topology.confidence}</strong></span>
                                     <span class="bg-emerald-500 text-white px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide">${item.topology.status}</span>
                                 </div>
                             </div>
@@ -702,7 +705,6 @@
                             L.circle([itemLat, itemLng], {radius: 5 * mpm, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 1.4}).addTo(tradeAreaRings);
                             
                             // Add Distance Text Labels to the top edge of each ring
-                            const labelStyles = "className: 'ring-label', iconSize: [null, null]";
                             L.marker([itemLat + (5 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-red-500 border-red-500">0-5 Miles (Core)</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
                             L.marker([itemLat + (15 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-orange-500 border-orange-500">5-15 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
                             L.marker([itemLat + (30 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-green-500 border-green-500">15-30 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
@@ -921,7 +923,6 @@
             });
         }
 
-
         // --- 6. THE GUIDED WIZARD ONBOARDING ENGINE ---
         let currentStep = -1;
         let tourActive = false;
@@ -977,14 +978,16 @@
                 text: "The Machine Learning engine evaluates friction and assigns this Hub to a Strategic Tier, setting defensive margin floors.",
                 targetClass: "topology-box", // Targets the box inside the popup
                 offsetX: 0, offsetY: 0, bubbleX: -380, bubbleY: 0,
-                action: () => { } 
+                action: () => { },
+                noClick: true
             },
             {
                 text: "Zooming out reveals the Hub's Distance Decay Rings, showing exactly where LTM revenue drops off.",
                 targetMap: true, zoomOut: true,
                 offsetX: 0, offsetY: 50, bubbleX: 50, bubbleY: -50,
                 action: () => { },
-                preAction: () => { if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 9, {duration: 1.5}); }
+                preAction: () => { if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 9, {duration: 1.5}); },
+                noClick: true
             },
             {
                 text: "Let's open the Analytics Drawer to view the raw POS data generating this Hub.",
@@ -1099,9 +1102,11 @@
                         targetY = rect.top + (rect.height / 2) + step.offsetY;
                     }
                 } else if (step.targetMap && autoTriggerHub) {
+                    // THE SCROLL FIX: Calculate relative to the actual Map Container bounds
+                    const mapRect = document.getElementById('map').getBoundingClientRect();
                     const point = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
-                    targetX = point.x + step.offsetX;
-                    targetY = point.y + step.offsetY;
+                    targetX = mapRect.left + point.x + step.offsetX;
+                    targetY = mapRect.top + point.y + step.offsetY;
                 }
             } catch (e) { console.log("Tour targeting fallback used."); }
 
@@ -1128,15 +1133,19 @@
             if (currentStep === tourSteps.length - 1) btnNext.innerText = "Finish";
             else btnNext.innerText = "Next";
 
-            // 5. The "Click" Ripple Animation
-            cursor.classList.add('clicking');
-            const ripple = document.getElementById('cursor-ripple');
-            ripple.classList.remove('animate-ripple');
-            void ripple.offsetWidth; // trigger reflow
-            ripple.classList.add('animate-ripple');
-            
-            await new Promise(r => setTimeout(r, 200));
-            cursor.classList.remove('clicking');
+            // 5. The "Click" Ripple Animation (Skip if noClick is true)
+            if (!step.noClick) {
+                cursor.classList.add('clicking');
+                const ripple = document.getElementById('cursor-ripple');
+                ripple.classList.remove('animate-ripple');
+                void ripple.offsetWidth; // trigger reflow
+                ripple.classList.add('animate-ripple');
+                
+                await new Promise(r => setTimeout(r, 200));
+                cursor.classList.remove('clicking');
+            } else {
+                await new Promise(r => setTimeout(r, 200)); // Just wait
+            }
             
             // 6. Execute Action
             if (step.action) {
