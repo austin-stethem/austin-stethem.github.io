@@ -63,22 +63,21 @@
         #map { height: 100%; width: 100%; z-index: 1; }
         
         /* Tactical Dark Map Filters */
-        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.5); }
+        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) grayscale(1) brightness(0.5); }
         .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
 
         /* Custom Popup Styling */
-        .leaflet-container { background: #1D1B1C !important; background-color: #1D1B1C !important; } 
-        .leaflet-popup-content-wrapper { border-radius: 8px !important; padding: 0 !important; overflow: hidden !important; box-shadow: 0 15px 35px rgba(0,0,0,0.6) !important; border: 1px solid #333 !important; background: #1D1B1C !important; background-color: #1D1B1C !important; }
-        .leaflet-popup-content { margin: 0 !important; padding: 0 !important; width: 280px !important; background: #1D1B1C !important; }
-        .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .popup-body { padding: 16px; background: #1D1B1C !important; } 
-        .leaflet-popup-tip { background: #1D1B1C !important; background-color: #1D1B1C !important; }
-        .leaflet-container a.leaflet-popup-close-button { color: #fff !important; top: 8px; right: 8px; font-weight: bold; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
+        .leaflet-popup-content { margin: 0; width: 280px !important; }
+        .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .popup-body { padding: 16px; } 
+        .leaflet-popup-tip { background: var(--bg-color); }
+        .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
 
         /* Custom Pins & Clusters */
         .custom-color-pin { border-radius: 50%; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
         .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
-        .custom-cluster { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0,0,0,0.5); border-style: solid; border-width: 2px; }
+        .custom-cluster { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 
         /* Custom Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
@@ -115,10 +114,7 @@
         body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
-        body.light-mode .leaflet-container { background-color: #e2e8f0 !important; }
-        body.light-mode .leaflet-popup-content-wrapper { background: #FFFFFF !important; border-color: #cbd5e1; }
-        body.light-mode .leaflet-popup-tip { background: #FFFFFF !important; }
-        body.light-mode .leaflet-container a.leaflet-popup-close-button { color: #333 !important; }
+        body.light-mode .leaflet-popup-tip { background: #fff; }
 
         /* Sidebar Hover Fixes */
         .breakdown-row:hover { background-color: rgba(255,255,255,0.08); }
@@ -153,15 +149,13 @@
         #wizard-overlay.active { opacity: 1; pointer-events: auto; }
         
         #ghost-cursor {
-            position: fixed; top: 0; left: 0; width: 24px; height: 24px; z-index: 2147483647; opacity: 0; pointer-events: none; transform-origin: top left;
+            position: fixed; top: 0; left: 0; width: 24px; height: 24px; z-index: 999999; opacity: 0; pointer-events: none; transition: all 2.0s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: top left;
         }
         #ghost-cursor.active { opacity: 1; }
-        
-        /* Scale inner SVG to prevent coordinate jumping on click */
-        #ghost-cursor.clicking svg { transform: rotate(-15deg) scale(0.8) !important; transition: transform 0.1s ease-out; } 
+        #ghost-cursor.clicking { transform: scale(0.8); }
         
         #tour-bubble {
-            position: fixed; top: 0; left: 0; width: 320px; z-index: 999995; opacity: 0; pointer-events: none; padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 12px;
+            position: fixed; top: 0; left: 0; width: 320px; z-index: 999995; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 2.0s cubic-bezier(0.25, 1, 0.5, 1); padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 12px;
         }
         #tour-bubble.active { opacity: 1; pointer-events: auto; }
         
@@ -387,7 +381,7 @@
         </div>
     </div>
 
-    <!-- THE GUIDED WIZARD ELEMENTS (Locked to Fixed Viewport for immunity to scrolling) -->
+    <!-- THE GUIDED WIZARD ELEMENTS (Moved to root Body to fix scrolling bugs) -->
     <div id="wizard-overlay"></div>
     
     <div id="ghost-cursor">
@@ -517,7 +511,7 @@
 
         // --- 3. MAP INITIALIZATION ---
         // preferCanvas is handled by the renderer explicitly
-        // Setting padding to 4 guarantees shapes are drawn up to 4 screens away, completely preventing clipping bugs during zoom out!
+        // Setting padding to 4.0 guarantees shapes are drawn up to 4 screens away, preventing clipping bugs!
         const myRenderer = L.canvas({ padding: 4.0 });
         const map = L.map('map', { zoomControl: false, scrollWheelZoom: false, renderer: myRenderer }).setView([35.0, -85.5], 6); 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -588,7 +582,6 @@
                 
                 const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
                 const clusterTextColor = lightColors.includes(catColor) ? '#1a2433' : '#FFFFFF';
-                // THIS VARIABLE SAFELY ACCESSED BY ALL DOM ELEMENTS
                 const pinBorderColor = lightColors.includes(catColor) ? '#1a2433' : '#fff'; 
                 const clusterBorder = lightColors.includes(catColor) ? '#1a2433' : 'rgba(255, 255, 255, 0.6)';
                 
@@ -707,7 +700,6 @@
                             const mpm = 1609.34;
                             const dLat = 0.01449275; 
                             
-                            // Reverting to the pale blue dashed line for the 50-mile ring
                             L.circle([itemLat, itemLng], {radius: 50 * mpm, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5'}).addTo(tradeAreaRings);
                             L.circle([itemLat, itemLng], {radius: 30 * mpm, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 1.5}).addTo(tradeAreaRings);
                             L.circle([itemLat, itemLng], {radius: 15 * mpm, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 1.5}).addTo(tradeAreaRings);
@@ -1010,7 +1002,7 @@
             {
                 text: "Let's open the Analytics Drawer to view the raw POS data generating this Hub.",
                 targetId: "open-analytics-btn", anchor: "center",
-                offsetX: 0, offsetY: 0, bubbleX: -420, bubbleY: 0,
+                offsetX: 0, offsetY: 0, bubbleX: -540, bubbleY: -20,
                 action: () => { if(autoTriggerHub) openAnalytics(autoTriggerHub.name, autoTriggerHub.rev); },
                 preAction: () => { 
                     closeAnalytics(); 
@@ -1021,14 +1013,14 @@
             {
                 text: "We can drill down into the Top Earner to view their specific margin yield and Product Group DNA.",
                 targetId: "account-btn-0", anchor: "center",
-                offsetX: 0, offsetY: 0, bubbleX: -420, bubbleY: 0, 
+                offsetX: 0, offsetY: 0, bubbleX: -540, bubbleY: -20, 
                 action: () => { openAccountDetails(activeHubAccounts[0]['Customer Name'].replace(/'/g, "\\'"), 0); },
                 preAction: () => { restoreHubView(); }
             },
             {
                 text: "Finally, we isolate specific Part Velocity to identify highly profitable SKUs within this account.",
                 targetId: "range-btn-1", anchor: "center",
-                offsetX: 0, offsetY: 0, bubbleX: -420, bubbleY: -20, 
+                offsetX: 0, offsetY: 0, bubbleX: -540, bubbleY: -20, 
                 action: () => { 
                     const firstAcc = activeHubAccounts[0];
                     if(firstAcc) {
@@ -1108,15 +1100,18 @@
             const btnNext = document.getElementById('tour-next-btn');
             const btnBack = document.getElementById('tour-back-btn');
             
+            // Lock buttons during animation
             btnNext.disabled = true; btnNext.classList.add('opacity-50');
             btnBack.disabled = true; btnBack.classList.add('opacity-50');
             
             try {
+                // 1. Run Pre-Action (e.g. flying the map)
                 if (step.preAction) {
                     step.preAction();
                     await new Promise(r => setTimeout(r, 1200)); 
                 }
 
+                // 2. Find target coordinates
                 let targetX = window.innerWidth / 2;
                 let targetY = window.innerHeight / 2;
 
@@ -1130,32 +1125,34 @@
                     }
                 }
                 
-                if (step.targetId) {
-                    const el = document.getElementById(step.targetId);
-                    if (el) {
-                        const pos = calculateAnchor(el.getBoundingClientRect(), step.anchor, step.offsetX || 0, step.offsetY || 0);
-                        targetX = pos.x; targetY = pos.y;
-                    }
-                } else if (step.targetClass) {
-                    const elements = document.querySelectorAll('.' + step.targetClass);
-                    for (let el of elements) {
-                        const rect = el.getBoundingClientRect();
-                        if (rect.width > 0 && rect.height > 0) {
-                            const pos = calculateAnchor(rect, step.anchor, step.offsetX || 0, step.offsetY || 0);
+                try {
+                    if (step.targetId) {
+                        const el = document.getElementById(step.targetId);
+                        if (el) {
+                            const pos = calculateAnchor(el.getBoundingClientRect(), step.anchor, step.offsetX || 0, step.offsetY || 0);
                             targetX = pos.x; targetY = pos.y;
-                            break;
                         }
+                    } else if (step.targetClass) {
+                        const elements = document.querySelectorAll('.' + step.targetClass);
+                        for (let el of elements) {
+                            const rect = el.getBoundingClientRect();
+                            if (rect.width > 0 && rect.height > 0) {
+                                const pos = calculateAnchor(rect, step.anchor, step.offsetX || 0, step.offsetY || 0);
+                                targetX = pos.x; targetY = pos.y;
+                                break;
+                            }
+                        }
+                    } else if (step.targetMap && autoTriggerHub) {
+                        const mapRect = document.getElementById('map').getBoundingClientRect();
+                        const point = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
+                        targetX = mapRect.left + point.x + (step.offsetX || 0);
+                        targetY = mapRect.top + point.y + (step.offsetY || 0);
                     }
-                } else if (step.targetMap && autoTriggerHub) {
-                    const mapRect = document.getElementById('map').getBoundingClientRect();
-                    const point = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
-                    targetX = mapRect.left + point.x + (step.offsetX || 0);
-                    targetY = mapRect.top + point.y + (step.offsetY || 0);
-                }
 
-                if (isNaN(targetX) || isNaN(targetY)) {
-                    targetX = window.innerWidth / 2; targetY = window.innerHeight / 2;
-                }
+                    if (isNaN(targetX) || isNaN(targetY)) {
+                        targetX = window.innerWidth / 2; targetY = window.innerHeight / 2;
+                    }
+                } catch (e) { console.log("Tour targeting fallback used."); }
 
                 let bX = targetX + step.bubbleX;
                 let bY = targetY + step.bubbleY;
@@ -1181,7 +1178,6 @@
                     
                     cursor.classList.add('active');
                     
-                    // Added 100ms micro-delay to let browser register the starting position before gliding
                     await new Promise(r => setTimeout(r, 100));
                     
                     cursor.style.transition = 'transform 2.0s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s';
@@ -1212,7 +1208,7 @@
                 }
                 
                 if (step.action) {
-                    step.action();
+                    try { step.action(); } catch(e) {}
                 }
                 
             } finally {
