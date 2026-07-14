@@ -212,8 +212,9 @@
             <strong>Data Governance Note:</strong> To comply with enterprise confidentiality, live branch coordinates, localized POS revenue figures, and proprietary datasets have been stripped. This application utilizes an anonymized proxy dataset spanning the Southeast U.S. to safely demonstrate the production-grade ETL architecture, Marker Clustering, and deeply nested POS analytics.
         </div>
 
-        <h2>1. The Problem: Territorial Blind Spots</h2>
-        <p>In high-velocity automotive and commercial distribution, networks typically rely on static, geometric mapping to define sales territories (e.g., a "20-mile radius"). This creates a fatal strategic blind spot. A 20-mile radius in a congested urban core functions entirely differently than a 20-mile radius in an isolated rural corridor. To move from descriptive analytics to prescriptive revenue capture, I architected a multi-layered Geospatial Intelligence Engine to map actual competitor threats against our Hub & Spoke delivery network.</p>
+        <h2>1. The Problem: From Geometric Guesswork to Predictive Capture</h2>
+        <p>In high-velocity distribution, defining sales territories with a static "20-mile radius" is a recipe for margin erosion. A 20-mile delivery in gridlocked downtown Atlanta destroys logistics profitability, while a 20-mile route in rural Iowa represents a highly profitable, captive market. To move from descriptive reporting to prescriptive revenue capture, I replaced this static guesswork with a dynamic <strong>Geospatial Intelligence Engine</strong>.</p>
+        <p>By programmatically harvesting and mapping thousands of competitor locations against our internal Hub & Spoke network, the engine exposed our exact territorial blind spots. This allowed operations leadership to instantly visualize market friction, identifying precisely where our routes were exposed to competitor cannibalization, and where we had the geographic leverage to safely raise prices.</p>
 
         <!-- DEMO BUTTONS SECTION -->
         <div class="pulse-instruction flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -368,20 +369,30 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div> <!-- END FULL BLEED DASHBOARD -->
+        </div> <!-- END flex-1 relative h-full -->
+    </div> <!-- END DASHBOARD CONTAINER -->
 
     <div class="portfolio-content">
-        <h2>2. Machine Learning & K-Means Topology</h2>
-        <p>Mapping raw points is only the first step. To translate geography into actual pricing strategy, I architected a <strong>POS Gravity Engine</strong>. By extracting 12 months of Point-of-Sale data (LTM Revenue) and Customer Ship-To addresses from the ERP, the Python engine mathematically measured the exact "as-the-crow-flies" distance between our fulfilling hubs and the customers generating the revenue.</p>
-        <p>I then fed this Distance Decay Matrix into a <strong>K-Means Unsupervised Machine Learning Model</strong> (via <code>scikit-learn</code>). The algorithm analyzed the mathematical decay curves of all branches and automatically clustered them into 5 distinct Strategic Topology Tiers. This replaced subjective human guesswork with pure data, dictating exactly which branches could absorb aggressive price increases (Rural Monopolies) and which branches required defensive margin floors (Hyper-Dense Urban).</p>
+        <h2>2. Machine Learning: Translating Maps into Margin</h2>
+        <p>A map is just a picture until you attach revenue to it. To translate this geography into an actionable pricing strategy, I engineered a <strong>POS Gravity Engine</strong>. By extracting 12 months of ERP invoice data and geocoding thousands of Customer Ship-To addresses, the Python engine calculated the exact mathematical "Distance Decay" of our revenue—proving exactly how far customers were willing to travel, or wait for delivery, before defecting to a competitor.</p>
+        <p>I then fed these decay curves into an unsupervised <strong>K-Means Machine Learning Algorithm</strong> (via <code>scikit-learn</code>). Instead of relying on subjective opinions from regional managers, the algorithm mathematically clustered our 80-branch network into 5 distinct <em>Strategic Topology Tiers</em> based on their actual friction profiles.</p>
+        <p>This fundamentally changed how the enterprise priced its catalog. We now knew with mathematical certainty which branches operated as <strong>"Tier 1: Rural Monopolies"</strong> (capable of absorbing aggressive, network-funding price increases) and which were <strong>"Tier 5: Hyper-Dense Urban"</strong> (requiring strict, defensive margin floors to survive block-by-block warfare without destroying volume).</p>
+
+        <h2>3. Enterprise Ecosystem: Scaling the Architecture</h2>
+        <p>This geospatial engine was not a single-use script; it was architected as a foundational data ecosystem. Using this exact Python/SQL backbone, I expanded the architecture to solve massive operational inefficiencies across the enterprise:</p>
+        <ul style="margin-top: 15px; margin-bottom: 25px; color: #334155; padding-left: 20px; line-height: 1.6;">
+            <li style="margin-bottom: 10px;"><strong>M&A Poaching & Cannibalization:</strong> Modeled regional overlaps between merging competitors to identify "cross-street" store closures, allowing our outside sales reps to preemptively target and poach abandoned commercial accounts.</li>
+            <li style="margin-bottom: 10px;"><strong>Greenfield Expansion (Whitespace):</strong> Identified high-density VIO corridors completely void of our distribution hubs, generating data-backed expansion targets for executive leadership.</li>
+            <li style="margin-bottom: 10px;"><strong>Logistics & Fleet Optimization:</strong> Modified the engine to map physical delivery vectors, identifying severe overlapping territories to eliminate margin waste on fuel, driver overtime, and fleet wear-and-tear.</li>
+            <li><strong>Sales Territory Calibration:</strong> Visualized actual POS revenue vectors against assigned salesman routes to expose under-serviced regions and rebalance rep workloads.</li>
+        </ul>
 
         <div style="margin-top: 50px; text-align: center;">
             <a href="algorithmic-margin-defense.html" style="background: var(--dark-slate-blue); color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background 0.2s;">Next Phase: Algorithmic Margin Defense &rarr;</a>
         </div>
     </div>
 
-    <!-- THE GUIDED WIZARD ELEMENTS (Moved to root Body to fix scrolling bugs) -->
+    <!-- THE GUIDED WIZARD ELEMENTS (Locked to Fixed Viewport for immunity to scrolling) -->
     <div id="wizard-overlay"></div>
     
     <div id="ghost-cursor">
