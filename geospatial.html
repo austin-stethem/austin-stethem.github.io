@@ -63,21 +63,22 @@
         #map { height: 100%; width: 100%; z-index: 1; }
         
         /* Tactical Dark Map Filters */
-        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) grayscale(1) brightness(0.5); }
+        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.5); }
         .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
 
         /* Custom Popup Styling */
-        .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
-        .leaflet-popup-content { margin: 0; width: 280px !important; }
-        .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .popup-body { padding: 16px; } 
-        .leaflet-popup-tip { background: var(--bg-color); }
-        .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
+        .leaflet-container { background: #1D1B1C !important; background-color: #1D1B1C !important; } 
+        .leaflet-popup-content-wrapper { border-radius: 8px !important; padding: 0 !important; overflow: hidden !important; box-shadow: 0 15px 35px rgba(0,0,0,0.6) !important; border: 1px solid #333 !important; background: #1D1B1C !important; background-color: #1D1B1C !important; }
+        .leaflet-popup-content { margin: 0 !important; padding: 0 !important; width: 280px !important; background: #1D1B1C !important; }
+        .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .popup-body { padding: 16px; background: #1D1B1C !important; } 
+        .leaflet-popup-tip { background: #1D1B1C !important; background-color: #1D1B1C !important; }
+        .leaflet-container a.leaflet-popup-close-button { color: #fff !important; top: 8px; right: 8px; font-weight: bold; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
         /* Custom Pins & Clusters */
         .custom-color-pin { border-radius: 50%; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
         .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
-        .custom-cluster { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .custom-cluster { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0,0,0,0.5); border-style: solid; border-width: 2px; }
 
         /* Custom Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
@@ -114,7 +115,10 @@
         body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
-        body.light-mode .leaflet-popup-tip { background: #fff; }
+        body.light-mode .leaflet-container { background-color: #e2e8f0 !important; }
+        body.light-mode .leaflet-popup-content-wrapper { background: #FFFFFF !important; border-color: #cbd5e1; }
+        body.light-mode .leaflet-popup-tip { background: #FFFFFF !important; }
+        body.light-mode .leaflet-container a.leaflet-popup-close-button { color: #333 !important; }
 
         /* Sidebar Hover Fixes */
         .breakdown-row:hover { background-color: rgba(255,255,255,0.08); }
@@ -146,14 +150,20 @@
         #wizard-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 999990; opacity: 0; pointer-events: none; transition: opacity 0.5s;
         }
+        #wizard-overlay.active { opacity: 1; pointer-events: auto; }
+        
         #ghost-cursor {
-            position: fixed; width: 24px; height: 24px; z-index: 999999; opacity: 0; pointer-events: none; transition: all 2.0s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: top left;
+            position: fixed; top: 0; left: 0; width: 24px; height: 24px; z-index: 2147483647; opacity: 0; pointer-events: none; transform-origin: top left;
         }
-        #ghost-cursor.clicking { transform: scale(0.8); }
+        #ghost-cursor.active { opacity: 1; }
+        
+        /* Scale inner SVG to prevent coordinate jumping on click */
+        #ghost-cursor.clicking svg { transform: rotate(-15deg) scale(0.8) !important; transition: transform 0.1s ease-out; } 
         
         #tour-bubble {
-            position: fixed; width: 320px; z-index: 999995; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 2.0s cubic-bezier(0.25, 1, 0.5, 1); padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 12px;
+            position: fixed; top: 0; left: 0; width: 320px; z-index: 999995; opacity: 0; pointer-events: none; padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 12px;
         }
+        #tour-bubble.active { opacity: 1; pointer-events: auto; }
         
         /* The Click Ripple Effect */
         .cursor-ripple {
@@ -273,7 +283,7 @@
                             <span id="sun-icon" style="opacity: 0.5;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             </span>
-                            <label class="switch">
+                            <label class="switch" id="theme-switch-label">
                                 <input type="checkbox" id="themeToggle" checked>
                                 <span class="slider"></span>
                             </label>
@@ -377,12 +387,12 @@
         </div>
     </div>
 
-    <!-- THE GUIDED WIZARD ELEMENTS (Moved to root Body to fix scrolling bugs) -->
+    <!-- THE GUIDED WIZARD ELEMENTS (Locked to Fixed Viewport for immunity to scrolling) -->
     <div id="wizard-overlay"></div>
     
     <div id="ghost-cursor">
         <div class="cursor-ripple" id="cursor-ripple"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="#000" stroke-width="1.5" style="filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); transform: rotate(-15deg);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="#000" stroke-width="1.5" style="filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); transform: rotate(-15deg); transition: transform 0.1s ease-out;">
             <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
             <path d="M13 13l6 6"></path>
         </svg>
@@ -393,7 +403,7 @@
         <div class="flex justify-between items-center mt-3 pt-3 border-t theme-border">
             <span class="text-xs font-bold theme-text-muted" id="tour-step">Step 1 of X</span>
             <div class="flex gap-2">
-                <button id="tour-back-btn" class="bg-gray-200 text-gray-800 hover:bg-gray-300 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="prevTourStep()">Back</button>
+                <button id="tour-back-btn" class="bg-gray-200 text-gray-800 border border-gray-300 shadow-sm hover:bg-gray-300 hover:border-gray-400 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="prevTourStep()">Back</button>
                 <button id="tour-next-btn" class="bg-[#b32525] text-white hover:bg-red-700 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="nextTourStep()">Next</button>
             </div>
         </div>
@@ -481,13 +491,12 @@
                     });
                 }
 
-                // Generous competitor generation to fill the map
+                // Density spread roughly ~30 miles
                 let compCount = city.type === "urban" ? 180 : city.type === "mid" ? 80 : 30;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
                         name: `${cat} - Sector ${i+1}`,
-                        // DENSE SPAWN RATE: 0.8 keeps them clustered inside the 50 mile rings!
                         lat: city.lat + (Math.random() - 0.5) * 0.8, 
                         lng: city.lng + (Math.random() - 0.5) * 0.8,
                         address: `Commercial Dr, ${city.name.split(',')[1].trim()}`
@@ -507,7 +516,10 @@
         let autoTriggerHub = null;
 
         // --- 3. MAP INITIALIZATION ---
-        const map = L.map('map', { zoomControl: false, scrollWheelZoom: false }).setView([35.0, -85.5], 6); 
+        // preferCanvas is handled by the renderer explicitly
+        // Setting padding to 4 guarantees shapes are drawn up to 4 screens away, completely preventing clipping bugs during zoom out!
+        const myRenderer = L.canvas({ padding: 4.0 });
+        const map = L.map('map', { zoomControl: false, scrollWheelZoom: false, renderer: myRenderer }).setView([35.0, -85.5], 6); 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
         const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -545,9 +557,9 @@
         }
 
         // --- 4. RENDER DATA & CLUSTERS ---
-        const createColorIcon = (color) => L.divIcon({
+        const createColorIcon = (color, pinBorderColor) => L.divIcon({
             className: 'custom-color-pin',
-            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%;"></div>`,
+            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%; border: 2px solid ${pinBorderColor};"></div>`,
             iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
         });
 
@@ -556,7 +568,7 @@
         };
         const categoryLayers = {};
         const tradeAreaRings = L.layerGroup().addTo(map);
-        const ringLabels = L.layerGroup().addTo(map); // Store text labels
+        const ringLabels = L.layerGroup().addTo(map); 
         let lockedPin = null;
 
         function renderMap() {
@@ -570,24 +582,23 @@
 
             let seenOrigins = {}; 
 
-            // THE CRITICAL FIX: Define colors outside the loop so the Sidebar HTML string can read them without crashing!
             sortedCategories.forEach(category => {
                 const catColor = categoryColors[category];
                 const items = data[category];
                 
                 const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
                 const clusterTextColor = lightColors.includes(catColor) ? '#1a2433' : '#FFFFFF';
+                // THIS VARIABLE SAFELY ACCESSED BY ALL DOM ELEMENTS
+                const pinBorderColor = lightColors.includes(catColor) ? '#1a2433' : '#fff'; 
                 const clusterBorder = lightColors.includes(catColor) ? '#1a2433' : 'rgba(255, 255, 255, 0.6)';
-                const pinBorderColor = lightColors.includes(catColor) ? '#1a2433' : '#fff'; // SCOPE FIX
                 
-                // Sidebar Market Breakdown
                 let breakdownHtml = `
                     <div class="breakdown-row flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all cursor-default min-h-[35px]">
-                        <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="flex items-center gap-3 flex-1 min-w-0 pl-1">
                             <div class="w-3 h-3 rounded-full shrink-0 border" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor}; border-color: ${lightColors.includes(catColor) ? '#1a2433' : 'transparent'};"></div>
                             <span class="text-[15px] font-semibold theme-text-main truncate tracking-wide" title="${category}">${category}</span>
                         </div>
-                        <span class="font-mono font-bold text-[17px] theme-text-main ml-2">${items.length}</span>
+                        <span class="font-mono font-bold text-[17px] theme-text-main ml-2 shrink-0">${items.length}</span>
                     </div>
                 `;
                 breakdownContainer.insertAdjacentHTML('beforeend', breakdownHtml);
@@ -598,11 +609,13 @@
                         const count = cluster.getChildCount();
                         const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
                         return L.divIcon({
-                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; border: 2px solid ${clusterBorder}; width: ${size}px; height: ${size}px;">${count}</div>`,
+                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; border-color: ${clusterBorder}; width: ${size}px; height: ${size}px; border-style: solid; border-width: 2px;">${count}</div>`,
                             className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
                         });
                     }
                 });
+
+                const markerIcon = createColorIcon(catColor, pinBorderColor);
 
                 items.forEach(item => {
                     let itemLat = parseFloat(item.lat);
@@ -621,9 +634,6 @@
                         seenOrigins[coordKey]++;
                     }
 
-                    const customPinHtml = `<div style="background-color: ${catColor}; width: 100%; height: 100%; border-radius: 50%; border: 2px solid ${pinBorderColor};"></div>`;
-                    const markerIcon = L.divIcon({ className: 'custom-color-pin', html: customPinHtml, iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8] });
-                    
                     const marker = L.marker([itemLat, itemLng], { icon: markerIcon });
                     
                     let analyticsButtonHtml = ''; let gravityHtml = ''; let topologyHtml = '';
@@ -638,7 +648,6 @@
                         }
 
                         let revFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rev);
-                        // Theme-aware inline styles instead of hardcoded white
                         gravityHtml = `
                             <div class="theme-card theme-border mt-3 p-2.5 rounded-md border shadow-sm">
                                 <div class="text-[11px] font-extrabold theme-text-muted uppercase mb-1.5 tracking-wider">Revenue Gravity (LTM)</div>
@@ -696,19 +705,18 @@
                         
                         if (item.gravity && category === "Meridian Parts") {
                             const mpm = 1609.34;
-                            const dLat = 0.01449275; // Approx degrees per mile
+                            const dLat = 0.01449275; 
                             
-                            // 30% Thinner Rings applied here:
-                            L.circle([itemLat, itemLng], {radius: 50 * mpm, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 0.7, dashArray: '5, 5'}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 30 * mpm, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 1.4}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 15 * mpm, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 1.4}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 5 * mpm, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 1.4}).addTo(tradeAreaRings);
+                            // Reverting to the pale blue dashed line for the 50-mile ring
+                            L.circle([itemLat, itemLng], {radius: 50 * mpm, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5'}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 30 * mpm, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 1.5}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 15 * mpm, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 1.5}).addTo(tradeAreaRings);
+                            L.circle([itemLat, itemLng], {radius: 5 * mpm, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 1.5}).addTo(tradeAreaRings);
                             
-                            // Add Distance Text Labels to the top edge of each ring
                             L.marker([itemLat + (5 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-red-500 border-red-500">0-5 Miles (Core)</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
                             L.marker([itemLat + (15 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-orange-500 border-orange-500">5-15 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
                             L.marker([itemLat + (30 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-green-500 border-green-500">15-30 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
-                            L.marker([itemLat + (50 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-blue-500 border-blue-500">30-50 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
+                            L.marker([itemLat + (50 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-blue-600 border-blue-600">30-50 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
                         }
 
                         lockedPin.on('popupclose', function() {
@@ -839,6 +847,7 @@
             let count = 1;
             for (const [rangeDesc, profit] of Object.entries(ranges)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
+                // Restored ID tag to ensure Step 10 cursor tracking works
                 rangesContainer.innerHTML += `
                     <div id="range-btn-${count}" onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
                         <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
@@ -883,8 +892,9 @@
             let count = 1;
             for (const [rangeDesc, profit] of Object.entries(window.currentAccountRangesRaw)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
+                // Restored ID tag here as well
                 rangesContainer.innerHTML += `
-                    <div onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
+                    <div id="range-btn-${count}" onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
                         <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
@@ -927,86 +937,98 @@
         let currentStep = -1;
         let tourActive = false;
         
-        // Definition of all tour steps and their actions
+        // Block background scrolling on the overlay so elements cannot detach
+        document.getElementById('wizard-overlay').addEventListener('wheel', e => e.preventDefault(), { passive: false });
+        document.getElementById('wizard-overlay').addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+        
         const tourSteps = [
             {
                 text: "Welcome to the Strategic Radar. Let's test the UI environment settings first.",
-                targetId: "filter-btn",
-                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 0,
-                action: () => { 
-                    if(document.getElementById('filter-dropdown').classList.contains('hidden')) {
-                        document.getElementById('filter-dropdown').classList.remove('hidden'); 
-                    }
-                },
-                preAction: () => { closeAnalytics(); map.setView([35.0, -85.5], 6); }
+                targetId: "filter-btn", anchor: "right",
+                offsetX: -80, offsetY: 0, bubbleX: -340, bubbleY: 0,
+                action: () => { document.getElementById('filter-dropdown').classList.remove('hidden'); },
+                preAction: () => { closeAnalytics(); map.closePopup(); document.getElementById('filter-dropdown').classList.add('hidden'); map.setView([35.0, -85.5], 6); }
             },
             {
                 text: "The engine supports rapid theming. Flipping to Light Mode...",
-                targetId: "themeToggle",
-                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 20,
-                action: () => { if(isDarkMode) document.getElementById('themeToggle').click(); }
+                targetId: "theme-switch-label", anchor: "left",
+                offsetX: 32, offsetY: 0, bubbleX: -340, bubbleY: -20, 
+                action: () => { if(isDarkMode) document.getElementById('themeToggle').click(); },
+                preAction: () => { document.getElementById('filter-dropdown').classList.remove('hidden'); map.flyTo([35.0, -85.5], 6, {duration: 1.0}); }
             },
             {
                 text: "Switching basemaps to high-resolution Satellite imagery...",
-                targetId: "satellite-btn",
-                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 20,
-                action: () => { document.querySelector('input[value="satellite"]').checked = true; window.changeBasemap('satellite'); }
+                targetId: "satellite-btn", anchor: "left",
+                offsetX: 8, offsetY: -8, bubbleX: -340, bubbleY: 20, 
+                action: () => { document.querySelector('input[value="satellite"]').checked = true; window.changeBasemap('satellite'); },
+                preAction: () => { document.getElementById('filter-dropdown').classList.remove('hidden'); map.flyTo([35.0, -85.5], 6, {duration: 1.0}); }
             },
             {
                 text: "Reverting to Tactical Dark Map. Now let's dive into the data.",
-                targetId: "tactical-btn",
-                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 20,
+                targetId: "tactical-btn", anchor: "left",
+                offsetX: 8, offsetY: -8, bubbleX: -340, bubbleY: 20, 
                 action: () => { 
                     document.querySelector('input[value="tactical"]').checked = true; window.changeBasemap('tactical'); 
                     if(!isDarkMode) document.getElementById('themeToggle').click();
-                }
+                },
+                preAction: () => { document.getElementById('filter-dropdown').classList.remove('hidden'); map.flyTo([35.0, -85.5], 6, {duration: 1.0}); }
             },
             {
                 text: "Clicking a Hub isolates its specific Trade Area. I'll zoom into our Atlanta Hub.",
                 targetMap: true,
-                offsetX: 0, offsetY: 0, bubbleX: 50, bubbleY: -50,
+                offsetX: 0, offsetY: 0, bubbleX: -380, bubbleY: -100, 
                 action: () => { 
                     document.getElementById('filter-dropdown').classList.add('hidden');
                     if(autoTriggerHub && autoTriggerHub.marker) autoTriggerHub.marker.fire('click');
                 },
                 preAction: () => {
                     document.getElementById('filter-dropdown').classList.add('hidden');
-                    if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 11, {duration: 1.5});
+                    map.closePopup();
+                    if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 12, {duration: 1.0});
                 }
             },
             {
                 text: "The Machine Learning engine evaluates friction and assigns this Hub to a Strategic Tier, setting defensive margin floors.",
-                targetClass: "topology-box", // Targets the box inside the popup
-                offsetX: 0, offsetY: 0, bubbleX: -380, bubbleY: 0,
+                targetClass: "topology-box", anchor: "center",
+                offsetX: 0, offsetY: 0, bubbleX: -480, bubbleY: -20, 
                 action: () => { },
+                preAction: () => {
+                    document.getElementById('filter-dropdown').classList.add('hidden');
+                    if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 12, {duration: 1.0});
+                    if (autoTriggerHub && autoTriggerHub.marker && !lockedPin) autoTriggerHub.marker.fire('click');
+                },
                 noClick: true
             },
             {
                 text: "Zooming out reveals the Hub's Distance Decay Rings, showing exactly where LTM revenue drops off.",
                 targetMap: true, zoomOut: true,
-                offsetX: 0, offsetY: 50, bubbleX: 50, bubbleY: -50,
+                offsetX: 0, offsetY: 40, bubbleX: -380, bubbleY: 40,
                 action: () => { },
-                preAction: () => { if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 9, {duration: 1.5}); },
+                preAction: () => { if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 8.5, {duration: 1.0}); },
                 noClick: true
             },
             {
                 text: "Let's open the Analytics Drawer to view the raw POS data generating this Hub.",
-                targetId: "open-analytics-btn",
-                offsetX: 0, offsetY: 0, bubbleX: -340, bubbleY: 0,
+                targetId: "open-analytics-btn", anchor: "center",
+                offsetX: 0, offsetY: 0, bubbleX: -420, bubbleY: 0,
                 action: () => { if(autoTriggerHub) openAnalytics(autoTriggerHub.name, autoTriggerHub.rev); },
-                preAction: () => { closeAnalytics(); }
+                preAction: () => { 
+                    closeAnalytics(); 
+                    if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 8.5, {duration: 1.0});
+                    if (autoTriggerHub && autoTriggerHub.marker && !lockedPin) autoTriggerHub.marker.fire('click');
+                }
             },
             {
                 text: "We can drill down into the Top Earner to view their specific margin yield and Product Group DNA.",
-                targetId: "account-btn-0",
-                offsetX: 0, offsetY: 0, bubbleX: -360, bubbleY: 20,
+                targetId: "account-btn-0", anchor: "center",
+                offsetX: 0, offsetY: 0, bubbleX: -420, bubbleY: 0, 
                 action: () => { openAccountDetails(activeHubAccounts[0]['Customer Name'].replace(/'/g, "\\'"), 0); },
                 preAction: () => { restoreHubView(); }
             },
             {
                 text: "Finally, we isolate specific Part Velocity to identify highly profitable SKUs within this account.",
-                targetId: "range-btn-1",
-                offsetX: 0, offsetY: 0, bubbleX: -360, bubbleY: -20,
+                targetId: "range-btn-1", anchor: "center",
+                offsetX: 0, offsetY: 0, bubbleX: -420, bubbleY: -20, 
                 action: () => { 
                     const firstAcc = activeHubAccounts[0];
                     if(firstAcc) {
@@ -1015,37 +1037,51 @@
                         drillDownToRange(firstRange.replace(/'/g, "\\'"));
                     }
                 },
-                preAction: () => { resetAccountChart(); }
+                preAction: () => { 
+                    if (activeHubAccounts && activeHubAccounts.length > 0) {
+                        openAccountDetails(activeHubAccounts[0]['Customer Name'].replace(/'/g, "\\'"), 0);
+                    }
+                }
             }
         ];
 
-        window.startGuidedTour = function() {
+        window.startGuidedTour = async function() {
             if (tourActive) return;
             tourActive = true;
             currentStep = -1;
             
-            document.getElementById('wizard-overlay').style.opacity = '1';
-            document.getElementById('wizard-overlay').style.pointerEvents = 'auto';
-            document.getElementById('ghost-cursor').style.opacity = '1';
-            document.getElementById('tour-bubble').style.opacity = '1';
+            // 1. Instantly snap the dashboard to the center of the screen
+            document.getElementById('app-dashboard').scrollIntoView({ block: 'center' });
             
-            // Close UI to prep
+            // 2. Lock the body scroll so the page cannot move underneath the fixed cursor
+            document.body.style.overflow = 'hidden';
+            
+            document.getElementById('wizard-overlay').classList.add('active');
+            document.getElementById('demo-start-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            
             document.getElementById('filter-dropdown').classList.add('hidden');
             closeAnalytics();
             
-            document.getElementById('demo-start-btn').classList.add('opacity-50', 'cursor-not-allowed');
-            nextTourStep();
+            const cursor = document.getElementById('ghost-cursor');
+            const bubble = document.getElementById('tour-bubble');
+            cursor.style.transition = 'none';
+            bubble.style.transition = 'none';
+            
+            await nextTourStep(true);
         };
 
         window.endGuidedTour = function() {
             tourActive = false;
-            document.getElementById('wizard-overlay').style.opacity = '0';
-            document.getElementById('wizard-overlay').style.pointerEvents = 'none';
-            document.getElementById('ghost-cursor').style.opacity = '0';
-            document.getElementById('tour-bubble').style.opacity = '0';
+            
+            // Unlock the page scroll
+            document.body.style.overflow = '';
+            
+            document.getElementById('wizard-overlay').classList.remove('active');
+            document.getElementById('ghost-cursor').classList.remove('active');
+            document.getElementById('tour-bubble').classList.remove('active');
+            
             document.getElementById('demo-start-btn').classList.remove('opacity-50', 'cursor-not-allowed');
             
-            // Clean up UI
             closeAnalytics();
             if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); ringLabels.clearLayers(); }
             map.closePopup();
@@ -1054,12 +1090,12 @@
 
         window.prevTourStep = function() {
             if (currentStep > 0 && !document.getElementById('tour-next-btn').disabled) {
-                currentStep -= 2; // Subtract 2 because nextTourStep will add 1
+                currentStep -= 2; 
                 nextTourStep();
             }
         }
 
-        window.nextTourStep = async function() {
+        window.nextTourStep = async function(isInitial = false) {
             if (!tourActive) return;
             currentStep++;
             
@@ -1072,89 +1108,117 @@
             const btnNext = document.getElementById('tour-next-btn');
             const btnBack = document.getElementById('tour-back-btn');
             
-            // Lock buttons during animation
             btnNext.disabled = true; btnNext.classList.add('opacity-50');
             btnBack.disabled = true; btnBack.classList.add('opacity-50');
             
-            // 1. Run Pre-Action (e.g. flying the map)
-            if (step.preAction) {
-                step.preAction();
-                await new Promise(r => setTimeout(r, 1600)); // Wait for flyTo
-            }
-
-            // 2. Find target coordinates
-            let targetX = window.innerWidth / 2;
-            let targetY = window.innerHeight / 2;
-            
             try {
+                if (step.preAction) {
+                    step.preAction();
+                    await new Promise(r => setTimeout(r, 1200)); 
+                }
+
+                let targetX = window.innerWidth / 2;
+                let targetY = window.innerHeight / 2;
+
+                function calculateAnchor(rect, anchor, offsetX, offsetY) {
+                    if (anchor === 'left') {
+                        return { x: rect.left + offsetX, y: rect.top + (rect.height / 2) + offsetY };
+                    } else if (anchor === 'right') {
+                        return { x: rect.right + offsetX, y: rect.top + (rect.height / 2) + offsetY };
+                    } else { 
+                        return { x: rect.left + (rect.width / 2) + offsetX, y: rect.top + (rect.height / 2) + offsetY };
+                    }
+                }
+                
                 if (step.targetId) {
                     const el = document.getElementById(step.targetId);
                     if (el) {
-                        const rect = el.getBoundingClientRect();
-                        targetX = rect.left + (rect.width / 2) + step.offsetX;
-                        targetY = rect.top + (rect.height / 2) + step.offsetY;
+                        const pos = calculateAnchor(el.getBoundingClientRect(), step.anchor, step.offsetX || 0, step.offsetY || 0);
+                        targetX = pos.x; targetY = pos.y;
                     }
                 } else if (step.targetClass) {
-                    const el = document.querySelector('.' + step.targetClass);
-                    if (el) {
+                    const elements = document.querySelectorAll('.' + step.targetClass);
+                    for (let el of elements) {
                         const rect = el.getBoundingClientRect();
-                        targetX = rect.left + (rect.width / 2) + step.offsetX;
-                        targetY = rect.top + (rect.height / 2) + step.offsetY;
+                        if (rect.width > 0 && rect.height > 0) {
+                            const pos = calculateAnchor(rect, step.anchor, step.offsetX || 0, step.offsetY || 0);
+                            targetX = pos.x; targetY = pos.y;
+                            break;
+                        }
                     }
                 } else if (step.targetMap && autoTriggerHub) {
-                    // THE SCROLL FIX: Calculate relative to the actual Map Container bounds
                     const mapRect = document.getElementById('map').getBoundingClientRect();
                     const point = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
-                    targetX = mapRect.left + point.x + step.offsetX;
-                    targetY = mapRect.top + point.y + step.offsetY;
+                    targetX = mapRect.left + point.x + (step.offsetX || 0);
+                    targetY = mapRect.top + point.y + (step.offsetY || 0);
                 }
-            } catch (e) { console.log("Tour targeting fallback used."); }
 
-            // 3. Move Cursor and Bubble
-            const cursor = document.getElementById('ghost-cursor');
-            const bubble = document.getElementById('tour-bubble');
-            
-            cursor.style.transform = `translate(${targetX}px, ${targetY}px)`;
-            
-            // Position bubble relative to cursor
-            let bX = targetX + step.bubbleX;
-            let bY = targetY + step.bubbleY;
-            // Constrain bubble to screen
-            bX = Math.max(20, Math.min(bX, window.innerWidth - 340));
-            bY = Math.max(20, Math.min(bY, window.innerHeight - 150));
-            bubble.style.transform = `translate(${bX}px, ${bY}px)`;
-            
-            // Wait for cursor travel
-            await new Promise(r => setTimeout(r, 2000));
+                if (isNaN(targetX) || isNaN(targetY)) {
+                    targetX = window.innerWidth / 2; targetY = window.innerHeight / 2;
+                }
 
-            // 4. Update Bubble Text
-            document.getElementById('tour-text').innerText = step.text;
-            document.getElementById('tour-step').innerText = `Step ${currentStep + 1} of ${tourSteps.length}`;
-            if (currentStep === tourSteps.length - 1) btnNext.innerText = "Finish";
-            else btnNext.innerText = "Next";
+                let bX = targetX + step.bubbleX;
+                let bY = targetY + step.bubbleY;
+                bX = Math.max(20, Math.min(bX, window.innerWidth - 340));
+                bY = Math.max(20, Math.min(bY, window.innerHeight - 150));
 
-            // 5. The "Click" Ripple Animation (Skip if noClick is true)
-            if (!step.noClick) {
-                cursor.classList.add('clicking');
-                const ripple = document.getElementById('cursor-ripple');
-                ripple.classList.remove('animate-ripple');
-                void ripple.offsetWidth; // trigger reflow
-                ripple.classList.add('animate-ripple');
+                const cursor = document.getElementById('ghost-cursor');
+                const bubble = document.getElementById('tour-bubble');
+
+                // SHIFTED: Inject text immediately BEFORE animation delay so "Step 1 of X" doesn't flash
+                document.getElementById('tour-text').innerText = step.text;
+                document.getElementById('tour-step').innerText = `Step ${currentStep + 1} of ${tourSteps.length}`;
+                if (currentStep === tourSteps.length - 1) btnNext.innerText = "Finish";
+                else btnNext.innerText = "Next";
+
+                if (isInitial === true) {
+                    const startBtn = document.getElementById('demo-start-btn').getBoundingClientRect();
+                    const startX = startBtn.left + (startBtn.width / 2);
+                    const startY = startBtn.top + (startBtn.height / 2);
+                    
+                    cursor.style.transform = `translate(${startX}px, ${startY}px)`;
+                    void cursor.offsetWidth; 
+                    
+                    cursor.classList.add('active');
+                    
+                    // Added 100ms micro-delay to let browser register the starting position before gliding
+                    await new Promise(r => setTimeout(r, 100));
+                    
+                    cursor.style.transition = 'transform 2.0s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s';
+                    bubble.style.transition = 'opacity 0.3s, transform 2.0s cubic-bezier(0.25, 1, 0.5, 1)';
+                    
+                    cursor.style.transform = `translate(${targetX}px, ${targetY}px)`;
+                    bubble.style.transform = `translate(${bX}px, ${bY}px)`;
+                    bubble.classList.add('active');
+                    
+                    await new Promise(r => setTimeout(r, 2000));
+                } else {
+                    cursor.style.transform = `translate(${targetX}px, ${targetY}px)`;
+                    bubble.style.transform = `translate(${bX}px, ${bY}px)`;
+                    await new Promise(r => setTimeout(r, 2000));
+                }
+
+                if (!step.noClick) {
+                    cursor.classList.add('clicking');
+                    const ripple = document.getElementById('cursor-ripple');
+                    ripple.classList.remove('animate-ripple');
+                    void ripple.offsetWidth; 
+                    ripple.classList.add('animate-ripple');
+                    
+                    await new Promise(r => setTimeout(r, 200));
+                    cursor.classList.remove('clicking');
+                } else {
+                    await new Promise(r => setTimeout(r, 200)); 
+                }
                 
-                await new Promise(r => setTimeout(r, 200));
-                cursor.classList.remove('clicking');
-            } else {
-                await new Promise(r => setTimeout(r, 200)); // Just wait
+                if (step.action) {
+                    step.action();
+                }
+                
+            } finally {
+                btnNext.disabled = false; btnNext.classList.remove('opacity-50');
+                if (currentStep > 0) { btnBack.disabled = false; btnBack.classList.remove('opacity-50'); }
             }
-            
-            // 6. Execute Action
-            if (step.action) {
-                try { step.action(); } catch(e) {}
-            }
-            
-            // Unlock buttons
-            btnNext.disabled = false; btnNext.classList.remove('opacity-50');
-            if (currentStep > 0) { btnBack.disabled = false; btnBack.classList.remove('opacity-50'); }
         };
 
         // Initialize Map Data
