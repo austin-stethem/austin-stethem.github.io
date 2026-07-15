@@ -32,6 +32,7 @@
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
+        /* STREAMING_CHUNK:Styling meta tables and layout components... -->
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
         .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
         .meta-cell:last-child { border-right: none; }
@@ -60,12 +61,14 @@
         .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
         .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
 
+        /* STREAMING_CHUNK:Styling tooltips for jargon definitions... -->
         .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; transition: border-color 0.2s ease; }
         .jargon-tooltip strong { font-weight: 700; color: var(--dark-slate-blue); }
         .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
         .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
         .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
         
+        /* STREAMING_CHUNK:Styling simulation container and charts... -->
         .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); align-items: stretch; flex-wrap: wrap; overflow: hidden;}
         .sim-sidebar { width: 320px; flex-shrink: 0; background: #f1f5f9; color: #1e293b; padding: 25px; display: flex; flex-direction: column; border-right: 1px solid #cbd5e1; box-sizing: border-box;}
         .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #ffffff; display: flex; flex-direction: column; box-sizing: border-box;}
@@ -88,8 +91,9 @@
         .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
-        .impact-box ul { font-size: 10pt; }
+        .impact-box ul { font-size: 10pt; margin-bottom: 0; }
 
+        /* STREAMING_CHUNK:Styling navigation boxes... -->
         .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
         .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
         .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
@@ -150,7 +154,7 @@
     
     <div class="scenario-box">
         <strong>The Enterprise Scenario (Step 5 of 5)</strong>
-        Our Phocas BI tracking (Step 4) confirms our new price points are holding firm in the market without sacrificing volume. Now we arrive at the most lucrative part of the cycle. Because our supply chain teams secured 60 days of inventory <em>before</em> the 15% cost spike hit, and we decoupled our retail price from our physical receiving docks, we are selling cheap stock at the newly elevated retail tiers. We must model this immediate <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of operational profit."><strong>EBITDA</strong></span> windfall.
+        Our statistical A/B tracking (Step 4) confirms our new price points are holding firm in the market without sacrificing volume. Now we arrive at the most lucrative part of the cycle. Because our supply chain teams secured 60 days of inventory <em>before</em> the 15% cost spike hit, and we decoupled our retail price from our physical receiving docks, we are selling cheap stock at the newly elevated retail tiers. We must model this immediate <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of operational profit."><strong>EBITDA</strong></span> windfall.
     </div>
 
     <p><strong>The Context:</strong> In physical distribution, when a manufacturer announces a sudden 10% price increase, the instinct of a reactive pricing team is to wait. They often hold prices steady until the new, expensive inventory physically arrives on the shelves, believing this is the "fair" way to treat customers.</p>
@@ -225,12 +229,12 @@
     <div class="impact-box">
         <h3>Turning Inflation into a Revenue Center</h3>
         <p>By shifting the organization's logic from Average Cost to Replacement Cost, the Pricing Department ceased to be a reactive administrative function and became an active revenue center.</p>
-        <p>This strategy demonstrates that true analytical value doesn't just come from building complex machine learning models; it comes from deeply understanding <strong>the mechanics of cash flow</strong>. By leveraging the physical realities of the supply chain against the accounting principles of the General Ledger, I was able to generate verifiable, risk-free EBITDA windfalls month over month, fundamentally padding the corporate bottom line during periods of severe macroeconomic inflation.</p>
+        <p style="margin-bottom: 0;">This strategy demonstrates that true analytical value doesn't just come from building complex machine learning models; it comes from deeply understanding <strong>the mechanics of cash flow</strong>. By leveraging the physical realities of the supply chain against the accounting principles of the General Ledger, I was able to generate verifiable, risk-free EBITDA windfalls month over month, fundamentally padding the corporate bottom line during periods of severe macroeconomic inflation.</p>
     </div>
 
     <div class="next-step-box">
         <h3>Ecosystem Architecture Complete</h3>
-        <p>This concludes the 5-step Enterprise Pricing Architecture scenario. We successfully identified the geospatial threat, probabilistically modeled the risk floor, deployed guardrail-constrained ERP updates, established the BI feedback loop to monitor market health, and ultimately captured the FIFO inventory windfall.</p>
+        <p>This concludes the 5-step Enterprise Pricing Architecture scenario. We successfully identified the geospatial threat, probabilistically modeled the risk floor, deployed guardrail-constrained ERP updates, established the statistical feedback loop to validate the market, and ultimately captured the FIFO inventory windfall.</p>
         <div class="project-navigation">
             <a href="ab-testing-framework.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Previous Phase</span>
