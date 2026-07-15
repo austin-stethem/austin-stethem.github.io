@@ -45,13 +45,13 @@
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
-        .meta-container { display: flex; gap: 20px; width: 100%; margin: 0 auto 30px auto; }
-        .meta-card { flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
+        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
+        .meta-cell:last-child { border-right: none; }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
         
         .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
-        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
         /* --- DASHBOARD WRAPPER --- */
@@ -136,6 +136,12 @@
             animation: pulse-border 2s infinite; border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; border-radius: 4px; margin: 20px 0; font-weight: 500; color: #334155; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
+        /* Jargon Tooltips */
+        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; }
+        .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000; pointer-events: none;}
+        .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 1000; pointer-events: none;}
+        .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
+
         @keyframes pulse-border {
             0% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(179, 37, 37, 0); }
@@ -174,7 +180,8 @@
         }
 
         @media (max-width: 800px) {
-            .meta-container { flex-direction: column; gap: 15px; }
+            .meta-table tr { display: flex; flex-direction: column; }
+            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
             .dashboard-container { flex-direction: column; height: 1000px; width: 100%; border-radius: 0; margin: 20px 0; }
             #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
             #map { height: 650px; }
@@ -193,28 +200,30 @@
             <div class="doc-title">Predictive VIO Market Capture & K-Means Threat Modeling</div>
         </div>
 
-        <div class="meta-container">
-            <div class="meta-card">
-                <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
-            </div>
-            <div class="meta-card">
-                <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Spatial Algorithms, K-Means Clustering, POS Data Drill-down, API Pipelines</span>
-            </div>
-            <div class="meta-card">
-                <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">Python (Pandas, Scikit-Learn, Flask), Jupyter, SQL, JavaScript (Leaflet.js), Tailwind CSS, Prompt Engineering</span>
-            </div>
-        </div>
+        <table class="meta-table">
+            <tr>
+                <td class="meta-cell">
+                    <span class="meta-label">Principal Engineer</span>
+                    <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+                </td>
+                <td class="meta-cell">
+                    <span class="meta-label">Core Competencies</span>
+                    <span class="meta-value">Spatial Algorithms, K-Means Clustering, POS Data Drill-down, API Pipelines</span>
+                </td>
+                <td class="meta-cell">
+                    <span class="meta-label">Technical Stack</span>
+                    <span class="meta-value">Python (Pandas, Scikit-Learn, Flask), Jupyter, SQL, JavaScript (Leaflet.js), Tailwind CSS, Prompt Engineering</span>
+                </td>
+            </tr>
+        </table>
 
         <div class="nda-note">
             <strong>Data Governance Note:</strong> To comply with enterprise confidentiality, live branch coordinates, localized POS revenue figures, and proprietary datasets have been stripped. This application utilizes an anonymized proxy dataset spanning the Southeast U.S. to safely demonstrate the production-grade ETL architecture, Marker Clustering, and deeply nested POS analytics.
         </div>
 
         <h2>1. The Problem: From Geometric Guesswork to Predictive Capture</h2>
-        <p>In high-velocity distribution, defining sales territories with a static "20-mile radius" is a recipe for margin erosion. A 20-mile delivery in gridlocked downtown Atlanta destroys logistics profitability, while a 20-mile route in rural Iowa represents a highly profitable, captive market. To move from descriptive reporting to prescriptive revenue capture, I replaced this static guesswork with a dynamic <strong>Geospatial Intelligence Engine</strong>.</p>
-        <p>By programmatically harvesting and mapping thousands of competitor locations against our internal Hub & Spoke network, the engine exposed our exact territorial blind spots. This allowed operations leadership to instantly visualize market friction, identifying precisely where our routes were exposed to competitor cannibalization, and where we had the geographic leverage to safely raise prices.</p>
+        <p>In high-velocity distribution, defining sales territories with a static "20-mile radius" is a recipe for margin erosion. A 20-mile delivery in gridlocked downtown Atlanta destroys logistics profitability, while a 20-mile route in rural Iowa represents a highly profitable, captive market. To move from descriptive reporting to prescriptive revenue capture, I replaced this static guesswork with a dynamic <span class="jargon-tooltip" data-tip="An automated architecture that merges physical map coordinates with financial data to visualize market threats and opportunities."><strong>Geospatial Intelligence Engine</strong></span>.</p>
+        <p>By programmatically harvesting and mapping thousands of competitor locations against our internal <span class="jargon-tooltip" data-tip="A centralized distribution model where a main 'Hub' stores heavy inventory and supplies smaller surrounding 'Spoke' branches or direct accounts."><strong>Hub & Spoke network</strong></span>, the engine exposed our exact territorial blind spots. This allowed operations leadership to instantly visualize market friction, identifying precisely where our routes were exposed to <span class="jargon-tooltip" data-tip="When an overlapping competitor location actively steals sales volume from an existing branch's established territory."><strong>competitor cannibalization</strong></span>, and where we had the geographic leverage to safely raise prices.</p>
 
         <!-- DEMO BUTTONS SECTION -->
         <div class="pulse-instruction flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -374,17 +383,17 @@
 
     <div class="portfolio-content">
         <h2>2. Machine Learning: Translating Maps into Margin</h2>
-        <p>A map is just a picture until you attach revenue to it. To translate this geography into an actionable pricing strategy, I engineered a <strong>POS Gravity Engine</strong>. By extracting 12 months of ERP invoice data and geocoding thousands of Customer Ship-To addresses, the Python engine calculated the exact mathematical "Distance Decay" of our revenue—proving exactly how far customers were willing to travel, or wait for delivery, before defecting to a competitor.</p>
-        <p>I then fed these decay curves into an unsupervised <strong>K-Means Machine Learning Algorithm</strong> (via <code>scikit-learn</code>). Instead of relying on subjective opinions from regional managers, the algorithm mathematically clustered our 80-branch network into 5 distinct <em>Strategic Topology Tiers</em> based on their actual friction profiles.</p>
-        <p>This fundamentally changed how the enterprise priced its catalog. We now knew with mathematical certainty which branches operated as <strong>"Tier 1: Rural Monopolies"</strong> (capable of absorbing aggressive, network-funding price increases) and which were <strong>"Tier 5: Hyper-Dense Urban"</strong> (requiring strict, defensive margin floors to survive block-by-block warfare without destroying volume).</p>
+        <p>A map is just a picture until you attach revenue to it. To translate this geography into an actionable pricing strategy, I engineered a <span class="jargon-tooltip" data-tip="A custom Python algorithm that measures how point-of-sale (POS) revenue mathematically drops off as the distance from the store increases."><strong>POS Gravity Engine</strong></span>. By extracting 12 months of <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> invoice data and geocoding thousands of Customer Ship-To addresses, the Python engine calculated the exact mathematical "Distance Decay" of our revenue—proving exactly how far customers were willing to travel, or wait for delivery, before defecting to a competitor.</p>
+        <p>I then fed these <span class="jargon-tooltip" data-tip="Mathematical models representing how fast revenue drops off as drive-time increases."><strong>decay curves</strong></span> into an unsupervised <span class="jargon-tooltip" data-tip="An unsupervised AI algorithm that automatically groups data points into distinct clusters based on their underlying similarities."><strong>K-Means Machine Learning Algorithm</strong></span> (via <code><span class="jargon-tooltip" data-tip="The industry-standard machine learning library for Python, used for complex predictive data analysis."><strong>scikit-learn</strong></span></code>). Instead of relying on subjective opinions from regional managers, the algorithm mathematically clustered our 80-branch network into 5 distinct <em>Strategic Topology Tiers</em> based on their actual friction profiles.</p>
+        <p>This fundamentally changed how the enterprise priced its catalog. We now knew with mathematical certainty which branches operated as <span style="white-space: nowrap;"><strong>"Tier 1: Rural Monopolies"</strong></span> (capable of absorbing aggressive, network-funding price increases) and which were <span style="white-space: nowrap;"><strong>"Tier 5: Hyper-Dense Urban"</strong></span> (requiring strict, defensive margin floors to survive block-by-block warfare without destroying volume).</p>
 
         <h2>3. Enterprise Ecosystem: Scaling the Architecture</h2>
-        <p>This geospatial engine was not a single-use script; it was architected as a foundational data ecosystem. Using this exact Python/SQL backbone, I expanded the architecture to solve massive operational inefficiencies across the enterprise:</p>
+        <p>This geospatial engine was not a single-use script; it was architected as a foundational data ecosystem. Using this exact <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture."><strong>Python</strong></span> & <span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases."><strong>SQL</strong></span> backbone, I expanded the architecture to solve massive operational inefficiencies across the enterprise:</p>
         <ul style="margin-top: 15px; margin-bottom: 25px; color: #334155; padding-left: 20px; line-height: 1.6;">
             <li style="margin-bottom: 10px;"><strong>M&A Poaching & Cannibalization:</strong> Modeled regional overlaps between merging competitors to identify "cross-street" store closures, allowing our outside sales reps to preemptively target and poach abandoned commercial accounts.</li>
-            <li style="margin-bottom: 10px;"><strong>Greenfield Expansion (Whitespace):</strong> Identified high-density VIO corridors completely void of our distribution hubs, generating data-backed expansion targets for executive leadership.</li>
+            <li style="margin-bottom: 10px;"><strong>Greenfield Expansion (Whitespace):</strong> Identified high-density <span class="jargon-tooltip" data-tip="Vehicles in Operation. Geographic strips with a high density of registered vehicles, indicating strong potential market demand."><strong>VIO corridors</strong></span> completely void of our distribution hubs, generating data-backed expansion targets for executive leadership.</li>
             <li style="margin-bottom: 10px;"><strong>Logistics & Fleet Optimization:</strong> Modified the engine to map physical delivery vectors, identifying severe overlapping territories to eliminate margin waste on fuel, driver overtime, and fleet wear-and-tear.</li>
-            <li><strong>Sales Territory Calibration:</strong> Visualized actual POS revenue vectors against assigned salesman routes to expose under-serviced regions and rebalance rep workloads.</li>
+            <li><strong>Sales Territory Calibration:</strong> Visualized actual <span class="jargon-tooltip" data-tip="Directional lines mapping exact Point-of-Sale invoice dollars from the fulfillment hub to the customer's physical delivery address."><strong>POS revenue vectors</strong></span> against assigned salesman routes to expose under-serviced regions and rebalance rep workloads.</li>
         </ul>
 
         <div style="margin-top: 50px; text-align: center;">
@@ -808,10 +817,10 @@
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(acc['Total LTM Profit']);
                 let safeName = acc['Customer Name'].replace(/'/g, "\\'");
                 let html = `
-                    <div onclick="openAccountDetails('${safeName}', ${index})" id="account-btn-${index}" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#DC2626] hover:shadow-md transition-all group">
+                    <div onclick="openAccountDetails('${safeName}', ${index})" id="account-btn-${index}" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#b32525] hover:shadow-md transition-all group">
                         <div class="overflow-hidden pr-2">
                             <div class="text-[10px] text-gray-500 font-bold mb-0.5 tracking-wider uppercase">#${index + 1} Earner</div>
-                            <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#DC2626] transition-colors truncate">${acc['Customer Name']}</div>
+                            <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#b32525] transition-colors truncate">${acc['Customer Name']}</div>
                         </div>
                         <div class="text-right shrink-0">
                             <div class="font-mono text-[15px] text-blue-400 font-bold">${profitStr}</div>
@@ -850,10 +859,9 @@
             let count = 1;
             for (const [rangeDesc, profit] of Object.entries(ranges)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
-                // Restored ID tag to ensure Step 10 cursor tracking works
                 rangesContainer.innerHTML += `
                     <div id="range-btn-${count}" onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
-                        <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
+                        <span class="truncate pr-2 group-hover:text-[#b32525] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
                 `;
@@ -864,7 +872,7 @@
         window.drillDownToRange = function(rangeName) {
             document.getElementById('chart-title').innerHTML = `
                 Top Parts: ${rangeName} 
-                <button onclick="resetAccountChart()" class="float-right text-[9px] bg-gray-700 text-white px-2 py-1 rounded hover:bg-[#DC2626] transition-colors tracking-widest">BACK</button>
+                <button onclick="resetAccountChart()" class="float-right text-[9px] bg-gray-700 text-white px-2 py-1 rounded hover:bg-[#b32525] transition-colors tracking-widest">BACK</button>
             `;
             renderDynamicDoughnutChart(window.currentAccountParts[rangeName]);
 
@@ -895,10 +903,9 @@
             let count = 1;
             for (const [rangeDesc, profit] of Object.entries(window.currentAccountRangesRaw)) {
                 let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
-                // Restored ID tag here as well
                 rangesContainer.innerHTML += `
                     <div id="range-btn-${count}" onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
-                        <span class="truncate pr-2 group-hover:text-[#DC2626] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
+                        <span class="truncate pr-2 group-hover:text-[#b32525] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
                         <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
                     </div>
                 `;
@@ -921,7 +928,7 @@
             let data = top5.map(val => val[1].toFixed(1));
             if (otherSum > 0) { labels.push('Other'); data.push(otherSum.toFixed(1)); }
 
-            const colors = ['#DC2626', '#F97316', '#FCD34D', '#DDDDDD', '#999999', '#555555'];
+            const colors = ['#b32525', '#F97316', '#FCD34D', '#DDDDDD', '#999999', '#555555'];
 
             pgChartInstance = new Chart(ctx, {
                 type: 'doughnut',
@@ -940,7 +947,6 @@
         let currentStep = -1;
         let tourActive = false;
         
-        // Block background scrolling on the overlay so elements cannot detach
         document.getElementById('wizard-overlay').addEventListener('wheel', e => e.preventDefault(), { passive: false });
         document.getElementById('wizard-overlay').addEventListener('touchmove', e => e.preventDefault(), { passive: false });
         
@@ -1053,10 +1059,7 @@
             tourActive = true;
             currentStep = -1;
             
-            // 1. Instantly snap the dashboard to the center of the screen
             document.getElementById('app-dashboard').scrollIntoView({ block: 'center' });
-            
-            // 2. Lock the body scroll so the page cannot move underneath the fixed cursor
             document.body.style.overflow = 'hidden';
             
             document.getElementById('wizard-overlay').classList.add('active');
@@ -1075,14 +1078,11 @@
 
         window.endGuidedTour = function() {
             tourActive = false;
-            
-            // Unlock the page scroll
             document.body.style.overflow = '';
             
             document.getElementById('wizard-overlay').classList.remove('active');
             document.getElementById('ghost-cursor').classList.remove('active');
             document.getElementById('tour-bubble').classList.remove('active');
-            
             document.getElementById('demo-start-btn').classList.remove('opacity-50', 'cursor-not-allowed');
             
             closeAnalytics();
@@ -1111,29 +1111,22 @@
             const btnNext = document.getElementById('tour-next-btn');
             const btnBack = document.getElementById('tour-back-btn');
             
-            // Lock buttons during animation
             btnNext.disabled = true; btnNext.classList.add('opacity-50');
             btnBack.disabled = true; btnBack.classList.add('opacity-50');
             
             try {
-                // 1. Run Pre-Action (e.g. flying the map)
                 if (step.preAction) {
                     step.preAction();
                     await new Promise(r => setTimeout(r, 1200)); 
                 }
 
-                // 2. Find target coordinates
                 let targetX = window.innerWidth / 2;
                 let targetY = window.innerHeight / 2;
 
                 function calculateAnchor(rect, anchor, offsetX, offsetY) {
-                    if (anchor === 'left') {
-                        return { x: rect.left + offsetX, y: rect.top + (rect.height / 2) + offsetY };
-                    } else if (anchor === 'right') {
-                        return { x: rect.right + offsetX, y: rect.top + (rect.height / 2) + offsetY };
-                    } else { 
-                        return { x: rect.left + (rect.width / 2) + offsetX, y: rect.top + (rect.height / 2) + offsetY };
-                    }
+                    if (anchor === 'left') return { x: rect.left + offsetX, y: rect.top + (rect.height / 2) + offsetY };
+                    else if (anchor === 'right') return { x: rect.right + offsetX, y: rect.top + (rect.height / 2) + offsetY };
+                    else return { x: rect.left + (rect.width / 2) + offsetX, y: rect.top + (rect.height / 2) + offsetY };
                 }
                 
                 try {
@@ -1159,10 +1152,7 @@
                         targetX = mapRect.left + point.x + (step.offsetX || 0);
                         targetY = mapRect.top + point.y + (step.offsetY || 0);
                     }
-
-                    if (isNaN(targetX) || isNaN(targetY)) {
-                        targetX = window.innerWidth / 2; targetY = window.innerHeight / 2;
-                    }
+                    if (isNaN(targetX) || isNaN(targetY)) { targetX = window.innerWidth / 2; targetY = window.innerHeight / 2; }
                 } catch (e) { console.log("Tour targeting fallback used."); }
 
                 let bX = targetX + step.bubbleX;
@@ -1173,7 +1163,6 @@
                 const cursor = document.getElementById('ghost-cursor');
                 const bubble = document.getElementById('tour-bubble');
 
-                // SHIFTED: Inject text immediately BEFORE animation delay so "Step 1 of X" doesn't flash
                 document.getElementById('tour-text').innerText = step.text;
                 document.getElementById('tour-step').innerText = `Step ${currentStep + 1} of ${tourSteps.length}`;
                 if (currentStep === tourSteps.length - 1) btnNext.innerText = "Finish";
@@ -1188,7 +1177,6 @@
                     void cursor.offsetWidth; 
                     
                     cursor.classList.add('active');
-                    
                     await new Promise(r => setTimeout(r, 100));
                     
                     cursor.style.transition = 'transform 2.0s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s';
@@ -1197,7 +1185,6 @@
                     cursor.style.transform = `translate(${targetX}px, ${targetY}px)`;
                     bubble.style.transform = `translate(${bX}px, ${bY}px)`;
                     bubble.classList.add('active');
-                    
                     await new Promise(r => setTimeout(r, 2000));
                 } else {
                     cursor.style.transform = `translate(${targetX}px, ${targetY}px)`;
@@ -1218,9 +1205,7 @@
                     await new Promise(r => setTimeout(r, 200)); 
                 }
                 
-                if (step.action) {
-                    try { step.action(); } catch(e) {}
-                }
+                if (step.action) { try { step.action(); } catch(e) {} }
                 
             } finally {
                 btnNext.disabled = false; btnNext.classList.remove('opacity-50');
