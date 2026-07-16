@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A/B Testing & Statistical Validation - Austin Stethem</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -51,7 +48,6 @@
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
-        /* STREAMING_CHUNK:Styling meta tables, text elements, and notes... -->
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
         .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box;}
         .meta-cell:last-child { border-right: none; }
@@ -83,7 +79,6 @@
             border: 1px solid #1e293b;
         }
 
-        /* STREAMING_CHUNK:Building the dark dashboard UI components... -->
         .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 20px;}
         .dash-title h3 { font-size: 2.2rem; font-weight: 900; margin: 0; letter-spacing: -1px; font-family: 'Inter', sans-serif;}
         .dash-title span { color: var(--curve-control); }
@@ -106,7 +101,6 @@
         .legend-item:last-child { margin-bottom: 0; }
         .legend-color { width: 12px; height: 12px; border-radius: 2px; }
 
-        /* STREAMING_CHUNK:Configuring interactive sliders and KPI grid... -->
         /* KPI / Input Grid */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; text-align: center; transition: all 0.3s;}
@@ -132,7 +126,6 @@
         .status-sig { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
         .status-insig { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
 
-        /* STREAMING_CHUNK:Implementing custom hover tooltips for jargon definitions... -->
         /* Jargon Tooltips */
         .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; transition: border-color 0.2s ease; }
         .jargon-tooltip strong { font-weight: 700; color: var(--dark-slate-blue); }
@@ -146,7 +139,6 @@
         .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
         .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
 
-        /* STREAMING_CHUNK:Styling the unified navigation buttons for portfolio flow... -->
         /* NAVIGATION BUTTONS */
         .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
         .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
@@ -350,9 +342,8 @@
                 </a>
             </div>
         </div>
-    </div> <!-- END DASHBOARD -->
+    </div> <!-- END PORTFOLIO CONTENT -->
 
-    <div class="portfolio-content">
     <script>
         let bellChart = null;
         
