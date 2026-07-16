@@ -7,7 +7,7 @@
     <!-- Chart.js Core -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
         :root { 
@@ -15,6 +15,11 @@
             --alert-red: #b32525; 
             --success-green: #10b981; 
             --bg-color: #fbfbfb; 
+            
+            /* Premium Dark Dashboard Colors */
+            --info-bg: #0f172a;
+            --info-panel: #1e293b;
+            --info-border: #334155;
         }
         
         body { 
@@ -35,7 +40,7 @@
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
-        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
+        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
         .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box;}
         .meta-cell:last-child { border-right: none; }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
@@ -63,76 +68,72 @@
         .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
         .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
 
-        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); font-weight: 600; white-space: nowrap; }
+        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); font-weight: 600; white-space: nowrap; transition: border-color 0.2s ease;}
         .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
         .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
         .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
 
-        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border-radius: 6px; align-items: stretch; flex-wrap: wrap; overflow: hidden;}
-        .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; display: flex; flex-direction: column; }
-        .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
-        .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
+        /* --- DASHBOARD WRAPPER (SaaS Style) --- */
+        .dashboard-container {
+            width: 100%; margin: 40px auto;
+            background: var(--info-bg); color: #e2e8f0;
+            border-radius: 12px; display: flex; flex-wrap: wrap;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid #1e293b; overflow: hidden;
+        }
+
+        .dash-sidebar {
+            width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; 
+            border-right: 1px solid var(--info-border); display: flex; flex-direction: column; box-sizing: border-box;
+        }
         
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; box-sizing: border-box;}
+
+        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px;}
+        .dash-header h3 { color: #f8fafc; font-size: 1.6rem; margin: 0; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
+        .dash-header h3 span { color: #f87171; }
+        .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
+        
+        /* Controls */
         .control-group { margin-bottom: 25px; }
-        .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
-        .val-readout { color: var(--alert-red); font-family: 'Fira Code', monospace; font-size: 11pt; font-weight: bold;}
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+        .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: #f87171;}
         
-        input[type="range"] { 
-            -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; border: 1px solid rgba(0,0,0,0.1);
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: var(--alert-red); margin-top: -6px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: transform 0.1s;
-        }
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; border: 1px solid rgba(255,255,255,0.05); }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #f87171; margin-top: -6px; box-shadow: 0 0 10px rgba(248, 113, 113, 0.4); transition: transform 0.1s; }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         input[type="range"]:focus { outline: none; }
 
-        select { width: 100%; padding: 10px; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 9pt; outline: none; cursor: pointer; transition: border-color 0.2s;}
-        select:hover { border-color: rgba(255,255,255,0.4); }
-        select option { background: var(--dark-slate-blue); color: white; }
+        select { width: 100%; padding: 10px; background: rgba(0,0,0,0.2); color: #f8fafc; border: 1px solid var(--info-border); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none; cursor: pointer; transition: border-color 0.2s;}
+        select:hover { border-color: #f87171; }
+        select option { background: var(--info-panel); color: #f8fafc; }
         
         .btn-run { 
-            background: var(--alert-red); 
-            color: white; 
-            border: none; 
-            padding: 16px 20px; 
-            width: 100%; 
-            font-family: 'Segoe UI', sans-serif; 
-            font-size: 11pt;
-            font-weight: 800; 
-            text-transform: uppercase; 
-            cursor: pointer; 
-            margin-top: 10px; 
-            margin-bottom: 10px;
-            letter-spacing: 1.5px; 
-            transition: all 0.2s ease; 
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(179,37,37,0.3);
+            background: var(--alert-red); color: white; border: none; padding: 16px 20px; width: 100%; 
+            font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; 
+            cursor: pointer; margin-top: 10px; margin-bottom: 10px; letter-spacing: 1.5px; 
+            transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(179,37,37,0.3);
         }
-        .btn-run:hover { 
-            background: #8e1c1c; 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(179,37,37,0.4);
-        }
-        .btn-run:disabled { 
-            background: #64748b; 
-            box-shadow: none;
-            transform: translateY(0);
-            cursor: not-allowed; 
-        }
+        .btn-run:hover { background: #8e1c1c; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(179,37,37,0.4); }
+        .btn-run:disabled { background: #64748b; box-shadow: none; transform: translateY(0); cursor: not-allowed; }
         
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 15px 10px; text-align: center; border-radius: 6px; border-top: 4px solid var(--dark-slate-blue); box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: transform 0.2s ease, box-shadow 0.2s ease;}
-        .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); }
-        .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
-        .kpi-value { font-size: 22pt; font-family: 'Fira Code', monospace; font-weight: bold; color: var(--dark-slate-blue); line-height: 1.2; }
-        .kpi-sub { font-size: 8pt; font-style: italic; color: #94a3b8; margin-top: 2px;}
-        
-        .chart-container { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
-        .chart-box { position: relative; height: 380px; width: 100%; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid #f87171; padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #94a3b8; margin-top: auto; line-height: 1.5;}
 
+        /* KPIs */
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        .kpi-card-header { font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.8rem; font-family: 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px;}
+        .kpi-sub { font-size: 0.75rem; color: #64748b; font-style: italic; }
+
+        /* Chart Area */
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;}
+        .chart-wrapper { position: relative; height: 380px; width: 100%; }
+
+        /* Portfolio Documentation Styles */
         .code-annotation { background: #e2e8f0; border-left: 4px solid #3b82f6; padding: 12px 18px; font-size: 9.5pt; color: #334155; border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Inter', sans-serif;}
         .code-annotation strong { color: #0f172a; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
         
@@ -164,9 +165,9 @@
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
-            .sim-container { flex-direction: column; }
-            .sim-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid #cbd5e1; }
-            .sim-main { padding: 15px; box-sizing: border-box; min-width: unset; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid #334155; }
+            .dash-main { padding: 15px; box-sizing: border-box; min-width: unset; }
             .project-navigation { flex-direction: column; }
             .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
             .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
@@ -221,14 +222,17 @@
     <p>Instead of feeding the engine flat variables, the algorithm generates a geometric <span class="jargon-tooltip" data-tip="A mathematical formalization of a path that consists of a succession of random steps.">random walk</span>. Over a 12-month timeline, it injects stochastic noise at every step. In each of the 5,000 simulated realities, cost fluctuates based on logistics volatility curves, and market demand fluctuates based on our defined price elasticity.</p>
     <p>By rendering these paths on a classic "Spaghetti Chart," we visualize the true density of our risk. The algorithm mathematically isolates the <span class="jargon-tooltip" data-tip="The risk boundary where 95% of all simulated outcomes perform better. This defines our absolute worst-case scenario."><strong>P5 (5th Percentile) Worst-Case Trajectory</strong></span> to establish an absolute algorithmic price floor. It also maps the <span class="jargon-tooltip" data-tip="The optimistic boundary where only 5% of simulated outcomes perform better, representing the maximum realistic windfall."><strong>P95 Upside Ceiling</strong></span> to forecast potential windfalls, ensuring we never price ourselves into a loss while aggressively capturing the <span class="jargon-tooltip" data-tip="The anticipated value for an investment at some point in the future, calculated by multiplying each possible outcome by its probability."><strong>Median Expected Profit (E[P])</strong></span>.</p>
 
-    <div class="sim-container">
-        <div class="sim-sidebar">
-            <div class="sidebar-header">Stochastic Inputs</div>
+    <div class="dashboard-container">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <h3>Monte <span>Carlo</span></h3>
+                <p>Stochastic Risk Inputs</p>
+            </div>
             
             <div class="control-group">
                 <label><span>Target Retail Price ($):</span> <span class="val-readout" id="val-price">$65.00</span></label>
                 <input type="range" id="slider-price" min="50" max="90" step="1" value="65">
-                <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Baseline Cost: $45.00 / Base Demand: 500 units</div>
+                <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Baseline Cost: $45.00 / Base Demand: 500 units</div>
             </div>
 
             <div class="control-group">
@@ -249,45 +253,45 @@
                 </select>
             </div>
 
-            <div style="font-size: 8.5pt; color: #94a3b8; font-style: italic; line-height: 1.4; margin-bottom: 20px; margin-top: auto;">
+            <div class="logic-box" style="margin-bottom: 20px;">
                 *Adjust the target retail price and market conditions. Executing the test triggers 5,000 random permutations to graph the probability distribution of your Expected Profit.
             </div>
 
             <button class="btn-run" id="btn-execute" onclick="triggerSimulation()">Run 5,000 Permutations</button>
         </div>
 
-        <div class="sim-main">
+        <div class="dash-main">
             <div class="kpi-grid">
                 <div class="kpi-card" id="card-p5" style="border-top-color: #ef4444;">
-                    <div class="kpi-title" style="color: #ef4444;">12-Mo P5 Risk</div>
+                    <div class="kpi-card-header" style="color: #ef4444;">12-Mo P5 Risk</div>
                     <div class="kpi-value" id="out-p5" style="color: #ef4444;">$--</div>
                     <div class="kpi-sub">5th Percentile Profit Floor</div>
                 </div>
                 <div class="kpi-card" style="border-top-color: #3b82f6;">
-                    <div class="kpi-title" style="color: #3b82f6;">12-Mo Median E[P]</div>
+                    <div class="kpi-card-header" style="color: #3b82f6;">12-Mo Median E[P]</div>
                     <div class="kpi-value" id="out-median" style="color: #3b82f6;">$--</div>
                     <div class="kpi-sub">Median Probable Yield</div>
                 </div>
                 <div class="kpi-card" id="card-p95" style="border-top-color: #10b981;">
-                    <div class="kpi-title" style="color: #10b981;">12-Mo P95 Upside</div>
+                    <div class="kpi-card-header" style="color: #10b981;">12-Mo P95 Upside</div>
                     <div class="kpi-value" id="out-p95" style="color: #10b981;">$--</div>
                     <div class="kpi-sub">95th Percentile Windfall</div>
                 </div>
             </div>
 
-            <div class="chart-container">
-        <div class="kpi-title" style="margin-bottom: 10px; text-align: center;">Cumulative Profit Trajectories (12-Month Random Walk)</div>
-        <div class="chart-box">
-            <canvas id="histogramChart"></canvas>
+            <div class="chart-section">
+                <div class="chart-header">Cumulative Profit Trajectories (12-Month Random Walk)</div>
+                <div class="chart-wrapper">
+                    <canvas id="histogramChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
 
-<h2>4. Action: SQL Pipeline & Data Science Stack</h2>
-<p>The mathematical backbone is built on an end-to-end data stack. First, I use <strong><span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases.">SQL</span></strong> to extract high-fidelity transactional history from the <strong><span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations.">ERP</span></strong>. This data is pulled into <strong><span class="jargon-tooltip" data-tip="An interactive development environment that allows data scientists to write Python code, view live data, and create visualizations in one place.">Jupyter</span></strong>, where I utilize <strong><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel.">Pandas</span></strong> to clean and sanitize anomalies. A massive one-time competitor inventory buyout, a year-end vendor rebate, or an abnormal bulk contract purchase will completely destroy a predictive model if treated as "normal" demand. By filtering against specific GL/Reason codes, I quarantine this operational noise—flagging these edge cases for manual human review—to strictly isolate our true recurring run-rate. Finally, I use <strong><span class="jargon-tooltip" data-tip="A Python library specialized for complex mathematical operations and processing massive data arrays at extremely high speeds.">NumPy</span></strong> for high-speed <span class="jargon-tooltip" data-tip="A computational technique that processes entire datasets simultaneously rather than row-by-row, making calculations exponentially faster.">array vectorization</span> of the simulation itself.</p>
+    <h2>4. Action: SQL Pipeline & Data Science Stack</h2>
+    <p>The mathematical backbone is built on an end-to-end data stack. First, I use <strong><span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases.">SQL</span></strong> to extract high-fidelity transactional history from the <strong><span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations.">ERP</span></strong>. This data is pulled into <strong><span class="jargon-tooltip" data-tip="An interactive development environment that allows data scientists to write Python code, view live data, and create visualizations in one place.">Jupyter</span></strong>, where I utilize <strong><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel.">Pandas</span></strong> to clean and sanitize anomalies. A massive one-time competitor inventory buyout, a year-end vendor rebate, or an abnormal bulk contract purchase will completely destroy a predictive model if treated as "normal" demand. By filtering against specific GL/Reason codes, I quarantine this operational noise—flagging these edge cases for manual human review—to strictly isolate our true recurring run-rate. Finally, I use <strong><span class="jargon-tooltip" data-tip="A Python library specialized for complex mathematical operations and processing massive data arrays at extremely high speeds.">NumPy</span></strong> for high-speed <span class="jargon-tooltip" data-tip="A computational technique that processes entire datasets simultaneously rather than row-by-row, making calculations exponentially faster.">array vectorization</span> of the simulation itself.</p>
 
-<p><strong>Vectorized Enterprise Scale:</strong> Because the engine relies on high-speed array vectorization rather than standard programming loops, it possesses massive operational scale. We can run 50,000+ randomized iterations across tens of thousands of SKUs in a matter of seconds. To further optimize compute overhead, I programmed algorithmic "bumper rails" into the engine—logical boundary constraints that act like bowling lane bumpers, guiding the simulation through a targeted funnel and terminating mathematically impossible trajectories early so the server never wastes time calculating useless permutations.</p>
+    <p><strong>Vectorized Enterprise Scale:</strong> Because the engine relies on high-speed array vectorization rather than standard programming loops, it possesses massive operational scale. We can run 50,000+ randomized iterations across tens of thousands of SKUs in a matter of seconds. To further optimize compute overhead, I programmed algorithmic "bumper rails" into the engine—logical boundary constraints that act like bowling lane bumpers, guiding the simulation through a targeted funnel and terminating mathematically impossible trajectories early so the server never wastes time calculating useless permutations.</p>
 
     <div class="code-annotation">
         <strong>Phase 1: ERP Data Extraction & Hygiene</strong>
@@ -457,24 +461,27 @@
             // Slice out just 100 paths for the visual "Spaghetti" rendering to keep browser fast
             let visualDatasets = allPaths.slice(0, 100).map(path => ({
                 data: path,
-                borderColor: 'rgba(148, 163, 184, 0.15)', // Light Slate Gray
+                borderColor: 'rgba(148, 163, 184, 0.15)', // Light Slate Gray (Spaghetti strands)
                 borderWidth: 1.5,
                 fill: false,
                 pointRadius: 0,
                 tension: 0.2
             }));
 
-            // Overlay the mathematical Percentile Boundaries
+            // Overlay the mathematical Percentile Boundaries (Ordered Left to Right matching KPIs)
+            
+            // 1. Red (P5)
             visualDatasets.push({
-                label: 'P95 Upside Threshold',
-                data: p95Path,
-                borderColor: '#10b981', // Emerald Green
+                label: 'P5 Absolute Risk Floor',
+                data: p5Path,
+                borderColor: '#ef4444', // Red
                 borderWidth: 3,
                 borderDash: [5, 5],
                 pointRadius: 0,
                 tension: 0.2
             });
 
+            // 2. Blue (Median)
             visualDatasets.push({
                 label: 'Median Expected Profit',
                 data: p50Path,
@@ -484,10 +491,11 @@
                 tension: 0.2
             });
 
+            // 3. Green (P95)
             visualDatasets.push({
-                label: 'P5 Absolute Risk Floor',
-                data: p5Path,
-                borderColor: '#ef4444', // Red
+                label: 'P95 Upside Threshold',
+                data: p95Path,
+                borderColor: '#10b981', // Emerald Green
                 borderWidth: 3,
                 borderDash: [5, 5],
                 pointRadius: 0,
@@ -516,23 +524,24 @@
                                     return item.text !== undefined; 
                                 },
                                 font: { size: 11, weight: '600' },
-                                color: '#1a2433'
+                                color: '#cbd5e1' // Dark mode legend text
                             }
                         },
                         tooltip: { enabled: false } // Too messy with 100 lines overlapping
                     },
                     scales: {
                         y: {
-                            title: { display: true, text: 'Cumulative Profit ($)', font: {size: 11, weight: 'bold'} },
-                            grid: { color: '#e2e8f0', borderDash: [4, 4] },
+                            title: { display: true, text: 'Cumulative Profit ($)', font: {size: 11, weight: 'bold'}, color: '#94a3b8' },
+                            grid: { color: '#334155', borderDash: [4, 4] },
                             ticks: { 
                                 callback: function(value) { return '$' + (value/1000).toFixed(0) + 'k'; },
-                                font: {size: 10} 
+                                font: {size: 10},
+                                color: '#cbd5e1' // Dark mode axis numbers
                             }
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { font: {size: 10, weight: '600'} }
+                            ticks: { font: {size: 10, weight: '600'}, color: '#cbd5e1' }
                         }
                     }
                 }
