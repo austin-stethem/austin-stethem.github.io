@@ -179,6 +179,20 @@
             background: rgba(15, 23, 42, 0.8); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); pointer-events: none; white-space: nowrap;
         }
 
+        /* NAVIGATION BUTTONS */
+        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
+        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
+        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
+        
+        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
+        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;}
+        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
+        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
+        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
+        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
+        .nav-btn.next .nav-label { color: #fca5a5; }
+        .nav-title { font-size: 11pt; font-weight: bold;}
+
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
@@ -186,6 +200,8 @@
             #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
             #map { height: 650px; }
             #analytics-panel { width: 100% !important; z-index: 3000; }
+            .project-navigation { flex-direction: column; }
+            .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
         }
     </style>
 </head>
@@ -396,8 +412,19 @@
             <li><strong>Sales Territory Calibration:</strong> Visualized actual <span class="jargon-tooltip" data-tip="Directional lines mapping exact Point-of-Sale invoice dollars from the fulfillment hub to the customer's physical delivery address."><strong>POS revenue vectors</strong></span> against assigned salesman routes to expose under-serviced regions and rebalance rep workloads.</li>
         </ul>
 
-        <div style="margin-top: 50px; text-align: center;">
-            <a href="algorithmic-margin-defense.html" style="background: var(--dark-slate-blue); color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: background 0.2s;">Next Phase: Algorithmic Margin Defense &rarr;</a>
+        <div class="next-step-box">
+            <h3>Ecosystem Step 2: Strategy Execution</h3>
+            <p>With our vulnerable territories mapped and our market anchors identified, we must now defend those margins against incoming supply chain inflation. Let's move from intelligence to execution by building an algorithmic cross-subsidization engine.</p>
+            <div class="project-navigation">
+                <a href="index.html" class="nav-btn prev">
+                    <span class="nav-label">&larr; Return Home</span>
+                    <span class="nav-title">Portfolio Hub</span>
+                </a>
+                <a href="algorithmic-margin-defense.html" class="nav-btn next">
+                    <span class="nav-label">Next Phase &rarr;</span>
+                    <span class="nav-title">Step 2: Algorithmic Margin Defense</span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -530,10 +557,7 @@
         let autoTriggerHub = null;
 
         // --- 3. MAP INITIALIZATION ---
-        // preferCanvas is handled by the renderer explicitly
-        // Setting padding to 4.0 guarantees shapes are drawn up to 4 screens away, preventing clipping bugs!
-        const myRenderer = L.canvas({ padding: 4.0 });
-        const map = L.map('map', { zoomControl: false, scrollWheelZoom: false, renderer: myRenderer }).setView([35.0, -85.5], 6); 
+        const map = L.map('map', { zoomControl: false, scrollWheelZoom: false }).setView([35.0, -85.5], 6); 
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
         const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
