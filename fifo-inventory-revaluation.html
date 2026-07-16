@@ -32,7 +32,6 @@
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
-        /* STREAMING_CHUNK:Styling meta tables and layout components... -->
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
         .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
         .meta-cell:last-child { border-right: none; }
@@ -61,14 +60,12 @@
         .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
         .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
 
-        /* STREAMING_CHUNK:Styling tooltips for jargon definitions... -->
         .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; transition: border-color 0.2s ease; }
         .jargon-tooltip strong { font-weight: 700; color: var(--dark-slate-blue); }
         .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
         .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
         .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
         
-        /* STREAMING_CHUNK:Styling simulation container and charts... -->
         .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); align-items: stretch; flex-wrap: wrap; overflow: hidden;}
         .sim-sidebar { width: 320px; flex-shrink: 0; background: #f1f5f9; color: #1e293b; padding: 25px; display: flex; flex-direction: column; border-right: 1px solid #cbd5e1; box-sizing: border-box;}
         .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #ffffff; display: flex; flex-direction: column; box-sizing: border-box;}
@@ -93,7 +90,6 @@
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
         .impact-box ul { font-size: 10pt; margin-bottom: 0; }
 
-        /* STREAMING_CHUNK:Styling navigation boxes... -->
         .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
         .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
         .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
