@@ -9,15 +9,19 @@
     <!-- Chart.js Data Labels Plugin -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* STANDARDIZED PORTFOLIO ROOT VARIABLES */
         :root { 
             --dark-slate-blue: #1a2433; 
             --alert-red: #b32525; 
             --success-green: #10b981; 
             --bg-color: #fbfbfb; 
+
+            /* Premium Dark Dashboard Colors */
+            --info-bg: #0f172a;
+            --info-panel: #1e293b;
+            --info-border: #334155;
         }
         
         body { 
@@ -38,8 +42,8 @@
         .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
-        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
+        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
+        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box;}
         .meta-cell:last-child { border-right: none; }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
@@ -66,83 +70,82 @@
         .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
         .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
 
-        .sim-container { display: flex; border: 1px solid #cbd5e1; background: #fff; margin-top: 30px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border-radius: 6px; align-items: stretch; flex-wrap: wrap; overflow: hidden;}
-        .sim-sidebar { width: 320px; flex-shrink: 0; background: var(--dark-slate-blue); color: white; padding: 25px; display: flex; flex-direction: column; }
-        .sim-main { flex: 1; min-width: 300px; padding: 25px; background: #f8fafc; display: flex; flex-direction: column;}
-        .sidebar-header { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #94a3b8;}
-        .control-group { margin-bottom: 25px; }
-        .control-group label { display: flex; justify-content: space-between; font-size: 9.5pt; font-weight: 600; margin-bottom: 8px; color: #e2e8f0; }
-        .val-readout { color: var(--alert-red); font-family: 'Fira Code', monospace; font-size: 11pt; font-weight: bold;}
+        /* --- DASHBOARD WRAPPER (SaaS Style) --- */
+        .dashboard-container {
+            width: 100%; margin: 40px auto;
+            background: var(--info-bg); color: #e2e8f0;
+            border-radius: 12px; display: flex; flex-wrap: wrap;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid #1e293b; overflow: hidden;
+        }
+
+        .dash-sidebar {
+            width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; 
+            border-right: 1px solid var(--info-border); display: flex; flex-direction: column; box-sizing: border-box;
+        }
         
-        input[type="range"] { 
-            -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; border: 1px solid rgba(0,0,0,0.1);
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: var(--alert-red); margin-top: -6px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: transform 0.1s;
-        }
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; box-sizing: border-box;}
+
+        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px;}
+        .dash-header h3 { color: #f8fafc; font-size: 1.6rem; margin: 0; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
+        .dash-header h3 span { color: #f87171; }
+        .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
+        
+        .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: #cbd5e1;}
+
+        /* Controls */
+        .control-group { margin-bottom: 25px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+        .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: #f87171;}
+        
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; border: 1px solid rgba(255,255,255,0.05); }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #f87171; margin-top: -6px; box-shadow: 0 0 10px rgba(248, 113, 113, 0.4); transition: transform 0.1s; }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         input[type="range"]:focus { outline: none; }
         
         .btn-run { 
-            background: var(--alert-red); 
-            color: white; 
-            border: none; 
-            padding: 16px 20px; 
-            width: 100%; 
-            font-family: 'Segoe UI', sans-serif; 
-            font-size: 11pt;
-            font-weight: 800; 
-            text-transform: uppercase; 
-            cursor: pointer; 
-            margin-top: 15px; 
-            margin-bottom: 25px;
-            letter-spacing: 1.5px; 
-            transition: all 0.2s ease; 
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(179,37,37,0.3);
+            background: var(--alert-red); color: white; border: none; padding: 16px 20px; width: 100%; 
+            font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; 
+            cursor: pointer; margin-top: 10px; margin-bottom: 10px; letter-spacing: 1.5px; 
+            transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(179,37,37,0.3);
         }
-        .btn-run:hover { 
-            background: #8e1c1c; 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(179,37,37,0.4);
-        }
-        .btn-run:disabled { 
-            background: #64748b; 
-            box-shadow: none;
-            transform: translateY(0);
-            cursor: not-allowed; 
-        }
+        .btn-run:hover { background: #8e1c1c; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(179,37,37,0.4); }
+        .btn-run:disabled { background: #64748b; box-shadow: none; transform: translateY(0); cursor: not-allowed; }
 
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .kpi-card { background: white; border: 1px solid #e2e8f0; padding: 15px 10px; text-align: center; border-radius: 6px; border-top: 4px solid var(--dark-slate-blue); box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: transform 0.2s ease, box-shadow 0.2s ease;}
-        .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); }
-        .kpi-title { font-size: 8pt; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
-        .kpi-value { font-size: 22pt; font-family: 'Fira Code', monospace; font-weight: bold; color: var(--dark-slate-blue); line-height: 1.2; }
-        .kpi-sub { font-size: 8pt; font-style: italic; color: #94a3b8; margin-top: 2px;}
-        
-        .chart-container { background: white; border: 1px solid #e2e8f0; padding: 20px; border-radius: 6px; margin-bottom: 20px; }
-        .chart-box { position: relative; height: 380px; width: 100%; }
-        
-        .status-safe { color: var(--success-green) !important; border-top-color: var(--success-green) !important; }
-        .status-warn { color: #e67e22 !important; border-top-color: #e67e22 !important; }
-        .status-critical { color: var(--alert-red) !important; border-top-color: var(--alert-red) !important; }
-        
-        .log-table { width: 100%; border-collapse: collapse; font-size: 9pt; background: white; border: 1px solid #e2e8f0;}
-        .log-table th { background: var(--dark-slate-blue); color: white; padding: 12px 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt;}
-        .log-table td { padding: 12px 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; font-size: 10pt; color: #334155;}
-        
-        .badge-lock { background: var(--alert-red); color: white; padding: 3px 6px; border-radius: 3px; font-size: 7.5pt; font-weight: bold; font-family: 'Segoe UI'; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
-        .badge-safe { background: var(--success-green); color: white; padding: 3px 6px; border-radius: 3px; font-size: 7.5pt; font-weight: bold; font-family: 'Segoe UI'; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
-        .badge-elastic { background: #3b82f6; color: white; padding: 3px 6px; border-radius: 3px; font-size: 7.5pt; font-weight: bold; font-family: 'Segoe UI'; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
-        
-        .rule-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 4px; font-size: 8.5pt; color: #94a3b8; margin-bottom: 25px; }
+        .rule-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); padding: 15px; border-radius: 6px; font-size: 0.8rem; color: #94a3b8; margin-bottom: 25px; }
         .rule-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px; }
         .rule-row:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
-        .context-box { background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05); border-left: 3px solid #cbd5e1; padding: 15px; border-radius: 4px; font-size: 9pt; color: #cbd5e1; line-height: 1.5; transition: border-left-color 0.3s; }
+        .context-box { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--info-border); border-left: 3px solid #cbd5e1; padding: 15px; border-radius: 4px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; transition: border-left-color 0.3s; margin-top: auto;}
         
+        /* KPIs */
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        .kpi-card-header { font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.8rem; font-family: 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px;}
+        .kpi-sub { font-size: 0.75rem; color: #64748b; font-style: italic; }
+
+        /* Chart Area */
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px;}
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;}
+        .chart-wrapper { position: relative; height: 380px; width: 100%; }
+        
+        /* Log Table */
+        .log-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; overflow-x: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .log-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; color: #e2e8f0; font-family: 'Inter', sans-serif;}
+        .log-table th { background: #0f172a; color: #94a3b8; padding: 12px 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; font-weight: 800; border-bottom: 1px solid var(--info-border);}
+        .log-table td { padding: 12px 10px; border-bottom: 1px solid var(--info-border); color: #cbd5e1;}
+        .log-table tr:last-child td { border-bottom: none; }
+        
+        .badge-lock { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
+        .badge-safe { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
+        .badge-elastic { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
+        
+        .status-safe { color: #10b981 !important; border-top-color: #10b981 !important; }
+        .status-warn { color: #f59e0b !important; border-top-color: #f59e0b !important; }
+        .status-critical { color: #ef4444 !important; border-top-color: #ef4444 !important; }
+
         .code-annotation { background: #e2e8f0; border-left: 4px solid #3b82f6; padding: 12px 18px; font-size: 9.5pt; color: #334155; border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Inter', sans-serif;}
         .code-annotation strong { color: #0f172a; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
         
@@ -153,7 +156,7 @@
         .code-string { color: #98c379; }
         .code-number { color: #d19a66; }
 
-        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; }
+        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; transition: border-color 0.2s ease;}
         .jargon-tooltip strong { font-weight: 700; color: var(--dark-slate-blue); }
         .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
         .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
@@ -164,7 +167,7 @@
         .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
         
         .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
-        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center;}
+        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;}
         .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
         .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
         .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
@@ -175,9 +178,9 @@
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
-            .sim-container { flex-direction: column; }
-            .sim-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid #cbd5e1; }
-            .sim-main { padding: 15px; box-sizing: border-box; min-width: unset; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid #334155; }
+            .dash-main { padding: 15px; box-sizing: border-box; min-width: unset; }
             .project-navigation { flex-direction: column; }
             .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
             .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
@@ -222,7 +225,7 @@
         With our vulnerable territories securely mapped (Step 1), we now face the impending 15% vendor cost spike. Standard ERP systems apply blanket markups that blindly destroy volume on sensitive items. We must build a deterministic algorithm to cross-subsidize our <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust."><strong>Key Value Items (KVIs)</strong></span> and safely defend our blended margin before we stress-test those thresholds against market noise.
     </div>
 
-    <p><strong>The Situation:</strong> In legacy distribution models, price updates are largely reactive. When a vendor issues a sudden price increase or global freight costs spike, standard <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> systems often trigger a blanket markup across the entire parts catalog. This creates massive business risk: it instantly bleeds volume on highly competitive, <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes. A price increase will likely destroy sales volume."><strong>elastic items</strong></span> while simultaneously leaving margin on the table for blind, <span class="jargon-tooltip" data-tip="Products (often rare or captive) where demand remains stable even if prices are raised."><strong>inelastic parts</strong></span>.</p>
+    <p><strong>The Situation:</strong> In legacy distribution models, price updates are largely reactive. When a vendor issues a sudden price increase or global freight costs spike, standard <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> systems often trigger a blanket markup across the entire parts catalog. This creates massive business risk: it instantly bleeds volume on highly competitive, <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes. A price margin increase will likely destroy sales volume."><strong>elastic items</strong></span> while simultaneously leaving margin on the table for blind, <span class="jargon-tooltip" data-tip="Products (often rare or captive) where demand remains stable even if prices are raised."><strong>inelastic parts</strong></span>.</p>
     <p><strong>The Initiative:</strong> Rather than accepting margin erosion as an unavoidable cost of doing business, I took it upon myself to architect a proactive solution. I designed and pitched this deterministic <span class="jargon-tooltip" data-tip="Intentionally taking lower margins on highly visible items while aggressively raising prices on blind/rare items to protect overall profitability."><strong>cross-subsidization</strong></span> engine to executive leadership to prove we could absorb external cost shocks and automatically recalculate price targets across millions of SKUs—without sacrificing volume on our most sensitive items.</p>
 
     <h2>2. Action: Elasticity Stratification & Cross-Subsidization</h2>
@@ -239,9 +242,12 @@
     <h2>3. Interactive Execution Dashboard</h2>
     <p><em>Adjust the market disruption sliders below to simulate a sudden cost spike. Click "Execute Margin Defense" to trigger the deterministic algorithm. It will apply your physical inventory shield and dynamically calculate the required Cross-Subsidization markups needed to defend the Blended Target Margin.</em></p>
 
-    <div class="sim-container">
-        <div class="sim-sidebar">
-            <div class="sidebar-header">System Controls</div>
+    <div class="dashboard-container">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <h3>Defense <span>Matrix</span></h3>
+                <p>System Controls</p>
+            </div>
             
             <div class="control-group">
                 <label><span>Global Freight Spike (%):</span> <span class="val-readout" id="val-freight">0%</span></label>
@@ -260,7 +266,7 @@
 
             <button class="btn-run" id="btn-execute" onclick="triggerSimulation()">Execute Margin Defense</button>
 
-            <div class="sidebar-header" style="margin-top: 30px; border-bottom-color: #475569;">Markup Limits (Elasticity)</div>
+            <div class="sidebar-subheader">Markup Limits (Elasticity)</div>
             <div class="rule-box">
                 <div class="rule-row">
                     <span style="color:#ef4444; font-weight:bold;">Grp A (Anchors)</span> 
@@ -276,51 +282,51 @@
                 </div>
             </div>
 
-            <div style="margin-top: auto; padding-top: 20px;">
-                <div class="sidebar-header" style="border-bottom-color: #475569;">Actionable Directive</div>
+            <div style="margin-top: auto; padding-top: 10px;">
+                <div class="sidebar-subheader">Actionable Directive</div>
                 <div class="context-box" id="dynamic-context">
-                    <strong style="color: white;">Status: Pending Execution</strong><br><br>Adjust the disruption sliders and execute the defense matrix to generate the recovery summary.
+                    <strong style="color: #e2e8f0;">Status: Pending Execution</strong><br><br>Adjust the disruption sliders and execute the defense matrix to generate the recovery summary.
                 </div>
             </div>
         </div>
 
-        <div class="sim-main">
+        <div class="dash-main">
             <div class="kpi-grid">
                 <div class="kpi-card" id="card-median">
-                    <div class="kpi-title">Defended Target Margin</div>
-                    <div class="kpi-value" id="out-median">--%</div>
+                    <div class="kpi-card-header">Defended Target Margin</div>
+                    <div class="kpi-value" id="out-median" style="color: #cbd5e1;">--%</div>
                     <div class="kpi-sub">Post-Subsidization Execution</div>
                 </div>
                 <div class="kpi-card" id="card-p95">
-                    <div class="kpi-title">Post-Stress Baseline</div>
-                    <div class="kpi-value" id="out-p95">--%</div>
+                    <div class="kpi-card-header">Post-Stress Baseline</div>
+                    <div class="kpi-value" id="out-p95" style="color: #cbd5e1;">--%</div>
                     <div class="kpi-sub">Calculated Absolute Floor Risk</div>
                 </div>
                 <div class="kpi-card" id="card-action">
-                    <div class="kpi-title">Q1 Realized Margin Yield</div>
-                    <div class="kpi-value" id="out-action" style="font-size: 20pt; color: var(--success-green);">--%</div>
+                    <div class="kpi-card-header">Q1 Realized Margin Yield</div>
+                    <div class="kpi-value" id="out-action" style="color: #cbd5e1;">--%</div>
                     <div class="kpi-sub" id="out-action-sub">Awaiting inputs</div>
                 </div>
             </div>
 
-            <div class="chart-container">
-                <div class="kpi-title" style="margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                    <span style="text-align: center;">Cross-Subsidization: Before vs. After Execution</span>
-                    <div style="display: flex; justify-content: center; gap: 12px; font-size: 8pt; text-transform: none; font-weight: 600; color: #475569; flex-wrap: wrap;">
-                        <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 12px; height: 12px; background: #e2e8f0; border: 1px solid #cbd5e1; border-radius: 2px;"></span> Base</span>
-                        <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 12px; height: 12px; background: #3b82f6; border-radius: 2px;"></span> Grp C</span>
-                        <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 12px; height: 12px; background: #f59e0b; border-radius: 2px;"></span> Grp B</span>
-                        <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 12px; height: 12px; background: #ef4444; border-radius: 2px;"></span> Grp A</span>
-                        <span style="display: flex; align-items: center; gap: 4px;"><span style="width: 12px; height: 12px; background: #10b981; border-radius: 2px;"></span> Blended</span>
+            <div class="chart-section">
+                <div class="chart-header">
+                    <span>Cross-Subsidization: Before vs. After Execution</span>
+                    <div style="display: flex; justify-content: center; gap: 15px; font-size: 0.75rem; text-transform: none; font-weight: 600; color: #94a3b8; flex-wrap: wrap; margin-top: 10px;">
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: rgba(100, 116, 139, 0.4); border: 1px solid #64748b; border-radius: 2px;"></span> Base</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #3b82f6; border-radius: 2px;"></span> Grp C</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #f59e0b; border-radius: 2px;"></span> Grp B</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #ef4444; border-radius: 2px;"></span> Grp A</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #10b981; border-radius: 2px;"></span> Blended</span>
                     </div>
                 </div>
-                <div class="chart-box">
+                <div class="chart-wrapper">
                     <canvas id="comparisonChart"></canvas>
                 </div>
             </div>
 
-            <div class="sidebar-header" style="color: var(--dark-slate-blue); border-bottom: 2px solid #cbd5e1; margin-bottom: 10px;">Algorithm Pricing Log</div>
-            <div style="overflow-x: auto;">
+            <div class="log-section">
+                <div class="chart-header" style="text-align: left; margin-bottom: 10px;">Algorithm Pricing Log</div>
                 <table class="log-table" id="log-table">
                     <thead>
                         <tr>
@@ -332,7 +338,7 @@
                         </tr>
                     </thead>
                     <tbody id="matrix-body">
-                        <tr><td colspan="5" style="text-align: center; color: #94a3b8; font-style: italic; font-family: 'Segoe UI';">Awaiting execution prompt...</td></tr>
+                        <tr><td colspan="5" style="text-align: center; color: #64748b; font-style: italic;">Awaiting execution prompt...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -448,7 +454,7 @@
         
         let initTableHTML = "";
         groups.forEach(g => {
-            initTableHTML += `<tr><td style="font-weight: 700;">${g.title}</td><td>${g.weight * 100}%</td><td>${g.baseMargin.toFixed(1)}%</td><td style="color:#94a3b8;">--%</td><td><span style="color:#94a3b8; font-size:7.5pt; font-weight:bold;">AWAITING EXECUTION</span></td></tr>`;
+            initTableHTML += `<tr><td style="font-weight: 700; color: #e2e8f0;">${g.title}</td><td>${g.weight * 100}%</td><td>${g.baseMargin.toFixed(1)}%</td><td style="color:#64748b;">--%</td><td><span style="color:#64748b; font-size:0.7rem; font-weight:800; letter-spacing:0.5px;">AWAITING EXECUTION</span></td></tr>`;
         });
         document.getElementById('matrix-body').innerHTML = initTableHTML;
 
@@ -511,35 +517,38 @@
                     let actualHit = markupsBlended[0] / g.weight;
                     if (actualHit > 0) {
                         displayedAction = `-${actualHit.toFixed(1)}% (Margin Loss)`;
-                        badgeHTML = `<span class="badge-lock" style="background:#ef4444;">SHIELD BREACHED</span>`;
+                        badgeHTML = `<span class="badge-lock">SHIELD BREACHED</span>`;
                     } else {
                         displayedAction = `0.0% (Price Locked)`;
                         badgeHTML = `<span class="badge-safe">100% SHIELDED</span>`;
                     }
                 }
 
-                tableHTML += `<tr><td style="font-weight: 700;">${g.title}</td><td>${g.weight * 100}%</td><td>${g.baseMargin.toFixed(1)}%</td><td style="font-weight:bold; color: ${(g.id === 'A' && markupsBlended[0] > 0) ? 'var(--alert-red)' : '#0f172a'}">${displayedAction}</td><td>${badgeHTML}</td></tr>`;
+                let actionColorClass = (g.id === 'A' && markupsBlended[0] > 0) ? 'color: #ef4444;' : 'color: #e2e8f0;';
+                
+                tableHTML += `<tr><td style="font-weight: 700; color: #e2e8f0;">${g.title}</td><td>${g.weight * 100}%</td><td>${g.baseMargin.toFixed(1)}%</td><td style="font-weight:bold; ${actionColorClass}">${displayedAction}</td><td>${badgeHTML}</td></tr>`;
             });
 
             document.getElementById('matrix-body').innerHTML = tableHTML;
 
-            // Updated output to be ACTIONABLE directives based on Reddit feedback
             if (marginHitA_blended > 0) {
-                dynamicContext.style.borderLeftColor = 'var(--alert-red)';
-                dynamicContext.innerHTML = `<span style="color: var(--alert-red); font-weight: bold; font-size: 10pt;">CRITICAL SHIELD BREACH</span><br><br><strong>Directive:</strong> Cost deficit (-${rawDeficit.toFixed(1)}%) has exceeded portfolio subsidization capacity. Group A (Anchor) prices must remain locked to defend volume. Absorb the <strong>${(marginHitA_blended / groups[0].weight).toFixed(1)}% margin bleed</strong> on anchor items and alert procurement to source alternate vendors immediately.`;
+                dynamicContext.style.borderLeftColor = '#ef4444';
+                dynamicContext.innerHTML = `<span style="color: #ef4444; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Critical Shield Breach</span><br><br><strong>Directive:</strong> Cost deficit (-${rawDeficit.toFixed(1)}%) has exceeded portfolio subsidization capacity. Group A (Anchor) prices must remain locked to defend volume. Absorb the <strong style="color:#ef4444;">${(marginHitA_blended / groups[0].weight).toFixed(1)}% margin bleed</strong> on anchor items and alert procurement to source alternate vendors immediately.`;
             } else if (requiredMarkupC_blended > 0 || requiredMarkupB_blended > 0 || fifoSubsidization > 0) {
-                dynamicContext.style.borderLeftColor = 'var(--success-green)';
+                dynamicContext.style.borderLeftColor = '#10b981';
                 let shieldText = fifoSubsidization > 0 ? `The <strong>${qohDays} days of QOH</strong> provided an immediate FIFO windfall shield that absorbed ${fifoSubsidization.toFixed(1)}% of the hit. ` : `Due to zero inventory buffer, the portfolio took the full hit immediately. `;
-                dynamicContext.innerHTML = `<span style="color: var(--success-green); font-weight: bold; font-size: 10pt;">MARGIN DEFENDED</span><br><br>${shieldText}<strong>Directive:</strong> Execute calculated markups on Group C & B immediately to generate enough surplus to subsidize Group A entirely. Baseline EBITDA is protected.`;
+                dynamicContext.innerHTML = `<span style="color: #10b981; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Margin Defended</span><br><br>${shieldText}<strong>Directive:</strong> Execute calculated markups on Group C & B immediately to generate enough surplus to subsidize Group A entirely. Baseline EBITDA is protected.`;
             } else {
                 dynamicContext.style.borderLeftColor = '#cbd5e1';
-                dynamicContext.innerHTML = `<span style="color: white; font-weight: bold; font-size: 10pt;">BASELINE STABILITY</span><br><br><strong>Directive:</strong> No significant cost pressure detected. Hold all pricing tiers steady.`;
+                dynamicContext.innerHTML = `<span style="color: #e2e8f0; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Baseline Stability</span><br><br><strong>Directive:</strong> No significant cost pressure detected. Hold all pricing tiers steady.`;
             }
 
             const stressBuffer = (fSpike * 3) + (cDrop * 1.5);
             const blendedFloor = finalBlendedMargin - stressBuffer; 
 
             document.getElementById('out-median').innerText = finalBlendedMargin.toFixed(1) + "%";
+            document.getElementById('out-median').style.color = "#f8fafc";
+            
             const p95El = document.getElementById('out-p95');
             p95El.innerText = blendedFloor.toFixed(1) + "%";
 
@@ -557,26 +566,26 @@
 
             if (qohDays > 0 && fSpike > 0) {
                 cardAction.classList.add("status-safe");
-                actionEl.classList.add("status-safe");
+                actionEl.style.color = "#10b981";
                 subEl.innerText = `FIFO windfall is pushing short-term yield above baseline targets.`;
-                subEl.style.color = "var(--success-green)";
+                subEl.style.color = "#10b981";
             } else if (fSpike > 0) {
                 cardAction.classList.add("status-warn");
-                actionEl.style.color = "var(--dark-slate-blue)";
+                actionEl.style.color = "#f59e0b";
                 subEl.innerText = `Zero physical buffer. Q1 yields exactly to defended replacement targets.`;
-                subEl.style.color = "#e67e22";
+                subEl.style.color = "#f59e0b";
             } else {
                 cardAction.classList.remove("status-safe", "status-warn");
-                actionEl.style.color = "var(--dark-slate-blue)";
+                actionEl.style.color = "#f8fafc";
                 subEl.innerText = `Awaiting cost disruption inputs.`;
-                subEl.style.color = "#94a3b8";
+                subEl.style.color = "#64748b";
             }
 
             const cardP95 = document.getElementById('card-p95');
             cardP95.className = "kpi-card"; 
-            if (blendedFloor < 32.0) { cardP95.classList.add("status-critical"); p95El.classList.add("status-critical"); } 
-            else if (blendedFloor < 35.0) { cardP95.classList.add("status-warn"); p95El.classList.add("status-warn"); } 
-            else { cardP95.classList.add("status-safe"); p95El.classList.add("status-safe"); }
+            if (blendedFloor < 32.0) { cardP95.classList.add("status-critical"); p95El.style.color = "#ef4444"; } 
+            else if (blendedFloor < 35.0) { cardP95.classList.add("status-warn"); p95El.style.color = "#f59e0b"; } 
+            else { cardP95.classList.add("status-safe"); p95El.style.color = "#10b981"; }
 
             const baseData = [groups[2].baseMargin, groups[1].baseMargin, groups[0].baseMargin, initialBlendedMargin];
             const simData = [simMarginC, simMarginB, simMarginA, finalBlendedMargin];
@@ -590,9 +599,11 @@
             const simColors = simData.map((simVal, index) => {
                 if (index === 0) return '#3b82f6'; // Group C (Elastic) - Blue
                 if (index === 1) return '#f59e0b'; // Group B (Core) - Orange
-                if (index === 2) return '#ef4444'; // Group A (Anchors) - Red (Alert/Vulnerable Zone)
-                return '#10b981'; // Total Blended - Green (Overall Portfolio Health)
+                if (index === 2) return '#ef4444'; // Group A (Anchors) - Red
+                return '#10b981'; // Total Blended - Green
             });
+            
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
 
             chartInstance = new Chart(ctx, {
                 type: 'bar',
@@ -602,9 +613,9 @@
                         {
                             label: 'Target Baseline Margin',
                             data: baseData,
-                            backgroundColor: '#e2e8f0', 
+                            backgroundColor: 'rgba(100, 116, 139, 0.4)', 
                             borderWidth: 1,
-                            borderColor: '#cbd5e1',
+                            borderColor: '#64748b',
                             borderRadius: 3
                         },
                         {
@@ -624,7 +635,7 @@
                     plugins: { 
                         legend: { display: false }, 
                         tooltip: { 
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
                             titleFont: { size: 13 },
                             bodyFont: { size: 14, weight: 'bold' },
                             padding: 12,
@@ -633,7 +644,7 @@
                             } 
                         },
                         datalabels: {
-                            color: '#1e293b',
+                            color: '#e2e8f0',
                             font: { weight: 'bold', size: 10 },
                             anchor: 'end',
                             align: 'top',
@@ -648,18 +659,22 @@
                             ticks: { 
                                 stepSize: 10,
                                 callback: function(value) { return value + '%'; }, 
-                                font: {size: 10} 
+                                font: {size: 10},
+                                color: '#cbd5e1'
                             }, 
-                            grid: { color: '#e2e8f0', borderDash: [5, 5] } 
+                            grid: { color: '#334155', borderDash: [5, 5] } 
                         }, 
                         x: { 
                             grid: { display: false }, 
-                            ticks: { font: {size: 10, weight: '600', color: '#334155'} } 
+                            ticks: { font: {size: 10, weight: '600'}, color: '#cbd5e1' } 
                         } 
                     }
                 }
             });
         }
+        
+        // Initial run
+        runSimulation();
     </script>
 </body>
 </html>
