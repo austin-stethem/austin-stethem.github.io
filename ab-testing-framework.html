@@ -70,6 +70,9 @@
         .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
+        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
+
         /* --- DASHBOARD WRAPPER (Infographic Style) --- */
         .dashboard-container {
             width: 95%; max-width: 1200px; margin: 40px auto;
@@ -198,6 +201,12 @@
         </div>
 
         <h2>1. The Problem: Testing Market Resistance</h2>
+        
+        <div class="scenario-box">
+            <strong>The Enterprise Scenario (Step 4 of 5)</strong>
+            Our Monte Carlo simulations (Step 3) established our acceptable risk boundaries, allowing us to safely deploy the new pricing guardrails into the ERP. However, mathematical theory must be validated by actual market behavior. Before we calculate our final cash windfall, we must run a controlled A/B test on the live B2B portal to mathematically prove the higher prices are not destroying quote-to-order conversion volume.
+        </div>
+
         <p>Before deploying the <em>Algorithmic Margin Defense</em> engine across our 80-branch network, leadership needed empirical proof that dynamic pricing wouldn't erode B2B conversion rates. A mathematical model that protects margins is useless if it causes customers to abandon their shopping carts.</p>
         <p>To validate the algorithm, I architected a randomized A/B test on our B2B E-Commerce portal. <strong>Group A (Control)</strong> received legacy static matrix pricing. <strong>Group B (Treatment)</strong> received the dynamic, algorithmic pricing. To prove that any changes in quote-to-order conversion rates were not due to random chance, I applied a <span class="jargon-tooltip" data-tip="A statistical method comparing two different conversion rates to prove if the difference is real or just random daily variance."><strong>Two-Proportion Z-Test</strong></span> to the results.</p>
     </div>
