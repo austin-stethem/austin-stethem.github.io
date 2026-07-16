@@ -25,8 +25,7 @@
             --info-border: #334155;
             --curve-control: #3b82f6; /* Blue */
             --curve-variant: #10b981; /* Green */
-            --highlight-pink: #ec4899;
-            --highlight-yellow: #f59e0b;
+            --curve-danger: #ef4444; /* Red */
         }
 
         body { 
@@ -66,12 +65,16 @@
             border: 1px solid #e2e8f0; 
             border-left: 4px solid var(--alert-red); 
         }
+
+        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
         
         .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
-        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
 
         /* --- DASHBOARD WRAPPER (Infographic Style) --- */
         .dashboard-container {
@@ -82,27 +85,18 @@
             border: 1px solid #1e293b;
         }
 
-        .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 20px;}
+        .dash-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 20px;}
         .dash-title h3 { font-size: 2.2rem; font-weight: 900; margin: 0; letter-spacing: -1px; font-family: 'Inter', sans-serif;}
         .dash-title span { color: var(--curve-control); }
-        .dash-subtitle { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; }
+        .dash-subtitle { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; max-width: 600px;}
         
-        /* Math Formula Box */
-        .formula-box { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; display: flex; align-items: center; justify-content: center; gap: 30px; margin-bottom: 25px; }
-        .badge-ztest { background: rgba(59, 130, 246, 0.1); color: var(--curve-control); border: 1px solid rgba(59, 130, 246, 0.3); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; }
-        .math-text { font-family: 'Georgia', serif; font-size: 1.3rem; font-style: italic; color: #f8fafc; }
-        .formula-desc { font-size: 0.85rem; color: #64748b; max-width: 400px; line-height: 1.4;}
+        .logic-instruction-box { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-left: 4px solid var(--curve-control); padding: 15px 20px; border-radius: 4px; font-size: 0.9rem; color: #cbd5e1; margin-bottom: 25px; line-height: 1.5; }
+        .logic-instruction-box strong { color: var(--curve-control); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem; display: block; margin-bottom: 5px;}
 
         /* Chart Area */
         .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; margin-bottom: 25px; position: relative;}
         .chart-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
         .chart-wrapper { width: 100%; height: 350px; }
-
-        /* Legend Box */
-        .custom-legend { position: absolute; top: 40px; right: 40px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--info-border); padding: 15px; border-radius: 6px; font-family: 'Fira Code', monospace; font-size: 0.8rem; backdrop-filter: blur(4px);}
-        .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .legend-item:last-child { margin-bottom: 0; }
-        .legend-color { width: 12px; height: 12px; border-radius: 2px; }
 
         /* KPI / Input Grid */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
@@ -114,7 +108,8 @@
         /* Interactive Sliders */
         .control-group { margin-bottom: 15px; text-align: left; }
         .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
-        input[type="range"] { width: 100%; accent-color: var(--curve-control); cursor: pointer; }
+        input[type="range"] { width: 100%; accent-color: var(--curve-variant); cursor: pointer; }
+        #slider-n { accent-color: #64748b; }
 
         /* Bottom Three Columns */
         .three-col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -122,25 +117,21 @@
         .list-card h4 { font-size: 0.8rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 10px;}
         .list-card ul { padding-left: 20px; margin: 0; font-size: 0.85rem; color: #cbd5e1; }
         .list-card li { margin-bottom: 10px; line-height: 1.5; }
-        .list-card li::marker { color: var(--curve-control); }
 
         /* Status Indicator */
-        .status-badge { display: inline-block; padding: 6px 12px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; }
-        .status-sig { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .status-insig { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .status-badge { display: inline-block; padding: 10px 20px; border-radius: 6px; font-weight: 900; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase; border: 2px solid transparent;}
+        .status-safe { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .status-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);}
+        .status-uplift { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.4); }
 
         /* Jargon Tooltips */
-        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; transition: border-color 0.2s ease; }
-        .jargon-tooltip strong { font-weight: 700; color: var(--dark-slate-blue); }
-        
-        /* Dashboard-Specific Tooltip Inversion */
-        .dashboard-container .jargon-tooltip { color: #ffffff; border-bottom-color: rgba(255, 255, 255, 0.6); }
-        .dashboard-container .jargon-tooltip strong { color: #ffffff; }
-        .dashboard-container .jargon-tooltip:hover { border-bottom-color: #ffffff; }
-        
+        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); font-weight: 600; white-space: nowrap; transition: border-color 0.2s ease; }
         .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
         .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
         .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
+        
+        .dashboard-container .jargon-tooltip { color: #ffffff; border-bottom-color: rgba(255, 255, 255, 0.6); }
+        .dashboard-container .jargon-tooltip:hover { border-bottom-color: #ffffff; }
 
         /* NAVIGATION BUTTONS */
         .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
@@ -161,8 +152,6 @@
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
             .three-col-grid { grid-template-columns: 1fr; }
             .dash-header { flex-direction: column; text-align: center; gap: 15px; }
-            .formula-box { flex-direction: column; text-align: center; gap: 15px; }
-            .custom-legend { position: static; margin-top: 20px; }
             .project-navigation { flex-direction: column; }
             .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
         }
@@ -183,11 +172,11 @@
             <tr>
                 <td class="meta-cell">
                     <span class="meta-label">Principal Engineer</span>
-                    <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
+                    <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & MDM Analyst</span>
                 </td>
                 <td class="meta-cell">
                     <span class="meta-label">Core Competencies</span>
-                    <span class="meta-value">Statistical Significance, Two-Proportion Z-Tests, P-Values, Data Science</span>
+                    <span class="meta-value">Statistical Significance, Z-Tests, P-Values, Data Science Integration</span>
                 </td>
                 <td class="meta-cell">
                     <span class="meta-label">Technical Stack</span>
@@ -204,11 +193,11 @@
         
         <div class="scenario-box">
             <strong>The Enterprise Scenario (Step 4 of 5)</strong>
-            Our Monte Carlo simulations (Step 3) established our acceptable risk boundaries, allowing us to safely deploy the new pricing guardrails into the ERP. However, mathematical theory must be validated by actual market behavior. Before we calculate our final cash windfall, we must run a controlled A/B test on the live B2B portal to mathematically prove the higher prices are not destroying quote-to-order conversion volume.
+            Our deterministic algorithm (Step 2) successfully identified the price floors needed to defend our margins, and our Monte Carlo models (Step 3) confirmed our risk boundaries. However, mathematical theory must be validated by actual market behavior. Before we fully commit, we must run a controlled A/B test on the live B2B portal to mathematically prove the higher prices are not destroying quote-to-order conversion volume.
         </div>
 
-        <p>Before deploying the <em>Algorithmic Margin Defense</em> engine across our 80-branch network, leadership needed empirical proof that dynamic pricing wouldn't erode B2B conversion rates. A mathematical model that protects margins is useless if it causes customers to abandon their shopping carts.</p>
-        <p>To validate the algorithm, I architected a randomized A/B test on our B2B E-Commerce portal. <strong>Group A (Control)</strong> received legacy static matrix pricing. <strong>Group B (Treatment)</strong> received the dynamic, algorithmic pricing. To prove that any changes in quote-to-order conversion rates were not due to random chance, I applied a <span class="jargon-tooltip" data-tip="A statistical method comparing two different conversion rates to prove if the difference is real or just random daily variance."><strong>Two-Proportion Z-Test</strong></span> to the results.</p>
+        <p>Before deploying the <em>Algorithmic Margin Defense</em> engine across the entire network, executive leadership needed empirical proof that dynamic pricing wouldn't erode B2B conversion rates. A mathematical model that protects margins is entirely useless if it causes customers to abandon their shopping carts in protest.</p>
+        <p>To validate the algorithm safely, I architected a randomized A/B test on our B2B E-Commerce portal. <strong>Group A (Control)</strong> received our legacy static pricing. <strong>Group B (Treatment)</strong> received the new dynamic, algorithmic pricing. To prove that any subsequent changes in customer conversion rates were real (and not just random daily variance), I applied a <span class="jargon-tooltip" data-tip="A statistical method comparing two different conversion rates to prove if the difference is real or just random daily variance."><strong>Two-Proportion Z-Test</strong></span> to the results.</p>
     </div>
 
     <!-- INFOGRAPHIC DASHBOARD -->
@@ -216,49 +205,30 @@
         
         <div class="dash-header">
             <div class="dash-title">
-                <h3>A/B <span>Testing</span></h3>
-                <div class="dash-subtitle">Statistical hypothesis testing to compare two pricing variants and determine true market resistance.</div>
+                <h3>A/B <span>Validation Engine</span></h3>
+                <div class="dash-subtitle">Measuring true market resistance using a Two-Proportion Z-Test.</div>
             </div>
             <div>
                 <span class="status-badge" id="significance-badge">Awaiting Input...</span>
             </div>
         </div>
 
-        <!-- Formula Bar -->
-        <div class="formula-box">
-            <div class="badge-ztest">Z-TEST</div>
-            <div class="math-text">
-                Z = (p̂<sub>B</sub> - p̂<sub>A</sub>) / &radic;[p̂(1 - p̂)(1/n<sub>A</sub> + 1/n<sub>B</sub>)]
-            </div>
-            <div class="formula-desc">
-                Two-proportion z-test statistic comparing B2B checkout conversion rates under the pooled null hypothesis (H<sub>0</sub>).
-            </div>
+        <!-- Plain English Instructions -->
+        <div class="logic-instruction-box">
+            <strong>How to read this simulator:</strong> 
+            We just raised prices on the B2B portal. Naturally, we expect some customers to walk away (Conversion Rate drops). Use the green slider below to drop the <strong>Variant Conversion</strong> to simulate losing sales.<br><br>
+            If the <span style="color: #10b981; font-weight: bold;">Green Curve (New Prices)</span> completely separates from the <span style="color: #3b82f6; font-weight: bold;">Blue Curve (Old Prices)</span>, the drop is mathematically real, meaning the prices are too high. <strong>However, if the curves overlap, the drop is just random daily noise. The test is inconclusive, which means it is completely safe to keep the higher prices!</strong>
         </div>
 
         <!-- Interactive Chart Section -->
         <div class="chart-section">
             <div class="chart-header">
-                <span>Sampling Distributions Under H<sub>0</sub> vs H<sub>1</sub></span>
-                <span>&alpha; = 0.05 | Confidence = 95%</span>
+                <span>Market Behavior: Baseline vs. New Price Point</span>
+                <span>Confidence Threshold = 95%</span>
             </div>
             
             <div class="chart-wrapper">
                 <canvas id="bellChart"></canvas>
-            </div>
-
-            <div class="custom-legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background: var(--highlight-pink);"></div>
-                    <span>&alpha; = Type I Error (5%)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: var(--highlight-yellow);"></div>
-                    <span>&beta; = Type II Error (20%)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: var(--curve-variant);"></div>
-                    <span>Power = 1 - &beta; (80%)</span>
-                </div>
             </div>
         </div>
 
@@ -266,10 +236,10 @@
         <div class="kpi-grid">
             <!-- Simulator Controls -->
             <div class="kpi-card" style="border-top-color: var(--curve-control);">
-                <div class="kpi-card-header" style="color: var(--curve-control);">Control (H₀) Params</div>
+                <div class="kpi-card-header" style="color: var(--curve-control);">Control: Old Prices</div>
                 <div class="control-group">
                     <label>Baseline Conversion <span>10.0%</span></label>
-                    <input type="range" disabled value="10" min="5" max="20">
+                    <input type="range" disabled value="10" min="5" max="20" style="accent-color: var(--curve-control);">
                 </div>
                 <div class="control-group">
                     <label>Traffic Sample (N) <span id="n-val-display">5,000</span></label>
@@ -278,13 +248,13 @@
             </div>
 
             <div class="kpi-card" style="border-top-color: var(--curve-variant);">
-                <div class="kpi-card-header" style="color: var(--curve-variant);">Treatment (H₁) Params</div>
+                <div class="kpi-card-header" style="color: var(--curve-variant);">Variant: New Prices</div>
                 <div class="control-group">
-                    <label>Variant Conversion <span id="cr-val-display">10.5%</span></label>
-                    <input type="range" id="slider-cr" value="10.5" min="9.0" max="13.0" step="0.1" oninput="updateSimulation()">
+                    <label>Variant Conversion <span id="cr-val-display">9.5%</span></label>
+                    <input type="range" id="slider-cr" value="9.5" min="8.0" max="11.0" step="0.1" oninput="updateSimulation()">
                 </div>
                 <div class="kpi-desc" style="text-align: left; margin-top: 15px;">
-                    *Adjust the variant's performance and sample size to observe how it impacts statistical power and the Z-Score.
+                    *Drop the conversion rate to see if the drop breaks the statistical proof boundary.
                 </div>
             </div>
 
@@ -292,54 +262,33 @@
             <div class="kpi-card" style="border-top-color: #64748b;">
                 <div class="kpi-card-header" style="color: #cbd5e1;">Z-Score (Test Statistic)</div>
                 <div class="kpi-value" id="out-zscore" style="color: #f8fafc;">0.00</div>
-                <div class="kpi-desc">Number of standard deviations from the null hypothesis mean.</div>
+                <div class="kpi-desc">How far the new results are from our old baseline.</div>
             </div>
 
             <div class="kpi-card" style="border-top-color: #64748b;">
                 <div class="kpi-card-header" style="color: #cbd5e1;">P-Value</div>
                 <div class="kpi-value" id="out-pvalue" style="color: #f8fafc;">0.000</div>
-                <div class="kpi-desc">Probability of observing this result if the new prices had zero impact.</div>
+                <div class="kpi-desc">The mathematical probability that this drop in sales is just random noise.</div>
             </div>
         </div>
 
-        <!-- Informational Footer -->
-        <div class="three-col-grid">
-            <div class="list-card">
-                <h4>Key Assumptions</h4>
-                <ul>
-                    <li>B2B Users are randomly and independently assigned to Control/Variant groups.</li>
-                    <li>Sample size is large enough for the <span class="jargon-tooltip" data-tip="A statistical rule stating that given a large enough sample size, the data will form a predictable bell curve, allowing us to accurately gauge risk."><strong>Central Limit Theorem (CLT)</strong></span> to apply.</li>
-                    <li>No network interference between control and treatment groups (SUTVA).</li>
-                </ul>
-            </div>
-            <div class="list-card">
-                <h4>Common Pitfalls</h4>
-                <ul>
-                    <li><strong>Peeking:</strong> Checking results early inflates the false positive rate (Type I error).</li>
-                    <li><strong>Multiple Comparisons:</strong> Testing 10 variables requires Bonferroni correction to prevent false signals.</li>
-                    <li><span class="jargon-tooltip" data-tip="A data trap where a trend appears in several different groups of data but disappears or reverses when these groups are combined."><strong>Simpson's Paradox:</strong></span> Always check for segment imbalance (e.g., Fleet vs. Walk-in ratios).</li>
-                </ul>
-            </div>
-            <div class="list-card">
-                <h4>Enterprise Extensions</h4>
-                <ul>
-                    <li><strong>Sequential Testing:</strong> Stop tests early when significance is mathematically clear, saving time.</li>
-                    <li><span class="jargon-tooltip" data-tip="An advanced alternative to standard A/B testing that generates direct, readable probabilities of financial improvement rather than abstract P-Values."><strong>Bayesian A/B:</strong></span> Generate direct posterior probabilities of financial improvement.</li>
-                    <li><strong>Multi-Armed Bandits:</strong> Balance exploration & exploitation dynamically for rapid price optimization.</li>
-                </ul>
-            </div>
-        </div>
     </div> <!-- END DASHBOARD -->
 
     <div class="portfolio-content">
         <h2>2. Translating Math to Business Strategy</h2>
-        <p>In the simulation above, notice what happens when the <span class="jargon-tooltip" data-tip="The actual percentage of B2B customers who successfully completed an order under the new algorithmic pricing."><strong>Variant Conversion</strong></span> drops slightly. Even if the conversion rate falls by a fraction of a percent, the test may not be <span class="jargon-tooltip" data-tip="Mathematical proof that a change in customer behavior (like a drop in sales) is caused by our new pricing, not just random daily variance."><strong>statistically significant</strong></span> depending on the sample size. In the B2B distribution world, this is a massive win.</p>
-        <p>If we raise prices via the Algorithmic Margin engine by 5%, and the A/B test proves that the resulting drop in conversion is statistically insignificant, we have effectively generated free <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability."><strong>EBITDA</strong></span>. We captured higher margins without triggering a mathematical exodus of customer volume. This strict adherence to statistical modeling allows the enterprise to execute aggressive pricing strategies with quantified, minimized risk.</p>
+        
+        <div class="impact-box">
+            <h3>The Power of "Inconclusive" Tests</h3>
+            <p>If you look at the simulator's default state, you will notice a massive business advantage hidden inside the math. We raised prices, and as expected, our conversion rate dropped from 10.0% down to 9.5%. The sales team panicked, demanding we revert the pricing.</p>
+            <p style="margin-bottom: 0;"><strong>But the A/B test proved the drop was statistically inconclusive.</strong> Because the green curve still overlapped the blue baseline curve, the drop in volume couldn't be mathematically blamed on the price increase—it was within the normal bounds of daily random variance. By trusting the data science rather than the emotional reaction, we held the higher prices firm. We generated massive, free <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability."><strong>EBITDA</strong></span> without actually triggering a mathematical exodus of customer volume.</p>
+        </div>
+
+        <p>This strict adherence to statistical modeling acts as an organizational guardrail. It prevents knee-jerk price drops when sales are slightly sluggish, but it also instantly rings the alarm bell (flashing the "Volume Loss" warning) the moment a price increase actually crosses the mathematical threshold of destroying demand.</p>
 
         <!-- NEXT STEP NAVIGATION -->
         <div class="next-step-box">
             <h3>Ecosystem Step 5: FIFO Inventory Revaluation</h3>
-            <p>With our algorithmic pricing changes statistically validated in the market, we hit the final, most lucrative part of the cycle. Because we decoupled our retail logic from our physical receiving docks, we are now raising prices <em>today</em> on inventory we bought <em>yesterday</em> at the old cost. Let's model the resulting EBITDA windfall.</p>
+            <p>With our algorithmic pricing changes statistically validated in the market, we hit the final, most lucrative part of the cycle. Because we decoupled our retail logic from our physical receiving docks, we are now raising prices <em>today</em> on inventory we bought <em>yesterday</em> at the old, cheaper cost. Let's model the resulting cash windfall.</p>
             <div class="project-navigation">
                 <a href="stochastic-margin-optimization.html" class="nav-btn prev">
                     <span class="nav-label">&larr; Previous Phase</span>
@@ -357,7 +306,6 @@
         let bellChart = null;
         
         // Math Helpers for Normal Distribution
-        // Standard Normal PDF: f(x) = (1 / sqrt(2*PI)) * exp(-0.5 * x^2)
         function normalPDF(x, mean, stdDev) {
             return Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2)) / (stdDev * Math.sqrt(2 * Math.PI));
         }
@@ -388,14 +336,9 @@
             document.getElementById('n-val-display').innerText = n.toLocaleString();
 
             // 2. Statistics Math (Two-Proportion Z-Test)
-            // Pooled proportion
             const p_pool = (pA + pB) / 2;
-            // Standard Error
             const se = Math.sqrt(p_pool * (1 - p_pool) * (2 / n));
-            // Z-Score
             const zScore = (pB - pA) / se;
-            
-            // Two-tailed P-Value
             const pValue = 2 * (1 - cdf(Math.abs(zScore)));
 
             // 3. Update KPIs
@@ -403,59 +346,51 @@
             document.getElementById('out-pvalue').innerText = pValue.toFixed(4);
 
             const badge = document.getElementById('significance-badge');
-            // Using alpha = 0.05 (Z-critical = ~1.96)
+            
+            // Business Translation Logic (Alpha = 0.05)
             if (pValue < 0.05) {
                 if (zScore > 0) {
-                    badge.innerText = "Significant Uplift Detected (Reject H₀)";
-                    badge.className = "status-badge status-sig";
+                    badge.innerHTML = "VOLUME UPLIFT DETECTED<br><span style='font-size: 0.65rem; font-weight: normal;'>The price change actually increased sales.</span>";
+                    badge.className = "status-badge status-uplift";
                 } else {
-                    badge.innerText = "Significant Drop Detected (Reject H₀)";
-                    badge.className = "status-badge status-insig";
+                    badge.innerHTML = "VOLUME LOSS DETECTED (Revert Prices)<br><span style='font-size: 0.65rem; font-weight: normal;'>The drop in sales is statistically real.</span>";
+                    badge.className = "status-badge status-danger";
                 }
             } else {
-                badge.innerText = "Inconclusive / No Effect (Fail to Reject H₀)";
-                badge.className = "status-badge";
-                badge.style.background = "rgba(100, 116, 139, 0.2)";
-                badge.style.color = "#94a3b8";
-                badge.style.borderColor = "rgba(100, 116, 139, 0.4)";
+                badge.innerHTML = "SAFE TO PROCEED (Keep Higher Margin)<br><span style='font-size: 0.65rem; font-weight: normal;'>Any drop in sales is statistically inconclusive.</span>";
+                badge.className = "status-badge status-safe";
             }
 
             // 4. Generate Data for Bell Curves
-            // We will plot the curves based on Conversion Rate (X-axis)
             const stdDevA = Math.sqrt(pA * (1 - pA) / n);
             const stdDevB = Math.sqrt(pB * (1 - pB) / n);
 
-            // Generate X-axis points (range from 7% to 14%)
             const labels = [];
             const dataA = [];
             const dataB = [];
 
-            // Determine critical value line (one-tailed right side for visualization simplicity)
-            const critValRight = pA + (1.96 * se);
+            // Determine left critical value line (since we are mostly looking at drops in conversion)
+            const critValLeft = pA - (1.96 * se);
 
-            for (let i = 0.07; i <= 0.14; i += 0.001) {
+            for (let i = 0.07; i <= 0.13; i += 0.001) {
                 labels.push((i * 100).toFixed(1));
-                
-                // Curve A (Control)
                 let valA = normalPDF(i, pA, stdDevA);
                 dataA.push(valA);
-
-                // Curve B (Treatment)
                 let valB = normalPDF(i, pB, stdDevB);
                 dataB.push(valB);
             }
 
-            drawChart(labels, dataA, dataB, critValRight * 100, pA * 100, pB * 100);
+            drawChart(labels, dataA, dataB, critValLeft * 100, pA * 100, pB * 100);
         }
 
-        function drawChart(labels, dataA, dataB, critValRight, meanA, meanB) {
+        function drawChart(labels, dataA, dataB, critValLeft, meanA, meanB) {
             const ctx = document.getElementById('bellChart').getContext('2d');
             
             if (bellChart) {
                 bellChart.destroy();
             }
 
-            // Custom plugin to draw the vertical Critical Value line and labels safely
+            // Custom plugin to draw the vertical Boundary line
             const verticalLinePlugin = {
                 id: 'verticalLine',
                 afterDraw: (chart) => {
@@ -463,38 +398,32 @@
                     const xAxis = chart.scales.x;
                     const yAxis = chart.scales.y;
                     
-                    // SAFE PIXEL CALCULATION: Math-based interpolation instead of string matching
+                    // SAFE PIXEL CALCULATION
                     const minX = 7.0;
-                    const maxX = 14.0;
+                    const maxX = 13.0;
                     const getXPixel = (val) => xAxis.left + ((val - minX) / (maxX - minX)) * xAxis.width;
                     
-                    let xPixelCrit = getXPixel(critValRight);
+                    let xPixelCrit = getXPixel(critValLeft);
                     
-                    // Draw Critical Value dashed line
+                    // Draw Statistical Proof Boundary line
                     ctx.save();
                     ctx.beginPath();
                     ctx.moveTo(xPixelCrit, yAxis.top);
                     ctx.lineTo(xPixelCrit, yAxis.bottom);
                     ctx.lineWidth = 2;
-                    ctx.strokeStyle = '#f59e0b'; // Amber/Yellow
+                    ctx.strokeStyle = '#ef4444'; // Red Danger Line
                     ctx.setLineDash([5, 5]);
                     ctx.stroke();
-                    
-                    // Text "Critical Value"
-                    ctx.fillStyle = '#f59e0b';
-                    ctx.font = 'bold 12px Inter';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('Critical Value', xPixelCrit, yAxis.top - 10);
 
-                    // Label H0 and H1 peaks
+                    // Label the peaks in plain English
                     let xPixelA = getXPixel(meanA);
                     let xPixelB = getXPixel(meanB);
                     
                     ctx.fillStyle = '#3b82f6';
-                    ctx.fillText('H₀ (Control)', xPixelA, yAxis.bottom - 100);
+                    ctx.fillText('Old Prices', xPixelA, yAxis.bottom - 100);
 
                     ctx.fillStyle = '#10b981';
-                    ctx.fillText('H₁ (Treatment)', xPixelB, yAxis.bottom - 150);
+                    ctx.fillText('New Prices', xPixelB, yAxis.bottom - 150);
 
                     ctx.restore();
                 }
@@ -506,7 +435,16 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Control Distribution (H₀)',
+                            label: 'Volume Loss Boundary',
+                            data: [],
+                            borderColor: '#ef4444',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            backgroundColor: 'transparent',
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Old Prices (Baseline Variance)',
                             data: dataA,
                             borderColor: '#3b82f6', // Blue
                             borderWidth: 3,
@@ -516,7 +454,7 @@
                             tension: 0.4
                         },
                         {
-                            label: 'Treatment Distribution (H₁)',
+                            label: 'New Prices (Variant Variance)',
                             data: dataB,
                             borderColor: '#10b981', // Green
                             borderWidth: 3,
@@ -530,9 +468,13 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: { padding: { top: 15 } },
                     animation: { duration: 400 },
                     plugins: {
-                        legend: { display: false }, // Using custom HTML legend
+                        legend: { 
+                            display: true, 
+                            labels: { color: '#cbd5e1', font: {family: "'Inter', sans-serif", weight: 'bold'} } 
+                        },
                         tooltip: { enabled: false }
                     },
                     scales: {
@@ -542,9 +484,10 @@
                             ticks: { color: '#cbd5e1', maxTicksLimit: 10 }
                         },
                         y: {
-                            title: { display: true, text: 'Probability Density', color: '#94a3b8', font: { weight: 'bold' } },
+                            title: { display: false },
                             grid: { display: false },
-                            ticks: { display: false } // Hide Y-axis numbers as they are abstract
+                            ticks: { display: false }, // Hide Y-axis as it is an abstract density
+                            grace: '25%' // Adds a massive 25% empty buffer inside the grid to push peaks down
                         }
                     }
                 },
