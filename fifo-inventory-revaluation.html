@@ -3,45 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFO Inventory Revaluation - Austin Stethem</title>
+    <title>A/B Testing & Statistical Validation - Austin Stethem</title>
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Import standard ecosystem fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root { 
-            --dark-slate-blue: #1a2433; 
-            --alert-red: #ef4444; /* Brightened for dark mode */
-            --success-green: #10b981; 
-            --bg-color: #fbfbfb; 
 
-            /* Premium Dark Dashboard Colors */
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base Brand Colors and Typography */
+        :root {
+            --dark-slate-blue: #1a2433;
+            --alert-red: #b32525;
+            --bg-color: #fbfbfb;
+            
+            /* Infographic Specific Dark Theme Colors */
             --info-bg: #0f172a;
             --info-panel: #1e293b;
             --info-border: #334155;
+            --curve-control: #3b82f6; /* Blue */
+            --curve-variant: #10b981; /* Green */
+            --curve-danger: #ef4444; /* Red */
         }
-        
+
         body { 
-            font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif; 
-            color: #333; 
-            font-size: 10.5pt; 
-            line-height: 1.6; 
-            max-width: 950px; 
-            margin: 0 auto; 
-            padding: 40px 20px; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 0; 
             background-color: var(--bg-color); 
+            color: #334155; 
+            font-size: 10.5pt;
+            line-height: 1.6;
         }
+
+        /* --- PORTFOLIO SPECIFIC STYLES --- */
+        .portfolio-content { max-width: 950px; margin: 0 auto; padding: 40px 20px; }
         
-        .back-link { color: #b32525; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
+        .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
         .back-link:hover { text-decoration: underline; }
         
         .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: #b32525; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
+        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
         .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
         
         .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
+        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box;}
         .meta-cell:last-child { border-right: none; }
         .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .meta-value { color: #1e293b; font-weight: 500; }
@@ -56,87 +63,84 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
             border-radius: 0 6px 6px 0; 
             border: 1px solid #e2e8f0; 
-            border-left: 4px solid #b32525; 
+            border-left: 4px solid var(--alert-red); 
         }
-        
-        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        p { text-align: justify; margin-bottom: 15px; color: #334155; }
-        
+
         .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
         .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
-
-        .jargon-tooltip { position: relative; border-bottom: 1px dashed #b32525; cursor: help; color: var(--dark-slate-blue); font-weight: 600; white-space: nowrap; transition: border-color 0.2s ease; }
-        .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
-        .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
-        .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
         
-        /* --- DASHBOARD WRAPPER (SaaS Style) --- */
-        .sim-container {
-            width: 100%; margin: 40px auto;
-            background: var(--info-bg); color: #e2e8f0;
-            border-radius: 12px; display: flex; flex-wrap: wrap;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            border: 1px solid #1e293b; overflow: hidden;
-        }
-        
-        .sim-sidebar {
-            width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; 
-            border-right: 1px solid var(--info-border); display: flex; flex-direction: column; box-sizing: border-box;
-        }
-        
-        .sim-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; box-sizing: border-box;}
-        
-        .sidebar-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 10px; color: #cbd5e1; text-align: center;}
-        
-        .control-group { margin-bottom: 25px; }
-        .control-group label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; line-height: 1.3;}
-        .control-group label span:first-child { padding-right: 15px; }
-        .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 0.95rem; white-space: nowrap; text-align: right;}
-        
-        /* Custom Webkit Sliders - Dark Theme */
-        input[type="range"] { 
-            -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; margin-top: -6px; transition: transform 0.1s;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-        input[type="range"]:focus { outline: none; }
-
-        /* Specific Slider Thumb Colors */
-        #slider-velocity::-webkit-slider-thumb { background: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); }
-        #slider-increase::-webkit-slider-thumb { background: var(--alert-red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
-        #slider-qoh::-webkit-slider-thumb { background: var(--success-green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
-
-        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid #cbd5e1; padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #cbd5e1; margin-top: auto; line-height: 1.5;}
-
-        /* KPIs */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
-        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
-        .kpi-title { font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .kpi-value { font-size: 2.2rem; font-family: 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px;}
-        .kpi-sub { font-size: 0.75rem; color: #64748b; font-style: italic; }
-        
-        /* Chart Area */
-        .chart-container { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;}
-        .chart-box { position: relative; height: 320px; width: 100%; }
+        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
         .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
 
-        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid #b32525;}
+        /* --- DASHBOARD WRAPPER (Infographic Style) --- */
+        .dashboard-container {
+            width: 95%; max-width: 1200px; margin: 40px auto;
+            background: var(--info-bg); color: #e2e8f0;
+            border-radius: 12px; padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid #1e293b;
+        }
+
+        .dash-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 20px;}
+        .dash-title h3 { font-size: 2.2rem; font-weight: 900; margin: 0; letter-spacing: -1px; font-family: 'Inter', sans-serif;}
+        .dash-title span { color: var(--curve-control); }
+        .dash-subtitle { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; max-width: 600px;}
+        
+        .logic-instruction-box { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-left: 4px solid var(--curve-control); padding: 15px 20px; border-radius: 4px; font-size: 0.9rem; color: #cbd5e1; margin-bottom: 25px; line-height: 1.5; }
+        .logic-instruction-box > strong:first-child { color: var(--curve-control); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem; display: block; margin-bottom: 5px;}
+
+        /* Chart Area */
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; margin-bottom: 25px; position: relative;}
+        .chart-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
+        .chart-wrapper { width: 100%; height: 350px; }
+
+        /* KPI / Input Grid */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; text-align: center; transition: all 0.3s;}
+        .kpi-card-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .kpi-value { font-size: 2rem; font-weight: 900; font-family: 'Fira Code', monospace; }
+        .kpi-desc { font-size: 0.75rem; color: #94a3b8; margin-top: 8px; line-height: 1.4; }
+
+        /* Interactive Sliders */
+        .control-group { margin-bottom: 15px; text-align: left; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+        input[type="range"] { width: 100%; accent-color: var(--curve-variant); cursor: pointer; }
+        #slider-n { accent-color: #64748b; }
+
+        /* Bottom Three Columns */
+        .three-col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .list-card { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; }
+        .list-card h4 { font-size: 0.8rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 10px;}
+        .list-card ul { padding-left: 20px; margin: 0; font-size: 0.85rem; color: #cbd5e1; }
+        .list-card li { margin-bottom: 10px; line-height: 1.5; }
+
+        /* Status Indicator */
+        .status-badge { display: inline-block; padding: 10px 20px; border-radius: 6px; font-weight: 900; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase; border: 2px solid transparent;}
+        .status-safe { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .status-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);}
+        .status-uplift { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.4); }
+
+        /* Jargon Tooltips */
+        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); font-weight: 600; white-space: nowrap; transition: border-color 0.2s ease; }
+        .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
+        .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
+        .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
+        
+        .dashboard-container .jargon-tooltip { color: #ffffff; border-bottom-color: rgba(255, 255, 255, 0.6); }
+        .dashboard-container .jargon-tooltip:hover { border-bottom-color: #ffffff; }
+
+        /* NAVIGATION BUTTONS */
+        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
         .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
         .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
         
         .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
         .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;}
-        .nav-btn.next { text-align: right; background: #b32525; border-color: #b32525; align-items: flex-end;}
+        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
         .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
         .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
         .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
@@ -146,298 +150,355 @@
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
-            .sim-container { flex-direction: column; }
-            .sim-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid #334155; }
-            .sim-main { padding: 15px; box-sizing: border-box; min-width: unset; }
+            .three-col-grid { grid-template-columns: 1fr; }
+            .dash-header { flex-direction: column; text-align: center; gap: 15px; }
             .project-navigation { flex-direction: column; }
             .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
-            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
-            .doc-title { font-size: 22pt; }
         }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+    <!-- PORTFOLIO HEADER -->
+    <div class="portfolio-content">
+        <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
 
-    <div class="doc-header">
-        <div class="doc-tagline">Financial Modeling & P&L Strategy</div>
-        <div class="doc-title">FIFO Inventory Revaluation & EBITDA Windfall</div>
+        <div class="doc-header">
+            <div class="doc-tagline">Statistical Validation & Hypothesis Testing</div>
+            <div class="doc-title">B2B E-Commerce: Pricing Algorithm A/B Test</div>
+        </div>
+
+        <table class="meta-table">
+            <tr>
+                <td class="meta-cell">
+                    <span class="meta-label">Principal Engineer</span>
+                    <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & MDM Analyst</span>
+                </td>
+                <td class="meta-cell">
+                    <span class="meta-label">Core Competencies</span>
+                    <span class="meta-value">Statistical Significance, Z-Tests, P-Values, Data Science Integration</span>
+                </td>
+                <td class="meta-cell">
+                    <span class="meta-label">Technical Stack</span>
+                    <span class="meta-value">Python (SciPy/StatsModels), SQL, JavaScript (Chart.js)</span>
+                </td>
+            </tr>
+        </table>
+
+        <div class="nda-note">
+            <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live B2B conversion metrics, exact pricing adjustments, and true order volumes have been replaced with randomized abstractions. The statistical methodology, Two-Proportion Z-Test architecture, and hypothesis validation frameworks accurately reflect the mathematical rigor utilized in the production environment.
+        </div>
+
+        <h2>1. The Problem: Testing Market Resistance</h2>
+        
+        <div class="scenario-box">
+            <strong>The Enterprise Scenario (Step 4 of 5)</strong>
+            Our deterministic algorithm (Step 2) successfully identified the price floors needed to defend our margins, and our Monte Carlo models (Step 3) confirmed our risk boundaries. However, mathematical theory must be validated by actual market behavior. Before we fully commit, we must run a controlled A/B test on the live B2B portal to mathematically prove the higher prices are not destroying quote-to-order conversion volume.
+        </div>
+
+        <p>Before deploying the <em>Algorithmic Margin Defense</em> engine across the entire network, executive leadership needed empirical proof that dynamic pricing wouldn't erode B2B conversion rates. A mathematical model that protects margins is entirely useless if it causes customers to abandon their shopping carts in protest.</p>
+        <p>To validate the algorithm safely, I architected a randomized A/B test on our B2B E-Commerce portal. <strong>Group A (Control)</strong> received our legacy static pricing. <strong>Group B (Treatment)</strong> received the new dynamic, algorithmic pricing. To prove that any subsequent changes in customer conversion rates were real (and not just random daily variance), I applied a <span class="jargon-tooltip" data-tip="A statistical method comparing two different conversion rates to prove if the difference is real or just random daily variance."><strong>Two-Proportion Z-Test</strong></span> to the results.</p>
     </div>
 
-    <table class="meta-table">
-        <tr>
-            <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & Master Data Analyst</span>
-            </td>
-            <td class="meta-cell">
-                <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Cash Flow Modeling, FIFO/LIFO Mechanics, Margin Realization, P&L Defense</span>
-            </td>
-            <td class="meta-cell">
-                <span class="meta-label">Strategic Focus</span>
-                <span class="meta-value">Capitalizing on supply chain inflation to generate short-term EBITDA windfalls.</span>
-            </td>
-        </tr>
-    </table>
+    <!-- INFOGRAPHIC DASHBOARD -->
+    <div class="dashboard-container">
+        
+        <div class="dash-header">
+            <div class="dash-title">
+                <h3>A/B <span>Validation Engine</span></h3>
+                <div class="dash-subtitle">Measuring true market resistance using a Two-Proportion Z-Test.</div>
+            </div>
+            <div>
+                <span class="status-badge" id="significance-badge">Awaiting Input...</span>
+            </div>
+        </div>
 
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live standard costs, actual vendor increase schedules, and specific SKU velocities have been replaced with randomized abstractions. The mathematical mechanism for capitalizing on <span class="jargon-tooltip" data-tip="Selling older, lower-cost inventory at newly elevated retail prices to generate an immediate profit buffer.">FIFO (First-In, First-Out)</span> inventory layers remains identical to the logic utilized to generate millions in bottom-line revenue.
-    </div>
+        <!-- Plain English Instructions -->
+        <div class="logic-instruction-box">
+            <strong>How to read this simulator:</strong> 
+            We just raised prices on the B2B portal. Naturally, we expect some customers to walk away (Conversion Rate drops). Use the green slider below to drop the <strong>Variant Conversion</strong> to simulate losing sales.<br><br>
+            If the <span style="color: #10b981; font-weight: bold;">Green Curve (New Prices)</span> completely separates from the <span style="color: #3b82f6; font-weight: bold;">Blue Curve (Old Prices)</span>, the drop is mathematically real, meaning the prices are too high. <strong>However, if the curves overlap, the drop is just random daily noise. The test is inconclusive, which means it is completely safe to keep the higher prices!</strong>
+        </div>
 
-    <h2>1. Situation & Task: The Inflationary Lag</h2>
-    
-    <div class="scenario-box">
-        <strong>The Enterprise Scenario (Step 5 of 5)</strong>
-        Our statistical A/B tracking (Step 4) confirms our new price points are holding firm in the market without sacrificing volume. Now we arrive at the most lucrative part of the cycle. Because our supply chain teams secured 60 days of inventory <em>before</em> the 15% cost spike hit, and we decoupled our retail price from our physical receiving docks, we are selling cheap stock at the newly elevated retail tiers. We must model this immediate <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of operational profit.">EBITDA</span> windfall.
-    </div>
-
-    <p><strong>The Context:</strong> In physical distribution, when a manufacturer announces a sudden 10% price increase, the instinct of a reactive pricing team is to wait. They often hold prices steady until the new, expensive inventory physically arrives on the shelves, believing this is the "fair" way to treat customers.</p>
-    <p><strong>The Task:</strong> This reactive mindset destroys potential capital. In reality, a mature distribution network often holds 60 to 90 days of <span class="jargon-tooltip" data-tip="The physical inventory currently sitting in the warehouse.">Quantity On Hand (QOH)</span> that was purchased at the <em>old, cheaper cost</em>. I was tasked with engineering a financial strategy to decouple our retail price logic from our physical receiving docks, transforming supply chain inflation into an immediate P&L advantage.</p>
-
-    <h2>2. Action: Pricing on Replacement Cost</h2>
-    <p>I transitioned the organizational pricing mechanism away from <em><span class="jargon-tooltip" data-tip="Pricing based on the blended cost of all inventory in stock. Often delays price increases and leaks margin.">Average Cost</span></em> and strictly onto <em><span class="jargon-tooltip" data-tip="Pricing based on what it will cost to buy the next unit from the vendor. Generates immediate windfall on old stock.">Replacement Cost</span></em>. By architecting this business logic into the ERP, the system instantly triggers a retail markup the moment a vendor price increase is announced—regardless of what is sitting on our shelves.</p>
-    
-    <p><strong>Systems Integration (The Ecosystem):</strong> In reality, vendor cost increases are never a flat percentage across all SKUs. As demonstrated in my <em>Algorithmic Margin Defense</em> and <em>Stochastic Optimization</em> models, cost shocks vary wildly by item. Those engines handle the micro-level elasticity—protecting <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust.">KVIs</span> and finding margin on <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes.">elastic items</span>—to ultimately calculate a <strong>Weighted Average Cost Spike</strong> for the portfolio. It is that finalized, blended deficit that feeds into this macro-level FIFO model.</p>
-
-    <p>Because accounting strictly follows FIFO (First-In, First-Out), we are now selling inventory that was bought cheaply, but charging the customer the new, inflated market rate. This gap between the old physical cost and the new retail price creates a temporary, massive spike in margin: <strong>The <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of operational profit.">EBITDA</span> Windfall.</strong></p>
-
-    <h2>3. Interactive FIFO Windfall Simulator</h2>
-    <p><em>Use the operational sliders below to simulate a vendor cost shock on a high-velocity product line. The engine will calculate the exact amount of "Free EBITDA" generated by executing the price increase immediately while bleeding through the existing physical inventory buffer.</em></p>
-
-    <div class="sim-container">
-        <div class="sim-sidebar">
-            <div class="sidebar-header">Operational Inputs</div>
+        <!-- Interactive Chart Section -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <span>Market Behavior: Baseline vs. New Price Point</span>
+                <span>Confidence Threshold = 95%</span>
+            </div>
             
-            <div class="control-group">
-                <label><span>Monthly Velocity (Run Rate):</span> <span class="val-readout" style="color: #38bdf8;" id="val-velocity">1,500 Units</span></label>
-                <input type="range" id="slider-velocity" min="500" max="5000" step="100" value="1500">
-                <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Baseline target margin: 35.0%</div>
-            </div>
-
-            <div class="control-group">
-                <label><span>Weighted Cost Spike (%):</span> <span class="val-readout" style="color: var(--alert-red);" id="val-increase">+12.0%</span></label>
-                <input type="range" id="slider-increase" min="2" max="25" step="0.5" value="12.0">
-                <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Blended average across KVI/Elastic tiers.</div>
-            </div>
-
-            <div class="control-group">
-                <label><span>Current QOH Buffer (Days):</span> <span class="val-readout" style="color: var(--success-green);" id="val-qoh">60 Days</span></label>
-                <input type="range" id="slider-qoh" min="0" max="150" step="15" value="60">
-            </div>
-
-            <div class="logic-box">
-                <strong>System Logic:</strong> The algorithm assumes the retail price is raised on Day 1 to defend the 35% baseline against the new replacement cost. The Windfall is generated exclusively on the physical units already owned at the legacy cost.
+            <div class="chart-wrapper">
+                <canvas id="bellChart"></canvas>
             </div>
         </div>
 
-        <div class="sim-main">
-            <div class="kpi-grid">
-                <div class="kpi-card" style="border-top-color: #3b82f6;">
-                    <div class="kpi-title">Windfall Duration</div>
-                    <div class="kpi-value" id="out-duration" style="color: #3b82f6;">--</div>
-                    <div class="kpi-sub">Time to bleed legacy stock</div>
+        <!-- Interactive Controls & KPIs -->
+        <div class="kpi-grid">
+            <!-- Simulator Controls -->
+            <div class="kpi-card" style="border-top-color: var(--curve-control);">
+                <div class="kpi-card-header" style="color: var(--curve-control);">Control: Old Prices</div>
+                <div class="control-group">
+                    <label>Baseline Conversion <span>10.0%</span></label>
+                    <input type="range" disabled value="10" min="5" max="20" style="accent-color: var(--curve-control);">
                 </div>
-                <div class="kpi-card" style="border-top-color: var(--alert-red);">
-                    <div class="kpi-title">Peak FIFO Margin</div>
-                    <div class="kpi-value" id="out-peak" style="color: var(--alert-red);">--</div>
-                    <div class="kpi-sub">Margin realized on old stock</div>
-                </div>
-                <div class="kpi-card" style="border-top-color: var(--success-green); background: rgba(16, 185, 129, 0.05);">
-                    <div class="kpi-title">Total EBITDA Windfall</div>
-                    <div class="kpi-value" id="out-windfall" style="color: var(--success-green);">$--</div>
-                    <div class="kpi-sub">Pure P&L Profit Generation</div>
+                <div class="control-group">
+                    <label>Traffic Sample (N) <span id="n-val-display">5,000</span></label>
+                    <input type="range" id="slider-n" value="5000" min="1000" max="20000" step="500" oninput="updateSimulation()">
                 </div>
             </div>
 
-            <div class="chart-container">
-                <div class="chart-header">Margin Realization Timeline (FIFO Bleed-Out)</div>
-                <div class="chart-box">
-                    <canvas id="fifoChart"></canvas>
+            <div class="kpi-card" style="border-top-color: var(--curve-variant);">
+                <div class="kpi-card-header" style="color: var(--curve-variant);">Variant: New Prices</div>
+                <div class="control-group">
+                    <label>Variant Conversion <span id="cr-val-display">9.5%</span></label>
+                    <input type="range" id="slider-cr" value="9.5" min="8.0" max="11.0" step="0.1" oninput="updateSimulation()">
+                </div>
+                <div class="kpi-desc" style="text-align: left; margin-top: 15px;">
+                    *Drop the conversion rate to see if the drop breaks the statistical proof boundary.
                 </div>
             </div>
-        </div>
-    </div>
 
-    <h2>4. Result: Bottom-Line P&L Impact</h2>
-    
-    <div class="impact-box">
-        <h3>Turning Inflation into a Revenue Center</h3>
-        <p>By shifting the organization's logic from Average Cost to Replacement Cost, the Pricing Department ceased to be a reactive administrative function and became an active revenue center.</p>
-        <p style="margin-bottom: 0;">This strategy demonstrates that true analytical value doesn't just come from building complex machine learning models; it comes from deeply understanding <strong>the mechanics of cash flow</strong>. By leveraging the physical realities of the supply chain against the accounting principles of the General Ledger, I was able to generate verifiable, risk-free EBITDA windfalls month over month, fundamentally padding the corporate bottom line during periods of severe macroeconomic inflation.</p>
-    </div>
+            <!-- Dynamic KPIs -->
+            <div class="kpi-card" style="border-top-color: #64748b;">
+                <div class="kpi-card-header" style="color: #cbd5e1;">Z-Score (Test Statistic)</div>
+                <div class="kpi-value" id="out-zscore" style="color: #f8fafc;">0.00</div>
+                <div class="kpi-desc">How far the new results are from our old baseline.</div>
+            </div>
 
-    <div class="next-step-box">
-        <h3>Ecosystem Architecture Complete</h3>
-        <p>This concludes the 5-step Enterprise Pricing Architecture scenario. We successfully identified the geospatial threat, probabilistically modeled the risk floor, deployed guardrail-constrained ERP updates, established the statistical feedback loop to validate the market, and ultimately captured the FIFO inventory windfall.</p>
-        <div class="project-navigation">
-            <a href="ab-testing-framework.html" class="nav-btn prev">
-                <span class="nav-label">&larr; Previous Phase</span>
-                <span class="nav-title">Step 4: Statistical Validation</span>
-            </a>
-            <a href="index.html" class="nav-btn next">
-                <span class="nav-label">End of Scenario &rarr;</span>
-                <span class="nav-title">Return to Ecosystem Hub</span>
-            </a>
+            <div class="kpi-card" style="border-top-color: #64748b;">
+                <div class="kpi-card-header" style="color: #cbd5e1;">P-Value</div>
+                <div class="kpi-value" id="out-pvalue" style="color: #f8fafc;">0.000</div>
+                <div class="kpi-desc">The mathematical probability that this drop in sales is just random noise.</div>
+            </div>
         </div>
-    </div>
+
+    </div> <!-- END DASHBOARD -->
+
+    <div class="portfolio-content">
+        <h2>2. Translating Math to Business Strategy</h2>
+        
+        <div class="impact-box">
+            <h3>The Power of "Inconclusive" Tests</h3>
+            <p>If you look at the simulator's default state, you will notice a massive business advantage hidden inside the math. We raised prices, and as expected, our conversion rate dropped from 10.0% down to 9.5%. The sales team panicked, demanding we revert the pricing.</p>
+            <p style="margin-bottom: 0;"><strong>But the A/B test proved the drop was statistically inconclusive.</strong> Because the green curve still overlapped the blue baseline curve, the drop in volume couldn't be mathematically blamed on the price increase—it was within the normal bounds of daily random variance. By trusting the data science rather than the emotional reaction, we held the higher prices firm. We generated massive, free <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability."><strong>EBITDA</strong></span> without actually triggering a mathematical exodus of customer volume.</p>
+        </div>
+
+        <p>This strict adherence to statistical modeling acts as an organizational guardrail. It prevents knee-jerk price drops when sales are slightly sluggish, but it also instantly rings the alarm bell (flashing the "Volume Loss" warning) the moment a price increase actually crosses the mathematical threshold of destroying demand.</p>
+
+        <!-- NEXT STEP NAVIGATION -->
+        <div class="next-step-box">
+            <h3>Ecosystem Step 5: FIFO Inventory Revaluation</h3>
+            <p>With our algorithmic pricing changes statistically validated in the market, we hit the final, most lucrative part of the cycle. Because we decoupled our retail logic from our physical receiving docks, we are now raising prices <em>today</em> on inventory we bought <em>yesterday</em> at the old, cheaper cost. Let's model the resulting cash windfall.</p>
+            <div class="project-navigation">
+                <a href="stochastic-margin-optimization.html" class="nav-btn prev">
+                    <span class="nav-label">&larr; Previous Phase</span>
+                    <span class="nav-title">Step 3: Stochastic Optimization</span>
+                </a>
+                <a href="fifo-inventory-revaluation.html" class="nav-btn next">
+                    <span class="nav-label">Next Phase &rarr;</span>
+                    <span class="nav-title">Step 5: FIFO Revaluation</span>
+                </a>
+            </div>
+        </div>
+    </div> <!-- END PORTFOLIO CONTENT -->
 
     <script>
-        // DOM Element bindings
-        const sliderVelocity = document.getElementById('slider-velocity');
-        const sliderIncrease = document.getElementById('slider-increase');
-        const sliderQoh = document.getElementById('slider-qoh');
+        let bellChart = null;
         
-        const valVelocity = document.getElementById('val-velocity');
-        const valIncrease = document.getElementById('val-increase');
-        const valQoh = document.getElementById('val-qoh');
-
-        let chartInstance = null;
-
-        // Base Financials
-        const BASE_COST = 100.00;
-        const TARGET_MARGIN = 0.35;
-        const BASE_PRICE = BASE_COST / (1 - TARGET_MARGIN); // $153.85
-
-        function updateSimulation() {
-            // Get inputs
-            const velocityMonthly = parseInt(sliderVelocity.value);
-            const increasePct = parseFloat(sliderIncrease.value) / 100;
-            const qohDays = parseInt(sliderQoh.value);
-
-            // Update UI Labels
-            valVelocity.innerText = velocityMonthly.toLocaleString() + " Units";
-            valIncrease.innerText = "+" + (increasePct * 100).toFixed(1) + "%";
-            valQoh.innerText = qohDays + " Days";
-
-            // Mathematics
-            const newCost = BASE_COST * (1 + increasePct);
-            const newPrice = newCost / (1 - TARGET_MARGIN);
-            
-            // Peak margin is selling Old Cost at New Price
-            const peakMargin = (newPrice - BASE_COST) / newPrice;
-
-            // Windfall calculation
-            const unitsOwned = (velocityMonthly / 30) * qohDays;
-            const normalProfitPerUnit = BASE_PRICE - BASE_COST;
-            const windfallProfitPerUnit = newPrice - BASE_COST;
-            const absoluteWindfall = (windfallProfitPerUnit - normalProfitPerUnit) * unitsOwned;
-
-            // Update KPIs
-            document.getElementById('out-duration').innerText = qohDays + " Days";
-            document.getElementById('out-peak').innerText = (peakMargin * 100).toFixed(1) + "%";
-            document.getElementById('out-windfall').innerText = "$" + Math.round(absoluteWindfall).toLocaleString();
-
-            // Generate Chart Data (Timeline over 6 months)
-            const labels = ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'];
-            let baselineProfitData = [];
-            let windfallData = [];
-            
-            let remainingOldUnits = unitsOwned;
-
-            for(let i=0; i<6; i++) {
-                let monthlyUnitsSold = velocityMonthly;
-                let monthOldUnitsSold = Math.min(remainingOldUnits, monthlyUnitsSold);
-                let monthNewUnitsSold = monthlyUnitsSold - monthOldUnitsSold;
-
-                // Baseline profit if we were just buying and selling at the new replacement cost
-                let baselineProfit = monthlyUnitsSold * (newPrice - newCost);
-                baselineProfitData.push(baselineProfit);
-                
-                // Track absolute windfall dollars generated purely from the old, cheap inventory
-                let monthWindfall = monthOldUnitsSold * (newCost - BASE_COST);
-                windfallData.push(monthWindfall);
-
-                remainingOldUnits -= monthOldUnitsSold;
-            }
-
-            renderChart(labels, baselineProfitData, windfallData);
+        // Math Helpers for Normal Distribution
+        function normalPDF(x, mean, stdDev) {
+            return Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2)) / (stdDev * Math.sqrt(2 * Math.PI));
         }
 
-        function renderChart(labels, baselineProfitData, windfallData) {
-            const ctx = document.getElementById('fifoChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
-            
-            // Ensure Chart uses the new Inter font
-            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+        // Basic error function approximation to calculate P-Values
+        function erf(x) {
+            const sign = (x >= 0) ? 1 : -1;
+            x = Math.abs(x);
+            const a1 =  0.254829592, a2 = -0.284496736, a3 =  1.421413741;
+            const a4 = -1.453152027, a5 =  1.061405429, p  =  0.3275911;
+            const t = 1.0 / (1.0 + p * x);
+            const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            return sign * y;
+        }
 
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
+        function cdf(x) {
+            return 0.5 * (1.0 + erf(x / Math.sqrt(2.0)));
+        }
+
+        function updateSimulation() {
+            // 1. Get Inputs
+            const pA = 0.10; // Baseline is fixed at 10%
+            const pB = parseFloat(document.getElementById('slider-cr').value) / 100;
+            const n = parseInt(document.getElementById('slider-n').value);
+
+            // Update UI Labels
+            document.getElementById('cr-val-display').innerText = (pB * 100).toFixed(1) + '%';
+            document.getElementById('n-val-display').innerText = n.toLocaleString();
+
+            // 2. Statistics Math (Two-Proportion Z-Test)
+            const p_pool = (pA + pB) / 2;
+            const se = Math.sqrt(p_pool * (1 - p_pool) * (2 / n));
+            const zScore = (pB - pA) / se;
+            const pValue = 2 * (1 - cdf(Math.abs(zScore)));
+
+            // 3. Update KPIs
+            document.getElementById('out-zscore').innerText = zScore.toFixed(2);
+            document.getElementById('out-pvalue').innerText = pValue.toFixed(4);
+
+            const badge = document.getElementById('significance-badge');
+            
+            // Business Translation Logic (Alpha = 0.05)
+            if (pValue < 0.05) {
+                if (zScore > 0) {
+                    badge.innerHTML = "VOLUME UPLIFT DETECTED<br><span style='font-size: 0.65rem; font-weight: normal;'>The price change actually increased sales.</span>";
+                    badge.className = "status-badge status-uplift";
+                } else {
+                    badge.innerHTML = "VOLUME LOSS DETECTED (Revert Prices)<br><span style='font-size: 0.65rem; font-weight: normal;'>The drop in sales is statistically real.</span>";
+                    badge.className = "status-badge status-danger";
+                }
+            } else {
+                badge.innerHTML = "SAFE TO PROCEED (Keep Higher Margin)<br><span style='font-size: 0.65rem; font-weight: normal;'>Any drop in sales is statistically inconclusive.</span>";
+                badge.className = "status-badge status-safe";
+            }
+
+            // 4. Generate Data for Bell Curves
+            const stdDevA = Math.sqrt(pA * (1 - pA) / n);
+            const stdDevB = Math.sqrt(pB * (1 - pB) / n);
+
+            const labels = [];
+            const dataA = [];
+            const dataB = [];
+
+            // Determine left critical value line (since we are mostly looking at drops in conversion)
+            const critValLeft = pA - (1.96 * se);
+
+            for (let i = 0.07; i <= 0.13; i += 0.001) {
+                labels.push((i * 100).toFixed(1));
+                let valA = normalPDF(i, pA, stdDevA);
+                dataA.push(valA);
+                let valB = normalPDF(i, pB, stdDevB);
+                dataB.push(valB);
+            }
+
+            drawChart(labels, dataA, dataB, critValLeft * 100, pA * 100, pB * 100);
+        }
+
+        function drawChart(labels, dataA, dataB, critValLeft, meanA, meanB) {
+            const ctx = document.getElementById('bellChart').getContext('2d');
+            
+            if (bellChart) {
+                bellChart.destroy();
+            }
+
+            // Custom plugin to draw the vertical Boundary line
+            const verticalLinePlugin = {
+                id: 'verticalLine',
+                afterDraw: (chart) => {
+                    const ctx = chart.ctx;
+                    const xAxis = chart.scales.x;
+                    const yAxis = chart.scales.y;
+                    
+                    // SAFE PIXEL CALCULATION
+                    const minX = 7.0;
+                    const maxX = 13.0;
+                    const getXPixel = (val) => xAxis.left + ((val - minX) / (maxX - minX)) * xAxis.width;
+                    
+                    let xPixelCrit = getXPixel(critValLeft);
+                    
+                    // Draw Statistical Proof Boundary line
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(xPixelCrit, yAxis.top);
+                    ctx.lineTo(xPixelCrit, yAxis.bottom);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#ef4444'; // Red Danger Line
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+
+                    // Label the peaks in plain English
+                    let xPixelA = getXPixel(meanA);
+                    let xPixelB = getXPixel(meanB);
+                    
+                    ctx.fillStyle = '#3b82f6';
+                    ctx.fillText('Old Prices', xPixelA, yAxis.bottom - 100);
+
+                    ctx.fillStyle = '#10b981';
+                    ctx.fillText('New Prices', xPixelB, yAxis.bottom - 150);
+
+                    ctx.restore();
+                }
+            };
+
+            bellChart = new Chart(ctx, {
+                type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Extra FIFO Windfall Profit ($)',
-                            data: windfallData,
-                            backgroundColor: '#10b981', // Neon Emerald Green
-                            borderColor: '#047857',
-                            borderWidth: 1,
-                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }
+                            label: 'Volume Loss Boundary',
+                            data: [],
+                            borderColor: '#ef4444',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            backgroundColor: 'transparent',
+                            pointRadius: 0
                         },
                         {
-                            label: 'Baseline Standard Profit ($)',
-                            data: baselineProfitData,
-                            backgroundColor: 'rgba(100, 116, 139, 0.4)', // Slate Transparent
-                            borderColor: '#64748b',
-                            borderWidth: 1,
-                            borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4 }
+                            label: 'Old Prices (Baseline Variance)',
+                            data: dataA,
+                            borderColor: '#3b82f6', // Blue
+                            borderWidth: 3,
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            pointRadius: 0,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'New Prices (Variant Variance)',
+                            data: dataB,
+                            borderColor: '#10b981', // Green
+                            borderWidth: 3,
+                            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                            fill: true,
+                            pointRadius: 0,
+                            tension: 0.4
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
+                    layout: { padding: { top: 15 } },
+                    animation: { duration: 400 },
                     plugins: {
-                        legend: { position: 'top', labels: { font: { size: 12, weight: '600' }, color: '#e2e8f0' } },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                            titleFont: { size: 13, family: "'Inter', sans-serif" },
-                            bodyFont: { size: 13, family: "'Fira Code', monospace", weight: 'bold' },
-                            padding: 12,
-                            borderColor: '#334155',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.dataset.label.replace(' ($)', '') + ': $' + Math.round(context.raw).toLocaleString();
-                                },
-                                footer: function(tooltipItems) {
-                                    let total = 0;
-                                    tooltipItems.forEach(function(tooltipItem) {
-                                        total += tooltipItem.raw;
-                                    });
-                                    return '\n Total Monthly Profit: $' + Math.round(total).toLocaleString();
-                                }
-                            }
-                        }
+                        legend: { 
+                            display: true, 
+                            labels: { color: '#cbd5e1', font: {family: "'Inter', sans-serif", weight: 'bold'} } 
+                        },
+                        tooltip: { enabled: false }
                     },
                     scales: {
-                        y: {
-                            stacked: true,
-                            display: true,
-                            position: 'left',
-                            title: { display: true, text: 'Total Profit Dollars ($)', font: {size: 11, weight: 'bold'}, color: '#94a3b8' },
-                            ticks: { callback: function(value) { return '$' + (value/1000).toFixed(0) + 'k'; }, font: {size: 11}, color: '#cbd5e1' },
-                            grid: { color: '#334155', borderDash: [4, 4] }
-                        },
                         x: {
-                            stacked: true,
+                            title: { display: true, text: 'Conversion Rate (%)', color: '#94a3b8', font: { weight: 'bold' } },
+                            grid: { color: '#334155', borderDash: [4, 4] },
+                            ticks: { color: '#cbd5e1', maxTicksLimit: 10 }
+                        },
+                        y: {
+                            title: { display: false },
                             grid: { display: false },
-                            ticks: { font: {size: 11, weight: '600'}, color: '#cbd5e1' }
+                            ticks: { display: false }, // Hide Y-axis as it is an abstract density
+                            grace: '25%' // Adds a massive 25% empty buffer inside the grid to push peaks down
                         }
                     }
-                }
+                },
+                plugins: [verticalLinePlugin]
             });
         }
 
-        // Attach listeners to sliders
-        sliderVelocity.addEventListener('input', updateSimulation);
-        sliderIncrease.addEventListener('input', updateSimulation);
-        sliderQoh.addEventListener('input', updateSimulation);
-
-        // Run simulation immediately on load
-        updateSimulation();
+        // Initialize on load
+        window.onload = function() {
+            updateSimulation();
+        };
     </script>
 </body>
 </html>
