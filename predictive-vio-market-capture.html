@@ -52,6 +52,16 @@
         .meta-value { color: #1e293b; font-weight: 500; }
         
         .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
+        
+        /* NEW: Scenario and Impact Boxes matching the rest of the portfolio */
+        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
+        
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
+
+        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
         /* --- DASHBOARD WRAPPER --- */
@@ -236,6 +246,11 @@
         <div class="nda-note">
             <strong>Data Governance Note:</strong> To comply with enterprise confidentiality, live branch coordinates, localized POS revenue figures, and proprietary datasets have been stripped. This application utilizes an anonymized proxy dataset spanning the Southeast U.S. to safely demonstrate the production-grade ETL architecture, Marker Clustering, and deeply nested POS analytics.
         </div>
+        
+        <div class="scenario-box">
+            <strong>The Enterprise Scenario (Step 1 of 5)</strong>
+            Before we can execute defensive pricing strategies across the distribution network, we must first understand our exact geographic exposure. Relying on static delivery radii leaves operations blind to regional competitor density and market cannibalization. Our first objective is to build a spatial intelligence engine that maps these threats in real-time, pinpointing exactly where our market leverage is strong and where our territories are highly vulnerable.
+        </div>
 
         <h2>1. The Problem: From Geometric Guesswork to Predictive Capture</h2>
         <p>In high-velocity distribution, defining sales territories with a static "20-mile radius" is a recipe for margin erosion. A 20-mile delivery in gridlocked downtown Atlanta destroys logistics profitability, while a 20-mile route in rural Iowa represents a highly profitable, captive market. To move from descriptive reporting to prescriptive revenue capture, I replaced this static guesswork with a dynamic <span class="jargon-tooltip" data-tip="An automated architecture that merges physical map coordinates with financial data to visualize market threats and opportunities."><strong>Geospatial Intelligence Engine</strong></span>.</p>
@@ -411,6 +426,11 @@
             <li style="margin-bottom: 10px;"><strong>Logistics & Fleet Optimization:</strong> Modified the engine to map physical delivery vectors, identifying severe overlapping territories to eliminate margin waste on fuel, driver overtime, and fleet wear-and-tear.</li>
             <li><strong>Sales Territory Calibration:</strong> Visualized actual <span class="jargon-tooltip" data-tip="Directional lines mapping exact Point-of-Sale invoice dollars from the fulfillment hub to the customer's physical delivery address."><strong>POS revenue vectors</strong></span> against assigned salesman routes to expose under-serviced regions and rebalance rep workloads.</li>
         </ul>
+        
+        <div class="impact-box">
+            <h3>Cross-Functional Enterprise Adoption</h3>
+            <p style="margin-bottom: 0;">While initially architected to solve regional pricing elasticity, the underlying spatial engine was designed to be highly modular. Following an executive demo, the foundation was rapidly scaled across multiple departments. The core architecture was adapted to generate logistics spider-maps for freight and route optimization, competitor density models for Sales & Marketing, and Greenfield/M&A threat-monitoring dashboards utilized directly by the Company President. The objective was not to build a single-use script, but a flexible, scalable enterprise tool.</p>
+        </div>
 
         <div class="next-step-box">
             <h3>Ecosystem Step 2: Strategy Execution</h3>
