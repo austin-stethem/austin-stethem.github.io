@@ -91,6 +91,8 @@
         .dash-subtitle { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; max-width: 600px;}
         
         .logic-instruction-box { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-left: 4px solid var(--curve-control); padding: 15px 20px; border-radius: 4px; font-size: 0.9rem; color: #cbd5e1; margin-bottom: 25px; line-height: 1.5; }
+        
+        /* THE FIX: Changed from .logic-instruction-box strong to specifically target the first child */
         .logic-instruction-box > strong:first-child { color: var(--curve-control); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem; display: block; margin-bottom: 5px;}
 
         /* Chart Area */
@@ -132,6 +134,21 @@
         
         .dashboard-container .jargon-tooltip { color: #ffffff; border-bottom-color: rgba(255, 255, 255, 0.6); }
         .dashboard-container .jargon-tooltip:hover { border-bottom-color: #ffffff; }
+
+        /* WATERMARK */
+        .watermark {
+            position: fixed;
+            bottom: 12px;
+            right: 15px;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            opacity: 0.6;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            pointer-events: none; 
+            user-select: none; 
+            z-index: 9999;
+        }
 
         /* NAVIGATION BUTTONS */
         .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
@@ -301,6 +318,9 @@
             </div>
         </div>
     </div> <!-- END PORTFOLIO CONTENT -->
+
+    <!-- Watermark for Portfolio Protection -->
+    <div class="watermark">&copy; 2026 Austin Stethem. All rights reserved.</div>
 
     <script>
         let bellChart = null;
