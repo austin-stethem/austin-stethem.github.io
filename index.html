@@ -3,210 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predictive VIO Market Capture - Austin Sonny Stethem</title>
     
-    <!-- Custom SVG Favicon (Perfectly Centered) -->
+    <!-- Open Graph Tags for Link Previews (Teams/Slack/iMessage) -->
+    <meta property="og:title" content="Austin Sonny Stethem | Systems Architecture & Analytics">
+    <meta property="og:description" content="Production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.">
+    <meta property="og:type" content="website">
+    
+    <!-- Custom SVG Favicon (Browser Tab Icon) - PERFECTLY CENTERED -->
     <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
-
-    <!-- Tailwind CSS for rapid UI styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Leaflet CSS and JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- Leaflet MarkerCluster CSS and JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-
-    <!-- Chart.js for Deep Dive Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+    <title>Austin Sonny Stethem | Portfolio</title>
+    
     <style>
-        /* Base Brand Colors and Typography */
-        :root {
-            --dark-slate-blue: #1a2433;
-            --alert-red: #b32525;
-            --bg-color: #fbfbfb;
-            --pure-white: #FFFFFF;
-        }
+        /* Custom Scrollbar for a Premium Feel */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f8fafc; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         body { 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; padding: 0; background-color: var(--bg-color); overflow-x: hidden; color: #334155;
+            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif; 
+            line-height: 1.6; 
+            color: #334155; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background: #f8fafc; 
         }
 
-        /* --- PORTFOLIO SPECIFIC STYLES --- */
-        .portfolio-content { max-width: 1000px; margin: 0 auto; padding: 40px 20px; font-size: 10.5pt; line-height: 1.6; }
-        .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
-        .back-link:hover { text-decoration: underline; }
-        .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
-        .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
+        h1, h2, h3 { font-family: 'Georgia', serif; font-weight: normal; }
         
-        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px;}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
-        .meta-cell:last-child { border-right: none; }
-        .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .meta-value { color: #1e293b; font-weight: 500; }
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-header h1 { color: #0f172a; margin: 0 0 5px 0; font-size: 2.8rem; letter-spacing: -0.5px;}
+        .page-header p.subtitle { margin: 0; color: #b32525; font-size: 1.2rem; font-weight: 500; }
         
-        .nda-note { border-left: 4px solid var(--alert-red); background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
-        
-        /* NEW: Scenario and Impact Boxes matching the rest of the portfolio */
-        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        .scenario-box strong { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
-        
-        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
-        .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
-
-        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
-
-        /* --- DASHBOARD WRAPPER --- */
-        .dashboard-container {
-            width: 95%; max-width: 1400px; margin: 40px auto; height: 85vh; min-height: 750px;
-            background: #1D1B1C; display: flex; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 12px; overflow: hidden; position: relative;
+        .contact-nav { margin-top: 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        .contact-nav a { 
+            color: #475569; 
+            font-weight: 600; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            padding: 8px 16px; 
+            background: #fff; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 25px; 
+            transition: all 0.2s ease; 
+            font-size: 0.9rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-
-        #map { height: 100%; width: 100%; z-index: 1; }
-        
-        /* Tactical Dark Map Filters */
-        .tactical-dark-map .leaflet-tile-pane { filter: brightness(0.6) invert(1) contrast(3) grayscale(1) brightness(0.5); }
-        .satellite-dark-map .leaflet-tile-pane { filter: brightness(0.7) contrast(1.2); }
-
-        /* Custom Popup Styling */
-        .leaflet-popup-content-wrapper { border-radius: 8px; padding: 0; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
-        .leaflet-popup-content { margin: 0; width: 280px !important; }
-        .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .popup-body { padding: 16px; } 
-        .leaflet-popup-tip { background: var(--bg-color); }
-        .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
-
-        /* Custom Pins & Clusters */
-        .custom-color-pin { border-radius: 50%; box-shadow: 0 0 4px rgba(0,0,0,0.4); transition: transform 0.2s; }
-        .custom-color-pin:hover { transform: scale(1.2); z-index: 1000 !important; }
-        .custom-cluster { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
-
-        /* Custom Checkboxes */
-        .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; }
-        .layer-toggle input { display: none; }
-        .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: transparent; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; border: 2px solid #555;}
-        .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
-
-        /* iOS Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .3s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--alert-red); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        /* Theme SVG Icons */
-        .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
-        body:not(.light-mode) .theme-icon { fill: #1D1B1C; stroke: #FFFFFF; stroke-width: 2px; }
-        body.light-mode .theme-icon { fill: #FFFFFF; stroke: #1D1B1C; stroke-width: 2px; }
-
-        /* Themes */
-        .theme-bg-main { background-color: #1D1B1C; } 
-        .theme-text-main { color: var(--pure-white); }
-        .theme-text-muted { color: #888888; } 
-        .theme-border { border-color: #333; } 
-        .theme-card { background-color: rgba(255,255,255,0.05); }
-        
-        body.light-mode .theme-bg-main { background-color: #F8FAFC; }
-        body.light-mode .theme-text-main { color: #0F172A; }
-        body.light-mode .theme-text-muted { color: #555555; } 
-        body.light-mode .theme-border { border-color: #E2E8F0; }
-        body.light-mode .theme-card { background-color: #FFFFFF; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-        body.light-mode .breakdown-row { border-color: #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-        body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
-        body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
-        body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
-        body.light-mode .leaflet-popup-tip { background: #fff; }
-
-        /* Sidebar Hover Fixes */
-        .breakdown-row:hover { background-color: rgba(255,255,255,0.08); }
-        body.light-mode .breakdown-row:hover { background-color: #f1f5f9; }
-
-        /* Scrollbars & Drawer */
-        .sidebar-scroll::-webkit-scrollbar { display: none; }
-        .sidebar-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-
-        #analytics-panel {
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: translateX(100%);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-        }
-        #analytics-panel.open { transform: translateX(0); }
-
-        /* PORTFOLIO DEMO STYLES */
-        .pulse-instruction {
-            animation: pulse-border 2s infinite; border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; border-radius: 4px; margin: 20px 0; font-weight: 500; color: #334155; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        /* Jargon Tooltips */
-        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; }
-        .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000; pointer-events: none;}
-        .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 1000; pointer-events: none;}
-        .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
-
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(179, 37, 37, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(179, 37, 37, 0); }
+        .contact-nav a:hover { 
+            border-color: #b32525; 
+            background: #fff5f5; 
+            color: #b32525;
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 6px rgba(179,37,37,0.1);
         }
         
-        /* Wizard Elements (Locked to Fixed Viewport for immunity to scrolling) */
-        #wizard-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.4); z-index: 999990; opacity: 0; pointer-events: none; transition: opacity 0.5s;
-        }
-        #wizard-overlay.active { opacity: 1; pointer-events: auto; }
-        
-        #ghost-cursor {
-            position: fixed; top: 0; left: 0; width: 24px; height: 24px; z-index: 999999; opacity: 0; pointer-events: none; transition: all 2.0s cubic-bezier(0.25, 1, 0.5, 1); transform-origin: top left;
-        }
-        #ghost-cursor.active { opacity: 1; }
-        #ghost-cursor.clicking { transform: scale(0.8); }
-        
-        #tour-bubble {
-            position: fixed; top: 0; left: 0; width: 320px; z-index: 999995; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 2.0s cubic-bezier(0.25, 1, 0.5, 1); padding: 16px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 12px;
-        }
-        #tour-bubble.active { opacity: 1; pointer-events: auto; }
-        
-        /* The Click Ripple Effect */
-        .cursor-ripple {
-            position: absolute; top: -8px; left: -8px; width: 40px; height: 40px; background: rgba(255, 204, 0, 0.5); border-radius: 50%; pointer-events: none; opacity: 0;
-        }
-        .cursor-ripple.animate-ripple {
-            animation: ripple-ping 0.8s ease-out forwards;
-        }
-        @keyframes ripple-ping { 0% { transform: scale(0.1); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+        .portfolio-desc { max-width: 750px; margin: 30px auto 0; color: #64748b; font-size: 1.05rem; }
 
-        /* Map Labels */
-        .ring-label {
-            background: rgba(15, 23, 42, 0.8); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); pointer-events: none; white-space: nowrap;
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 25px; 
+            margin-top: 40px; 
+        }
+        
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; } 
+        }
+        
+        .card { 
+            background: #f4f4f5;
+            border: 1px solid #d4d4d8; 
+            padding: 30px; 
+            border-radius: 8px; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+        }
+        
+        .card:hover { 
+            border-color: #b32525; 
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.05);
+        }
+        
+        .featured-card { 
+            grid-column: 1 / -1; 
+            background: #1a2433; 
+            color: #f8fafc;
+            border: none;
+        }
+        .featured-card:hover {
+            border: none;
+            box-shadow: 0 15px 25px rgba(26, 36, 51, 0.2);
+        }
+        
+        .card h3 { margin-top: 0; color: #0f172a; font-size: 1.4rem; margin-bottom: 10px;}
+        .tech { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #b32525; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+        .desc { font-size: 0.95rem; margin-bottom: 20px; color: #475569; line-height: 1.6;}
+
+        .featured-card h3 { color: #ffffff; font-size: 2rem; margin-top: 0; margin-bottom: 12px;}
+        .featured-card .desc { color: #cbd5e1; font-size: 1.05rem; line-height: 1.6;}
+        .featured-card .tech { color: #cbd5e1; }
+        
+        .btn { 
+            display: inline-block; 
+            align-self: center; 
+            margin-top: auto; 
+            background: #ffffff; 
+            color: #0f172a; 
+            border: 1px solid #cbd5e1;
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600; 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02); 
+        }
+        
+        .btn:hover { 
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #b32525; 
+            text-decoration: none; 
         }
 
-        /* NAVIGATION BUTTONS */
-        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
-        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
-        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
+        .featured-card .btn {
+            background: #b32525;
+            border-color: #b32525;
+            color: #ffffff;
+        }
         
-        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
-        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;}
-        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
-        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
-        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
-        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
-        .nav-btn.next .nav-label { color: #fca5a5; }
-        .nav-title { font-size: 11pt; font-weight: bold;}
+        .featured-card .btn:hover {
+            background: #8e1c1c; 
+            border-color: #8e1c1c;
+            color: #ffffff; 
+            transform: translateY(-2px); 
+        }
 
-        /* WATERMARK FOOTER */
+        .ai-disclaimer {
+            margin-top: 60px;
+            padding: 25px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .ai-disclaimer strong {
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
         .watermark {
             position: fixed;
             bottom: 12px;
@@ -216,1078 +177,93 @@
             opacity: 0.6;
             font-family: 'Inter', sans-serif;
             letter-spacing: 0.5px;
-            pointer-events: none;
-            user-select: none;
+            pointer-events: none; /* Prevents blocking clicks */
+            user-select: none; /* Prevents highlighting */
             z-index: 9999;
-        }
-
-        @media (max-width: 800px) {
-            .meta-table tr { display: flex; flex-direction: column; }
-            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
-            .dashboard-container { flex-direction: column; height: 1000px; width: 100%; border-radius: 0; margin: 20px 0; }
-            #sidebar { width: 100%; height: 350px; border-right: none; border-bottom: 1px solid #333; }
-            #map { height: 650px; }
-            #analytics-panel { width: 100% !important; z-index: 3000; }
-            .project-navigation { flex-direction: column; }
-            .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
         }
     </style>
 </head>
 <body>
 
-    <!-- PORTFOLIO HEADER -->
-    <div class="portfolio-content">
-        <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
-
-        <div class="doc-header">
-            <!-- CUSTOM BRAND LOGO -->
-            <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
-                <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
-                <polyline points="26,66 46,44 58,56 70,38" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="26" cy="66" r="5" fill="#1a2433"/>
-                <circle cx="46" cy="44" r="5" fill="#1a2433"/>
-                <circle cx="58" cy="56" r="5" fill="#1a2433"/>
-                <circle cx="70" cy="38" r="7" fill="#b32525"/>
-            </svg>
-            <div class="doc-tagline">Geospatial Intelligence & Machine Learning</div>
-            <div class="doc-title">Predictive VIO Market Capture & K-Means Threat Modeling</div>
-        </div>
-
-        <table class="meta-table">
-            <tr>
-                <td class="meta-cell">
-                    <span class="meta-label">Principal Engineer</span>
-                    <span class="meta-value">Austin Sonny Stethem<br>Pricing & MDM Analyst</span>
-                </td>
-                <td class="meta-cell">
-                    <span class="meta-label">Core Competencies</span>
-                    <span class="meta-value">Spatial Algorithms, K-Means Clustering, POS Data Drill-down, API Pipelines</span>
-                </td>
-                <td class="meta-cell">
-                    <span class="meta-label">Technical Stack</span>
-                    <span class="meta-value">Python (Pandas, Scikit-Learn, Flask), Jupyter, SQL, JavaScript (Leaflet.js), Tailwind CSS, Prompt Engineering</span>
-                </td>
-            </tr>
-        </table>
-
-        <div class="nda-note">
-            <strong>Data Governance Note:</strong> To comply with enterprise confidentiality, live branch coordinates, localized POS revenue figures, and proprietary datasets have been stripped. This application utilizes an anonymized proxy dataset spanning the Southeast U.S. to safely demonstrate the production-grade ETL architecture, Marker Clustering, and deeply nested POS analytics.
-        </div>
+    <div class="page-header">
         
-        <div class="scenario-box">
-            <strong>The Enterprise Scenario (Step 1 of 5)</strong>
-            Before we can execute defensive pricing strategies across the distribution network, we must first understand our exact geographic exposure. Relying on static delivery radii leaves operations blind to regional competitor density and market cannibalization. Our first objective is to build a spatial intelligence engine that maps these threats in real-time, pinpointing exactly where our market leverage is strong and where our territories are highly vulnerable.
-        </div>
-
-        <h2>1. The Problem: From Geometric Guesswork to Predictive Capture</h2>
-        <p>In high-velocity distribution, defining sales territories with a static "20-mile radius" is a recipe for margin erosion. A 20-mile delivery in gridlocked downtown Atlanta destroys logistics profitability, while a 20-mile route in rural Iowa represents a highly profitable, captive market. To move from descriptive reporting to prescriptive revenue capture, I replaced this static guesswork with a dynamic <span class="jargon-tooltip" data-tip="An automated architecture that merges physical map coordinates with financial data to visualize market threats and opportunities."><strong>Geospatial Intelligence Engine</strong></span>.</p>
-        <p>By programmatically harvesting and mapping thousands of competitor locations against our internal <span class="jargon-tooltip" data-tip="A centralized distribution model where a main 'Hub' stores heavy inventory and supplies smaller surrounding 'Spoke' branches or direct accounts."><strong>Hub & Spoke network</strong></span>, the engine exposed our exact territorial blind spots. This allowed operations leadership to instantly visualize market friction, identifying precisely where our routes were exposed to <span class="jargon-tooltip" data-tip="When an overlapping competitor location actively steals sales volume from an existing branch's established territory."><strong>competitor cannibalization</strong></span>, and where we had the geographic leverage to safely raise prices.</p>
-
-        <!-- DEMO BUTTONS SECTION -->
-        <div class="pulse-instruction flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div class="flex-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block text-[#b32525] mr-1 mb-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <strong>INTERACTIVE DEMO:</strong> Click "Start Guided Tour" to follow an automated walk-through of the ML clustering, or explore the dashboard freely by clicking the hubs and layers yourself.
-            </div>
-            <div class="flex flex-wrap gap-2 mt-2 md:mt-0 shrink-0">
-                <button id="demo-start-btn" onclick="startGuidedTour()" class="bg-[#1a2433] text-white hover:bg-[#b32525] border-[#1a2433] hover:border-[#b32525] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="inline-block"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Start Guided Tour
-                </button>
-            </div>
-        </div>
-    </div> 
-
-    <!-- LIVE DASHBOARD -->
-    <div class="dashboard-container" id="app-dashboard">
-        
-        <!-- Left Sidebar: Command Center -->
-        <div id="sidebar" class="w-[380px] shrink-0 h-full flex flex-col z-10 theme-bg-main theme-border border-r relative shadow-2xl transition-colors duration-300">
-            
-            <div class="p-6 pb-2 flex flex-col items-center text-center">
-                <div class="text-sm font-extrabold text-[#b32525] tracking-[0.2em] uppercase mb-1">Meridian Parts</div>
-                <h1 class="text-2xl font-black theme-text-main italic tracking-tight">STRATEGIC <span class="text-[#b32525]">RADAR</span></h1>
-                
-                <div class="flex items-center justify-center gap-3 mt-3">
-                    <div class="relative flex h-3 w-3">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                    </div>
-                    <span class="text-xs font-bold tracking-widest text-green-400">PROXY DATA ACTIVE</span>
-                </div>
-            </div>
-
-            <!-- Static Content Area -->
-            <div class="flex-1 overflow-hidden px-5 pb-6 flex flex-col mt-4 border-t theme-border pt-4">
-                <h3 class="text-xs font-bold theme-text-muted uppercase tracking-widest mb-4 text-center border-b theme-border pb-2">Market Footprint</h3>
-                <div id="market-breakdown-container" class="flex flex-col gap-2 overflow-y-auto sidebar-scroll flex-1 pr-2 pb-4">
-                    <!-- Populated dynamically by JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Center: Map Container -->
-        <div class="flex-1 relative h-full">
-            <div id="map" class="w-full h-full z-0"></div>
-
-            <!-- Floating Dropdown UI for Filters -->
-            <div class="absolute top-4 right-4 z-[1000] flex flex-col items-end">
-                <button id="filter-btn" onclick="document.getElementById('filter-dropdown').classList.toggle('hidden')" class="theme-bg-main theme-text-main px-4 py-2 rounded-lg shadow-lg border theme-border font-semibold text-sm flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                    Map Filters & Controls
-                </button>
-                
-                <div id="filter-dropdown" class="hidden mt-2 border rounded-xl shadow-2xl w-80 p-5 theme-bg-main theme-border max-h-[80vh] overflow-y-auto sidebar-scroll">
-                    <!-- Display Mode -->
-                    <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Environment Settings</h3>
-                    
-                    <div class="flex items-center justify-between mb-6">
-                        <span class="text-sm font-medium theme-text-main">Dark Mode</span>
-                        <div class="flex items-center gap-2" id="theme-toggle-container">
-                            <span id="sun-icon" style="opacity: 0.5;">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                            </span>
-                            <label class="switch" id="theme-switch-label">
-                                <input type="checkbox" id="themeToggle" checked>
-                                <span class="slider"></span>
-                            </label>
-                            <span id="moon-icon" style="opacity: 1;">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col gap-3 mb-8">
-                        <label class="layer-toggle !mb-0" id="tactical-btn">
-                            <input type="radio" name="basemap" value="tactical" checked onchange="changeBasemap(this.value)">
-                            <div class="custom-checkbox rounded-full border-2 theme-border"></div>
-                            <span class="text-sm font-medium theme-text-main">Tactical Maps (High Contrast)</span>
-                        </label>
-                        <label class="layer-toggle !mb-0" id="satellite-btn">
-                            <input type="radio" name="basemap" value="satellite" onchange="changeBasemap(this.value)">
-                            <div class="custom-checkbox rounded-full border-2 theme-border"></div>
-                            <span class="text-sm font-medium theme-text-main">Satellite Imagery (Real-world)</span>
-                        </label>
-                    </div>
-
-                    <!-- Competitor Layer Toggles -->
-                    <div class="flex justify-between items-end mb-4 border-b theme-border pb-2">
-                        <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider">Map Layers</h3>
-                        <button id="master-toggle" onclick="toggleAllLayers()" class="text-[10px] theme-text-muted border theme-border px-2 py-1 rounded hover:bg-gray-800 transition-colors uppercase font-bold">Hide All</button>
-                    </div>
-
-                    <div id="dynamic-layer-toggles" class="space-y-1">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Right Sidebar: Slide-out Analytics Drawer -->
-            <div id="analytics-panel" class="absolute top-0 right-0 h-full w-[400px] z-[2000] theme-bg-main border-l theme-border flex flex-col">
-                <!-- Drawer Header -->
-                <div class="p-6 border-b theme-border flex justify-between items-center bg-[#b32525]">
-                    <div>
-                        <div id="analytics-subtitle" class="text-[10px] font-black text-white uppercase tracking-widest">Hub Diagnostic</div>
-                        <h2 id="analytics-title" class="text-xl font-black text-white tracking-tight">Store Name</h2>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button id="back-to-hub-btn" onclick="restoreHubView()" class="hidden text-[11px] font-black text-white uppercase tracking-wide hover:underline mr-2">&larr; Back</button>
-                        <button onclick="closeAnalytics()" class="text-white hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Drawer Content (Scrollable) -->
-                <div class="flex-1 overflow-y-auto p-6 sidebar-scroll">
-                    
-                    <!-- KPI Cards -->
-                    <div class="flex gap-3 mb-6">
-                        <div class="theme-card border theme-border rounded-lg p-3 flex-1 text-center shadow-inner">
-                            <div class="text-[9px] font-bold theme-text-muted uppercase tracking-wider mb-1">LTM Revenue</div>
-                            <div id="analytics-rev" class="text-lg font-black theme-text-main text-green-400">--</div>
-                        </div>
-                        <div class="theme-card border theme-border rounded-lg p-3 flex-1 text-center shadow-inner">
-                            <div id="analytics-margin-title" class="text-[9px] font-bold theme-text-muted uppercase tracking-wider mb-1">True Gross Margin</div>
-                            <div id="analytics-margin" class="text-lg font-black theme-text-main text-blue-400">--</div>
-                        </div>
-                    </div>
-
-                    <!-- Chart.js Container -->
-                    <div class="mb-8">
-                        <h3 id="chart-title" class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Product Group Velocity (LTM)</h3>
-                        <div class="relative w-full h-[250px]">
-                            <canvas id="pgChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Top Ranges Table -->
-                    <div id="ranges-section" class="mb-8 hidden">
-                        <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Product Group Ranges</h3>
-                        <div id="top-ranges-list" class="space-y-2 text-sm theme-text-main">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Top Accounts List -->
-                    <div id="accounts-section">
-                        <h3 class="text-xs font-bold theme-text-muted uppercase tracking-wider mb-4 border-b theme-border pb-2">Top Accounts</h3>
-                        <div id="top-accounts-list" class="space-y-2">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> <!-- END flex-1 relative h-full -->
-    </div> <!-- END DASHBOARD CONTAINER -->
-
-    <div class="portfolio-content">
-        <h2>2. Machine Learning: Translating Maps into Margin</h2>
-        <p>A map is just a picture until you attach revenue to it. To translate this geography into an actionable pricing strategy, I engineered a <span class="jargon-tooltip" data-tip="A custom Python algorithm that measures how point-of-sale (POS) revenue mathematically drops off as the distance from the store increases."><strong>POS Gravity Engine</strong></span>. By extracting 12 months of <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> invoice data and geocoding thousands of Customer Ship-To addresses, the Python engine calculated the exact mathematical "Distance Decay" of our revenue—proving exactly how far customers were willing to travel, or wait for delivery, before defecting to a competitor.</p>
-        <p>I then fed these <span class="jargon-tooltip" data-tip="Mathematical models representing how fast revenue drops off as drive-time increases."><strong>decay curves</strong></span> into an unsupervised <span class="jargon-tooltip" data-tip="An unsupervised AI algorithm that automatically groups data points into distinct clusters based on their underlying similarities."><strong>K-Means Machine Learning Algorithm</strong></span> (via <code><span class="jargon-tooltip" data-tip="The industry-standard machine learning library for Python, used for complex predictive data analysis."><strong>scikit-learn</strong></span></code>). Instead of relying on subjective opinions from regional managers, the algorithm mathematically clustered our 80-branch network into 5 distinct <em>Strategic Topology Tiers</em> based on their actual friction profiles.</p>
-        <p>This fundamentally changed how the enterprise priced its catalog. We now knew with mathematical certainty which branches operated as <span style="white-space: nowrap;"><strong>"Tier 1: Rural Monopolies"</strong></span> (capable of absorbing aggressive, network-funding price increases) and which were <span style="white-space: nowrap;"><strong>"Tier 5: Hyper-Dense Urban"</strong></span> (requiring strict, defensive margin floors to survive block-by-block warfare without destroying volume).</p>
-
-        <h2>3. Enterprise Ecosystem: Scaling the Architecture</h2>
-        <p>This geospatial engine was not a single-use script; it was architected as a foundational data ecosystem. Using this exact <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture."><strong>Python</strong></span> & <span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases."><strong>SQL</strong></span> backbone, I expanded the architecture to solve massive operational inefficiencies across the enterprise:</p>
-        <ul style="margin-top: 15px; margin-bottom: 25px; color: #334155; padding-left: 20px; line-height: 1.6;">
-            <li style="margin-bottom: 10px;"><strong>M&A Poaching & Cannibalization:</strong> Modeled regional overlaps between merging competitors to identify "cross-street" store closures, allowing our outside sales reps to preemptively target and poach abandoned commercial accounts.</li>
-            <li style="margin-bottom: 10px;"><strong>Greenfield Expansion (Whitespace):</strong> Identified high-density <span class="jargon-tooltip" data-tip="Vehicles in Operation. Geographic strips with a high density of registered vehicles, indicating strong potential market demand."><strong>VIO corridors</strong></span> completely void of our distribution hubs, generating data-backed expansion targets for executive leadership.</li>
-            <li style="margin-bottom: 10px;"><strong>Logistics & Fleet Optimization:</strong> Modified the engine to map physical delivery vectors, identifying severe overlapping territories to eliminate margin waste on fuel, driver overtime, and fleet wear-and-tear.</li>
-            <li><strong>Sales Territory Calibration:</strong> Visualized actual <span class="jargon-tooltip" data-tip="Directional lines mapping exact Point-of-Sale invoice dollars from the fulfillment hub to the customer's physical delivery address."><strong>POS revenue vectors</strong></span> against assigned salesman routes to expose under-serviced regions and rebalance rep workloads.</li>
-        </ul>
-        
-        <div class="impact-box">
-            <h3>Cross-Functional Enterprise Adoption</h3>
-            <p style="margin-bottom: 0;">While initially architected to solve regional pricing elasticity, the underlying spatial engine was designed to be highly modular. Following an executive demo, the foundation was rapidly scaled across multiple departments. The core architecture was adapted to generate logistics spider-maps for freight and route optimization, competitor density models for Sales & Marketing, and Greenfield/M&A threat-monitoring dashboards utilized directly by the Company President. The objective was not to build a single-use script, but a flexible, scalable enterprise tool.</p>
-        </div>
-
-        <div class="next-step-box">
-            <h3>Ecosystem Step 2: Strategy Execution</h3>
-            <p>With our vulnerable territories mapped and our market anchors identified, we must now defend those margins against incoming supply chain inflation. Let's move from intelligence to execution by building an algorithmic cross-subsidization engine.</p>
-            <div class="project-navigation">
-                <a href="index.html" class="nav-btn prev">
-                    <span class="nav-label">&larr; Return Home</span>
-                    <span class="nav-title">Portfolio Hub</span>
-                </a>
-                <a href="algorithmic-margin-defense.html" class="nav-btn next">
-                    <span class="nav-label">Next Phase &rarr;</span>
-                    <span class="nav-title">Step 2: Algorithmic Margin Defense</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- THE GUIDED WIZARD ELEMENTS (Locked to Fixed Viewport for immunity to scrolling) -->
-    <div id="wizard-overlay"></div>
-    
-    <div id="ghost-cursor">
-        <div class="cursor-ripple" id="cursor-ripple"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white" stroke="#000" stroke-width="1.5" style="filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); transform: rotate(-15deg); transition: transform 0.1s ease-out;">
-            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
-            <path d="M13 13l6 6"></path>
+        <!-- CUSTOM BRAND LOGO (PERFECTLY CENTERED) -->
+        <svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));">
+            <!-- Outer Hexagon (Architecture) -->
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <!-- Inner Trend Line (Financial Growth) - MATHEMATICALLY CENTERED -->
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Data Nodes (Analytics) -->
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <!-- The Final Breakout Node -->
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
         </svg>
-    </div>
-    
-    <div id="tour-bubble" class="theme-bg-main theme-border theme-text-main border">
-        <div class="text-sm font-semibold leading-relaxed" id="tour-text"></div>
-        <div class="flex justify-between items-center mt-3 pt-3 border-t theme-border">
-            <span class="text-xs font-bold theme-text-muted" id="tour-step">Step 1 of X</span>
-            <div class="flex gap-2">
-                <button id="tour-back-btn" class="bg-gray-200 text-gray-800 border border-gray-300 shadow-sm hover:bg-gray-300 hover:border-gray-400 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="prevTourStep()">Back</button>
-                <button id="tour-next-btn" class="bg-[#b32525] text-white hover:bg-red-700 font-bold text-xs px-3 py-1.5 rounded transition-colors" onclick="nextTourStep()">Next</button>
-            </div>
+
+        <h1>Austin Sonny Stethem</h1>
+        <p class="subtitle">Strategic Pricing & Master Data Analyst</p>
+        
+        <div class="contact-nav">
+            <a href="tel:7122995267">📞 712-299-5267</a>
+            <a href="mailto:austinstethem1976@gmail.com">✉️ austinstethem1976@gmail.com</a>
+            <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank">💼 LinkedIn</a>
+            <a href="Stethem_Austin_Resume.pdf" target="_blank">📄 View Resume (PDF)</a>
         </div>
+        
+        <hr style="width: 50%; border: 0; border-top: 1px solid #cbd5e1; margin: 30px auto;">
+        
+        <h2>Systems Architecture & Analytics Portfolio</h2>
+        <p class="portfolio-desc">Showcasing production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.</p>
     </div>
 
-    <script>
-        // --- 1. REALISTIC FAKE DATA GENERATOR ---
-        function generateDeepFakeData() {
-            const data = { "Meridian Parts": [], "Vanguard Auto": [], "Titan Parts": [], "Omega Automotive": [], "Apex Distribution": [], "Nova Parts": [] };
-            const comps = Object.keys(data).filter(k => k !== "Meridian Parts");
-
-            const pgs = ['Friction / Brakes', 'Filtration', 'Ride Control', 'Electrical', 'Chemicals'];
-            const ranges = {
-                'Friction / Brakes': ['Premium Fleet Pads', 'Coated Rotors', 'SevereDuty Calipers'],
-                'Filtration': ['Heavy Duty Oil Filters', 'Cabin Air', 'Hydraulic Filters'],
-                'Ride Control': ['Monotube Shocks', 'Strut Assemblies'],
-                'Electrical': ['AGM Batteries', 'Alternators'],
-                'Chemicals': ['Bulk DEF', 'Synthetic Oil 5W-30']
-            };
-
-            const cityAnchors = [
-                { name: "Atlanta, GA", lat: 33.7490, lng: -84.3880, type: "urban", hasHub: true },
-                { name: "Nashville, TN", lat: 36.1627, lng: -86.7816, type: "urban", hasHub: true },
-                { name: "Charlotte, NC", lat: 35.2271, lng: -80.8431, type: "urban", hasHub: true },
-                { name: "Birmingham, AL", lat: 33.5186, lng: -86.8104, type: "mid", hasHub: true },
-                { name: "Greenville, SC", lat: 34.8526, lng: -82.3940, type: "mid", hasHub: true },
-                { name: "Knoxville, TN", lat: 35.9606, lng: -83.9207, type: "mid", hasHub: true },
-                { name: "Macon, GA", lat: 32.8407, lng: -83.6324, type: "mid", hasHub: true },
-                { name: "Cookeville, TN", lat: 36.1628, lng: -85.5016, type: "rural", hasHub: true },
-                { name: "Chattanooga, TN", lat: 36.0446, lng: -85.3097, type: "mid", hasHub: false },
-                { name: "Augusta, GA", lat: 33.4735, lng: -81.9748, type: "mid", hasHub: false }
-            ];
-
-            const accountPrefixes = ["Commercial Fleet", "Metro Diesel", "City Transit", "Agri-Repair", "Heavy Duty Services", "Express Auto", "Advanced Diagnostics", "Premier Alignment"];
-
-            cityAnchors.forEach((city) => {
-                let hubCount = city.hasHub ? (city.type === "urban" ? 18 : city.type === "mid" ? 9 : 5) : 0;
-                
-                for(let h=1; h<=hubCount; h++) {
-                    let totalHubRev = Math.floor(Math.random() * 3000000) + 1000000;
-                    let accounts = [];
-                    
-                    for(let j=1; j<=8; j++) {
-                        let accRev = Math.floor(totalHubRev * (Math.random() * 0.15 + 0.02)); 
-                        let accProfit = accRev * (Math.random() * 0.15 + 0.25); 
-                        
-                        let pgMix = {}; let remaining = 100;
-                        for(let i=0; i<4; i++) {
-                            let alloc = Math.floor(Math.random() * (remaining * 0.6));
-                            pgMix[pgs[i]] = alloc; remaining -= alloc;
-                        }
-                        pgMix[pgs[4]] = remaining;
-
-                        let accRanges = {}; let rangeParts = {};
-                        Object.keys(pgMix).forEach(pg => {
-                            if(pgMix[pg] > 0) {
-                                let topRange = ranges[pg][0];
-                                accRanges[topRange] = accProfit * (pgMix[pg]/100) * 0.8; 
-                                rangeParts[topRange] = {
-                                    [`${topRange.substring(0,3).toUpperCase()}-101`]: 40,
-                                    [`${topRange.substring(0,3).toUpperCase()}-202`]: 35,
-                                    [`${topRange.substring(0,3).toUpperCase()}-303`]: 25
-                                };
-                            }
-                        });
-
-                        accounts.push({
-                            'Customer Name': `${accountPrefixes[j-1]} 00${j}`,
-                            'Total LTM Revenue': accRev, 'Total LTM Profit': accProfit,
-                            'True Margin Pct': ((accProfit / accRev) * 100).toFixed(1),
-                            'Product Group DNA': JSON.stringify(pgMix), 'Top MAM Ranges': JSON.stringify(accRanges), 'Range Parts DNA': JSON.stringify(rangeParts)
-                        });
-                    }
-
-                    // Tighter Hub Offset for accuracy
-                    let hLat = city.lat + (Math.random() - 0.5) * 0.2; 
-                    let hLng = city.lng + (Math.random() - 0.5) * 0.2;
-
-                    data["Meridian Parts"].push({
-                        name: `Meridian Hub - ${city.name.split(',')[0]} #${h}`,
-                        lat: hLat, lng: hLng, address: `123 Industrial Pkwy, ${city.name}`,
-                        gravity: { 'Total LTM Revenue': totalHubRev, '0-5 Miles': '45.2%', '5-15 Miles': '22.1%', '15-30 Miles': '15.4%', '30-50 Miles': '12.3%', '50-100 Miles': '5.0%', '100+ Miles': '0.0%' },
-                        topology: { tier: city.type === "urban" ? 4 : city.type === "mid" ? 2 : 1, confidence: "94.2%", status: "Locked" },
-                        top_accounts: accounts.sort((a,b) => b['Total LTM Revenue'] - a['Total LTM Revenue'])
-                    });
-                }
-
-                // Density spread roughly ~30 miles
-                let compCount = city.type === "urban" ? 180 : city.type === "mid" ? 80 : 30;
-                for(let i = 0; i < compCount; i++) {
-                    let cat = comps[Math.floor(Math.random() * comps.length)];
-                    data[cat].push({
-                        name: `${cat} - Sector ${i+1}`,
-                        lat: city.lat + (Math.random() - 0.5) * 0.8, 
-                        lng: city.lng + (Math.random() - 0.5) * 0.8,
-                        address: `Commercial Dr, ${city.name.split(',')[1].trim()}`
-                    });
-                }
-            });
-            return data;
-        }
-
-        // --- 2. STATE VARIABLES ---
-        let currentMapStyle = 'tactical';
-        let isDarkMode = true;
-        let pgChartInstance = null;
-        let activeHubName = null;
-        let activeHubRev = null;
-        let activeHubAccounts = [];
-        let autoTriggerHub = null;
-
-        // --- 3. MAP INITIALIZATION ---
-        const map = L.map('map', { zoomControl: false, scrollWheelZoom: false }).setView([35.0, -85.5], 6); 
-        L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-        const tacticalLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-
-        function applyMapFilters() {
-            const mapContainer = document.getElementById('map');
-            mapContainer.classList.remove('tactical-dark-map', 'satellite-dark-map');
-            if (isDarkMode) {
-                if (currentMapStyle === 'tactical') mapContainer.classList.add('tactical-dark-map');
-                else mapContainer.classList.add('satellite-dark-map');
-            }
-        }
-        applyMapFilters();
-
-        document.getElementById('themeToggle').addEventListener('change', function(e) {
-            isDarkMode = e.target.checked; 
-            if (isDarkMode) {
-                document.body.classList.remove('light-mode');
-                document.getElementById('moon-icon').style.opacity = '1';
-                document.getElementById('sun-icon').style.opacity = '0.5';
-            } else {
-                document.body.classList.add('light-mode');
-                document.getElementById('moon-icon').style.opacity = '0.5';
-                document.getElementById('sun-icon').style.opacity = '1';
-            }
-            applyMapFilters();
-        });
-
-        window.changeBasemap = function(type) {
-            currentMapStyle = type;
-            if (type === 'tactical') { map.removeLayer(satelliteLayer); tacticalLayer.addTo(map); } 
-            else { map.removeLayer(tacticalLayer); satelliteLayer.addTo(map); }
-            applyMapFilters();
-        }
-
-        // --- 4. RENDER DATA & CLUSTERS ---
-        const createColorIcon = (color, pinBorderColor) => L.divIcon({
-            className: 'custom-color-pin',
-            html: `<div style="background-color: ${color}; width: 100%; height: 100%; border-radius: 50%; border: 2px solid ${pinBorderColor};"></div>`,
-            iconSize: [16, 16], iconAnchor: [8, 8], popupAnchor: [0, -8]
-        });
-
-        const categoryColors = {
-            "Meridian Parts": '#DC2626', "Vanguard Auto": '#F97316', "Titan Parts": '#FCD34D', "Omega Automotive": '#DDDDDD', "Apex Distribution": '#999999', "Nova Parts": '#555555'
-        };
-        const categoryLayers = {};
-        const tradeAreaRings = L.layerGroup().addTo(map);
-        const ringLabels = L.layerGroup().addTo(map); 
-        let lockedPin = null;
-
-        function renderMap() {
-            const data = generateDeepFakeData();
-            const toggleContainer = document.getElementById('dynamic-layer-toggles');
-            const breakdownContainer = document.getElementById('market-breakdown-container');
-            toggleContainer.innerHTML = ''; breakdownContainer.innerHTML = '';
-
-            const categoryOrder = ["Meridian Parts", "Vanguard Auto", "Titan Parts", "Omega Automotive", "Apex Distribution", "Nova Parts"];
-            const sortedCategories = Object.keys(data).sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
-
-            let seenOrigins = {}; 
-
-            sortedCategories.forEach(category => {
-                const catColor = categoryColors[category];
-                const items = data[category];
-                
-                const lightColors = ['#FCD34D', '#DDDDDD', '#999999'];
-                const clusterTextColor = lightColors.includes(catColor) ? '#1a2433' : '#FFFFFF';
-                const pinBorderColor = lightColors.includes(catColor) ? '#1a2433' : '#fff'; 
-                const clusterBorder = lightColors.includes(catColor) ? '#1a2433' : 'rgba(255, 255, 255, 0.6)';
-                
-                let breakdownHtml = `
-                    <div class="breakdown-row flex-1 flex items-center justify-between p-2.5 rounded-lg border theme-border theme-card transition-all cursor-default min-h-[35px]">
-                        <div class="flex items-center gap-3 flex-1 min-w-0 pl-1">
-                            <div class="w-3 h-3 rounded-full shrink-0 border" style="background-color: ${catColor}; box-shadow: 0 0 8px ${catColor}; border-color: ${lightColors.includes(catColor) ? '#1a2433' : 'transparent'};"></div>
-                            <span class="text-[15px] font-semibold theme-text-main truncate tracking-wide" title="${category}">${category}</span>
-                        </div>
-                        <span class="font-mono font-bold text-[17px] theme-text-main ml-2 shrink-0">${items.length}</span>
-                    </div>
-                `;
-                breakdownContainer.insertAdjacentHTML('beforeend', breakdownHtml);
-
-                const clusterGroup = L.markerClusterGroup({
-                    chunkedLoading: true, spiderfyOnMaxZoom: false, showCoverageOnHover: false, maxClusterRadius: 80, disableClusteringAtZoom: 11,
-                    iconCreateFunction: function(cluster) {
-                        const count = cluster.getChildCount();
-                        const size = count < 10 ? 36 : count < 25 ? 46 : 56; 
-                        return L.divIcon({
-                            html: `<div class="custom-cluster" style="background-color: ${catColor}; color: ${clusterTextColor}; border-color: ${clusterBorder}; width: ${size}px; height: ${size}px; border-style: solid; border-width: 2px;">${count}</div>`,
-                            className: 'custom-cluster-wrapper', iconSize: L.point(size, size)
-                        });
-                    }
-                });
-
-                const markerIcon = createColorIcon(catColor, pinBorderColor);
-
-                items.forEach(item => {
-                    let itemLat = parseFloat(item.lat);
-                    let itemLng = parseFloat(item.lng);
-
-                    if (!isNaN(itemLat) && !isNaN(itemLng)) {
-                        let coordKey = `${itemLat.toFixed(4)},${itemLng.toFixed(4)}`;
-                        if (seenOrigins[coordKey] === undefined) seenOrigins[coordKey] = 0;
-                        let count = seenOrigins[coordKey];
-                        if (count > 0) {
-                            let angle = count * (Math.PI * 2 / 6); 
-                            let radius = 0.0015; 
-                            itemLat += Math.sin(angle) * radius;
-                            itemLng += Math.cos(angle) * radius;
-                        }
-                        seenOrigins[coordKey]++;
-                    }
-
-                    const marker = L.marker([itemLat, itemLng], { icon: markerIcon });
-                    
-                    let analyticsButtonHtml = ''; let gravityHtml = ''; let topologyHtml = '';
-
-                    if (category === "Meridian Parts") {
-                        let safeName = item.name.replace(/'/g, "\\'");
-                        let rev = item.gravity['Total LTM Revenue'];
-                        window[`hubData_${safeName.replace(/\s+/g, '')}`] = item.top_accounts;
-                        
-                        if(!autoTriggerHub && item.name.includes("Atlanta")) {
-                            autoTriggerHub = { name: safeName, rev: rev, lat: itemLat, lng: itemLng, marker: marker };
-                        }
-
-                        let revFormatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(rev);
-                        gravityHtml = `
-                            <div class="theme-card theme-border mt-3 p-2.5 rounded-md border shadow-sm">
-                                <div class="text-[11px] font-extrabold theme-text-muted uppercase mb-1.5 tracking-wider">Revenue Gravity (LTM)</div>
-                                <div class="text-sm font-bold theme-text-main mb-2">${revFormatted}</div>
-                                <table class="w-full text-xs collapse theme-text-main">
-                                    <tr class="border-b theme-border"><td class="py-1">0-5 Miles (Core)</td><td class="text-right font-semibold text-green-500">${item.gravity['0-5 Miles']}</td></tr>
-                                    <tr class="border-b theme-border"><td class="py-1">5-15 Miles</td><td class="text-right font-semibold">${item.gravity['5-15 Miles']}</td></tr>
-                                    <tr class="border-b theme-border"><td class="py-1">15-30 Miles</td><td class="text-right font-semibold">${item.gravity['15-30 Miles']}</td></tr>
-                                    <tr><td class="py-1">30-50 Miles</td><td class="text-right font-semibold">${item.gravity['30-50 Miles']}</td></tr>
-                                </table>
-                            </div>
-                        `;
-
-                        const tierNames = { 1: "Tier 1: Deep Rural Super-Hub", 2: "Tier 2: Regional Market Center", 4: "Tier 4: Urban Fringe / High Density" };
-                        let tierName = tierNames[item.topology.tier] || `Tier ${item.topology.tier}`;
-                        
-                        topologyHtml = `
-                            <div class="topology-box mb-3 p-2.5 theme-card theme-border rounded-md border shadow-sm">
-                                <div class="text-[10px] font-extrabold uppercase tracking-widest theme-text-muted mb-1">ML Topology Profile</div>
-                                <div class="text-sm font-bold theme-text-main mb-1.5">${tierName}</div>
-                                <div class="flex justify-between items-center text-[11px]">
-                                    <span class="theme-text-muted">Confidence: <strong class="theme-text-main">${item.topology.confidence}</strong></span>
-                                    <span class="bg-emerald-500 text-white px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide">${item.topology.status}</span>
-                                </div>
-                            </div>
-                        `;
-
-                        analyticsButtonHtml = `
-                            <button id="open-analytics-btn" onclick="openAnalytics('${safeName}', ${rev})" class="w-full mt-4 p-2.5 bg-[#b32525] hover:bg-red-700 text-white border-none rounded-md font-extrabold uppercase tracking-wider text-[11px] cursor-pointer transition-colors shadow-md">
-                                Open Hub Analytics &raquo;
-                            </button>
-                        `;
-                    }
-
-                    let popupHtml = `
-                        <div class="popup-header" style="background-color: ${catColor}; color: ${clusterTextColor};">${category}</div>
-                        <div class="popup-body theme-bg-main theme-text-main theme-border border-b">
-                            ${topologyHtml}
-                            <div class="popup-title theme-text-main">${item.name}</div>
-                            <div class="text-xs theme-text-muted italic mb-2">${item.address}</div>
-                            ${gravityHtml}
-                            ${analyticsButtonHtml}
-                        </div>
-                    `;
-                    marker.bindPopup(popupHtml);
-                    
-                    marker.on('click', function() {
-                        tradeAreaRings.clearLayers();
-                        ringLabels.clearLayers();
-                        if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; }
-                        marker.closePopup();
-
-                        lockedPin = L.marker([itemLat, itemLng], { icon: markerIcon, zIndexOffset: 10000 }).addTo(map);
-                        lockedPin.bindPopup(popupHtml).openPopup();
-                        
-                        if (item.gravity && category === "Meridian Parts") {
-                            const mpm = 1609.34;
-                            const dLat = 0.01449275; 
-                            
-                            L.circle([itemLat, itemLng], {radius: 50 * mpm, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.08, weight: 1.5, dashArray: '5, 5'}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 30 * mpm, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.10, weight: 1.5}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 15 * mpm, color: '#f97316', fillColor: '#f97316', fillOpacity: 0.15, weight: 1.5}).addTo(tradeAreaRings);
-                            L.circle([itemLat, itemLng], {radius: 5 * mpm, color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.20, weight: 1.5}).addTo(tradeAreaRings);
-                            
-                            L.marker([itemLat + (5 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-red-500 border-red-500">0-5 Miles (Core)</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
-                            L.marker([itemLat + (15 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-orange-500 border-orange-500">5-15 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
-                            L.marker([itemLat + (30 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-green-500 border-green-500">15-30 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
-                            L.marker([itemLat + (50 * dLat), itemLng], {icon: L.divIcon({html: `<div class="ring-label text-blue-600 border-blue-600">30-50 Miles</div>`, className: '', iconSize: [null, null]})}).addTo(ringLabels);
-                        }
-
-                        lockedPin.on('popupclose', function() {
-                            tradeAreaRings.clearLayers();
-                            ringLabels.clearLayers();
-                            if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; }
-                        });
-                    });
-
-                    clusterGroup.addLayer(marker);
-                });
-
-                map.addLayer(clusterGroup);
-                categoryLayers[category] = clusterGroup;
-
-                const safeCat = category.replace(/'/g, "\\'"); 
-                const toggleHtml = `
-                    <label class="layer-toggle">
-                        <input type="checkbox" class="category-checkbox" data-category="${safeCat}" checked onchange="toggleCategory('${safeCat}', this.checked)">
-                        <div class="custom-checkbox border-2 ${lightColors.includes(catColor) ? 'theme-border' : 'border-gray-500'}"></div>
-                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}] border" style="background-color: ${catColor}; border-color: ${pinBorderColor}; flex-shrink: 0;"></div>
-                        <span class="text-sm font-semibold theme-text-main truncate">${category} <span class="opacity-50 text-xs ml-1">(${items.length})</span></span>
-                    </label>
-                `;
-                toggleContainer.insertAdjacentHTML('beforeend', toggleHtml);
-            });
-        }
-
-        window.toggleAllLayers = function() {
-            const btn = document.getElementById('master-toggle');
-            const isHiding = btn.innerText === "HIDE ALL";
-            document.querySelectorAll('.category-checkbox').forEach(cb => {
-                if (cb.checked === isHiding) {
-                    cb.checked = !isHiding;
-                    window.toggleCategory(cb.getAttribute('data-category'), !isHiding);
-                }
-            });
-            btn.innerText = isHiding ? "SHOW ALL" : "HIDE ALL";
-        };
-
-        window.toggleCategory = function(category, isVisible) {
-            const layer = categoryLayers[category];
-            if (isVisible) map.addLayer(layer);
-            else map.removeLayer(layer);
-        };
-
-        // --- 5. ANALYTICS DRAWER & CHART LOGIC ---
-        window.openAnalytics = function(storeName, totalRev) {
-            activeHubName = storeName;
-            activeHubRev = totalRev;
-            activeHubAccounts = window[`hubData_${storeName.replace(/\s+/g, '')}`] || [];
-
-            document.getElementById('analytics-panel').classList.add('open');
-            document.getElementById('analytics-subtitle').innerText = "Hub Diagnostic";
-            document.getElementById('analytics-title').innerText = storeName;
-            document.getElementById('back-to-hub-btn').classList.add('hidden');
-            document.getElementById('accounts-section').classList.remove('hidden');
-            document.getElementById('ranges-section').classList.add('hidden'); 
-            document.getElementById('chart-title').innerText = "Top Accounts PG Velocity (Proxy Mix)";
-            
-            document.getElementById('analytics-rev').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(totalRev);
-            
-            let totalHubProfit = activeHubAccounts.reduce((sum, acc) => sum + acc['Total LTM Profit'], 0);
-            document.getElementById('analytics-margin').innerText = ((totalHubProfit / totalRev) * 100).toFixed(1) + '%';
-            document.getElementById('analytics-margin-title').innerText = "True Gross Margin";
-
-            let hubPgRawRev = {};
-            let totalHubRevCalculated = 0;
-            activeHubAccounts.forEach(acc => {
-                let pgMix = JSON.parse(acc['Product Group DNA']);
-                for (let [pg, pct] of Object.entries(pgMix)) {
-                    let estRev = (pct / 100) * acc['Total LTM Revenue'];
-                    hubPgRawRev[pg] = (hubPgRawRev[pg] || 0) + estRev;
-                    totalHubRevCalculated += estRev;
-                }
-            });
-
-            let hubPgMix = {};
-            for (let [pg, rev] of Object.entries(hubPgRawRev)) { hubPgMix[pg] = (rev / totalHubRevCalculated) * 100; }
-            renderDynamicDoughnutChart(hubPgMix);
-
-            const accountsContainer = document.getElementById('top-accounts-list');
-            accountsContainer.innerHTML = ''; 
-            
-            activeHubAccounts.forEach((acc, index) => {
-                let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(acc['Total LTM Profit']);
-                let safeName = acc['Customer Name'].replace(/'/g, "\\'");
-                let html = `
-                    <div onclick="openAccountDetails('${safeName}', ${index})" id="account-btn-${index}" class="flex justify-between items-center p-3 rounded-lg theme-card border theme-border cursor-pointer hover:border-[#b32525] hover:shadow-md transition-all group">
-                        <div class="overflow-hidden pr-2">
-                            <div class="text-[10px] text-gray-500 font-bold mb-0.5 tracking-wider uppercase">#${index + 1} Earner</div>
-                            <div class="text-[15px] font-semibold theme-text-main group-hover:text-[#b32525] transition-colors truncate">${acc['Customer Name']}</div>
-                        </div>
-                        <div class="text-right shrink-0">
-                            <div class="font-mono text-[15px] text-blue-400 font-bold">${profitStr}</div>
-                            <div class="text-[10px] text-gray-500 font-bold">${acc['True Margin Pct']}% Margin</div>
-                        </div>
-                    </div>
-                `;
-                accountsContainer.insertAdjacentHTML('beforeend', html);
-            });
-        };
-
-        window.openAccountDetails = function(accountName, accountIndex) {
-            const accData = activeHubAccounts[accountIndex];
-            
-            document.getElementById('analytics-subtitle').innerText = "Account Profile";
-            document.getElementById('analytics-title').innerText = accountName;
-            document.getElementById('back-to-hub-btn').classList.remove('hidden');
-            document.getElementById('accounts-section').classList.add('hidden'); 
-            document.getElementById('ranges-section').classList.remove('hidden'); 
-            document.getElementById('chart-title').innerText = "Actual Account PG Breakdown";
-
-            document.getElementById('analytics-rev').innerText = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(accData['Total LTM Revenue']);
-            document.getElementById('analytics-margin').innerText = accData['True Margin Pct'] + '%'; 
-            document.getElementById('analytics-margin-title').innerText = "Account Margin";
-
-            window.currentAccountPGs = JSON.parse(accData['Product Group DNA']);
-            renderDynamicDoughnutChart(window.currentAccountPGs);
-
-            const rangesContainer = document.getElementById('top-ranges-list');
-            rangesContainer.innerHTML = '';
-            
-            let ranges = JSON.parse(accData['Top MAM Ranges']);
-            window.currentAccountParts = JSON.parse(accData['Range Parts DNA']);
-            window.currentAccountRangesRaw = ranges; 
-
-            let count = 1;
-            for (const [rangeDesc, profit] of Object.entries(ranges)) {
-                let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
-                rangesContainer.innerHTML += `
-                    <div id="range-btn-${count}" onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
-                        <span class="truncate pr-2 group-hover:text-[#b32525] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
-                        <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
-                    </div>
-                `;
-                count++;
-            }
-        };
-
-        window.drillDownToRange = function(rangeName) {
-            document.getElementById('chart-title').innerHTML = `
-                Top Parts: ${rangeName} 
-                <button onclick="resetAccountChart()" class="float-right text-[9px] bg-gray-700 text-white px-2 py-1 rounded hover:bg-[#b32525] transition-colors tracking-widest">BACK</button>
-            `;
-            renderDynamicDoughnutChart(window.currentAccountParts[rangeName]);
-
-            const listContainer = document.getElementById('top-ranges-list');
-            listContainer.innerHTML = '';
-            let partsData = window.currentAccountParts[rangeName];
-            let rangeTotalProfit = window.currentAccountRangesRaw[rangeName];
-            
-            let count = 1;
-            for (let [partNum, profitPct] of Object.entries(partsData)) {
-                let actualDollarProfit = (profitPct / 100) * rangeTotalProfit;
-                let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(actualDollarProfit);
-                listContainer.innerHTML += `
-                    <div class="flex justify-between items-center py-2 border-b theme-border last:border-0 rounded px-2 group">
-                        <span class="truncate pr-2 theme-text-main text-sm"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${partNum}</span>
-                        <span class="font-mono text-blue-400 font-semibold text-sm">${profitStr}</span>
-                    </div>
-                `;
-                count++;
-            }
-        };
-
-        window.resetAccountChart = function() {
-            document.getElementById('chart-title').innerText = "Actual Account PG Breakdown";
-            renderDynamicDoughnutChart(window.currentAccountPGs);
-            const rangesContainer = document.getElementById('top-ranges-list');
-            rangesContainer.innerHTML = '';
-            let count = 1;
-            for (const [rangeDesc, profit] of Object.entries(window.currentAccountRangesRaw)) {
-                let profitStr = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(profit);
-                rangesContainer.innerHTML += `
-                    <div id="range-btn-${count}" onclick="drillDownToRange('${rangeDesc.replace(/'/g, "\\'")}')" class="flex justify-between items-center py-2.5 border-b theme-border last:border-0 cursor-pointer theme-card hover:shadow-sm rounded px-2 transition-all group">
-                        <span class="truncate pr-2 group-hover:text-[#b32525] transition-colors theme-text-main"><span class="text-gray-500 font-bold mr-2">#${count}</span> ${rangeDesc}</span>
-                        <span class="font-mono text-blue-400 font-semibold">${profitStr}</span>
-                    </div>
-                `;
-                count++;
-            }
-        };
-
-        window.restoreHubView = function() { openAnalytics(activeHubName, activeHubRev); };
-        window.closeAnalytics = function() { document.getElementById('analytics-panel').classList.remove('open'); };
-
-        function renderDynamicDoughnutChart(pgDict) {
-            const ctx = document.getElementById('pgChart').getContext('2d');
-            if (pgChartInstance) pgChartInstance.destroy();
-
-            let sortedPgs = Object.entries(pgDict).sort((a,b) => b[1] - a[1]);
-            let top5 = sortedPgs.slice(0, 5);
-            let otherSum = sortedPgs.slice(5).reduce((sum, val) => sum + val[1], 0);
-            
-            let labels = top5.map(val => val[0]);
-            let data = top5.map(val => val[1].toFixed(1));
-            if (otherSum > 0) { labels.push('Other'); data.push(otherSum.toFixed(1)); }
-
-            const colors = ['#b32525', '#F97316', '#FCD34D', '#DDDDDD', '#999999', '#555555'];
-
-            pgChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderWidth: 0, hoverOffset: 4 }] },
-                options: {
-                    responsive: true, maintainAspectRatio: false, cutout: '65%',
-                    plugins: {
-                        legend: { position: 'right', labels: { color: isDarkMode ? '#e2e8f0' : '#475569', font: { size: 10 } } },
-                        tooltip: { callbacks: { label: function(context) { return ' ' + context.label + ': ' + context.raw + '%'; } } }
-                    }
-                }
-            });
-        }
-
-        // --- 6. THE GUIDED WIZARD ONBOARDING ENGINE ---
-        let currentStep = -1;
-        let tourActive = false;
+    <div class="grid">
         
-        document.getElementById('wizard-overlay').addEventListener('wheel', e => e.preventDefault(), { passive: false });
-        document.getElementById('wizard-overlay').addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+        <!-- Hero Project (Full width, Dark Inverted Theme) -->
+        <div class="card featured-card">
+            <div class="tech">Python (Pandas, Scikit-Learn, Flask), Jupyter, SQL, JavaScript (Leaflet.js), AI-Assisted Deployment</div>
+            <h3>Predictive VIO Market Capture</h3>
+            <p class="desc">Engineered a geospatial intelligence platform mapping physical assets against competitors to identify high-value market capture opportunities through Topological Risk Modeling.</p>
+            <a href="predictive-vio-market-capture.html" class="btn">Review Case Study &rarr;</a>
+        </div>
+
+        <!-- 2x2 Grid Projects -->
+        <div class="card">
+            <div class="tech">Python (Pandas), SQL, Deterministic Math, KVI P-Tiers</div>
+            <h3>Algorithmic Margin Defense</h3>
+            <p class="desc">Architected a deterministic cross-subsidization engine that integrates with ERP data to defend baseline EBITDA against supply chain inflation and freight shocks.</p>
+            <a href="algorithmic-margin-defense.html" class="btn">Review Case Study &rarr;</a>
+        </div>
+
+        <div class="card">
+            <div class="tech">Python (NumPy, Pandas), Jupyter, Monte Carlo</div>
+            <h3>Stochastic Margin Optimization</h3>
+            <p class="desc">Developed a pure Data Science simulator injecting statistical noise into demand curves to probabilistically identify maximum Expected Profit (E[P]).</p>
+            <a href="stochastic-margin-optimization.html" class="btn">Review Case Study &rarr;</a>
+        </div>
+
+        <div class="card">
+            <div class="tech">Python (SciPy/StatsModels), SQL, JavaScript (Chart.js)</div>
+            <h3>A/B Testing & Statistical Validation</h3>
+            <p class="desc">Architected a randomized A/B test utilizing a Two-Proportion Z-Test to empirically prove dynamic pricing algorithms do not erode B2B conversion rates.</p>
+            <a href="ab-testing-framework.html" class="btn">Review Case Study &rarr;</a>
+        </div>
+
+        <div class="card">
+            <div class="tech">Cash Flow Modeling, JavaScript (Chart.js), Margin Realization</div>
+            <h3>FIFO Inventory Revaluation</h3>
+            <p class="desc">Built a cash flow modeling tool demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
+            <a href="fifo-inventory-revaluation.html" class="btn">Review Case Study &rarr;</a>
+        </div>
         
-        const tourSteps = [
-            {
-                text: "Welcome to the Strategic Radar. Let's test the UI environment settings first.",
-                targetId: "filter-btn", anchor: "right",
-                offsetX: -80, offsetY: 0, bubbleX: -340, bubbleY: 0,
-                action: () => { document.getElementById('filter-dropdown').classList.remove('hidden'); },
-                preAction: () => { closeAnalytics(); map.closePopup(); document.getElementById('filter-dropdown').classList.add('hidden'); map.setView([35.0, -85.5], 6); }
-            },
-            {
-                text: "The engine supports rapid theming. Flipping to Light Mode...",
-                targetId: "theme-switch-label", anchor: "left",
-                offsetX: 32, offsetY: 0, bubbleX: -340, bubbleY: -20, 
-                action: () => { if(isDarkMode) document.getElementById('themeToggle').click(); },
-                preAction: () => { document.getElementById('filter-dropdown').classList.remove('hidden'); map.flyTo([35.0, -85.5], 6, {duration: 1.0}); }
-            },
-            {
-                text: "Switching basemaps to high-resolution Satellite imagery...",
-                targetId: "satellite-btn", anchor: "left",
-                offsetX: 8, offsetY: -8, bubbleX: -340, bubbleY: 20, 
-                action: () => { document.querySelector('input[value="satellite"]').checked = true; window.changeBasemap('satellite'); },
-                preAction: () => { document.getElementById('filter-dropdown').classList.remove('hidden'); map.flyTo([35.0, -85.5], 6, {duration: 1.0}); }
-            },
-            {
-                text: "Reverting to Tactical Dark Map. Now let's dive into the data.",
-                targetId: "tactical-btn", anchor: "left",
-                offsetX: 8, offsetY: -8, bubbleX: -340, bubbleY: 20, 
-                action: () => { 
-                    document.querySelector('input[value="tactical"]').checked = true; window.changeBasemap('tactical'); 
-                    if(!isDarkMode) document.getElementById('themeToggle').click();
-                },
-                preAction: () => { document.getElementById('filter-dropdown').classList.remove('hidden'); map.flyTo([35.0, -85.5], 6, {duration: 1.0}); }
-            },
-            {
-                text: "Clicking a Hub isolates its specific Trade Area. I'll zoom into our Atlanta Hub.",
-                targetMap: true,
-                offsetX: 0, offsetY: 0, bubbleX: -380, bubbleY: -100, 
-                action: () => { 
-                    document.getElementById('filter-dropdown').classList.add('hidden');
-                    if(autoTriggerHub && autoTriggerHub.marker) autoTriggerHub.marker.fire('click');
-                },
-                preAction: () => {
-                    document.getElementById('filter-dropdown').classList.add('hidden');
-                    map.closePopup();
-                    if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 12, {duration: 1.0});
-                }
-            },
-            {
-                text: "The Machine Learning engine evaluates friction and assigns this Hub to a Strategic Tier, setting defensive margin floors.",
-                targetClass: "topology-box", anchor: "center",
-                offsetX: 0, offsetY: 0, bubbleX: -480, bubbleY: -20, 
-                action: () => { },
-                preAction: () => {
-                    document.getElementById('filter-dropdown').classList.add('hidden');
-                    if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 12, {duration: 1.0});
-                    if (autoTriggerHub && autoTriggerHub.marker && !lockedPin) autoTriggerHub.marker.fire('click');
-                },
-                noClick: true
-            },
-            {
-                text: "Zooming out reveals the Hub's Distance Decay Rings, showing exactly where LTM revenue drops off.",
-                targetMap: true, zoomOut: true,
-                offsetX: 0, offsetY: 40, bubbleX: -380, bubbleY: 40,
-                action: () => { },
-                preAction: () => { if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 8.5, {duration: 1.0}); },
-                noClick: true
-            },
-            {
-                text: "Let's open the Analytics Drawer to view the raw POS data generating this Hub.",
-                targetId: "open-analytics-btn", anchor: "center",
-                offsetX: 0, offsetY: 0, bubbleX: -540, bubbleY: -20,
-                action: () => { if(autoTriggerHub) openAnalytics(autoTriggerHub.name, autoTriggerHub.rev); },
-                preAction: () => { 
-                    closeAnalytics(); 
-                    if(autoTriggerHub) map.flyTo([autoTriggerHub.lat, autoTriggerHub.lng], 8.5, {duration: 1.0});
-                    if (autoTriggerHub && autoTriggerHub.marker && !lockedPin) autoTriggerHub.marker.fire('click');
-                }
-            },
-            {
-                text: "We can drill down into the Top Earner to view their specific margin yield and Product Group DNA.",
-                targetId: "account-btn-0", anchor: "center",
-                offsetX: 0, offsetY: 0, bubbleX: -540, bubbleY: -20, 
-                action: () => { openAccountDetails(activeHubAccounts[0]['Customer Name'].replace(/'/g, "\\'"), 0); },
-                preAction: () => { restoreHubView(); }
-            },
-            {
-                text: "Finally, we isolate specific Part Velocity to identify highly profitable SKUs within this account.",
-                targetId: "range-btn-1", anchor: "center",
-                offsetX: 0, offsetY: 0, bubbleX: -540, bubbleY: -20, 
-                action: () => { 
-                    const firstAcc = activeHubAccounts[0];
-                    if(firstAcc) {
-                        const ranges = JSON.parse(firstAcc['Top MAM Ranges']);
-                        const firstRange = Object.keys(ranges)[0];
-                        drillDownToRange(firstRange.replace(/'/g, "\\'"));
-                    }
-                },
-                preAction: () => { 
-                    if (activeHubAccounts && activeHubAccounts.length > 0) {
-                        openAccountDetails(activeHubAccounts[0]['Customer Name'].replace(/'/g, "\\'"), 0);
-                    }
-                }
-            }
-        ];
+    </div>
 
-        window.startGuidedTour = async function() {
-            if (tourActive) return;
-            tourActive = true;
-            currentStep = -1;
-            
-            document.getElementById('app-dashboard').scrollIntoView({ block: 'center' });
-            document.body.style.overflow = 'hidden';
-            
-            document.getElementById('wizard-overlay').classList.add('active');
-            document.getElementById('demo-start-btn').classList.add('opacity-50', 'cursor-not-allowed');
-            
-            document.getElementById('filter-dropdown').classList.add('hidden');
-            closeAnalytics();
-            
-            const cursor = document.getElementById('ghost-cursor');
-            const bubble = document.getElementById('tour-bubble');
-            cursor.style.transition = 'none';
-            bubble.style.transition = 'none';
-            
-            await nextTourStep(true);
-        };
+    <div class="ai-disclaimer">
+        <strong>Architectural Note & Development Workflow</strong>
+        While my core expertise lies in financial strategy, Python, and SQL data architecture, I am a hands-on technical analyst. The interactive web applications in this portfolio were deployed using a modern, AI-accelerated workflow. By structuring the core backend logic locally and leveraging AI (Prompt Engineering) as a collaborative copilot for JavaScript and HTML syntax, I am able to rapidly bridge the gap between heavy backend data architecture and front-end executive strategy.
+    </div>
 
-        window.endGuidedTour = function() {
-            tourActive = false;
-            document.body.style.overflow = '';
-            
-            document.getElementById('wizard-overlay').classList.remove('active');
-            document.getElementById('ghost-cursor').classList.remove('active');
-            document.getElementById('tour-bubble').classList.remove('active');
-            document.getElementById('demo-start-btn').classList.remove('opacity-50', 'cursor-not-allowed');
-            
-            closeAnalytics();
-            if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); ringLabels.clearLayers(); }
-            map.closePopup();
-            map.setView([35.0, -85.5], 6);
-        };
+    <div class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</div>
 
-        window.prevTourStep = function() {
-            if (currentStep > 0 && !document.getElementById('tour-next-btn').disabled) {
-                currentStep -= 2; 
-                nextTourStep();
-            }
-        }
-
-        window.nextTourStep = async function(isInitial = false) {
-            if (!tourActive) return;
-            currentStep++;
-            
-            if (currentStep >= tourSteps.length) {
-                endGuidedTour();
-                return;
-            }
-
-            const step = tourSteps[currentStep];
-            const btnNext = document.getElementById('tour-next-btn');
-            const btnBack = document.getElementById('tour-back-btn');
-            
-            btnNext.disabled = true; btnNext.classList.add('opacity-50');
-            btnBack.disabled = true; btnBack.classList.add('opacity-50');
-            
-            try {
-                if (step.preAction) {
-                    step.preAction();
-                    await new Promise(r => setTimeout(r, 1200)); 
-                }
-
-                let targetX = window.innerWidth / 2;
-                let targetY = window.innerHeight / 2;
-
-                function calculateAnchor(rect, anchor, offsetX, offsetY) {
-                    if (anchor === 'left') return { x: rect.left + offsetX, y: rect.top + (rect.height / 2) + offsetY };
-                    else if (anchor === 'right') return { x: rect.right + offsetX, y: rect.top + (rect.height / 2) + offsetY };
-                    else return { x: rect.left + (rect.width / 2) + offsetX, y: rect.top + (rect.height / 2) + offsetY };
-                }
-                
-                try {
-                    if (step.targetId) {
-                        const el = document.getElementById(step.targetId);
-                        if (el) {
-                            const pos = calculateAnchor(el.getBoundingClientRect(), step.anchor, step.offsetX || 0, step.offsetY || 0);
-                            targetX = pos.x; targetY = pos.y;
-                        }
-                    } else if (step.targetClass) {
-                        const elements = document.querySelectorAll('.' + step.targetClass);
-                        for (let el of elements) {
-                            const rect = el.getBoundingClientRect();
-                            if (rect.width > 0 && rect.height > 0) {
-                                const pos = calculateAnchor(rect, step.anchor, step.offsetX || 0, step.offsetY || 0);
-                                targetX = pos.x; targetY = pos.y;
-                                break;
-                            }
-                        }
-                    } else if (step.targetMap && autoTriggerHub) {
-                        const mapRect = document.getElementById('map').getBoundingClientRect();
-                        const point = map.latLngToContainerPoint([autoTriggerHub.lat, autoTriggerHub.lng]);
-                        targetX = mapRect.left + point.x + (step.offsetX || 0);
-                        targetY = mapRect.top + point.y + (step.offsetY || 0);
-                    }
-                    if (isNaN(targetX) || isNaN(targetY)) { targetX = window.innerWidth / 2; targetY = window.innerHeight / 2; }
-                } catch (e) { console.log("Tour targeting fallback used."); }
-
-                let bX = targetX + step.bubbleX;
-                let bY = targetY + step.bubbleY;
-                bX = Math.max(20, Math.min(bX, window.innerWidth - 340));
-                bY = Math.max(20, Math.min(bY, window.innerHeight - 150));
-
-                const cursor = document.getElementById('ghost-cursor');
-                const bubble = document.getElementById('tour-bubble');
-
-                document.getElementById('tour-text').innerText = step.text;
-                document.getElementById('tour-step').innerText = `Step ${currentStep + 1} of ${tourSteps.length}`;
-                if (currentStep === tourSteps.length - 1) btnNext.innerText = "Finish";
-                else btnNext.innerText = "Next";
-
-                if (isInitial === true) {
-                    const startBtn = document.getElementById('demo-start-btn').getBoundingClientRect();
-                    const startX = startBtn.left + (startBtn.width / 2);
-                    const startY = startBtn.top + (startBtn.height / 2);
-                    
-                    cursor.style.transform = `translate(${startX}px, ${startY}px)`;
-                    void cursor.offsetWidth; 
-                    
-                    cursor.classList.add('active');
-                    await new Promise(r => setTimeout(r, 100));
-                    
-                    cursor.style.transition = 'transform 2.0s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s';
-                    bubble.style.transition = 'opacity 0.3s, transform 2.0s cubic-bezier(0.25, 1, 0.5, 1)';
-                    
-                    cursor.style.transform = `translate(${targetX}px, ${targetY}px)`;
-                    bubble.style.transform = `translate(${bX}px, ${bY}px)`;
-                    bubble.classList.add('active');
-                    await new Promise(r => setTimeout(r, 2000));
-                } else {
-                    cursor.style.transform = `translate(${targetX}px, ${targetY}px)`;
-                    bubble.style.transform = `translate(${bX}px, ${bY}px)`;
-                    await new Promise(r => setTimeout(r, 2000));
-                }
-
-                if (!step.noClick) {
-                    cursor.classList.add('clicking');
-                    const ripple = document.getElementById('cursor-ripple');
-                    ripple.classList.remove('animate-ripple');
-                    void ripple.offsetWidth; 
-                    ripple.classList.add('animate-ripple');
-                    
-                    await new Promise(r => setTimeout(r, 200));
-                    cursor.classList.remove('clicking');
-                } else {
-                    await new Promise(r => setTimeout(r, 200)); 
-                }
-                
-                if (step.action) { try { step.action(); } catch(e) {} }
-                
-            } finally {
-                btnNext.disabled = false; btnNext.classList.remove('opacity-50');
-                if (currentStep > 0) { btnBack.disabled = false; btnBack.classList.remove('opacity-50'); }
-            }
-        };
-
-        // Initialize Map Data
-        renderMap();
-
-    </script>
-    <div class="watermark">&copy; 2026 Austin Stethem. All rights reserved.</div>
 </body>
 </html>
