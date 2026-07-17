@@ -151,6 +151,20 @@
             display: block;
             margin-bottom: 8px;
         }
+
+        .watermark {
+            position: fixed;
+            bottom: 12px;
+            right: 15px;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            opacity: 0.6;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            pointer-events: none; /* Prevents blocking clicks */
+            user-select: none; /* Prevents highlighting */
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
@@ -217,6 +231,8 @@
         <strong>Architectural Note & Development Workflow</strong>
         While my core expertise lies in financial strategy, Python, and SQL data architecture, I am a hands-on technical analyst. The interactive web applications in this portfolio were deployed using a modern, AI-accelerated workflow. By structuring the core backend logic locally and leveraging AI (Prompt Engineering) as a collaborative copilot for JavaScript and HTML syntax, I am able to rapidly bridge the gap between heavy backend data architecture and front-end executive strategy.
     </div>
+
+    <div class="watermark">&copy; 2026 Austin Stethem. All rights reserved.</div>
 
 </body>
 </html>
