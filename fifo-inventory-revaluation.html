@@ -143,6 +143,21 @@
         .nav-btn.next .nav-label { color: #fca5a5; }
         .nav-title { font-size: 11pt; font-weight: bold;}
 
+        /* WATERMARK */
+        .watermark {
+            position: fixed;
+            bottom: 12px;
+            right: 15px;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            opacity: 0.6;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+            pointer-events: none; 
+            user-select: none; 
+            z-index: 9999;
+        }
+
         @media (max-width: 800px) {
             .meta-table tr { display: flex; flex-direction: column; }
             .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
@@ -283,6 +298,9 @@
             </a>
         </div>
     </div>
+
+    <!-- Watermark for Portfolio Protection -->
+    <div class="watermark">&copy; 2026 Austin Stethem. All rights reserved.</div>
 
     <script>
         // DOM Element bindings
