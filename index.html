@@ -15,7 +15,6 @@
             background: #f8fafc; 
         }
 
-        /* NEW 2-FONT STANDARDIZATION */
         h1, h2, h3 { font-family: 'Georgia', serif; font-weight: normal; }
         
         .page-header { text-align: center; margin-bottom: 50px; }
@@ -45,7 +44,7 @@
             box-shadow: 0 4px 6px rgba(179,37,37,0.1);
         }
         
-        .portfolio-desc { max-width: 650px; margin: 30px auto 0; color: #64748b; font-size: 1.05rem; }
+        .portfolio-desc { max-width: 750px; margin: 30px auto 0; color: #64748b; font-size: 1.05rem; }
 
         .grid { 
             display: grid; 
@@ -59,16 +58,16 @@
         }
         
         .card { 
-            background: #f4f4f5; /* Pure neutral gray, no blue tint */
+            background: #f4f4f5;
             border: 1px solid #d4d4d8; 
             padding: 30px; 
             border-radius: 8px; 
             display: flex; 
             flex-direction: column;
-            align-items: center; /* Centers items horizontally */
-            text-align: center; /* Centers the text */
+            align-items: center;
+            text-align: center;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.04); /* Lifted slightly off the page */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
         }
         
         .card:hover { 
@@ -78,8 +77,8 @@
         }
         
         .featured-card { 
-            grid-column: 1 / -1; /* Forces it to span all columns */
-            background: #1a2433; /* Dark slate background to pop */
+            grid-column: 1 / -1; 
+            background: #1a2433; 
             color: #f8fafc;
             border: none;
         }
@@ -88,21 +87,19 @@
             box-shadow: 0 15px 25px rgba(26, 36, 51, 0.2);
         }
         
-        /* 1. Define the standard card text colors FIRST */
         .card h3 { margin-top: 0; color: #0f172a; font-size: 1.4rem; margin-bottom: 10px;}
         .tech { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #b32525; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
         .desc { font-size: 0.95rem; margin-bottom: 20px; color: #475569; line-height: 1.6;}
 
-        /* 2. Put the Featured Card overrides LAST so they win the CSS cascade */
         .featured-card h3 { color: #ffffff; font-size: 2rem; margin-top: 0; margin-bottom: 12px;}
         .featured-card .desc { color: #cbd5e1; font-size: 1.05rem; line-height: 1.6;}
         .featured-card .tech { color: #cbd5e1; }
         
         .btn { 
             display: inline-block; 
-            align-self: center; /* Centers button in the flex column */
-            margin-top: auto; /* Pushes button to the very bottom of the card */
-            background: #ffffff; /* Kept white so it pops off the neutral gray card */
+            align-self: center; 
+            margin-top: auto; 
+            background: #ffffff; 
             color: #0f172a; 
             border: 1px solid #cbd5e1;
             padding: 10px 20px;
@@ -112,7 +109,7 @@
             font-size: 0.9rem; 
             border-radius: 6px;
             transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02); /* Slight shadow added to button */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02); 
         }
         
         .btn:hover { 
@@ -129,10 +126,30 @@
         }
         
         .featured-card .btn:hover {
-            background: #8e1c1c; /* Changed to a richer, darker crimson on hover */
+            background: #8e1c1c; 
             border-color: #8e1c1c;
-            color: #ffffff; /* FIXED: Forces text to stay white, preventing the red-on-red bug */
+            color: #ffffff; 
             transform: translateY(-2px); 
+        }
+
+        .ai-disclaimer {
+            margin-top: 60px;
+            padding: 25px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #64748b;
+            text-align: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .ai-disclaimer strong {
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+            display: block;
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -159,8 +176,7 @@
         
         <!-- Hero Project (Full width, Dark Inverted Theme) -->
         <div class="card featured-card">
-            <!-- UPDATED TEXT -->
-            <div class="tech">Python (Pandas, Scikit-Learn, Flask), Jupyter, SQL, JavaScript (Leaflet.js)</div>
+            <div class="tech">Python (Pandas, Scikit-Learn, Flask), Jupyter, SQL, JavaScript (Leaflet.js), AI-Assisted Deployment</div>
             <h3>Predictive VIO Market Capture</h3>
             <p class="desc">Engineered a geospatial intelligence platform mapping physical assets against competitors to identify high-value market capture opportunities through Topological Risk Modeling.</p>
             <a href="predictive-vio-market-capture.html" class="btn">Review Case Study &rarr;</a>
@@ -168,7 +184,6 @@
 
         <!-- 2x2 Grid Projects -->
         <div class="card">
-            <!-- UPDATED TEXT -->
             <div class="tech">Python (Pandas), SQL, Deterministic Math, KVI P-Tiers</div>
             <h3>Algorithmic Margin Defense</h3>
             <p class="desc">Architected a deterministic cross-subsidization engine that integrates with ERP data to defend baseline EBITDA against supply chain inflation and freight shocks.</p>
@@ -176,7 +191,6 @@
         </div>
 
         <div class="card">
-            <!-- UPDATED TEXT -->
             <div class="tech">Python (NumPy, Pandas), Jupyter, Monte Carlo</div>
             <h3>Stochastic Margin Optimization</h3>
             <p class="desc">Developed a pure Data Science simulator injecting statistical noise into demand curves to probabilistically identify maximum Expected Profit (E[P]).</p>
@@ -184,7 +198,6 @@
         </div>
 
         <div class="card">
-            <!-- UPDATED TEXT -->
             <div class="tech">Python (SciPy/StatsModels), SQL, JavaScript (Chart.js)</div>
             <h3>A/B Testing & Statistical Validation</h3>
             <p class="desc">Architected a randomized A/B test utilizing a Two-Proportion Z-Test to empirically prove dynamic pricing algorithms do not erode B2B conversion rates.</p>
@@ -192,13 +205,17 @@
         </div>
 
         <div class="card">
-            <!-- UPDATED TEXT -->
             <div class="tech">Cash Flow Modeling, JavaScript (Chart.js), Margin Realization</div>
             <h3>FIFO Inventory Revaluation</h3>
             <p class="desc">Built a cash flow modeling tool demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
             <a href="fifo-inventory-revaluation.html" class="btn">Review Case Study &rarr;</a>
         </div>
         
+    </div>
+
+    <div class="ai-disclaimer">
+        <strong>Architectural Note & Development Workflow</strong>
+        While my core expertise lies in financial strategy, Python, and SQL data architecture, I am a hands-on technical analyst. The interactive web applications in this portfolio were deployed using a modern, AI-accelerated workflow. By structuring the core backend logic locally and leveraging AI (Prompt Engineering) as a collaborative copilot for JavaScript and HTML syntax, I am able to rapidly bridge the gap between heavy backend data architecture and front-end executive strategy.
     </div>
 
 </body>
