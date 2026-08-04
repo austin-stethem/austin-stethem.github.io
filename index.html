@@ -3,149 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Open Graph Tags for Link Previews (Teams/Slack/iMessage) -->
-    <meta property="og:title" content="Austin Sonny Stethem | Systems Architecture & Analytics">
+
+    <title>Austin Sonny Stethem | Strategic Pricing &amp; Master Data Analyst</title>
+    <meta name="description" content="Portfolio of production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <!-- Open Graph / Twitter Tags for Link Previews (Teams/Slack/iMessage/LinkedIn) -->
+    <meta property="og:title" content="Austin Sonny Stethem | Systems Architecture &amp; Analytics">
     <meta property="og:description" content="Production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.">
     <meta property="og:type" content="website">
-    
-    <!-- Custom SVG Favicon (Browser Tab Icon) - PERFECTLY CENTERED -->
-    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
-    
-    <title>Austin Sonny Stethem | Portfolio</title>
-    
-    <style>
-        /* Custom Scrollbar for a Premium Feel */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f8fafc; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <!-- TODO: replace both URLs below with your live domain once deployed -->
+    <meta property="og:url" content="https://example.com/">
+    <meta property="og:image" content="https://example.com/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
+    <meta name="twitter:card" content="summary_large_image">
 
-        body { 
-            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif; 
-            line-height: 1.6; 
-            color: #334155; 
-            max-width: 1000px; 
-            margin: 0 auto; 
-            padding: 40px 20px; 
-            background: #f8fafc; 
+    <!-- Inter was referenced in the stylesheet but never loaded; this actually serves it -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom SVG Favicon (Browser Tab Icon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <style>
+        :root {
+            --navy: #1a2433;
+            --ink: #0f172a;
+            --crimson: #b32525;
+            --crimson-dark: #8e1c1c;
+            --body: #334155;
+            --muted: #64748b;
+            --line: #cbd5e1;
+            --surface: #f8fafc;
         }
 
-        h1, h2, h3 { font-family: 'Georgia', serif; font-weight: normal; }
-        
+        *, *::before, *::after { box-sizing: border-box; }
+
+        /* Custom Scrollbar for a Premium Feel */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif;
+            line-height: 1.6;
+            color: var(--body);
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 90px;
+            background: var(--surface);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3 { font-family: 'Georgia', 'Times New Roman', serif; font-weight: normal; }
+
+        /* Visible keyboard focus, brand-colored */
+        a:focus-visible {
+            outline: 2px solid var(--crimson);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            background: var(--navy);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 0 0 6px 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            z-index: 10000;
+        }
+        .skip-link:focus { left: 0; }
+
         .page-header { text-align: center; margin-bottom: 50px; }
-        .page-header h1 { color: #0f172a; margin: 0 0 5px 0; font-size: 2.8rem; letter-spacing: -0.5px;}
-        .page-header p.subtitle { margin: 0; color: #b32525; font-size: 1.2rem; font-weight: 500; }
-        
+        .page-header h1 {
+            color: var(--ink);
+            margin: 0 0 5px 0;
+            font-size: clamp(2rem, 6vw, 2.8rem);
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+        }
+        .page-header p.subtitle {
+            margin: 0;
+            color: var(--crimson);
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 500;
+        }
+        .page-header h2 { font-size: clamp(1.35rem, 4vw, 1.75rem); color: var(--ink); }
+
         .contact-nav { margin-top: 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
-        .contact-nav a { 
-            color: #475569; 
-            font-weight: 600; 
-            text-decoration: none; 
-            display: flex; 
-            align-items: center; 
-            padding: 8px 16px; 
-            background: #fff; 
-            border: 1px solid #cbd5e1; 
-            border-radius: 25px; 
-            transition: all 0.2s ease; 
+        .contact-nav a {
+            color: #475569;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 25px;
+            transition: all 0.2s ease;
             font-size: 0.9rem;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-        .contact-nav a:hover { 
-            border-color: #b32525; 
-            background: #fff5f5; 
-            color: #b32525;
-            transform: translateY(-2px); 
+        .contact-nav a:hover {
+            border-color: var(--crimson);
+            background: #fff5f5;
+            color: var(--crimson);
+            transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(179,37,37,0.1);
         }
-        
-        .portfolio-desc { max-width: 750px; margin: 30px auto 0; color: #64748b; font-size: 1.05rem; }
 
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 25px; 
-            margin-top: 40px; 
+        .portfolio-desc { max-width: 750px; margin: 30px auto 0; color: var(--muted); font-size: 1.05rem; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 40px;
         }
-        
+
         @media (max-width: 768px) {
-            .grid { grid-template-columns: 1fr; } 
+            body { padding: 28px 16px 70px; }
+            .grid { grid-template-columns: 1fr; gap: 18px; }
+            .card { padding: 24px 20px; }
+            .contact-nav { gap: 10px; }
         }
-        
-        .card { 
+
+        .card {
+            position: relative;
             background: #f4f4f5;
-            border: 1px solid #d4d4d8; 
-            padding: 30px; 
-            border-radius: 8px; 
-            display: flex; 
+            border: 1px solid #d4d4d8;
+            padding: 30px;
+            border-radius: 8px;
+            display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+            /* Subtle staggered entrance */
+            opacity: 0;
+            animation: rise 0.5s ease forwards;
         }
-        
-        .card:hover { 
-            border-color: #b32525; 
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.12s; }
+        .card:nth-child(3) { animation-delay: 0.18s; }
+        .card:nth-child(4) { animation-delay: 0.24s; }
+        .card:nth-child(5) { animation-delay: 0.30s; }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:hover, .card:focus-within {
+            border-color: var(--crimson);
             transform: translateY(-4px);
             box-shadow: 0 12px 20px rgba(0,0,0,0.05);
         }
-        
-        .featured-card { 
-            grid-column: 1 / -1; 
-            background: #1a2433; 
-            color: #f8fafc;
-            border: none;
+
+        .featured-card {
+            grid-column: 1 / -1;
+            background: var(--navy);
+            color: var(--surface);
+            border: 1px solid transparent;
         }
-        .featured-card:hover {
-            border: none;
+        .featured-card:hover, .featured-card:focus-within {
+            border-color: transparent;
             box-shadow: 0 15px 25px rgba(26, 36, 51, 0.2);
         }
-        
-        .card h3 { margin-top: 0; color: #0f172a; font-size: 1.4rem; margin-bottom: 10px;}
-        .tech { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #b32525; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-        .desc { font-size: 0.95rem; margin-bottom: 20px; color: #475569; line-height: 1.6;}
 
-        .featured-card h3 { color: #ffffff; font-size: 2rem; margin-top: 0; margin-bottom: 12px;}
-        .featured-card .desc { color: #cbd5e1; font-size: 1.05rem; line-height: 1.6;}
-        .featured-card .tech { color: #cbd5e1; }
-        
-        .btn { 
-            display: inline-block; 
-            align-self: center; 
-            margin-top: auto; 
-            background: #ffffff; 
-            color: #0f172a; 
-            border: 1px solid #cbd5e1;
+        .card h3 { margin-top: 0; color: var(--ink); font-size: 1.4rem; margin-bottom: 10px; }
+        .tech {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--crimson);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .desc { font-size: 0.95rem; margin-bottom: 20px; color: #475569; line-height: 1.6; }
+
+        .featured-card h3 { color: #ffffff; font-size: clamp(1.5rem, 4.5vw, 2rem); margin-top: 0; margin-bottom: 12px; }
+        .featured-card .desc { color: var(--line); font-size: 1.05rem; line-height: 1.6; }
+        .featured-card .tech { color: var(--line); }
+
+        .btn {
+            display: inline-block;
+            align-self: center;
+            margin-top: auto;
+            background: #ffffff;
+            color: var(--ink);
+            border: 1px solid var(--line);
             padding: 10px 20px;
             font-family: 'Inter', sans-serif;
-            font-weight: 600; 
-            text-decoration: none; 
-            font-size: 0.9rem; 
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
             border-radius: 6px;
             transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02); 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-        
-        .btn:hover { 
+
+        .btn:hover {
             background: #f1f5f9;
             border-color: #94a3b8;
-            color: #b32525; 
-            text-decoration: none; 
+            color: var(--crimson);
+            text-decoration: none;
         }
 
         .featured-card .btn {
-            background: #b32525;
-            border-color: #b32525;
+            background: var(--crimson);
+            border-color: var(--crimson);
             color: #ffffff;
         }
-        
+
         .featured-card .btn:hover {
-            background: #8e1c1c; 
-            border-color: #8e1c1c;
-            color: #ffffff; 
-            transform: translateY(-2px); 
+            background: var(--crimson-dark);
+            border-color: var(--crimson-dark);
+            color: #ffffff;
+            transform: translateY(-2px);
         }
 
         .ai-disclaimer {
@@ -155,12 +247,12 @@
             border: 1px solid #e2e8f0;
             border-radius: 8px;
             font-size: 0.85rem;
-            color: #64748b;
+            color: var(--muted);
             text-align: center;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
         .ai-disclaimer strong {
-            color: #334155;
+            color: var(--body);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 0.75rem;
@@ -177,21 +269,50 @@
             opacity: 0.6;
             font-family: 'Inter', sans-serif;
             letter-spacing: 0.5px;
-            pointer-events: none; /* Prevents blocking clicks */
-            user-select: none; /* Prevents highlighting */
+            pointer-events: none;
+            user-select: none;
             z-index: 9999;
+        }
+
+        /* On small screens the fixed watermark overlaps content — dock it instead */
+        @media (max-width: 600px) {
+            .watermark {
+                position: static;
+                text-align: center;
+                margin-top: 40px;
+                opacity: 0.75;
+            }
+            body { padding-bottom: 28px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { animation: none !important; transition: none !important; }
+            .card { opacity: 1; }
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; max-width: none; }
+            .card, .featured-card { break-inside: avoid; box-shadow: none; background: #fff; color: #000; opacity: 1; animation: none; }
+            .featured-card h3, .featured-card .desc, .featured-card .tech { color: #000; }
+            .btn, .watermark, .skip-link { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="page-header">
-        
-        <!-- CUSTOM BRAND LOGO (PERFECTLY CENTERED) -->
-        <svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));">
+    <a class="skip-link" href="#projects">Skip to projects</a>
+
+    <header class="page-header">
+
+        <!-- CUSTOM BRAND LOGO -->
+        <svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+             role="img" aria-labelledby="logoTitle"
+             style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram: a hexagon enclosing an upward data trend line</title>
             <!-- Outer Hexagon (Architecture) -->
             <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
-            <!-- Inner Trend Line (Financial Growth) - MATHEMATICALLY CENTERED -->
+            <!-- Inner Trend Line (Financial Growth) -->
             <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
             <!-- Data Nodes (Analytics) -->
             <circle cx="27" cy="65" r="5" fill="#1a2433"/>
@@ -202,68 +323,68 @@
         </svg>
 
         <h1>Austin Sonny Stethem</h1>
-        <p class="subtitle">Strategic Pricing & Master Data Analyst</p>
-        
-        <div class="contact-nav">
-            <a href="tel:7122995267">📞 712-299-5267</a>
-            <a href="mailto:austinstethem1976@gmail.com">✉️ austinstethem1976@gmail.com</a>
-            <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank">💼 LinkedIn</a>
-            <a href="Stethem_Austin_Resume.pdf" target="_blank">📄 View Resume (PDF)</a>
-        </div>
-        
-        <hr style="width: 50%; border: 0; border-top: 1px solid #cbd5e1; margin: 30px auto;">
-        
-        <h2>Systems Architecture & Analytics Portfolio</h2>
-        <p class="portfolio-desc">Showcasing production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.</p>
-    </div>
+        <p class="subtitle">Strategic Pricing &amp; Master Data Analyst</p>
 
-    <div class="grid">
-        
+        <nav class="contact-nav" aria-label="Contact and documents">
+            <a href="tel:+17122995267"><span aria-hidden="true">📞</span> 712-299-5267</a>
+            <a href="mailto:austinstethem1976@gmail.com"><span aria-hidden="true">✉️</span> austinstethem1976@gmail.com</a>
+            <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">💼</span> LinkedIn</a>
+            <a href="Stethem_Austin_Resume.pdf" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">📄</span> View Resume (PDF)</a>
+        </nav>
+
+        <hr style="width: 50%; border: 0; border-top: 1px solid #cbd5e1; margin: 30px auto;">
+
+        <h2>Systems Architecture &amp; Analytics Portfolio</h2>
+        <p class="portfolio-desc">Showcasing production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.</p>
+    </header>
+
+    <main class="grid" id="projects">
+
         <!-- Hero Project (Full width, Dark Inverted Theme) -->
-        <div class="card featured-card">
-            <div class="tech">Python (Pandas, Scikit-Learn, Flask), Jupyter, SQL, JavaScript (Leaflet.js), AI-Assisted Deployment</div>
+        <article class="card featured-card">
+            <p class="tech">Python (Pandas, Scikit-Learn, Flask), Jupyter, SQL, JavaScript (Leaflet.js), AI-Assisted Deployment</p>
             <h3>Predictive VIO Market Capture</h3>
             <p class="desc">Engineered a geospatial intelligence platform mapping physical assets against competitors to identify high-value market capture opportunities through Topological Risk Modeling.</p>
-            <a href="predictive-vio-market-capture.html" class="btn">Review Case Study &rarr;</a>
-        </div>
+            <a href="predictive-vio-market-capture.html" class="btn" aria-label="Review the Predictive VIO Market Capture case study">Review Case Study &rarr;</a>
+        </article>
 
         <!-- 2x2 Grid Projects -->
-        <div class="card">
-            <div class="tech">Python (Pandas), SQL, Deterministic Math, KVI P-Tiers</div>
+        <article class="card">
+            <p class="tech">Python (Pandas), SQL, Deterministic Math, KVI P-Tiers</p>
             <h3>Algorithmic Margin Defense</h3>
             <p class="desc">Architected a deterministic cross-subsidization engine that integrates with ERP data to defend baseline EBITDA against supply chain inflation and freight shocks.</p>
-            <a href="algorithmic-margin-defense.html" class="btn">Review Case Study &rarr;</a>
-        </div>
+            <a href="algorithmic-margin-defense.html" class="btn" aria-label="Review the Algorithmic Margin Defense case study">Review Case Study &rarr;</a>
+        </article>
 
-        <div class="card">
-            <div class="tech">Python (NumPy, Pandas), Jupyter, Monte Carlo</div>
+        <article class="card">
+            <p class="tech">Python (NumPy, Pandas), Jupyter, Monte Carlo</p>
             <h3>Stochastic Margin Optimization</h3>
             <p class="desc">Developed a pure Data Science simulator injecting statistical noise into demand curves to probabilistically identify maximum Expected Profit (E[P]).</p>
-            <a href="stochastic-margin-optimization.html" class="btn">Review Case Study &rarr;</a>
-        </div>
+            <a href="stochastic-margin-optimization.html" class="btn" aria-label="Review the Stochastic Margin Optimization case study">Review Case Study &rarr;</a>
+        </article>
 
-        <div class="card">
-            <div class="tech">Python (SciPy/StatsModels), SQL, JavaScript (Chart.js)</div>
-            <h3>A/B Testing & Statistical Validation</h3>
+        <article class="card">
+            <p class="tech">Python (SciPy/StatsModels), SQL, JavaScript (Chart.js)</p>
+            <h3>A/B Testing &amp; Statistical Validation</h3>
             <p class="desc">Architected a randomized A/B test utilizing a Two-Proportion Z-Test to empirically prove dynamic pricing algorithms do not erode B2B conversion rates.</p>
-            <a href="ab-testing-framework.html" class="btn">Review Case Study &rarr;</a>
-        </div>
+            <a href="ab-testing-framework.html" class="btn" aria-label="Review the A/B Testing and Statistical Validation case study">Review Case Study &rarr;</a>
+        </article>
 
-        <div class="card">
-            <div class="tech">Cash Flow Modeling, JavaScript (Chart.js), Margin Realization</div>
+        <article class="card">
+            <p class="tech">Cash Flow Modeling, JavaScript (Chart.js), Margin Realization</p>
             <h3>FIFO Inventory Revaluation</h3>
             <p class="desc">Built a cash flow modeling tool demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
-            <a href="fifo-inventory-revaluation.html" class="btn">Review Case Study &rarr;</a>
-        </div>
-        
-    </div>
+            <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review the FIFO Inventory Revaluation case study">Review Case Study &rarr;</a>
+        </article>
 
-    <div class="ai-disclaimer">
-        <strong>Architectural Note & Development Workflow</strong>
+    </main>
+
+    <section class="ai-disclaimer">
+        <strong>Architectural Note &amp; Development Workflow</strong>
         While my core expertise lies in financial strategy, Python, and SQL data architecture, I am a hands-on technical analyst. The interactive web applications in this portfolio were deployed using a modern, AI-accelerated workflow. By structuring the core backend logic locally and leveraging AI (Prompt Engineering) as a collaborative copilot for JavaScript and HTML syntax, I am able to rapidly bridge the gap between heavy backend data architecture and front-end executive strategy.
-    </div>
+    </section>
 
-    <div class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</div>
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
 
 </body>
 </html>
