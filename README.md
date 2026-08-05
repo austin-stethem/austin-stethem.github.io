@@ -15,9 +15,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-Pandas_·_NumPy_·_Scikit--learn-1a2433?style=flat-square" alt="Python">
-  <img src="https://img.shields.io/badge/Data-Anonymized_proxy-64748b?style=flat-square" alt="Anonymized proxy data">
-  <img src="https://img.shields.io/badge/Build-No_dependencies-64748b?style=flat-square" alt="No build step">
+  <sub>
+    Python · Pandas · NumPy · Scikit-learn
+    &nbsp;&nbsp;•&nbsp;&nbsp; Anonymized proxy data
+    &nbsp;&nbsp;•&nbsp;&nbsp; No build step
+  </sub>
 </p>
 
 ---
@@ -122,4 +124,4 @@ Every figure in these dashboards is generated from an anonymized proxy dataset. 
   Strategic Pricing &amp; Master Data Analyst<br>
   <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/">LinkedIn</a> ·
   <a href="mailto:austinstethem1976@gmail.com">austinstethem1976@gmail.com</a>
-</p>> Strategic Pricing &amp; Master Data Analyst<br> <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/">LinkedIn</a> · <a href="mailto:austinstethem1976@gmail.com">austinstethem1976@gmail.com</a> </p>
+</p>
