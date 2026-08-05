@@ -89,6 +89,9 @@ input:focus-visible,
 /* --- Metadata table ------------------------------------------------------- */
 .meta-table {
     width: 100%;
+    /* Without this, a long tech-stack string widens its column and squeezes the
+       other two out of their declared 33%. */
+    table-layout: fixed;
     margin: 0 auto 30px auto;
     border-collapse: collapse;
     background: #fff;
@@ -98,6 +101,8 @@ input:focus-visible,
 }
 .meta-cell {
     vertical-align: top;
+    /* Fixed layout will not grow to fit, so long unbroken tokens must wrap */
+    overflow-wrap: break-word;
     padding: 15px;
     font-size: 9.5pt;
     text-align: center;
@@ -295,6 +300,54 @@ input:focus-visible,
 .nav-btn.next .nav-label { color: #fca5a5; }
 .nav-title { font-size: 11pt; font-weight: bold; }
 
+/* --- Range sliders --------------------------------------------------------
+   Baseline for pointer devices. Sliders only appear inside the dark dashboard
+   sidebars, so the track and thumb are tuned for that context. The
+   @media (pointer: coarse) block further down scales the thumb for touch;
+   the -10px thumb offset there assumes this 6px track height.              */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+    margin-top: 5px;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 18px;
+    width: 18px;
+    margin-top: -6px;            /* centres an 18px thumb on a 6px track */
+    border-radius: 50%;
+    background: #f87171;
+    box-shadow: 0 0 10px rgba(248, 113, 113, 0.4);
+    transition: transform 0.12s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+input[type="range"]::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border: none;
+    border-radius: 50%;
+    background: #f87171;
+}
+input[type="range"]:focus { outline: none; }
+input[type="range"]:focus-visible { outline: 2px solid var(--alert-red); outline-offset: 6px; }
+input[type="range"]:disabled { cursor: not-allowed; opacity: 0.55; }
+
 /* --- Watermark ------------------------------------------------------------ */
 .watermark {
     position: fixed;
@@ -314,6 +367,8 @@ input:focus-visible,
 @media (max-width: 800px) {
     .meta-table tr { display: flex; flex-direction: column; }
     .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid var(--hairline); }
+    /* Stacked, the final cell's bottom border sits on the table's outer border */
+    .meta-cell:last-child { border-bottom: none; }
 
     .project-navigation { flex-direction: column; }
     .nav-btn {
@@ -372,6 +427,12 @@ input:focus-visible,
 }
 
 @media print {
-    .watermark, .skip-link { display: none !important; }
+    /* .project-navigation is nested inside .next-step-box on every case study, so
+       hiding the parent already covers it. Listed anyway so the rule still holds if
+       the nav is ever used standalone. */
+    .watermark,
+    .skip-link,
+    .next-step-box,
+    .project-navigation { display: none !important; }
     body { background: #fff; }
 }
