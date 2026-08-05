@@ -15,6 +15,12 @@
     --muted: #64748b;
     --line: #cbd5e1;
     --hairline: #e2e8f0;
+
+    /* Informational accent. Distinct from the #3b82f6 used for data series
+       (Group C bars, the A/B control curve, VIO trade-area rings) — that blue
+       identifies a series and must not be reused for chrome. */
+    --info-blue: #0369a1;
+    --info-blue-bright: #7dd3fc;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -139,7 +145,7 @@ input:focus-visible,
 
 .scenario-box {
     background: #e0f2fe;
-    border-left: 4px solid #0369a1;
+    border-left: 4px solid var(--info-blue, #0369a1);
     padding: 18px 25px;
     margin-top: -5px;
     margin-bottom: 30px;
@@ -149,7 +155,7 @@ input:focus-visible,
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 .scenario-box > strong:first-child {
-    color: #0369a1;
+    color: var(--info-blue, #0369a1);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-size: 8.5pt;
