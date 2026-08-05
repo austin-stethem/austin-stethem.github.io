@@ -78,7 +78,12 @@
         
         .sim-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; box-sizing: border-box;}
         
-        .sidebar-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 10px; color: #cbd5e1; text-align: center;}
+        /* Matches .dash-header on the other dashboards: centred, bold two-tone title
+           with an uppercase eyebrow beneath it. */
+        .sidebar-header { margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center; }
+        .sidebar-header .sim-title { color: #f8fafc; font-size: 1.6rem; margin: 0; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
+        .sidebar-header .sim-title span { color: #f87171; }
+        .sidebar-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
         
         .control-group { margin-bottom: 25px; }
         .control-group label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; line-height: 1.3;}
@@ -233,7 +238,10 @@
 
     <div class="sim-container" id="dashboard">
         <div class="sim-sidebar">
-            <div class="sidebar-header">Operational Inputs</div>
+            <div class="sidebar-header">
+                <div class="sim-title">Revaluation <span>Engine</span></div>
+                <p>Operational Inputs</p>
+            </div>
             
             <div class="control-group">
                 <label for="slider-velocity"><span>Monthly Velocity (Run Rate):</span> <span class="val-readout" style="color: #38bdf8;" id="val-velocity">1,500 Units</span></label>
