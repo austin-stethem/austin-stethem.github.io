@@ -1,6 +1,6 @@
 /* ==========================================================================
    portfolio.css — shared brand layer for all Austin Sonny Stethem case studies
-   Load this BEFORE each page's own <style> block so page rules can override.
+   Load this BEFORE each page's own inline style block so page rules can override.
    Anything here appears on two or more pages; page-specific styling stays local.
    ========================================================================== */
 
