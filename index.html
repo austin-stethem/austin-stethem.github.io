@@ -150,6 +150,7 @@
         .card:nth-child(3) { animation-delay: 0.18s; }
         .card:nth-child(4) { animation-delay: 0.24s; }
         .card:nth-child(5) { animation-delay: 0.30s; }
+        .card:nth-child(6) { animation-delay: 0.36s; }
 
         @keyframes rise {
             from { opacity: 0; transform: translateY(12px); }
@@ -161,6 +162,16 @@
             transform: translateY(-4px);
             box-shadow: 0 12px 20px rgba(0,0,0,0.05);
         }
+
+        /* Second full-width feature. Not part of the numbered pricing arc, so it takes a
+           slate treatment rather than the inverted navy of the hero card. */
+        .resilience-card {
+            grid-column: 1 / -1;
+            background: #eef2f7;
+            border-color: #94a3b8;
+        }
+        .resilience-card .tech { color: #0369a1; }
+        .resilience-card:hover { border-color: #0369a1; }
 
         .featured-card {
             grid-column: 1 / -1;
@@ -346,6 +357,14 @@
             <h3>FIFO Inventory Revaluation</h3>
             <p class="desc">Built a cash flow modeling tool demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
             <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review the FIFO Inventory Revaluation case study">Review Case Study &rarr;</a>
+        </article>
+
+        <!-- Operational resilience: a separate track from the five-step pricing arc -->
+        <article class="card resilience-card">
+            <p class="tech">Disaster Recovery, ERP Reconciliation, IoT / API Kill-Switch Architecture</p>
+            <h3>ERP Crisis Reconciliation</h3>
+            <p class="desc">A flood destroyed the warehouse; the ERP kept promising the inventory. Severing the phantom fulfillment loop by hand across an 80-branch network, then designing the automation that makes the heroics unnecessary.</p>
+            <a href="erp-reconciliation-engine.html" class="btn" aria-label="Review the ERP Crisis Reconciliation case study">Review Case Study &rarr;</a>
         </article>
 
     </main>
