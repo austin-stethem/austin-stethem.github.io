@@ -13,9 +13,8 @@
     <meta property="og:description" content="Geospatial intelligence engine mapping competitor density against a distribution network to set defensible, tier-based pricing floors.">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Austin Sonny Stethem">
-    <!-- TODO: replace with your live domain once deployed -->
-    <meta property="og:url" content="https://example.com/predictive-vio-market-capture.html">
-    <meta property="og:image" content="https://example.com/og-preview.png">
+    <meta property="og:url" content="https://austin-stethem.github.io/predictive-vio-market-capture.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
@@ -46,11 +45,9 @@
     <link rel="stylesheet" href="portfolio.css">
 
     <style>
-        /* Base Brand Colors and Typography */
+        /* --dark-slate-blue, --alert-red and --bg-color come from portfolio.css.
+           --pure-white is only used by this page's theming, so it stays local. */
         :root {
-            --dark-slate-blue: #1a2433;
-            --alert-red: #b32525;
-            --bg-color: #fbfbfb;
             --pure-white: #FFFFFF;
         }
 
@@ -60,16 +57,8 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Visible keyboard focus everywhere */
-        a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
-            outline: 2px solid var(--alert-red);
-            outline-offset: 3px;
-            border-radius: 4px;
-        }
-
         /* --- PORTFOLIO SPECIFIC STYLES --- */
         .portfolio-content { max-width: 1000px; margin: 0 auto; padding: 40px 20px; font-size: 10.5pt; line-height: 1.6; }
-        .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
 
         .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
@@ -289,8 +278,27 @@
         }
 
         @media print {
-            .dashboard-container, .pulse-instruction, #wizard-overlay, #ghost-cursor, #tour-bubble, .watermark,            body { background: #fff; }
+            .dashboard-container, .pulse-instruction, #wizard-overlay, #ghost-cursor, #tour-bubble { display: none !important; }
+            body { background: #fff; }
             .portfolio-content { max-width: none; }
+
+            /* portfolio.css hides .next-step-box so a dark panel doesn't drink toner,
+               but the closing narrative is worth keeping on paper. Re-show it as plain
+               text and leave the web-only navigation hidden. */
+            .next-step-box {
+                display: block !important;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-top: 24px;
+                color: #000;
+            }
+            .next-step-box h3 { color: #000; }
+            /* Doubled class required: portfolio.css uses .next-step-box.next-step-box p,
+               which outranks a single-class selector regardless of load order. */
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
         }
     </style>
 </head>
@@ -1279,8 +1287,19 @@
             renderRangeList();
         };
 
-        window.restoreHubView = function() { openAnalytics(activeHubName, activeHubRev); };
-        window.closeAnalytics = function() { document.getElementById('analytics-panel').classList.remove('open'); };
+        window.restoreHubView = function() {
+            if (!activeHubName) return;   // drawer was closed; nothing to restore to
+            openAnalytics(activeHubName, activeHubRev);
+        };
+
+        /* Closing the drawer clears the drill-down state so the next open always
+           starts at the hub overview, whatever the user was looking at before. */
+        window.closeAnalytics = function() {
+            document.getElementById('analytics-panel').classList.remove('open');
+            activeHubName = null;
+            activeAccountIndex = null;
+            drilledRange = null;
+        };
 
         let lastChartSig = null;
         function renderDynamicDoughnutChart(pgDict) {
@@ -1495,6 +1514,28 @@
             closeAnalytics();
             if (lockedPin) { map.removeLayer(lockedPin); lockedPin = null; tradeAreaRings.clearLayers(); ringLabels.clearLayers(); }
             map.closePopup();
+
+            /* The tour mutates the theme, the basemap and layer visibility. Aborting at
+               step 3 used to leave the dashboard in light mode on satellite tiles, and
+               aborting at step 5 left every competitor layer switched off. Revert all
+               three so the user always lands back on the documented default. */
+            const tacticalRadio = document.querySelector('input[value="tactical"]');
+            if (tacticalRadio) tacticalRadio.checked = true;
+            if (currentMapStyle !== 'tactical') window.changeBasemap('tactical');
+
+            const themeToggle = document.getElementById('themeToggle');
+            // .click() rather than setting .checked, so the change handler re-syncs
+            // isDarkMode, the body class, the sun/moon icons and the map filters
+            if (themeToggle && !themeToggle.checked) themeToggle.click();
+
+            setCompetitorLayers(true);
+
+            const dropdown = document.getElementById('filter-dropdown');
+            if (dropdown) {
+                dropdown.classList.add('hidden');
+                document.getElementById('filter-btn').setAttribute('aria-expanded', 'false');
+            }
+
             map.setView([35.0, -85.5], 6.5);
             document.getElementById('demo-start-btn').focus();
         };
