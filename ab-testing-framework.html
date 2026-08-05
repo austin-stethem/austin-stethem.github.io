@@ -285,6 +285,7 @@
             <div class="chart-wrapper">
                 <canvas id="bellChart" role="img" aria-label="Overlaid sampling distributions for the control and variant conversion rates, with the 95 percent significance boundary marked"></canvas>
             </div>
+            <p style="margin: 14px 0 0 0; font-size: 0.75rem; line-height: 1.5; color: #64748b; text-align: left; font-style: italic;">Reading note: the two curves are the sampling distributions of each arm's conversion rate. The dashed boundary is drawn on the pooled standard error of the <em>difference</em>, which is &radic;2 wider &mdash; so it sits further out than 1.96&sigma; of either curve on its own. Significance is the Z-score and p-value above, not whether a curve visually clears the line.</p>
             <p id="inference-caveat" role="status" aria-live="polite" style="margin: 14px 0 0 0; font-size: 0.8rem; line-height: 1.55; color: #94a3b8; text-align: left; border-left: 3px solid #334155; padding-left: 14px;"></p>
         </div>
 
@@ -517,7 +518,7 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: '95% Significance Boundaries (two-sided)',
+                            label: '95% boundary on the difference (\u00B11.96 \u00D7 pooled SE)',
                             data: [],
                             borderColor: '#ef4444', borderWidth: 2, borderDash: [5, 5],
                             backgroundColor: 'transparent', pointRadius: 0
