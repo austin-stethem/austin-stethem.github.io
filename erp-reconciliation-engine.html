@@ -132,7 +132,10 @@
             .protocol-table thead { display: none; }
             .protocol-table tr { display: block; border-bottom: 1px solid #e2e8f0; padding: 6px 0; }
             .protocol-table td { display: block; border: none; padding: 6px 0; }
-            .protocol-table td:first-child { width: auto; font-size: 10pt; }
+            /* First cell becomes the card heading, so it doesn't need its own label —
+               matching the stacked log table on the margin defense page. */
+            .protocol-table td:first-child { width: auto; font-size: 10pt; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; margin-bottom: 4px; }
+            .protocol-table td:first-child::before { content: none; }
             .protocol-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: #64748b; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
         }
 
