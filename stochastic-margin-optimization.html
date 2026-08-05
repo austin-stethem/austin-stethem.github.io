@@ -49,11 +49,11 @@
             max-width: 950px; 
             margin: 0 auto; 
             padding: 40px 20px; 
-            background-color: var(--bg-color); 
+            background-color: var(--bg-color, #fbfbfb); 
         }
         
-        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        h3 { font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, #1a2433); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
         p { text-align: justify; margin-bottom: 15px; color: #334155; }
         ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
         li { margin-bottom: 8px; }
@@ -75,7 +75,7 @@
         
         .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; box-sizing: border-box;}
 
-        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px;}
+        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center;}
         .dash-header h3 { color: #f8fafc; font-size: 1.6rem; margin: 0; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
         .dash-header h3 span { color: #f87171; }
         .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
@@ -90,8 +90,21 @@
         select:hover { border-color: #f87171; }
         select option { background: var(--info-panel); color: #f8fafc; }
         
+        /* Local slider baseline. Duplicates portfolio.css deliberately: without it, a
+           missing shared sheet drops the page back to the native OS slider, which looks
+           nothing like the rest of the dashboard. Geometry matches the shared rules so
+           the touch scaling in portfolio.css still lines up. */
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
+
         .btn-run { 
-            background: var(--alert-red); color: white; border: none; padding: 16px 20px; width: 100%; 
+            background: var(--alert-red, #b32525); color: white; border: none; padding: 16px 20px; width: 100%; 
             font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; 
             cursor: pointer; margin-top: 10px; margin-bottom: 10px; letter-spacing: 1.5px; 
             transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(179,37,37,0.3);
@@ -99,7 +112,10 @@
         .btn-run:hover { background: #8e1c1c; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(179,37,37,0.4); }
         .btn-run:disabled { background: #64748b; box-shadow: none; transform: translateY(0); cursor: not-allowed; }
         
-        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid #f87171; padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #94a3b8; margin-top: auto; line-height: 1.5;}
+        /* No margin-top:auto. In a flex column that pins the card to the bottom of the
+           sidebar and absorbs all remaining height as a gap, leaving it stranded well
+           below the controls it explains. */
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid #f87171; padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #94a3b8; line-height: 1.5;}
 
         /* KPIs */
         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 15px; margin-bottom: 25px; }
@@ -125,8 +141,8 @@
         .code-string { color: #98c379; }
         .code-number { color: #d19a66; }
 
-        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue, #1a2433); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue, #1a2433); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
         .impact-box ul { font-size: 10pt; }
 
@@ -387,7 +403,7 @@
             <li><strong><span class="jargon-tooltip" data-tip="Automatically adjusting price sensitivity variables based on real-time market reactions, rather than relying on static historical assumptions.">Dynamic Elasticity Tuning</span>:</strong> Every 30 days, actual Point-of-Sale (POS) data is fed back into the engine. The model calculates the delta between its <em>Predicted P50 Expected Profit</em> and the <em>Realized Profit</em>, automatically micro-adjusting its own internal elasticity weights.</li>
             <li><strong><span class="jargon-tooltip" data-tip="Protections built into the algorithm to prevent it from being tricked by temporary anomalies, ensuring it only learns from long-term market shifts.">Concept Drift Defense</span>:</strong> The engine uses anomaly detection to sanitize "poisoned" data (like temporary supply shocks), ensuring the training set reflects true long-term market trends rather than transient noise.</li>
         </ul>
-        <p style="margin-bottom: 0; font-weight: bold; color: var(--alert-red);">The Result: A self-correcting pricing engine that grows mathematically sharper with every fiscal quarter.</p>
+        <p style="margin-bottom: 0; font-weight: bold; color: var(--alert-red, #b32525);">The Result: A self-correcting pricing engine that grows mathematically sharper with every fiscal quarter.</p>
     </div>
 
     <div class="next-step-box">
