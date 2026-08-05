@@ -53,18 +53,18 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0; padding: 0; background-color: var(--bg-color); overflow-x: hidden; color: #334155;
+            margin: 0; padding: 0; background-color: var(--bg-color, #fbfbfb); overflow-x: hidden; color: #334155;
             -webkit-font-smoothing: antialiased;
         }
 
         /* --- PORTFOLIO SPECIFIC STYLES --- */
         .portfolio-content { max-width: 1000px; margin: 0 auto; padding: 40px 20px; font-size: 10.5pt; line-height: 1.6; }
 
-        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue, #1a2433); padding: 25px; border-radius: 4px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue, #1a2433); font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
 
-        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
         /* --- DASHBOARD WRAPPER --- */
@@ -105,7 +105,7 @@
         .popup-header { padding: 12px 16px; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
         .popup-body { padding: 16px; }
         .popup-title { font-weight: 700; font-size: 13px; line-height: 1.35; }
-        .leaflet-popup-tip { background: var(--bg-color); }
+        .leaflet-popup-tip { background: var(--bg-color, #fbfbfb); }
         .leaflet-container a.leaflet-popup-close-button { color: #fff; top: 8px; right: 8px; font-weight: bold; }
 
         /* Custom Pins & Clusters */
@@ -118,16 +118,16 @@
         .layer-toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
         .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: transparent; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; border: 2px solid #555;}
         .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
-        .layer-toggle input:focus-visible + .custom-checkbox { outline: 2px solid var(--alert-red); outline-offset: 2px; }
+        .layer-toggle input:focus-visible + .custom-checkbox { outline: 2px solid var(--alert-red, #b32525); outline-offset: 2px; }
 
         /* iOS Toggle Switch */
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .3s; border-radius: 24px; }
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--alert-red); }
+        input:checked + .slider { background-color: var(--alert-red, #b32525); }
         input:checked + .slider:before { transform: translateX(20px); }
-        .switch input:focus-visible + .slider { outline: 2px solid var(--alert-red); outline-offset: 3px; }
+        .switch input:focus-visible + .slider { outline: 2px solid var(--alert-red, #b32525); outline-offset: 3px; }
 
         /* Theme SVG Icons */
         .theme-icon { width: 20px; height: 20px; transition: all 0.3s ease; }
@@ -147,7 +147,7 @@
         body.light-mode .theme-border { border-color: #E2E8F0; }
         body.light-mode .theme-card { background-color: #FFFFFF; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         body.light-mode .breakdown-row { border-color: #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-        body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red); border-color: var(--alert-red); }
+        body.light-mode .layer-toggle input:checked + .custom-checkbox { background: var(--alert-red, #b32525); border-color: var(--alert-red, #b32525); }
         body.light-mode .layer-toggle input:checked + .custom-checkbox::after { color: var(--pure-white); }
         body.light-mode .custom-checkbox { border: 2px solid #CBD5E1; }
         body.light-mode .leaflet-popup-tip { background: #fff; }
@@ -191,7 +191,7 @@
 
         /* PORTFOLIO DEMO STYLES */
         .pulse-instruction {
-            animation: pulse-border 2s infinite; border-left: 4px solid var(--alert-red); background: #f8fafc; padding: 15px; border-radius: 4px; margin: 20px 0; font-weight: 500; color: #334155; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            animation: pulse-border 2s infinite; border-left: 4px solid var(--alert-red, #b32525); background: #f8fafc; padding: 15px; border-radius: 4px; margin: 20px 0; font-weight: 500; color: #334155; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         @keyframes pulse-border {
