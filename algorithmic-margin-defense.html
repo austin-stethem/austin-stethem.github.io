@@ -1,440 +1,858 @@
-/* ==========================================================================
-   portfolio.css — shared brand layer for all Austin Sonny Stethem case studies
-   Load this BEFORE each page's own <style> block so page rules can override.
-   Anything here appears on two or more pages; page-specific styling stays local.
-   ========================================================================== */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithmic Margin Defense Engine | Austin Sonny Stethem</title>
+    <meta name="description" content="A deterministic cross-subsidization engine that defends blended portfolio margin against cost shocks by cascading markups across elasticity tiers.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
 
-:root {
-    --dark-slate-blue: #1a2433;
-    --alert-red: #b32525;
-    --alert-red-dark: #8e1c1c;
-    --success-green: #10b981;
-    --bg-color: #fbfbfb;
-    --ink: #0f172a;
-    --body-text: #334155;
-    --muted: #64748b;
-    --line: #cbd5e1;
-    --hairline: #e2e8f0;
-}
+    <!-- Open Graph / Twitter Tags -->
+    <meta property="og:title" content="Algorithmic Margin Defense Engine">
+    <meta property="og:description" content="Deterministic cross-subsidization: cascading markups across elasticity tiers to defend blended EBITDA against supply chain inflation.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/algorithmic-margin-defense.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
 
-*, *::before, *::after { box-sizing: border-box; }
+    <!-- Custom SVG Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
 
-/* --- Accessibility primitives -------------------------------------------- */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-[tabindex]:focus-visible {
-    outline: 2px solid var(--alert-red);
-    outline-offset: 3px;
-    border-radius: 4px;
-}
+    <!-- Chart.js Core + Data Labels Plugin (plugin must load after Chart.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 
-.skip-link {
-    position: absolute;
-    left: -9999px;
-    top: 0;
-    background: var(--dark-slate-blue);
-    color: #fff;
-    padding: 10px 16px;
-    border-radius: 0 0 6px 0;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    z-index: 1000000;
-}
-.skip-link:focus { left: 0; }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
 
-/* --- Document chrome ------------------------------------------------------ */
-.back-link {
-    color: var(--alert-red);
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9rem;
-    display: inline-block;
-    margin-bottom: 20px;
-}
-.back-link:hover { text-decoration: underline; }
+    <link rel="stylesheet" href="portfolio.css">
 
-.doc-header {
-    width: 100%;
-    border-bottom: 2px solid var(--dark-slate-blue);
-    padding-bottom: 18px;
-    margin-bottom: 24px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-/* Doubled class: a page-level `.portfolio-content p` rule is (0,1,1) and outranks a
-   single class, which left the tagline justified instead of centred on two pages. */
-.doc-tagline.doc-tagline {
-    font-size: 8.5pt;
-    font-weight: 700;
-    color: var(--alert-red);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin: 0 0 6px 0;
-    text-align: center;
-    width: 100%;
-}
-.doc-title {
-    font-family: 'Georgia', 'Times New Roman', serif;
-    font-variant-numeric: lining-nums;
-    font-size: clamp(19pt, 5.5vw, 26pt);
-    color: var(--dark-slate-blue);
-    margin: 0 0 10px 0;
-    line-height: 1.2;
-    text-align: center;
-    font-weight: normal;
-}
+    <style>
+        /* Brand tokens live in portfolio.css; only the dashboard palette is local. */
+        :root {
+            --info-bg: #0f172a;
+            --info-panel: #1e293b;
+            --info-border: #334155;
+        }
 
-/* --- Metadata table ------------------------------------------------------- */
-.meta-table {
-    width: 100%;
-    /* Without this, a long tech-stack string widens its column and squeezes the
-       other two out of their declared 33%. */
-    table-layout: fixed;
-    margin: 0 auto 30px auto;
-    border-collapse: collapse;
-    background: #fff;
-    border: 1px solid var(--hairline);
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-}
-.meta-cell {
-    vertical-align: top;
-    /* Fixed layout will not grow to fit, so long unbroken tokens must wrap */
-    overflow-wrap: break-word;
-    padding: 15px;
-    font-size: 9.5pt;
-    text-align: center;
-    border-right: 1px solid var(--hairline);
-    width: 33%;
-}
-.meta-cell:last-child { border-right: none; }
-.meta-label {
-    display: block;
-    font-size: 7.5pt;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    letter-spacing: 0.5px;
-}
-.meta-value { color: #1e293b; font-weight: 500; }
+        *, *::before, *::after { box-sizing: border-box; }
 
-/* --- Callouts ------------------------------------------------------------- */
-.nda-note {
-    background: #fff;
-    padding: 15px;
-    margin: 20px 0;
-    font-size: 8.5pt;
-    font-style: italic;
-    color: var(--body-text);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-    border-radius: 0 6px 6px 0;
-    border: 1px solid var(--hairline);
-    border-left: 4px solid var(--alert-red);
-}
+        body {
+            font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #333;
+            font-size: 10.5pt;
+            line-height: 1.6;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 40px 20px 90px;
+            background-color: var(--bg-color, #fbfbfb);
+            -webkit-font-smoothing: antialiased;
+        }
 
-.scenario-box {
-    background: #e0f2fe;
-    border-left: 4px solid #0369a1;
-    padding: 18px 25px;
-    margin-top: -5px;
-    margin-bottom: 30px;
-    border-radius: 0 6px 6px 0;
-    font-size: 10pt;
-    color: var(--ink);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-}
-.scenario-box > strong:first-child {
-    color: #0369a1;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 8.5pt;
-    display: block;
-    margin-bottom: 6px;
-}
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, #1a2433); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        p { text-align: justify; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
+        li { margin-bottom: 8px; }
 
-/* --- Jargon tooltips ------------------------------------------------------
-   :focus is included alongside :hover so these are reachable by keyboard and
-   by tap. The pages add tabindex="0" to each one at runtime.               */
-.jargon-tooltip {
-    position: relative;
-    border-bottom: 1px dashed var(--alert-red);
-    cursor: help;
-    color: var(--dark-slate-blue);
-    white-space: nowrap;
-    transition: border-color 0.2s ease;
-}
-.jargon-tooltip strong { font-weight: 700; color: var(--dark-slate-blue); }
-.jargon-tooltip::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1e293b;
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 8.5pt;
-    font-weight: normal;
-    white-space: normal;
-    width: max-content;
-    max-width: 260px;
-    text-align: center;
-    line-height: 1.4;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 1000;
-    pointer-events: none;
-}
-.jargon-tooltip::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px;
-    border-style: solid;
-    border-color: #1e293b transparent transparent transparent;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s;
-    z-index: 1000;
-    pointer-events: none;
-}
-.jargon-tooltip:hover::after, .jargon-tooltip:hover::before,
-.jargon-tooltip:focus::after, .jargon-tooltip:focus::before {
-    opacity: 1;
-    visibility: visible;
-    bottom: 135%;
-}
+        /* --- DASHBOARD WRAPPER (SaaS Style) --- */
+        .dashboard-container {
+            width: 100%; margin: 40px auto;
+            background: var(--info-bg); color: #e2e8f0;
+            border-radius: 12px; display: flex; flex-wrap: wrap;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid #1e293b; overflow: hidden;
+        }
 
-/* --- End-of-page navigation ----------------------------------------------- */
-.next-step-box {
-    background: var(--dark-slate-blue);
-    color: white;
-    padding: 35px 25px;
-    border-radius: 8px;
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    border-top: 4px solid var(--alert-red);
-}
-.next-step-box h3 {
-    color: #f8fafc;
-    margin-top: 0;
-    font-family: 'Georgia', 'Times New Roman', serif;
-    font-variant-numeric: lining-nums;
-    font-size: clamp(15pt, 4.5vw, 18pt);
-    margin-bottom: 12px;
-    border-bottom: none;
-    padding-bottom: 0;
-    text-transform: none;
-    letter-spacing: 0;
-    font-weight: normal;
-}
-/* The doubled class is deliberate. `.next-step-box p` ties on specificity with a
-   page-level `.portfolio-content p`, and portfolio.css loads first — so the page's
-   dark body colour would win on source order and paint dark text onto the navy
-   panel. Doubling the class outranks it without resorting to !important. */
-.next-step-box.next-step-box p {
-    color: #f8fafc;
-    font-size: 10pt;
-    max-width: 650px;
-    margin: 0 auto 25px auto;
-    text-align: center;
-    line-height: 1.6;
-}
+        .dash-sidebar {
+            width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px;
+            border-right: 1px solid var(--info-border); display: flex; flex-direction: column;
+        }
 
-.project-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    margin-top: 30px;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-.nav-btn {
-    flex: 1;
-    min-width: 250px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: white;
-    padding: 15px 20px;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.nav-btn.next {
-    text-align: right;
-    background: var(--alert-red);
-    border-color: var(--alert-red);
-    align-items: flex-end;
-}
-.nav-btn.prev:hover {
-    background: rgba(255,255,255,0.1);
-    transform: translateX(-4px);
-    border-color: rgba(255,255,255,0.3);
-}
-.nav-btn.next:hover {
-    background: var(--alert-red-dark);
-    transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(179,37,37,0.3);
-}
-.nav-label {
-    font-size: 8pt;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #94a3b8;
-    margin-bottom: 4px;
-}
-.nav-btn.next .nav-label { color: #fca5a5; }
-.nav-title { font-size: 11pt; font-weight: bold; }
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
 
-/* --- Range sliders --------------------------------------------------------
-   Baseline for pointer devices. Sliders only appear inside the dark dashboard
-   sidebars, so the track and thumb are tuned for that context. The
-   @media (pointer: coarse) block further down scales the thumb for touch;
-   the -10px thumb offset there assumes this 6px track height.              */
-input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    background: transparent;
-    cursor: pointer;
-    margin-top: 5px;
-}
-input[type="range"]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 6px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 3px;
-}
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    height: 18px;
-    width: 18px;
-    margin-top: -6px;            /* centres an 18px thumb on a 6px track */
-    border-radius: 50%;
-    background: #f87171;
-    box-shadow: 0 0 10px rgba(248, 113, 113, 0.4);
-    transition: transform 0.12s ease;
-}
-input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-input[type="range"]::-moz-range-track {
-    width: 100%;
-    height: 6px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 3px;
-}
-input[type="range"]::-moz-range-thumb {
-    height: 18px;
-    width: 18px;
-    border: none;
-    border-radius: 50%;
-    background: #f87171;
-}
-input[type="range"]:focus { outline: none; }
-input[type="range"]:focus-visible { outline: 2px solid var(--alert-red); outline-offset: 6px; }
-input[type="range"]:disabled { cursor: not-allowed; opacity: 0.55; }
+        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center;}
+        .dash-header .dash-title { color: #f8fafc; font-size: 1.6rem; margin: 0; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
+        .dash-header .dash-title span { color: #f87171; }
+        /* text-align must be explicit. The page has a bare `p { text-align: justify }`
+           rule, and any matching rule beats inherited centring from .dash-header. */
+        .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center;}
 
-/* --- Watermark ------------------------------------------------------------ */
-.watermark {
-    position: fixed;
-    bottom: 12px;
-    right: 15px;
-    font-size: 0.65rem;
-    color: #94a3b8;
-    opacity: 0.6;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
-    letter-spacing: 0.5px;
-    pointer-events: none;
-    user-select: none;
-    z-index: 9999;
-}
+        /* Centred to sit in line with the panel header above it. The label/value rows
+           inside .rule-box stay space-between — those are data pairs, not headings. */
+        .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: #cbd5e1; text-align: center;}
 
-/* --- Mobile --------------------------------------------------------------- */
-@media (max-width: 800px) {
-    .meta-table tr { display: flex; flex-direction: column; }
-    .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid var(--hairline); }
-    /* Stacked, the final cell's bottom border sits on the table's outer border */
-    .meta-cell:last-child { border-bottom: none; }
+        /* Controls */
+        .control-group { margin-bottom: 25px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; cursor: pointer; }
+        .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: #f87171;}
 
-    .project-navigation { flex-direction: column; }
-    .nav-btn {
-        width: 100%;
-        min-width: 0;
-        align-items: center !important;
-        text-align: center !important;
-    }
 
-    /* A clipped tooltip bubble is unusable on a phone; show it as a bottom sheet */
-    .jargon-tooltip { white-space: normal; }
-    .jargon-tooltip::before { display: none; }
-    .jargon-tooltip::after,
-    .jargon-tooltip:hover::after,
-    .jargon-tooltip:focus::after {
-        position: fixed;
-        bottom: 16px;
-        top: auto;
-        left: 16px;
-        right: 16px;
-        transform: none;
-        width: auto;
-        max-width: none;
-        font-size: 10pt;
-        padding: 14px 16px;
-    }
+        /* Local slider baseline. Duplicates portfolio.css deliberately: without it, a
+           missing shared sheet drops the page back to the native OS slider, which looks
+           nothing like the rest of the dashboard. Geometry matches the shared rules so
+           the touch scaling in portfolio.css still lines up. */
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
 
-    .watermark {
-        position: static;
-        display: block;
-        text-align: center;
-        padding-top: 26px;
-        opacity: 0.75;
-    }
-}
+        .btn-run {
+            background: var(--alert-red, #b32525); color: white; border: none; padding: 16px 20px; width: 100%;
+            font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; text-transform: uppercase;
+            cursor: pointer; margin-top: 10px; margin-bottom: 10px; letter-spacing: 1.5px;
+            transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(179,37,37,0.3);
+        }
+        .btn-run:hover { background: #8e1c1c; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(179,37,37,0.4); }
+        .btn-run:disabled { background: #64748b; box-shadow: none; transform: translateY(0); cursor: not-allowed; }
 
-/* Larger grab targets on touch devices. WCAG asks for ~44px; a bare text link
-   or a 28px button is a miss-tap waiting to happen on a phone. */
-@media (pointer: coarse) {
-    input[type="range"] { margin-top: 10px; padding: 6px 0; }
-    input[type="range"]::-webkit-slider-thumb { height: 26px; width: 26px; margin-top: -10px; }
-    input[type="range"]::-moz-range-thumb { height: 26px; width: 26px; }
+        .rule-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); padding: 15px; border-radius: 6px; font-size: 0.8rem; color: #94a3b8; margin-bottom: 25px; }
+        .rule-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px; gap: 10px; }
+        .rule-row:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+        .context-box { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--info-border); border-left: 3px solid #cbd5e1; padding: 15px; border-radius: 4px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; transition: border-left-color 0.3s; min-height: 128px;}
 
-    .back-link { padding: 10px 4px; margin-bottom: 14px; }
-    .nav-btn { padding: 18px 20px; }
-    .jargon-tooltip { padding: 3px 0; }
-}
+        /* KPIs */
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        .kpi-card-header { font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.8rem; font-family: 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px;}
+        .kpi-sub { font-size: 0.75rem; color: #64748b; font-style: italic; min-height: 32px; }
 
-@media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
+        /* Chart Area */
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px;}
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;}
+        .chart-wrapper { position: relative; height: 380px; width: 100%; }
 
-@media print {
-    /* .project-navigation is nested inside .next-step-box on every case study, so
-       hiding the parent already covers it. Listed anyway so the rule still holds if
-       the nav is ever used standalone. */
-    .watermark,
-    .skip-link,
-    .next-step-box,
-    .project-navigation { display: none !important; }
-    body { background: #fff; }
-}
+        /* Log Table */
+        .log-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        /* No min-width and no overflow container. The panel only ever offers about
+           510px (950 body - 340 sidebar - 60 main padding - 32 section padding), so a
+           620px minimum guaranteed a horizontal scrollbar at every viewport width.
+           Cells wrap instead, which is what a table should do. */
+        .log-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; color: #e2e8f0; font-family: 'Inter', sans-serif; table-layout: auto; }
+        .log-table th { background: #0f172a; color: #94a3b8; padding: 10px 6px; text-align: left; text-transform: uppercase; letter-spacing: 0.3px; font-size: 0.68rem; font-weight: 800; border-bottom: 1px solid var(--info-border); vertical-align: bottom; }
+        .log-table td { padding: 11px 6px; border-bottom: 1px solid var(--info-border); color: #cbd5e1; vertical-align: middle; }
+        .log-table td:first-child { line-height: 1.3; }
+        .log-table tr:last-child td { border-bottom: none; }
+
+        .badge-lock { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-safe { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-elastic { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-warn { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+
+        .status-safe { border-top-color: #10b981 !important; }
+        .status-warn { border-top-color: #f59e0b !important; }
+        .status-critical { border-top-color: #ef4444 !important; }
+
+        .code-annotation { background: #e2e8f0; border-left: 4px solid #3b82f6; padding: 12px 18px; font-size: 9.5pt; color: #334155; border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Inter', sans-serif;}
+        .code-annotation > strong:first-child { color: #0f172a; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+
+        pre.code-block { background-color: #0f172a; color: #e2e8f0; padding: 20px; border-radius: 0 0 6px 6px; overflow-x: auto; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 9pt; border-left: 4px solid #3b82f6; line-height: 1.5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); margin-top: 0; margin-bottom: 30px; }
+        .code-comment { color: #94a3b8; font-style: italic; }
+        .code-keyword { color: #c678dd; font-weight: bold; }
+        .code-function { color: #61afef; }
+        .code-string { color: #98c379; }
+        .code-number { color: #d19a66; }
+
+        @media (max-width: 800px) {
+            body { padding: 28px 16px 40px; }
+            p { text-align: left; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #334155; padding: 22px; }
+            .dash-main { padding: 18px; min-width: 0; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .chart-wrapper { height: 320px; }
+
+            /* --- Pricing log: table -> stacked cards ---------------------------
+               Six columns need ~620px. A 380px phone leaves about 272px inside the
+               panel, so the table was 2.3x too wide and every row required sideways
+               scrolling. Below the breakpoint each row becomes its own card with the
+               column name supplied by data-label, so nothing scrolls. */
+            .log-section { padding: 16px; }
+            .log-table { min-width: 0; display: block; }
+            .log-table thead { display: none; }
+            .log-table tbody, .log-table tr, .log-table td { display: block; width: 100%; }
+
+            .log-table tr {
+                border: 1px solid var(--info-border);
+                border-radius: 8px;
+                background: rgba(0, 0, 0, 0.18);
+                padding: 4px 14px 10px;
+                margin-bottom: 12px;
+            }
+            .log-table tr:last-child { margin-bottom: 0; }
+
+            .log-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                gap: 14px;
+                padding: 9px 0;
+                border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+                text-align: right;
+            }
+            .log-table td:last-child { border-bottom: none; padding-bottom: 2px; }
+            .log-table td::before {
+                content: attr(data-label);
+                color: #94a3b8;
+                font-size: 0.68rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                text-align: left;
+                flex-shrink: 0;
+            }
+
+            /* First cell is the card heading, not a label/value pair */
+            .log-table td:first-child {
+                display: block;
+                text-align: left;
+                font-size: 0.95rem;
+                padding: 10px 0 9px;
+                border-bottom: 1px solid var(--info-border);
+            }
+            .log-table td:first-child::before { content: none; }
+
+            /* The pre-execution placeholder spans all columns */
+            .log-table td[colspan] { display: block; text-align: center; border-bottom: none; }
+            .log-table td[colspan]::before { content: none; }
+
+        }
+
+        @media (pointer: coarse) { .btn-run { padding: 18px 20px; } }
+
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: #fff; max-width: none; }
+            pre.code-block { background: #f8fafc; color: #0f172a; box-shadow: none; }
+            .code-comment, .code-keyword, .code-function, .code-string, .code-number { color: #334155; }
+
+            /* portfolio.css hides .next-step-box to spare the toner; the closing
+               narrative still belongs on paper, so re-show it unstyled. */
+            .next-step-box {
+                display: block !important;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-top: 24px;
+                color: #000;
+            }
+            .next-step-box h3 { color: #000; }
+            /* Doubled class: portfolio.css uses .next-step-box.next-step-box p */
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive dashboard</a>
+
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
+    <header class="doc-header">
+        <!-- CUSTOM BRAND LOGO -->
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Systems Architecture &amp; Analytics Portfolio Case Study</p>
+        <h1 class="doc-title">Algorithmic Margin Defense Engine</h1>
+    </header>
+
+    <table class="meta-table">
+        <tbody>
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Cross-Subsidization, FIFO Buffers, Python (Pandas), Data Sanitization</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Technical Stack</span>
+                <span class="meta-value">Python, Deterministic Optimization, ERP Data Stratification</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary margin targets, and exact landed-cost arrays have been replaced with randomized proxies. This tool is a custom-built simulation designed to accurately demonstrate the mathematical architecture—specifically the elasticity stratification and cross-subsidization logic—that I utilized in the production environment.
+    </div>
+
+    <h2>1. Initiative: Proactive Margin Defense</h2>
+
+    <div class="scenario-box">
+        <strong>The Enterprise Scenario (Step 2 of 5)</strong>
+        With our vulnerable territories securely mapped (Step 1), we now face the impending 15% vendor cost spike. Standard ERP systems apply blanket markups that blindly destroy volume on sensitive items. We must build a deterministic algorithm to cross-subsidize our <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust."><strong>Key Value Items (KVIs)</strong></span> and safely defend our blended margin before we stress-test those thresholds against market noise.
+    </div>
+
+    <p><strong>The Situation:</strong> In legacy distribution models, price updates are largely reactive. When a vendor issues a sudden price increase or global freight costs spike, standard <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> systems often trigger a blanket markup across the entire parts catalog. This creates massive business risk: it instantly bleeds volume on highly competitive, <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes. A price margin increase will likely destroy sales volume."><strong>elastic items</strong></span> while simultaneously leaving margin on the table for blind, <span class="jargon-tooltip" data-tip="Products (often rare or captive) where demand remains stable even if prices are raised."><strong>inelastic parts</strong></span>.</p>
+    <p><strong>The Initiative:</strong> Rather than accepting margin erosion as an unavoidable cost of doing business, I took it upon myself to architect a proactive solution. I designed and pitched this deterministic <span class="jargon-tooltip" data-tip="Intentionally taking lower margins on highly visible items while aggressively raising prices on blind/rare items to protect overall profitability."><strong>cross-subsidization</strong></span> engine to executive leadership to prove we could absorb external cost shocks and automatically recalculate price targets across millions of SKUs—without sacrificing volume on our most sensitive items.</p>
+
+    <h2>2. Action: Elasticity Stratification &amp; Cross-Subsidization</h2>
+    <p>Instead of evaluating SKUs in a vacuum, the system calculates the <span class="jargon-tooltip" data-tip="The total aggregate profit margin across the entire product catalog, balancing high and low-margin items."><strong>Blended Portfolio Margin</strong></span> by processing raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> data through a <span class="jargon-tooltip" data-tip="A cascading pricing logic that applies different markup rules based on how sensitive a product category is to price changes."><strong>multi-echelon Elasticity Waterfall</strong></span>. I structured the logic into three distinct groups:</p>
+    <ul>
+        <li><strong>Group A (10% Volume - High-Velocity KVIs):</strong> Ultra-sensitive Known Value Items. Because these items drive standard transactional volume, they are mathematically locked to a maximum 3% variance to defend market perception.</li>
+        <li><strong>Group B (40% Volume - Mid-Tier Core):</strong> Standard competitive parts. Allowed up to a 20% variance before the system hard-locks the price to prevent volume erosion.</li>
+        <li><strong>Group C (50% Volume - Highly Elastic Tail):</strong> Blind or captive items, often weighted toward Heavy Jobber accounts. Permitted up to 70% variance, this group acts as a shock absorber. It generates margin surplus to explicitly subsidize the defense of Group A.</li>
+    </ul>
+
+    <h3>Markup Is Not Margin</h3>
+    <p>A subtlety that sinks most naive pricing models: a permitted <em>price markup</em> does not convert into an equal number of <em>margin points</em>. Raising price by 70% on an item already carrying a 48% margin lifts that margin to 69.4%—a gain of 21.4 points, not 70. The engine therefore converts every permitted markup into its true margin contribution before deciding how much deficit each tier can genuinely absorb. Skip that conversion and the model will report Group C as capable of swallowing any shock, and the cascade into Groups B and A will never fire.</p>
+
+    <h3>The FIFO Inventory Shield</h3>
+    <p>Crucially, this model leverages physical <span class="jargon-tooltip" data-tip="Quantity On Hand: The physical inventory currently sitting in the warehouse."><strong>Quantity on Hand (QOH)</strong></span> as a <span class="jargon-tooltip" data-tip="First-In, First-Out: Selling older, lower-cost inventory at newly elevated retail prices to generate an immediate profit buffer."><strong>FIFO (First-In, First-Out) windfall shield</strong></span>. Before calculating necessary price increases, the algorithm measures how many days of inventory we hold at the old, cheaper cost. It then calculates the exact markups required on Group C and B to mathematically pay for the remaining cost deficit, ensuring enterprise <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability."><strong>EBITDA</strong></span> targets are protected without touching the <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust."><strong>KVIs</strong></span>.</p>
+
+    <h2 id="dashboard">3. Interactive Execution Dashboard</h2>
+    <p><em>Adjust the market disruption sliders below to simulate a sudden cost spike. Click "Execute Margin Defense" to trigger the deterministic algorithm. It will apply your physical inventory shield and dynamically calculate the required cross-subsidization markups needed to defend the Blended Target Margin. Push freight past roughly 20% with a low inventory buffer and you will watch the cascade run out of elastic headroom.</em></p>
+
+    <div class="dashboard-container">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <div class="dash-title">Defense <span>Matrix</span></div>
+                <p>System Controls</p>
+            </div>
+
+            <div class="control-group">
+                <label for="slider-freight"><span>Global Freight Spike (%):</span> <span class="val-readout" id="val-freight">0%</span></label>
+                <input type="range" id="slider-freight" min="0" max="35" value="0" aria-label="Global freight spike percentage">
+            </div>
+
+            <div class="control-group">
+                <label for="slider-comp"><span>Comp. Deflation Risk (%):</span> <span class="val-readout" id="val-comp">0%</span></label>
+                <input type="range" id="slider-comp" min="0" max="15" value="0" aria-label="Competitive deflation risk percentage">
+            </div>
+
+            <div class="control-group">
+                <label for="slider-qoh"><span>Network QOH (Days Supply):</span> <span class="val-readout" id="val-qoh">45 Days</span></label>
+                <input type="range" id="slider-qoh" min="0" max="120" step="15" value="45" aria-label="Network quantity on hand, days of supply">
+            </div>
+
+            <button class="btn-run" id="btn-execute" onclick="triggerSimulation()">Execute Margin Defense</button>
+
+            <div class="sidebar-subheader">Markup Limits (Elasticity)</div>
+            <div class="rule-box">
+                <div class="rule-row">
+                    <span style="color:#ef4444; font-weight:bold;">Grp A (Anchors)</span>
+                    <span>Max Markup: 3%</span>
+                </div>
+                <div class="rule-row">
+                    <span style="color:#f59e0b; font-weight:bold;">Grp B (Core)</span>
+                    <span>Max Markup: 20%</span>
+                </div>
+                <div class="rule-row">
+                    <span style="color:#3b82f6; font-weight:bold;">Grp C (Elastic)</span>
+                    <span>Max Markup: 70%</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="sidebar-subheader">Actionable Directive</div>
+                <div class="context-box" id="dynamic-context" role="status" aria-live="polite">
+                    <strong style="color: #e2e8f0;">Status: Pending Execution</strong><br><br>Adjust the disruption sliders and execute the defense matrix to generate the recovery summary.
+                </div>
+            </div>
+        </div>
+
+        <div class="dash-main">
+            <div class="kpi-grid">
+                <div class="kpi-card" id="card-median">
+                    <div class="kpi-card-header">Defended Target Margin</div>
+                    <div class="kpi-value" id="out-median" style="color: #cbd5e1;">--%</div>
+                    <div class="kpi-sub">Post-Subsidization Execution</div>
+                </div>
+                <div class="kpi-card" id="card-p95">
+                    <div class="kpi-card-header">Post-Stress Baseline</div>
+                    <div class="kpi-value" id="out-p95" style="color: #cbd5e1;">--%</div>
+                    <div class="kpi-sub">Calculated Absolute Floor Risk</div>
+                </div>
+                <div class="kpi-card" id="card-action">
+                    <div class="kpi-card-header">Q1 Realized Margin Yield</div>
+                    <div class="kpi-value" id="out-action" style="color: #cbd5e1;">--%</div>
+                    <div class="kpi-sub" id="out-action-sub">Awaiting inputs</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-header">
+                    <span>Cross-Subsidization: Before vs. After Execution</span>
+                    <div style="display: flex; justify-content: center; gap: 15px; font-size: 0.75rem; text-transform: none; font-weight: 600; color: #94a3b8; flex-wrap: wrap; margin-top: 10px;">
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: rgba(100, 116, 139, 0.4); border: 1px solid #64748b; border-radius: 2px;"></span> Base</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #3b82f6; border-radius: 2px;"></span> Grp C</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #f59e0b; border-radius: 2px;"></span> Grp B</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #ef4444; border-radius: 2px;"></span> Grp A</span>
+                        <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; background: #10b981; border-radius: 2px;"></span> Blended</span>
+                    </div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="comparisonChart" role="img" aria-label="Bar chart comparing baseline margin against simulated post-execution margin for each elasticity group"></canvas>
+                </div>
+            </div>
+
+            <div class="log-section" role="region" aria-label="Algorithm pricing log">
+                <div class="chart-header" style="text-align: left; margin-bottom: 10px;">Algorithm Pricing Log</div>
+                <table class="log-table" id="log-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tier</th>
+                            <th scope="col">Volume</th>
+                            <th scope="col">Base</th>
+                            <th scope="col">Post-Shock</th>
+                            <th scope="col">Markup</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrix-body">
+                        <tr><td colspan="6" data-label="" style="text-align: center; color: #64748b; font-style: italic;">Awaiting execution prompt...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. Result: Python Implementation &amp; Data Engineering</h2>
+    <p>The mathematical backbone of this strategy is executed in <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture."><strong>Python</strong></span> using <code><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel."><strong>pandas</strong></span></code>. Before the deterministic math runs, the engine must sanitize raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> extracts—handling missing vendor costs, mapping messy historical data, and enforcing data hygiene to ensure the subsidization logic doesn't crash on null values.</p>
+
+    <div class="code-annotation">
+        <strong>Phase 1: <span class="jargon-tooltip" data-tip="The process of cleaning and formatting raw data to prevent errors, such as handling missing values before running mathematical algorithms."><strong>Data Sanitization</strong></span> &amp; Mapping</strong>
+        We cannot run optimization math on dirty data. This function catches missing vendor costs to prevent division-by-zero errors, and automatically maps our raw ERP data into our new Elasticity Groups.
+    </div>
+    <pre class="code-block" tabindex="0"><code><span class="code-comment"># Algorithmic Margin Defense &amp; Cross-Subsidization Engine</span>
+<span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+
+<span class="code-keyword">def</span> <span class="code-function">clean_erp_data</span>(raw_df):
+    <span class="code-string">"""
+    Data Engineering: Sanitizes raw ERP extract to handle missing costs
+    and map elasticity tiers before algorithmic processing.
+    """</span>
+    <span class="code-comment"># Fill missing landed costs with standard average to prevent division by zero</span>
+    raw_df[<span class="code-string">'landed_cost'</span>] = raw_df[<span class="code-string">'landed_cost'</span>].fillna(raw_df[<span class="code-string">'landed_cost'</span>].mean())
+
+    <span class="code-comment"># Map legacy ERP P-Tiers (e.g. 'P2', 'P5') to our new strategic elasticity groups</span>
+    tier_mapping = {<span class="code-string">'P2'</span>: <span class="code-string">'A'</span>, <span class="code-string">'P3'</span>: <span class="code-string">'A'</span>, <span class="code-string">'P4'</span>: <span class="code-string">'C'</span>, <span class="code-string">'P5'</span>: <span class="code-string">'B'</span>}
+    raw_df[<span class="code-string">'elasticity_group'</span>] = raw_df[<span class="code-string">'p_tier'</span>].map(tier_mapping).fillna(<span class="code-string">'C'</span>) <span class="code-comment"># Default to elastic tail</span>
+    <span class="code-keyword">return</span> raw_df</code></pre>
+
+    <div class="code-annotation" style="margin-top: 25px;">
+        <strong>Phase 2: The Deterministic Subsidization Engine</strong>
+        The core algorithm. It applies the FIFO windfall shield, converts each tier's permitted markup into the margin points it can actually contribute, and cascades the deficit from the most elastic tier inward so the Anchors are protected for as long as the portfolio can afford it.
+    </div>
+    <pre class="code-block" tabindex="0"><code><span class="code-keyword">def</span> <span class="code-function">margin_after_markup</span>(margin, markup):
+    <span class="code-string">"""A price markup does NOT lift margin point-for-point.
+    At 48% margin, a 70% markup yields 69.4% -- a 21.4pt gain, not 70."""</span>
+    <span class="code-keyword">return</span> <span class="code-number">1.0</span> - (<span class="code-number">1.0</span> - margin) / (<span class="code-number">1.0</span> + markup)
+
+
+<span class="code-keyword">def</span> <span class="code-function">execute_margin_defense</span>(portfolio_df, deficit_pts, days_qoh):
+    <span class="code-string">"""
+    Calculates deterministic cross-subsidization markups required
+    to defend baseline margin against a defined cost deficit.
+    """</span>
+    <span class="code-comment"># 1. Apply FIFO Inventory Shield</span>
+    fifo_shield_factor = min(days_qoh / <span class="code-number">120</span>, <span class="code-number">1.0</span>) * <span class="code-number">0.65</span>
+    shock = max(<span class="code-number">0.0</span>, deficit_pts * (<span class="code-number">1.0</span> - fifo_shield_factor))
+
+    <span class="code-comment"># 2. The cost shock lands on every tier before any pricing action</span>
+    portfolio_df[<span class="code-string">'post_shock_margin'</span>] = portfolio_df[<span class="code-string">'base_margin'</span>] - shock
+
+    <span class="code-comment"># 3. Cascade the deficit from most elastic inward (C -> B -> A)</span>
+    portfolio_df.sort_values(by=<span class="code-string">'max_markup'</span>, ascending=<span class="code-keyword">False</span>, inplace=<span class="code-keyword">True</span>)
+    remaining = shock
+
+    <span class="code-keyword">for</span> index, grp <span class="code-keyword">in</span> portfolio_df.iterrows():
+        <span class="code-keyword">if</span> remaining &lt;= <span class="code-number">0</span>:
+            <span class="code-keyword">break</span>
+
+        <span class="code-comment"># True capacity in blended margin points, not raw markup percent</span>
+        ceiling = <span class="code-function">margin_after_markup</span>(grp[<span class="code-string">'post_shock_margin'</span>], grp[<span class="code-string">'max_markup'</span>])
+        capacity = (ceiling - grp[<span class="code-string">'post_shock_margin'</span>]) * grp[<span class="code-string">'volume_weight'</span>]
+
+        applied = min(remaining, capacity)
+        target = grp[<span class="code-string">'post_shock_margin'</span>] + applied / grp[<span class="code-string">'volume_weight'</span>]
+
+        <span class="code-comment"># Invert the margin formula to get the price action to publish</span>
+        portfolio_df.at[index, <span class="code-string">'action_markup'</span>] = (
+            (<span class="code-number">1</span> - grp[<span class="code-string">'post_shock_margin'</span>]) / (<span class="code-number">1</span> - target)
+        ) - <span class="code-number">1</span>
+        remaining -= applied
+
+    <span class="code-comment"># 4. Whatever the portfolio could not absorb is an unmitigated EBITDA hit</span>
+    <span class="code-keyword">return</span> portfolio_df, remaining</code></pre>
+
+    <div class="next-step-box">
+        <h3>Ecosystem Step 3: Risk Modeling</h3>
+        <p>We have our algorithmic guardrails built, but before we push these deterministic rules to the live ERP, we need to mathematically simulate the risk of these new price floors. Let's run a stochastic Monte Carlo simulation to test our strategy against chaotic market conditions.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="predictive-vio-market-capture.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Previous Phase</span>
+                <span class="nav-title">Step 1: Market Intelligence</span>
+            </a>
+            <a href="stochastic-margin-optimization.html" class="nav-btn next">
+                <span class="nav-label">Next Phase &rarr;</span>
+                <span class="nav-title">Step 3: Risk Modeling</span>
+            </a>
+        </nav>
+    </div>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        const sliderFreight = document.getElementById('slider-freight');
+        const sliderComp = document.getElementById('slider-comp');
+        const sliderQoh = document.getElementById('slider-qoh');
+        const valFreight = document.getElementById('val-freight');
+        const valComp = document.getElementById('val-comp');
+        const valQoh = document.getElementById('val-qoh');
+        const btnExecute = document.getElementById('btn-execute');
+        const dynamicContext = document.getElementById('dynamic-context');
+        let chartInstance = null;
+
+        /* Ordered most-elastic first: the cascade consumes headroom in this order. */
+        const groups = [
+            { id: 'C', title: 'Group C (Elastic)', weight: 0.50, baseMargin: 48.0, maxMarkup: 0.70, color: '#3b82f6' },
+            { id: 'B', title: 'Group B (Core)',    weight: 0.40, baseMargin: 35.0, maxMarkup: 0.20, color: '#f59e0b' },
+            { id: 'A', title: 'Group A (Anchors)', weight: 0.10, baseMargin: 28.5, maxMarkup: 0.03, color: '#ef4444' }
+        ];
+
+        /* Blended margin points lost per 1.0 (=100%) of each slider.
+           Derived from a ~59% COGS base: a 35% landed-cost spike costs ~20.7 points,
+           a 15% forced price deflation costs ~10.5. Adjust here to re-calibrate severity. */
+        const SHOCK_WEIGHTS = { freight: 59, deflation: 70 };
+
+        const initialBlendedMargin = groups.reduce((acc, g) => acc + (g.baseMargin * g.weight), 0);
+
+        /* A markup raises price, not margin, and the two are not interchangeable.
+           margin' = 1 - (1 - margin) / (1 + markup) */
+        function marginAfterMarkup(marginPct, markup) {
+            const m = marginPct / 100;
+            return (1 - (1 - m) / (1 + markup)) * 100;
+        }
+
+        /* Inverse: what price markup moves us from `fromPct` to `toPct` margin? */
+        function markupForTarget(fromPct, toPct) {
+            const a = 1 - (fromPct / 100);
+            const b = 1 - (toPct / 100);
+            if (b <= 0.0001) return Infinity;
+            return (a / b) - 1;
+        }
+
+        sliderFreight.addEventListener('input', (e) => { valFreight.innerText = `+${e.target.value}%`; });
+        sliderComp.addEventListener('input', (e) => { valComp.innerText = `-${e.target.value}%`; });
+        sliderQoh.addEventListener('input', (e) => { valQoh.innerText = `${e.target.value} Days`; });
+
+        // Inputs are locked alongside the button: moving a slider mid-run would leave
+        // the rendered result describing a scenario the controls no longer show.
+        const inputsToLock = [sliderFreight, sliderComp, sliderQoh];
+
+        function triggerSimulation() {
+            btnExecute.disabled = true;
+            inputsToLock.forEach(el => { el.disabled = true; });
+            btnExecute.innerText = "Calculating Defense Matrix...";
+            dynamicContext.style.borderLeftColor = '#cbd5e1';
+            dynamicContext.innerHTML = '<span style="color: #94a3b8; font-style: italic;">Processing deterministic algorithm...</span>';
+
+            setTimeout(() => {
+                try {
+                    runSimulation();
+                } finally {
+                    // finally, so a thrown error can't leave the panel permanently locked
+                    btnExecute.disabled = false;
+                    inputsToLock.forEach(el => { el.disabled = false; });
+                    btnExecute.innerText = "Execute Margin Defense";
+                }
+            }, 600);
+        }
+
+        function runSimulation() {
+            const fSpike = parseFloat(sliderFreight.value) / 100;
+            const cDrop = parseFloat(sliderComp.value) / 100;
+            const qohDays = parseInt(sliderQoh.value, 10);
+
+            const rawDeficit = (fSpike * SHOCK_WEIGHTS.freight) + (cDrop * SHOCK_WEIGHTS.deflation);
+
+            const fifoShieldFactor = Math.min(qohDays / 120, 1.0) * 0.65;
+            const fifoSubsidization = rawDeficit * fifoShieldFactor;
+            const shock = Math.max(0, rawDeficit - fifoSubsidization);
+
+            // The cost shock lands on every tier equally before any pricing action
+            const postShock = groups.map(g => g.baseMargin - shock);
+
+            // Cascade: consume elastic headroom first, in group order
+            let remaining = shock;
+            const recovery = [];
+            const markup = [];
+
+            groups.forEach((g, i) => {
+                const ceiling = marginAfterMarkup(postShock[i], g.maxMarkup);
+                const capacity = Math.max(0, (ceiling - postShock[i]) * g.weight);
+                const applied = Math.max(0, Math.min(remaining, capacity));
+                const target = postShock[i] + (applied / g.weight);
+
+                recovery[i] = applied;
+                markup[i] = applied > 0 ? markupForTarget(postShock[i], target) : 0;
+                remaining -= applied;
+            });
+
+            const unmitigated = Math.max(0, remaining);
+            const simMargins = groups.map((g, i) => postShock[i] + (recovery[i] / g.weight));
+            const finalBlendedMargin = groups.reduce((acc, g, i) => acc + (simMargins[i] * g.weight), 0);
+
+            // --- Pricing log ---
+            let tableHTML = "";
+            groups.forEach((g, i) => {
+                const pct = markup[i] * 100;
+                const atCeiling = pct >= (g.maxMarkup * 100) - 0.05 && pct > 0;
+                let badgeHTML, displayedAction;
+
+                if (pct > 0.05) {
+                    displayedAction = `+${pct.toFixed(1)}%`;
+                    if (g.id === 'A') {
+                        badgeHTML = unmitigated > 0
+                            ? `<span class="badge-lock">SHIELD BREACHED</span>`
+                            : `<span class="badge-warn">AT ANCHOR CAP</span>`;
+                    } else if (atCeiling) {
+                        badgeHTML = `<span class="badge-lock">ELASTICITY MAXED</span>`;
+                    } else {
+                        badgeHTML = `<span class="badge-elastic">GENERATING SURPLUS</span>`;
+                    }
+                } else {
+                    displayedAction = g.id === 'A' ? `0.0% \u2014 locked` : `0.0%`;
+                    badgeHTML = g.id === 'A'
+                        ? `<span class="badge-safe">SHIELDED</span>`
+                        : `<span class="badge-safe">NO ACTION</span>`;
+                }
+
+                const shockColor = postShock[i] < g.baseMargin ? 'color:#f59e0b;' : 'color:#cbd5e1;';
+                /* data-label lets the same markup render as a table on desktop and as a
+                   stacked card on mobile, where a six-column table cannot fit. */
+                tableHTML += `<tr>
+                    <td data-label="Tier" style="font-weight: 700; color: #e2e8f0;">${g.title}</td>
+                    <td data-label="Volume Split">${(g.weight * 100).toFixed(0)}%</td>
+                    <td data-label="Base Margin">${g.baseMargin.toFixed(1)}%</td>
+                    <td data-label="Post-Shock" style="${shockColor}">${postShock[i].toFixed(1)}%</td>
+                    <td data-label="Required Markup" style="font-weight:bold; color:#e2e8f0;">${displayedAction}</td>
+                    <td data-label="Status">${badgeHTML}</td>
+                </tr>`;
+            });
+            document.getElementById('matrix-body').innerHTML = tableHTML;
+
+            // --- Directive ---
+            if (unmitigated > 0) {
+                dynamicContext.style.borderLeftColor = '#ef4444';
+                dynamicContext.innerHTML = `<span style="color: #ef4444; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Critical Shield Breach</span><br><br><strong>Directive:</strong> A ${rawDeficit.toFixed(1)}pt cost deficit has exhausted every tier's elastic headroom. The portfolio absorbed what it could; <strong style="color:#ef4444;">${unmitigated.toFixed(1)} points of blended margin</strong> remain unrecovered. Hold Group A pricing to defend volume, and escalate to procurement to source alternate vendors immediately.`;
+            } else if (shock > 0) {
+                dynamicContext.style.borderLeftColor = '#10b981';
+                const shieldText = fifoSubsidization > 0
+                    ? `The <strong>${qohDays} days of QOH</strong> delivered a FIFO windfall absorbing ${fifoSubsidization.toFixed(1)}pts of the hit. `
+                    : `With zero inventory buffer, the portfolio took the full hit on day one. `;
+                dynamicContext.innerHTML = `<span style="color: #10b981; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Margin Defended</span><br><br>${shieldText}<strong>Directive:</strong> Execute the calculated markups to generate enough surplus to carry the remaining ${shock.toFixed(1)}pts. Baseline EBITDA is protected.`;
+            } else {
+                dynamicContext.style.borderLeftColor = '#cbd5e1';
+                dynamicContext.innerHTML = `<span style="color: #e2e8f0; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Baseline Stability</span><br><br><strong>Directive:</strong> No significant cost pressure detected. Hold all pricing tiers steady.`;
+            }
+
+            // --- KPIs ---
+            /* Downside stress applied on top of the defended position. Scaled to the same
+               blended-point units as the deficit, not the old markup-percent scale. */
+            const stressBuffer = (fSpike * 8) + (cDrop * 10);
+            const blendedFloor = finalBlendedMargin - stressBuffer;
+
+            const medianEl = document.getElementById('out-median');
+            medianEl.innerText = finalBlendedMargin.toFixed(1) + "%";
+            medianEl.style.color = unmitigated > 0 ? "#ef4444" : "#f8fafc";
+
+            const p95El = document.getElementById('out-p95');
+            p95El.innerText = blendedFloor.toFixed(1) + "%";
+
+            /* The FIFO windfall is the new markups landing on old, cheaper stock — so it
+               is worth exactly the recovery the cascade generated, not a freight constant.
+               Depletion tracks the same 120-day horizon the shield uses. */
+            const totalRecovery = recovery.reduce((a, b) => a + b, 0);
+            const windfallMargin = finalBlendedMargin + totalRecovery;
+            const ratioOldStock = Math.min(qohDays / 120, 1.0);
+            const realizedQ1 = (windfallMargin * ratioOldStock) + (finalBlendedMargin * (1 - ratioOldStock));
+
+            const cardAction = document.getElementById('card-action');
+            const actionEl = document.getElementById('out-action');
+            const subEl = document.getElementById('out-action-sub');
+
+            actionEl.innerText = realizedQ1.toFixed(1) + "%";
+            cardAction.className = "kpi-card";
+
+            if (rawDeficit > 0 && qohDays > 0) {
+                cardAction.classList.add("status-safe");
+                actionEl.style.color = "#10b981";
+                subEl.innerText = "FIFO windfall is pushing short-term yield above baseline targets.";
+                subEl.style.color = "#10b981";
+            } else if (rawDeficit > 0) {
+                cardAction.classList.add("status-warn");
+                actionEl.style.color = "#f59e0b";
+                subEl.innerText = "Zero physical buffer. Q1 yields exactly to defended replacement targets.";
+                subEl.style.color = "#f59e0b";
+            } else {
+                actionEl.style.color = "#f8fafc";
+                subEl.innerText = "Awaiting cost disruption inputs.";
+                subEl.style.color = "#64748b";
+            }
+
+            const cardP95 = document.getElementById('card-p95');
+            cardP95.className = "kpi-card";
+            if (blendedFloor < 32.0) { cardP95.classList.add("status-critical"); p95El.style.color = "#ef4444"; }
+            else if (blendedFloor < 35.0) { cardP95.classList.add("status-warn"); p95El.style.color = "#f59e0b"; }
+            else { cardP95.classList.add("status-safe"); p95El.style.color = "#10b981"; }
+
+            const baseData = groups.map(g => g.baseMargin).concat([initialBlendedMargin]);
+            const simData = simMargins.concat([finalBlendedMargin]);
+            renderComparisonChart(baseData, simData);
+        }
+
+        /* "Group C (Elastic)" x4 does not fit across a 380px viewport; Chart.js would
+           rotate them to near-vertical. Short forms below the breakpoint. */
+        function axisLabels() {
+            return window.matchMedia('(max-width: 800px)').matches
+                ? ['Grp C', 'Grp B', 'Grp A', 'Blended']
+                : groups.map(g => g.title).concat(['Total Blended']);
+        }
+
+        function renderComparisonChart(baseData, simData) {
+            const canvas = document.getElementById('comparisonChart');
+            if (!canvas || typeof Chart === 'undefined') return;
+            const ctx = canvas.getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            const simColors = groups.map(g => g.color).concat(['#10b981']);
+
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: axisLabels(),
+                    datasets: [
+                        {
+                            label: 'Target Baseline Margin',
+                            data: baseData,
+                            backgroundColor: 'rgba(100, 116, 139, 0.4)',
+                            borderWidth: 1,
+                            borderColor: '#64748b',
+                            borderRadius: 3
+                        },
+                        {
+                            label: 'Simulated Executed Margin',
+                            data: simData,
+                            backgroundColor: simColors,
+                            borderWidth: 1,
+                            borderColor: '#0f172a',
+                            borderRadius: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 25 } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleFont: { size: 13 },
+                            bodyFont: { size: 14, weight: 'bold' },
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) { return context.dataset.label + ': ' + context.raw.toFixed(1) + '%'; }
+                            }
+                        },
+                        datalabels: {
+                            color: '#e2e8f0',
+                            font: { weight: 'bold', size: 10 },
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: function(value) { return value.toFixed(1) + '%'; }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            /* Fixed window on purpose. An axis that rescales to the data
+                               hides the severity of a cost shock, because the bars stay
+                               tall and only the labels move. Verified across all 5,184
+                               slider combinations: plotted values span 0.34% to 61.48%,
+                               so a 0-70 window cannot clip while leaving only ~8.5 points
+                               of dead space above the worst case. */
+                            beginAtZero: true,
+                            min: 0,
+                            max: 70,
+                            ticks: {
+                                callback: function(value) { return value + '%'; },
+                                font: { size: 10 },
+                                color: '#cbd5e1'
+                            },
+                            grid: { color: '#334155', borderDash: [5, 5] }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 10, weight: '600' }, color: '#cbd5e1' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Make jargon tooltips reachable by keyboard and by tap
+        document.querySelectorAll('.jargon-tooltip').forEach(el => {
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('role', 'note');
+            el.setAttribute('aria-label', el.textContent.trim() + ': ' + el.getAttribute('data-tip'));
+        });
+
+        // Chart.js and the datalabels plugin both come from a CDN; if either is missing,
+        // keep the numeric dashboard working rather than killing the whole script.
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js failed to load — showing figures without the chart.');
+            const cs = document.querySelector('.chart-section');
+            if (cs) cs.innerHTML = '<div style="padding:40px 20px;text-align:center;color:#94a3b8;font-size:0.85rem;">Chart library unavailable on this network. The pricing log and KPIs below are unaffected.</div>';
+        } else if (typeof ChartDataLabels !== 'undefined') {
+            Chart.register(ChartDataLabels);
+        } else {
+            console.warn('chartjs-plugin-datalabels failed to load — bars will render without value labels.');
+        }
+
+        // Swap axis labels when the viewport crosses the breakpoint (e.g. rotation)
+        let wasNarrow = window.matchMedia('(max-width: 800px)').matches;
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const nowNarrow = window.matchMedia('(max-width: 800px)').matches;
+                if (nowNarrow !== wasNarrow && chartInstance) {
+                    wasNarrow = nowNarrow;
+                    chartInstance.data.labels = axisLabels();
+                    chartInstance.update();
+                }
+            }, 150);
+        });
+
+        runSimulation();
+    </script>
+</body>
+</html>
