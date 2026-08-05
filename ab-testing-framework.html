@@ -13,9 +13,8 @@
     <meta property="og:description" content="A randomized two-proportion Z-test with power analysis, proving dynamic pricing does not erode B2B quote-to-order conversion.">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Austin Sonny Stethem">
-    <!-- TODO: replace example.com with your live domain once deployed -->
-    <meta property="og:url" content="https://example.com/ab-testing-framework.html">
-    <meta property="og:image" content="https://example.com/og-preview.png">
+    <meta property="og:url" content="https://austin-stethem.github.io/ab-testing-framework.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
@@ -38,11 +37,8 @@
 
     <style>
         /* Base Brand Colors and Typography */
+        /* Brand tokens live in portfolio.css; only the chart palette is local. */
         :root {
-            --dark-slate-blue: #1a2433;
-            --alert-red: #b32525;
-            --bg-color: #fbfbfb;
-            
             /* Infographic Specific Dark Theme Colors */
             --info-bg: #0f172a;
             --info-panel: #1e293b;
@@ -55,7 +51,7 @@
         body { 
             font-family: 'Inter', sans-serif; 
             margin: 0; padding: 0; 
-            background-color: var(--bg-color); 
+            background-color: var(--bg-color, #fbfbfb); 
             color: #334155; 
             font-size: 10.5pt;
             line-height: 1.6;
@@ -64,11 +60,11 @@
         /* --- PORTFOLIO SPECIFIC STYLES --- */
         .portfolio-content { max-width: 950px; margin: 0 auto; padding: 40px 20px; }
         
-        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        .portfolio-content h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: #334155; }
 
-        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue, #1a2433); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue, #1a2433); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
 
         /* --- DASHBOARD WRAPPER (Infographic Style) --- */
@@ -80,10 +76,14 @@
             border: 1px solid #1e293b;
         }
 
-        .dash-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 20px;}
+        /* Stacked and centred to match the sidebar headers on the other four tools.
+             Previously a space-between row with the status badge pushed to the right,
+             which read as a different design language. Centring also promotes the badge
+             — the live verdict — to a hero element instead of a corner ornament. */
+        .dash-header { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 20px;}
         .dash-title h3 { font-size: 2.2rem; font-weight: 900; margin: 0; letter-spacing: -1px; font-family: 'Inter', sans-serif;}
         .dash-title span { color: var(--curve-control); }
-        .dash-subtitle { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; max-width: 600px;}
+        .dash-subtitle { font-size: 0.9rem; color: #94a3b8; margin-top: 5px; max-width: 600px; margin-left: auto; margin-right: auto;}
         
         .logic-instruction-box { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-left: 4px solid var(--curve-control); padding: 15px 20px; border-radius: 4px; font-size: 0.9rem; color: #cbd5e1; margin-bottom: 25px; line-height: 1.5; }
         
@@ -105,8 +105,47 @@
         /* Interactive Sliders */
         .control-group { margin-bottom: 15px; text-align: left; }
         .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
-        input[type="range"] { width: 100%; accent-color: var(--curve-variant); cursor: pointer; }
-        #slider-n { accent-color: #64748b; }
+
+        /* Local slider baseline. Duplicates portfolio.css deliberately: without it, a
+           missing shared sheet drops the page back to the native OS slider, which looks
+           nothing like the rest of the dashboard. Geometry matches the shared rules so
+           the touch scaling in portfolio.css still lines up. */
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
+
+        /* --- Colour-coded slider thumbs ------------------------------------------
+           Each control is tinted to match the curve it drives, so the eye can link a
+           slider to its distribution without reading the labels. This overrides only
+           the thumb colour; track geometry and touch sizing stay in portfolio.css.
+           Note: accent-color cannot be used here, because the shared baseline sets
+           appearance:none, which disables it. The thumb pseudo-elements are the hook. */
+        #slider-cr::-webkit-slider-thumb {
+            background: var(--curve-variant);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
+        }
+        #slider-cr::-moz-range-thumb { background: var(--curve-variant); }
+
+        #slider-n::-webkit-slider-thumb {
+            background: #64748b;
+            box-shadow: 0 0 8px rgba(100, 116, 139, 0.45);
+        }
+        #slider-n::-moz-range-thumb { background: #64748b; }
+
+        /* The control arm is fixed at 10%, so its slider is disabled and decorative.
+           It is the only disabled range on the page. */
+        input[type="range"]:disabled::-webkit-slider-thumb {
+            background: var(--curve-control);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+        }
+        input[type="range"]:disabled::-moz-range-thumb { background: var(--curve-control); }
+        /* portfolio.css dims disabled inputs to 0.55; lift it enough for the blue to read */
+        input[type="range"]:disabled { opacity: 0.75; }
 
         /* Bottom Three Columns */
 
@@ -119,11 +158,31 @@
         
         .dashboard-container        .dashboard-container .jargon-tooltip:hover { border-bottom-color: #ffffff; }
 
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: #fff; max-width: none; }
+
+            /* portfolio.css hides .next-step-box to spare the toner; the closing
+               narrative still belongs on paper, so re-show it unstyled. */
+            .next-step-box {
+                display: block !important;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-top: 24px;
+                color: #000;
+            }
+            .next-step-box h3 { color: #000; }
+            /* Doubled class: portfolio.css uses .next-step-box.next-step-box p */
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+
         /* --- Added in review: mobile + a11y hardening ------------------------ */
         @media (max-width: 800px) {
             body { padding-left: 16px; padding-right: 16px; }
             p { text-align: left; }
-            .dash-header { flex-direction: column; text-align: center; gap: 15px; }
             /* Two spans justified apart collapse into each other at phone widths */
             .chart-header { flex-direction: column; align-items: flex-start; gap: 6px; }
             .chart-wrapper { height: 300px; }
@@ -227,7 +286,7 @@
                 <div class="kpi-card-header" style="color: var(--curve-control);">Control: Old Prices</div>
                 <div class="control-group">
                     <label>Baseline Conversion <span>10.0%</span></label>
-                    <input type="range" disabled value="10" aria-hidden="true" tabindex="-1" min="5" max="20" style="accent-color: var(--curve-control);">
+                    <input type="range" disabled value="10" aria-hidden="true" tabindex="-1" min="5" max="20">
                 </div>
                 <div class="control-group">
                     <label for="slider-n">Traffic Sample (N) <span id="n-val-display">5,000</span></label>
@@ -387,11 +446,15 @@
                 dataB.push(normalPDF(i, pB, stdDevB));
             }
 
+            /* The p-value is two-sided, so the acceptance region has two edges. Drawing
+               only the left one implied a one-tailed test and hid the fact that a large
+               enough UPLIFT is equally significant. */
             const critValLeft = pA - (Z_ALPHA * se);
-            drawChart(labels, dataA, dataB, critValLeft * 100, pA * 100, pB * 100);
+            const critValRight = pA + (Z_ALPHA * se);
+            drawChart(labels, dataA, dataB, critValLeft * 100, critValRight * 100, pA * 100, pB * 100);
         }
 
-        function drawChart(labels, dataA, dataB, critValLeft, meanA, meanB) {
+        function drawChart(labels, dataA, dataB, critValLeft, critValRight, meanA, meanB) {
             const el = document.getElementById('bellChart');
             if (!el || typeof Chart === 'undefined') return;
             const ctx = el.getContext('2d');
@@ -411,13 +474,16 @@
                     };
 
                     c.save();
-                    c.beginPath();
-                    c.moveTo(getXPixel(critValLeft), yAxis.top);
-                    c.lineTo(getXPixel(critValLeft), yAxis.bottom);
                     c.lineWidth = 2;
                     c.strokeStyle = '#ef4444';
                     c.setLineDash([5, 5]);
-                    c.stroke();
+                    [critValLeft, critValRight].forEach(v => {
+                        const x = getXPixel(v);
+                        c.beginPath();
+                        c.moveTo(x, yAxis.top);
+                        c.lineTo(x, yAxis.bottom);
+                        c.stroke();
+                    });
 
                     // Explicit font and alignment: without these the labels inherit
                     // whatever Chart.js last set and hang off to the right of the peak
@@ -442,7 +508,7 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Volume Loss Boundary (95%)',
+                            label: '95% Significance Boundaries (two-sided)',
                             data: [],
                             borderColor: '#ef4444', borderWidth: 2, borderDash: [5, 5],
                             backgroundColor: 'transparent', pointRadius: 0
@@ -498,6 +564,22 @@
             const w = document.querySelector('.chart-wrapper');
             if (w) w.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;">Chart library unavailable on this network. The Z-score and p-value below are unaffected.</div>';
         }
+
+        /* The x-axis tick density is chosen from the viewport at draw time, so a
+           rotation has to trigger a redraw. Throttled, and only when the breakpoint is
+           actually crossed — resize fires continuously on some mobile browsers. */
+        let wasNarrow = window.matchMedia('(max-width: 800px)').matches;
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const nowNarrow = window.matchMedia('(max-width: 800px)').matches;
+                if (nowNarrow !== wasNarrow) {
+                    wasNarrow = nowNarrow;
+                    updateSimulation();
+                }
+            }, 150);
+        });
 
         updateSimulation();
 
