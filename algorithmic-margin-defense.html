@@ -50,12 +50,12 @@
             max-width: 950px;
             margin: 0 auto;
             padding: 40px 20px 90px;
-            background-color: var(--bg-color);
+            background-color: var(--bg-color, #fbfbfb);
             -webkit-font-smoothing: antialiased;
         }
 
-        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-        h3 { font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, #1a2433); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
         p { text-align: justify; margin-bottom: 15px; color: #334155; }
         ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
         li { margin-bottom: 8px; }
@@ -76,10 +76,10 @@
 
         .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
 
-        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px;}
+        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center;}
         .dash-header .dash-title { color: #f8fafc; font-size: 1.6rem; margin: 0; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
         .dash-header .dash-title span { color: #f87171; }
-        .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: left;}
+        .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;}
 
         .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: #cbd5e1;}
 
@@ -89,8 +89,21 @@
         .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: #f87171;}
 
 
+        /* Local slider baseline. Duplicates portfolio.css deliberately: without it, a
+           missing shared sheet drops the page back to the native OS slider, which looks
+           nothing like the rest of the dashboard. Geometry matches the shared rules so
+           the touch scaling in portfolio.css still lines up. */
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
+
         .btn-run {
-            background: var(--alert-red); color: white; border: none; padding: 16px 20px; width: 100%;
+            background: var(--alert-red, #b32525); color: white; border: none; padding: 16px 20px; width: 100%;
             font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; text-transform: uppercase;
             cursor: pointer; margin-top: 10px; margin-bottom: 10px; letter-spacing: 1.5px;
             transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(179,37,37,0.3);
@@ -101,7 +114,7 @@
         .rule-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); padding: 15px; border-radius: 6px; font-size: 0.8rem; color: #94a3b8; margin-bottom: 25px; }
         .rule-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px; gap: 10px; }
         .rule-row:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
-        .context-box { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--info-border); border-left: 3px solid #cbd5e1; padding: 15px; border-radius: 4px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; transition: border-left-color 0.3s; min-height: 150px;}
+        .context-box { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--info-border); border-left: 3px solid #cbd5e1; padding: 15px; border-radius: 4px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; transition: border-left-color 0.3s; min-height: 128px;}
 
         /* KPIs */
         .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
@@ -117,16 +130,21 @@
         .chart-wrapper { position: relative; height: 380px; width: 100%; }
 
         /* Log Table */
-        .log-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; overflow-x: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
-        .log-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; color: #e2e8f0; font-family: 'Inter', sans-serif; min-width: 620px;}
-        .log-table th { background: #0f172a; color: #94a3b8; padding: 12px 10px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; font-weight: 800; border-bottom: 1px solid var(--info-border);}
-        .log-table td { padding: 12px 10px; border-bottom: 1px solid var(--info-border); color: #cbd5e1;}
+        .log-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        /* No min-width and no overflow container. The panel only ever offers about
+           510px (950 body - 340 sidebar - 60 main padding - 32 section padding), so a
+           620px minimum guaranteed a horizontal scrollbar at every viewport width.
+           Cells wrap instead, which is what a table should do. */
+        .log-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; color: #e2e8f0; font-family: 'Inter', sans-serif; table-layout: auto; }
+        .log-table th { background: #0f172a; color: #94a3b8; padding: 10px 6px; text-align: left; text-transform: uppercase; letter-spacing: 0.3px; font-size: 0.68rem; font-weight: 800; border-bottom: 1px solid var(--info-border); vertical-align: bottom; }
+        .log-table td { padding: 11px 6px; border-bottom: 1px solid var(--info-border); color: #cbd5e1; vertical-align: middle; }
+        .log-table td:first-child { line-height: 1.3; }
         .log-table tr:last-child td { border-bottom: none; }
 
-        .badge-lock { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
-        .badge-safe { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
-        .badge-elastic { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
-        .badge-warn { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; display: inline-block;}
+        .badge-lock { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-safe { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-elastic { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-warn { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
 
         .status-safe { border-top-color: #10b981 !important; }
         .status-warn { border-top-color: #f59e0b !important; }
@@ -156,7 +174,7 @@
                panel, so the table was 2.3x too wide and every row required sideways
                scrolling. Below the breakpoint each row becomes its own card with the
                column name supplied by data-label, so nothing scrolls. */
-            .log-section { overflow-x: visible; padding: 16px; }
+            .log-section { padding: 16px; }
             .log-table { min-width: 0; display: block; }
             .log-table thead { display: none; }
             .log-table tbody, .log-table tr, .log-table td { display: block; width: 100%; }
@@ -344,7 +362,7 @@
                 </div>
             </div>
 
-            <div style="margin-top: auto; padding-top: 10px;">
+            <div>
                 <div class="sidebar-subheader">Actionable Directive</div>
                 <div class="context-box" id="dynamic-context" role="status" aria-live="polite">
                     <strong style="color: #e2e8f0;">Status: Pending Execution</strong><br><br>Adjust the disruption sliders and execute the defense matrix to generate the recovery summary.
@@ -387,17 +405,17 @@
                 </div>
             </div>
 
-            <div class="log-section" tabindex="0" role="region" aria-label="Algorithm pricing log">
+            <div class="log-section" role="region" aria-label="Algorithm pricing log">
                 <div class="chart-header" style="text-align: left; margin-bottom: 10px;">Algorithm Pricing Log</div>
                 <table class="log-table" id="log-table">
                     <thead>
                         <tr>
-                            <th scope="col">Stratification Tier</th>
-                            <th scope="col">Volume Split</th>
-                            <th scope="col">Base Margin</th>
+                            <th scope="col">Tier</th>
+                            <th scope="col">Volume</th>
+                            <th scope="col">Base</th>
                             <th scope="col">Post-Shock</th>
-                            <th scope="col">Required Markup</th>
-                            <th scope="col">Subsidization Status</th>
+                            <th scope="col">Markup</th>
+                            <th scope="col">Status</th>
                         </tr>
                     </thead>
                     <tbody id="matrix-body">
@@ -608,17 +626,17 @@
                     if (g.id === 'A') {
                         badgeHTML = unmitigated > 0
                             ? `<span class="badge-lock">SHIELD BREACHED</span>`
-                            : `<span class="badge-warn">ANCHOR CAP ENGAGED</span>`;
+                            : `<span class="badge-warn">AT ANCHOR CAP</span>`;
                     } else if (atCeiling) {
-                        badgeHTML = `<span class="badge-lock">MAX ELASTICITY TAPPED</span>`;
+                        badgeHTML = `<span class="badge-lock">ELASTICITY MAXED</span>`;
                     } else {
                         badgeHTML = `<span class="badge-elastic">GENERATING SURPLUS</span>`;
                     }
                 } else {
-                    displayedAction = g.id === 'A' ? `0.0% (Price Locked)` : `0.0%`;
+                    displayedAction = g.id === 'A' ? `0.0% \u2014 locked` : `0.0%`;
                     badgeHTML = g.id === 'A'
-                        ? `<span class="badge-safe">100% SHIELDED</span>`
-                        : `<span class="badge-safe">NO ACTION REQUIRED</span>`;
+                        ? `<span class="badge-safe">SHIELDED</span>`
+                        : `<span class="badge-safe">NO ACTION</span>`;
                 }
 
                 const shockColor = postShock[i] < g.baseMargin ? 'color:#f59e0b;' : 'color:#cbd5e1;';
