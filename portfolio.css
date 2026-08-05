@@ -233,8 +233,12 @@ input:focus-visible,
     letter-spacing: 0;
     font-weight: normal;
 }
-.next-step-box p {
-    color: var(--line);
+/* The doubled class is deliberate. `.next-step-box p` ties on specificity with a
+   page-level `.portfolio-content p`, and portfolio.css loads first — so the page's
+   dark body colour would win on source order and paint dark text onto the navy
+   panel. Doubling the class outranks it without resorting to !important. */
+.next-step-box.next-step-box p {
+    color: #f8fafc;
     font-size: 10pt;
     max-width: 650px;
     margin: 0 auto 25px auto;
@@ -346,11 +350,16 @@ input:focus-visible,
     }
 }
 
-/* Larger grab targets on touch devices */
+/* Larger grab targets on touch devices. WCAG asks for ~44px; a bare text link
+   or a 28px button is a miss-tap waiting to happen on a phone. */
 @media (pointer: coarse) {
     input[type="range"] { margin-top: 10px; padding: 6px 0; }
     input[type="range"]::-webkit-slider-thumb { height: 26px; width: 26px; margin-top: -10px; }
     input[type="range"]::-moz-range-thumb { height: 26px; width: 26px; }
+
+    .back-link { padding: 10px 4px; margin-bottom: 14px; }
+    .nav-btn { padding: 18px 20px; }
+    .jargon-tooltip { padding: 3px 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
