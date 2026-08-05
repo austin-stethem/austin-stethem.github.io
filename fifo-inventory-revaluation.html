@@ -3,16 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFO Inventory Revaluation - Austin Sonny Stethem</title>
+
+    <meta name="description" content="A cash-flow model showing how pricing on replacement cost turns a physical inventory buffer into immediate, quantifiable EBITDA.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <!-- Open Graph / Twitter Tags -->
+    <meta property="og:title" content="FIFO Inventory Revaluation & EBITDA Windfall">
+    <meta property="og:description" content="A cash-flow model showing how pricing on replacement cost turns a physical inventory buffer into immediate, quantifiable EBITDA.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <!-- TODO: replace example.com with your live domain once deployed -->
+    <meta property="og:url" content="https://example.com/fifo-inventory-revaluation.html">
+    <meta property="og:image" content="https://example.com/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>FIFO Inventory Revaluation | Austin Sonny Stethem</title>
 
     <!-- Custom SVG Favicon (Perfectly Centered) -->
     <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     
     <!-- Import standard ecosystem fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
     
+    <link rel="stylesheet" href="portfolio.css">
+
     <style>
         :root { 
             --dark-slate-blue: #1a2433; 
@@ -37,42 +58,8 @@
             background-color: var(--bg-color); 
         }
         
-        .back-link { color: #b32525; text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
-        .back-link:hover { text-decoration: underline; }
-        
-        .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: #b32525; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
-        .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 26pt; color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
-        
-        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; box-sizing: border-box; }
-        .meta-cell:last-child { border-right: none; }
-        .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .meta-value { color: #1e293b; font-weight: 500; }
-        
-        .nda-note { 
-            background: #fff; 
-            padding: 15px; 
-            margin: 20px 0; 
-            font-size: 8.5pt; 
-            font-style: italic; 
-            color: #334155; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
-            border-radius: 0 6px 6px 0; 
-            border: 1px solid #e2e8f0; 
-            border-left: 4px solid #b32525; 
-        }
-        
         h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         p { text-align: justify; margin-bottom: 15px; color: #334155; }
-        
-        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
-
-        .jargon-tooltip { position: relative; border-bottom: 1px dashed #b32525; cursor: help; color: var(--dark-slate-blue); font-weight: 600; white-space: nowrap; transition: border-color 0.2s ease; }
-        .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
-        .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
-        .jargon-tooltip:hover::after, .jargon-tooltip:hover::before { opacity: 1; visibility: visible; bottom: 135%; }
         
         /* --- DASHBOARD WRAPPER (SaaS Style) --- */
         .sim-container {
@@ -134,66 +121,44 @@
         .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue); font-family: 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: #334155; font-size: 10pt; line-height: 1.6; }
 
-        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid #b32525;}
-        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: 18pt; margin-bottom: 12px; border-bottom: none; padding-bottom: 0;}
-        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
-        
-        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
-        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;}
-        .nav-btn.next { text-align: right; background: #b32525; border-color: #b32525; align-items: flex-end;}
-        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
-        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
-        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
-        .nav-btn.next .nav-label { color: #fca5a5; }
-        .nav-title { font-size: 11pt; font-weight: bold;}
-
-        /* WATERMARK */
-        .watermark {
-            position: fixed;
-            bottom: 12px;
-            right: 15px;
-            font-size: 0.65rem;
-            color: #94a3b8;
-            opacity: 0.6;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.5px;
-            pointer-events: none; 
-            user-select: none; 
-            z-index: 9999;
-        }
-
         @media (max-width: 800px) {
-            .meta-table tr { display: flex; flex-direction: column; }
-            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; box-sizing: border-box; }
             .sim-container { flex-direction: column; }
             .sim-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid #334155; }
             .sim-main { padding: 15px; box-sizing: border-box; min-width: unset; }
-            .project-navigation { flex-direction: column; }
-            .nav-btn { width: 100%; align-items: center !important; text-align: center !important; box-sizing: border-box; }
             .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
-            .doc-title { font-size: 22pt; }
         }
-    </style>
+    
+        /* --- Added in review: mobile + a11y hardening ------------------------ */
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            .chart-box { height: 290px; }
+        }
+</style>
 </head>
 <body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive dashboard</a>
 
     <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
 
     <div class="doc-header">
         <!-- CUSTOM BRAND LOGO -->
-        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
             <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
-            <polyline points="26,66 46,44 58,56 70,38" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="26" cy="66" r="5" fill="#1a2433"/>
-            <circle cx="46" cy="44" r="5" fill="#1a2433"/>
-            <circle cx="58" cy="56" r="5" fill="#1a2433"/>
-            <circle cx="70" cy="38" r="7" fill="#b32525"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
         </svg>
-        <div class="doc-tagline">Financial Modeling & P&L Strategy</div>
-        <div class="doc-title">FIFO Inventory Revaluation & EBITDA Windfall</div>
+        <p class="doc-tagline">Financial Modeling & P&L Strategy</p>
+        <h1 class="doc-title">FIFO Inventory Revaluation & EBITDA Windfall</h1>
     </div>
 
     <table class="meta-table">
+        <tbody>
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
@@ -208,6 +173,7 @@
                 <span class="meta-value">Capitalizing on supply chain inflation to generate short-term EBITDA windfalls.</span>
             </td>
         </tr>
+    </tbody>
     </table>
 
     <div class="nda-note">
@@ -235,29 +201,29 @@
     <h2>3. Interactive FIFO Windfall Simulator</h2>
     <p><em>Use the operational sliders below to simulate a vendor cost shock on a high-velocity product line. The engine will calculate the exact amount of "Free EBITDA" generated by executing the price increase immediately while bleeding through the existing physical inventory buffer.</em></p>
 
-    <div class="sim-container">
+    <div class="sim-container" id="dashboard">
         <div class="sim-sidebar">
             <div class="sidebar-header">Operational Inputs</div>
             
             <div class="control-group">
-                <label><span>Monthly Velocity (Run Rate):</span> <span class="val-readout" style="color: #38bdf8;" id="val-velocity">1,500 Units</span></label>
-                <input type="range" id="slider-velocity" min="500" max="5000" step="100" value="1500">
+                <label for="slider-velocity"><span>Monthly Velocity (Run Rate):</span> <span class="val-readout" style="color: #38bdf8;" id="val-velocity">1,500 Units</span></label>
+                <input type="range" id="slider-velocity" aria-label="Monthly sales velocity in units" min="500" max="5000" step="100" value="1500">
                 <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Baseline target margin: 35.0%</div>
             </div>
 
             <div class="control-group">
-                <label><span>Weighted Cost Spike (%):</span> <span class="val-readout" style="color: var(--alert-red);" id="val-increase">+12.0%</span></label>
-                <input type="range" id="slider-increase" min="2" max="25" step="0.5" value="12.0">
+                <label for="slider-increase"><span>Weighted Cost Spike (%):</span> <span class="val-readout" style="color: var(--alert-red);" id="val-increase">+12.0%</span></label>
+                <input type="range" id="slider-increase" aria-label="Weighted vendor cost spike percentage" min="2" max="25" step="0.5" value="12.0">
                 <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Blended average across KVI/Elastic tiers.</div>
             </div>
 
             <div class="control-group">
-                <label><span>Current QOH Buffer (Days):</span> <span class="val-readout" style="color: var(--success-green);" id="val-qoh">60 Days</span></label>
-                <input type="range" id="slider-qoh" min="0" max="150" step="15" value="60">
+                <label for="slider-qoh"><span>Current QOH Buffer (Days):</span> <span class="val-readout" style="color: var(--success-green);" id="val-qoh">60 Days</span></label>
+                <input type="range" id="slider-qoh" aria-label="Current quantity on hand buffer in days" min="0" max="150" step="15" value="60">
             </div>
 
             <div class="logic-box">
-                <strong>System Logic:</strong> The algorithm assumes the retail price is raised on Day 1 to defend the 35% baseline against the new replacement cost. The Windfall is generated exclusively on the physical units already owned at the legacy cost.
+                <strong>System Logic:</strong> The algorithm assumes the retail price is raised on Day 1 to defend the 35% baseline against the new replacement cost. The Windfall is generated exclusively on the physical units already owned at the legacy cost, and is measured against steady state &mdash; buying at the new cost and selling at the new price. Per unit it equals the cost increase we did not have to pay.
             </div>
         </div>
 
@@ -276,14 +242,14 @@
                 <div class="kpi-card" style="border-top-color: var(--success-green);">
                     <div class="kpi-title">Total EBITDA Windfall</div>
                     <div class="kpi-value" id="out-windfall" style="color: var(--success-green);">$--</div>
-                    <div class="kpi-sub">Pure P&L Profit Generation</div>
+                    <div class="kpi-sub" id="out-windfall-sub">Pure P&amp;L Profit Generation</div>
                 </div>
             </div>
 
             <div class="chart-container">
                 <div class="chart-header">Margin Realization Timeline (FIFO Bleed-Out)</div>
                 <div class="chart-box">
-                    <canvas id="fifoChart"></canvas>
+                    <canvas id="fifoChart" role="img" aria-label="Stacked bar chart of monthly baseline profit and additional FIFO windfall profit over six months"></canvas>
                 </div>
             </div>
         </div>
@@ -300,7 +266,7 @@
     <div class="next-step-box">
         <h3>Ecosystem Architecture Complete</h3>
         <p>This concludes the 5-step Enterprise Pricing Architecture scenario. We successfully identified the geospatial threat, probabilistically modeled the risk floor, deployed guardrail-constrained ERP updates, established the statistical feedback loop to validate the market, and ultimately captured the FIFO inventory windfall.</p>
-        <div class="project-navigation">
+        <nav class="project-navigation" aria-label="Case study navigation">
             <a href="ab-testing-framework.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Previous Phase</span>
                 <span class="nav-title">Step 4: Statistical Validation</span>
@@ -309,89 +275,95 @@
                 <span class="nav-label">End of Scenario &rarr;</span>
                 <span class="nav-title">Return to Ecosystem Hub</span>
             </a>
-        </div>
+        </nav>
     </div>
 
     <!-- Watermark for Portfolio Protection -->
-    <div class="watermark">&copy; 2026 Austin Stethem. All rights reserved.</div>
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
 
     <script>
-        // DOM Element bindings
         const sliderVelocity = document.getElementById('slider-velocity');
         const sliderIncrease = document.getElementById('slider-increase');
         const sliderQoh = document.getElementById('slider-qoh');
-        
+
         const valVelocity = document.getElementById('val-velocity');
         const valIncrease = document.getElementById('val-increase');
         const valQoh = document.getElementById('val-qoh');
 
         let chartInstance = null;
 
-        // Base Financials
         const BASE_COST = 100.00;
         const TARGET_MARGIN = 0.35;
-        const BASE_PRICE = BASE_COST / (1 - TARGET_MARGIN); // $153.85
+        const HORIZON_MONTHS = 6;
+
+        const isNarrow = () => window.matchMedia('(max-width: 800px)').matches;
 
         function updateSimulation() {
-            // Get inputs
-            const velocityMonthly = parseInt(sliderVelocity.value);
+            const velocityMonthly = parseInt(sliderVelocity.value, 10);
             const increasePct = parseFloat(sliderIncrease.value) / 100;
-            const qohDays = parseInt(sliderQoh.value);
+            const qohDays = parseInt(sliderQoh.value, 10);
 
-            // Update UI Labels
             valVelocity.innerText = velocityMonthly.toLocaleString() + " Units";
             valIncrease.innerText = "+" + (increasePct * 100).toFixed(1) + "%";
             valQoh.innerText = qohDays + " Days";
 
-            // Mathematics
             const newCost = BASE_COST * (1 + increasePct);
             const newPrice = newCost / (1 - TARGET_MARGIN);
-            
-            // Peak margin is selling Old Cost at New Price
+
+            // Peak margin = selling legacy-cost stock at the new retail price
             const peakMargin = (newPrice - BASE_COST) / newPrice;
 
-            // Windfall calculation
             const unitsOwned = (velocityMonthly / 30) * qohDays;
-            const normalProfitPerUnit = BASE_PRICE - BASE_COST;
-            const windfallProfitPerUnit = newPrice - BASE_COST;
-            const absoluteWindfall = (windfallProfitPerUnit - normalProfitPerUnit) * unitsOwned;
 
-            // Update KPIs
-            document.getElementById('out-duration').innerText = qohDays + " Days";
-            document.getElementById('out-peak').innerText = (peakMargin * 100).toFixed(1) + "%";
-            document.getElementById('out-windfall').innerText = "$" + Math.round(absoluteWindfall).toLocaleString();
+            /* WINDFALL DEFINITION
+               The windfall is what the buffer earns ABOVE steady state — that is,
+               above buying at the new replacement cost and selling at the new price.
+               Per unit that is exactly (newCost - BASE_COST): the cost we did not pay.
+               Measuring against the OLD price instead would fold the price increase
+               itself into the "windfall" and inflate it by 1/(1 - margin), which is
+               a different number from the one the chart below stacks.            */
+            const windfallPerUnit = newCost - BASE_COST;
 
-            // Generate Chart Data (Timeline over 6 months)
-            const labels = ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'];
-            let baselineProfitData = [];
-            let windfallData = [];
-            
+            const labels = [];
+            const baselineProfitData = [];
+            const windfallData = [];
             let remainingOldUnits = unitsOwned;
+            let realisedWindfall = 0;
 
-            for(let i=0; i<6; i++) {
-                let monthlyUnitsSold = velocityMonthly;
-                let monthOldUnitsSold = Math.min(remainingOldUnits, monthlyUnitsSold);
-                let monthNewUnitsSold = monthlyUnitsSold - monthOldUnitsSold;
+            for (let i = 0; i < HORIZON_MONTHS; i++) {
+                labels.push('Month ' + (i + 1));
+                const monthOldUnitsSold = Math.min(remainingOldUnits, velocityMonthly);
 
-                // Baseline profit if we were just buying and selling at the new replacement cost
-                let baselineProfit = monthlyUnitsSold * (newPrice - newCost);
-                baselineProfitData.push(baselineProfit);
-                
-                // Track absolute windfall dollars generated purely from the old, cheap inventory
-                let monthWindfall = monthOldUnitsSold * (newCost - BASE_COST);
+                // Steady-state profit on the full month's volume at replacement cost
+                baselineProfitData.push(velocityMonthly * (newPrice - newCost));
+
+                const monthWindfall = monthOldUnitsSold * windfallPerUnit;
                 windfallData.push(monthWindfall);
+                realisedWindfall += monthWindfall;
 
                 remainingOldUnits -= monthOldUnitsSold;
+            }
+
+            document.getElementById('out-duration').innerText = qohDays + " Days";
+            document.getElementById('out-peak').innerText = (peakMargin * 100).toFixed(1) + "%";
+            document.getElementById('out-windfall').innerText = "$" + Math.round(realisedWindfall).toLocaleString();
+
+            const sub = document.getElementById('out-windfall-sub');
+            if (sub) {
+                sub.innerText = unitsOwned > 0
+                    ? `${Math.round(unitsOwned).toLocaleString()} legacy units × $${windfallPerUnit.toFixed(2)} avoided cost`
+                    : 'No buffer — nothing to revalue';
             }
 
             renderChart(labels, baselineProfitData, windfallData);
         }
 
         function renderChart(labels, baselineProfitData, windfallData) {
-            const ctx = document.getElementById('fifoChart').getContext('2d');
+            const el = document.getElementById('fifoChart');
+            if (!el || typeof Chart === 'undefined') return;
+            const ctx = el.getContext('2d');
             if (chartInstance) chartInstance.destroy();
-            
-            // Ensure Chart uses the new Inter font
+
             Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
 
             chartInstance = new Chart(ctx, {
@@ -399,21 +371,24 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        {
-                            label: 'Extra FIFO Windfall Profit ($)',
-                            data: windfallData,
-                            backgroundColor: '#10b981', // Neon Emerald Green
-                            borderColor: '#047857',
-                            borderWidth: 1,
-                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }
-                        },
+                        /* Baseline is listed FIRST so it stacks on the bottom. The
+                           rounded corners then land on the outside of the column
+                           instead of buried in the middle of the stack. */
                         {
                             label: 'Baseline Standard Profit ($)',
                             data: baselineProfitData,
-                            backgroundColor: 'rgba(100, 116, 139, 0.4)', // Slate Transparent
+                            backgroundColor: 'rgba(100, 116, 139, 0.4)',
                             borderColor: '#64748b',
                             borderWidth: 1,
                             borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4 }
+                        },
+                        {
+                            label: 'Extra FIFO Windfall Profit ($)',
+                            data: windfallData,
+                            backgroundColor: '#10b981',
+                            borderColor: '#047857',
+                            borderWidth: 1,
+                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }
                         }
                     ]
                 },
@@ -422,7 +397,7 @@
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: { position: 'top', labels: { font: { size: 12, weight: '600' }, color: '#e2e8f0' } },
+                        legend: { position: 'top', labels: { font: { size: 12, weight: '600' }, color: '#e2e8f0', boxWidth: 14 } },
                         tooltip: {
                             backgroundColor: 'rgba(15, 23, 42, 0.95)',
                             titleFont: { size: 13, family: "'Inter', sans-serif" },
@@ -434,11 +409,9 @@
                                 label: function(context) {
                                     return ' ' + context.dataset.label.replace(' ($)', '') + ': $' + Math.round(context.raw).toLocaleString();
                                 },
-                                footer: function(tooltipItems) {
+                                footer: function(items) {
                                     let total = 0;
-                                    tooltipItems.forEach(function(tooltipItem) {
-                                        total += tooltipItem.raw;
-                                    });
+                                    items.forEach(it => { total += it.raw; });
                                     return '\n Total Monthly Profit: $' + Math.round(total).toLocaleString();
                                 }
                             }
@@ -447,29 +420,39 @@
                     scales: {
                         y: {
                             stacked: true,
-                            display: true,
-                            position: 'left',
-                            title: { display: true, text: 'Total Profit Dollars ($)', font: {size: 11, weight: 'bold'}, color: '#94a3b8' },
-                            ticks: { callback: function(value) { return '$' + (value/1000).toFixed(0) + 'k'; }, font: {size: 11}, color: '#cbd5e1' },
+                            beginAtZero: true,
+                            title: { display: true, text: 'Total Profit Dollars ($)', font: { size: 11, weight: 'bold' }, color: '#94a3b8' },
+                            ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k', font: { size: 11 }, color: '#cbd5e1' },
                             grid: { color: '#334155', borderDash: [4, 4] }
                         },
                         x: {
                             stacked: true,
                             grid: { display: false },
-                            ticks: { font: {size: 11, weight: '600'}, color: '#cbd5e1' }
+                            ticks: { font: { size: 11, weight: '600' }, color: '#cbd5e1', maxTicksLimit: isNarrow() ? 4 : 6 }
                         }
                     }
                 }
             });
         }
 
-        // Attach listeners to sliders
         sliderVelocity.addEventListener('input', updateSimulation);
         sliderIncrease.addEventListener('input', updateSimulation);
         sliderQoh.addEventListener('input', updateSimulation);
 
-        // Run simulation immediately on load
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js failed to load — the timeline chart is disabled.');
+            const box = document.querySelector('.chart-box');
+            if (box) box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network. The KPIs above are unaffected.</div>';
+        }
+
         updateSimulation();
+
+        // Jargon tooltips are hover-only in CSS; this makes them keyboard and tap reachable.
+        document.querySelectorAll('.jargon-tooltip').forEach(el => {
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('role', 'note');
+            el.setAttribute('aria-label', el.textContent.trim() + ': ' + el.getAttribute('data-tip'));
+        });
     </script>
 </body>
 </html>
