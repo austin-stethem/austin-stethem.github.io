@@ -35,14 +35,22 @@ frozen in place.
 
 ### How it was built
 
-I wrote the SQL and Python logic locally in VS Code and used an LLM as a copilot for
-the front-end deployment layer. Worth stating plainly, because the distinction matters
-to anyone evaluating this: the financial models and data architecture are mine. The
-JavaScript that renders them in a browser was accelerated.
+The code was written by an LLM working from my direction. My contribution was the
+specification and the review loop: defining what each engine had to do, supplying the
+pricing and inventory logic it needed to encode, testing the output against expected
+behavior, and iterating until the tool did what the strategy required.
 
-That workflow is the actual point. It lets one analyst take a pricing model from
-exploratory analysis to a deployed decision-support tool in days, and put a working
-artifact in front of an executive instead of a slide describing one.
+I state that plainly rather than blur it, because the division of labor is the
+interesting part. Generating a Monte Carlo simulation is now cheap. Knowing that a
+70% price markup is not 70 margin points, that a non-significant A/B result needs a
+power calculation before you act on it, or that a FIFO windfall has to be measured
+against replacement cost rather than last quarter's price — that judgment is what
+separates a script that runs from a model an executive can price against. It is also
+the only part that does not come free with the tooling.
+
+That workflow is the practical argument for this portfolio. It lets one analyst carry
+a pricing model from a domain question to a deployed decision-support tool in days,
+and put a working artifact in front of leadership instead of a slide describing one.
 
 **What each layer does:**
 
@@ -56,5 +64,19 @@ artifact in front of an executive instead of a slide describing one.
 
 ### Stack
 
-`SQL` · `Python (Pandas, Scikit-learn, GeoPandas)` · `Leaflet` · `Phocas BI` ·
-`Advanced Excel` · `AI-assisted development`
+**Analysis & modeling**
+`SQL` · `Python` · `Pandas` · `NumPy` · `Scikit-learn` · `SciPy / StatsModels` ·
+`GeoPandas` · `Jupyter` · `Advanced Excel` · `Phocas BI`
+
+**Methods**
+`Monte Carlo simulation (Box-Muller)` · `K-Means clustering` · `Two-proportion Z-test` ·
+`Power analysis / MDE` · `Elasticity stratification` · `Deterministic optimization` ·
+`Distance-decay / gravity modeling` · `FIFO cash-flow modeling` · `ERP data stratification`
+
+**Delivery & front end**
+`JavaScript (ES6+)` · `HTML5` · `CSS3 (Grid, Flexbox, custom properties)` · `Chart.js` ·
+`Leaflet.js + MarkerCluster` · `Tailwind CSS` · `Canvas API` · `SVG` ·
+`Responsive & WCAG-conscious markup` · `Git / GitHub Pages`
+
+**Workflow**
+`LLM-directed development` · `Prompt engineering` · `Model validation & reconciliation`
