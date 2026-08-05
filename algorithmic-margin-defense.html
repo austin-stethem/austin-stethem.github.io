@@ -154,6 +154,18 @@
         .status-warn { border-top-color: #f59e0b !important; }
         .status-critical { border-top-color: #ef4444 !important; }
 
+        /* --- P-tier ladder ------------------------------------------------- */
+        .ladder-table { width: 100%; border-collapse: collapse; margin: 20px 0 10px; font-size: 9.5pt; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; table-layout: fixed; }
+        .ladder-table th { background: var(--dark-slate-blue, #1a2433); color: #f8fafc; text-align: left; padding: 10px 10px; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 800; }
+        .ladder-table td { padding: 9px 10px; border-bottom: 1px solid #eef2f7; color: #334155; overflow-wrap: break-word; }
+        .ladder-table tr:last-child td { border-bottom: none; }
+        .ladder-table .tier { font-family: 'Fira Code', monospace; font-weight: 700; color: var(--dark-slate-blue, #1a2433); }
+        .ladder-table .num { font-family: 'Fira Code', monospace; text-align: right; }
+        .ladder-table tr.cost-row td { background: #f1f5f9; font-style: italic; color: #475569; }
+        .ladder-table tr.volume-row td { background: #fff5f5; }
+        .ladder-table tr.volume-row .tier { color: var(--alert-red, #b32525); }
+        .ladder-caption { font-size: 8.5pt; color: #64748b; font-style: italic; margin: 0 0 28px 0; text-align: left; }
+
         .code-annotation { background: #e2e8f0; border-left: 4px solid #3b82f6; padding: 12px 18px; font-size: 9.5pt; color: #334155; border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Inter', sans-serif;}
         .code-annotation > strong:first-child { color: #0f172a; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
 
@@ -323,7 +335,59 @@
     <h3>The FIFO Inventory Shield</h3>
     <p>Crucially, this model leverages physical <span class="jargon-tooltip" data-tip="Quantity On Hand: The physical inventory currently sitting in the warehouse."><strong>Quantity on Hand (QOH)</strong></span> as a <span class="jargon-tooltip" data-tip="First-In, First-Out: Selling older, lower-cost inventory at newly elevated retail prices to generate an immediate profit buffer."><strong>FIFO (First-In, First-Out) windfall shield</strong></span>. Before calculating necessary price increases, the algorithm measures how many days of inventory we hold at the old, cheaper cost. It then calculates the exact markups required on Group C and B to mathematically pay for the remaining cost deficit, ensuring enterprise <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability."><strong>EBITDA</strong></span> targets are protected without touching the <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust."><strong>KVIs</strong></span>.</p>
 
-    <h2 id="dashboard">3. Interactive Execution Dashboard</h2>
+    <h2>3. The Price Ladder: What Actually Moves</h2>
+
+    <p>The elasticity groups above describe <em>products</em>. Cutting the other way is the customer ladder, and in a legacy distribution ERP that ladder is a compounding chain of divisors rather than a set of independent prices. Each tier is derived from the one beneath it, so a single cost movement at intake has to travel the whole chain before it reaches the prices that carry the volume.</p>
+
+    <p>The structure below is the real one. The divisors are illustrative proxies &mdash; the actual margins are proprietary &mdash; but the sequence, the audiences, and the gaps are exactly as the system is built.</p>
+
+    <table class="ladder-table">
+        <thead>
+            <tr>
+                <th scope="col" style="width:14%;">Tier</th>
+                <th scope="col" style="width:34%;">Who pays it</th>
+                <th scope="col" style="width:18%;">Derivation</th>
+                <th scope="col" style="width:17%;">Price</th>
+                <th scope="col" style="width:17%;">Margin</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="cost-row"><td class="tier">P11</td><td>Warehouse intake &mdash; what the DC pays</td><td>base cost</td><td class="num">$100.00</td><td class="num">&mdash;</td></tr>
+            <tr class="cost-row"><td class="tier">P10</td><td>Store intake &mdash; the branch's own cost</td><td>&divide; 0.90</td><td class="num">$111.11</td><td class="num">10.0%</td></tr>
+            <tr><td class="tier">P9</td><td>Employee purchase</td><td>&divide; 0.90</td><td class="num">$123.46</td><td class="num">19.0%</td></tr>
+            <tr><td class="tier">P8</td><td>Special rate &mdash; category-specific (paint, chemicals)</td><td>&divide; 0.94</td><td class="num">$131.34</td><td class="num">23.9%</td></tr>
+            <tr class="volume-row"><td class="tier">P4</td><td>Jobber &mdash; fleets and top accounts, deepest loyalty discount</td><td>&divide; 0.88</td><td class="num">$149.25</td><td class="num">33.0%</td></tr>
+            <tr class="volume-row"><td class="tier">P3</td><td>Dealer / installer &mdash; buys from us <em>and</em> from our jobbers</td><td>&divide; 0.94</td><td class="num">$158.77</td><td class="num">37.0%</td></tr>
+            <tr><td class="tier">P2</td><td>Good customers &mdash; small shops, frequent walk-ins</td><td>&divide; 0.88</td><td class="num">$180.42</td><td class="num">44.6%</td></tr>
+            <tr><td class="tier">P1</td><td>Retail list</td><td>&divide; 0.80</td><td class="num">$225.53</td><td class="num">55.7%</td></tr>
+        </tbody>
+    </table>
+    <p class="ladder-caption">P7, P6 and P5 are unused. Nobody designs a scheme with holes in it; they accrete. The two highlighted tiers carry the overwhelming majority of transaction volume, which is the only reason any of this matters financially.</p>
+
+    <h3>Consequence 1: The Dollar Amplification</h3>
+    <p>Because every tier is derived from the one below it, the cumulative multiple from intake to list is roughly <strong>2.26&times;</strong>. A ten dollar movement in landed cost does not require a ten dollar movement in list price &mdash; it requires <strong>$22.55</strong>. Percentage-wise the increase passes through unchanged at every tier, which is precisely why the dollar figure surprises people who have only ever seen the percentage.</p>
+
+    <h3>Consequence 2: Sticky Pricing Bleeds Fastest Where the Volume Is</h3>
+    <p>Leave the ladder untouched through a 10% cost increase and every tier loses margin, but not evenly. The tiers with the thinnest starting margin lose the most points:</p>
+    <ul>
+        <li><strong>P10 store intake:</strong> 10.0% &rarr; 1.0% &nbsp;(&minus;9.0 pts)</li>
+        <li><strong>P4 jobber:</strong> 33.0% &rarr; 26.3% &nbsp;(&minus;6.7 pts)</li>
+        <li><strong>P3 dealer:</strong> 37.0% &rarr; 30.7% &nbsp;(&minus;6.3 pts)</li>
+        <li><strong>P1 retail list:</strong> 55.7% &rarr; 51.2% &nbsp;(&minus;4.4 pts)</li>
+    </ul>
+    <p>The tiers that hurt least are the ones nobody buys at. Six to seven points of margin evaporate precisely where the transactions are, which is what makes a delay of weeks &mdash; not months &mdash; financially material.</p>
+
+    <h3>Consequence 3: Partial Re-Indexing Can Invert the Ladder</h3>
+    <p>This is the trap, and it is the reason the cascade in the dashboard below moves tiers in a defined order rather than opportunistically. The obvious political move under cost pressure is to re-index the tiers with the least resistance and leave the biggest accounts alone. Do that literally &mdash; re-index P4 to the new cost while holding P3 flat &mdash; and the arithmetic produces this:</p>
+    <ul>
+        <li>P4 jobber, re-indexed: <strong>$164.17</strong></li>
+        <li>P3 dealer, held flat: <strong>$158.77</strong></li>
+    </ul>
+    <p>The jobber now pays <strong>$5.40 more than the dealer they resell to.</strong> The P3&ndash;P4 spread is not a discount; it is the margin our own middlemen live on. Compress it and you are competing with your best customers using your own price file. Invert it and the distribution model stops functioning &mdash; not because the margin math is wrong, but because the relationship logic the ladder encodes has been broken.</p>
+
+    <p>That constraint is why margin defense cannot be a single blanket adjustment, and why the engine below cascades in a fixed sequence with hard caps per tier rather than simply solving for the cheapest path to the target.</p>
+
+    <h2 id="dashboard">4. Interactive Execution Dashboard</h2>
     <p><em>Adjust the market disruption sliders below to simulate a sudden cost spike. Click "Execute Margin Defense" to trigger the deterministic algorithm. It will apply your physical inventory shield and dynamically calculate the required cross-subsidization markups needed to defend the Blended Target Margin. Push freight past roughly 20% with a low inventory buffer and you will watch the cascade run out of elastic headroom.</em></p>
 
     <div class="dashboard-container">
@@ -430,7 +494,7 @@
         </div>
     </div>
 
-    <h2>4. Result: Python Implementation &amp; Data Engineering</h2>
+    <h2>5. Result: Python Implementation &amp; Data Engineering</h2>
     <p>The mathematical backbone of this strategy is executed in <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture."><strong>Python</strong></span> using <code><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel."><strong>pandas</strong></span></code>. Before the deterministic math runs, the engine must sanitize raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> extracts—handling missing vendor costs, mapping messy historical data, and enforcing data hygiene to ensure the subsidization logic doesn't crash on null values.</p>
 
     <div class="code-annotation">
