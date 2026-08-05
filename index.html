@@ -123,7 +123,7 @@
             margin-top: 40px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 800px) {
             body { padding: 28px 16px 70px; }
             .grid { grid-template-columns: 1fr; gap: 18px; }
             .card { padding: 24px 20px; }
@@ -250,7 +250,12 @@
         /* .watermark, .skip-link and focus styles now live in portfolio.css */
 
         /* On small screens the fixed watermark overlaps content — dock it instead */
-        @media (max-width: 600px) { body { padding-bottom: 28px; } }
+        @media (max-width: 800px) { body { padding-bottom: 28px; } }
+
+        @media (pointer: coarse) {
+            .contact-nav a { padding: 13px 18px; }
+            .btn { padding: 14px 22px; }
+        }
 
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
