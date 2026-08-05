@@ -190,6 +190,8 @@
         @media (max-width: 800px) {
             body { padding-left: 16px; padding-right: 16px; }
             p { text-align: left; }
+            /* Two 160px columns cannot hold a monospace KPI value plus its label */
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
             /* Two spans justified apart collapse into each other at phone widths */
             .chart-header { flex-direction: column; align-items: flex-start; gap: 6px; }
             .chart-wrapper { height: 300px; }
