@@ -1,281 +1,502 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Enterprise Crisis Management | DR Lab</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; color: #333; line-height: 1.55; max-width: 10.5in; margin: 0 auto; padding: 40px; background: #fff; }
-    
-    /* PDF HEADER STYLING */
-    .doc-header { width: 100%; border-bottom: 2px solid #1a2433; padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-    .doc-tagline { font-size: 8.5pt; font-weight: 700; color: #b32525; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
-    .doc-title { font-family: 'Georgia', serif; font-size: 26pt; color: #1a2433; margin: 0 0 10px 0; line-height: 1.2; text-align: center; }
-    
-    .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; }
-    .meta-cell { vertical-align: top; padding: 0 15px; font-size: 9pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
-    .meta-cell:last-child { border-right: none; }
-    .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
-    .meta-value { color: #1e293b; font-weight: 500; }
-    
-    .nda-note { border-left: 4px solid #b32525; background: #f8fafc; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic; color: #475569; }
-    
-    /* DASHBOARD LAYOUT */
-    .dashboard { display: grid; grid-template-columns: 320px 1fr; gap: 25px; margin-top: 30px; }
-    .controls { background: #f8fafc; padding: 25px; border: 1px solid #cbd5e1; display: flex; flex-direction: column; }
-    .sim-panel { display: flex; flex-direction: column; gap: 20px; }
-    
-    /* SIDEBAR ELEMENTS */
-    .control-group { margin-bottom: 20px; }
-    .control-label { font-size: 9pt; font-weight: 700; color: #1a2433; margin-bottom: 8px; display: flex; justify-content: space-between; }
-    .val-display { color: #b32525; }
-    input[type="range"] { width: 100%; cursor: pointer; }
-    
-    .logic-key { background: #1a2433; color: #fff; padding: 18px; border-radius: 4px; font-size: 8.5pt; margin-top: auto; line-height: 1.5; }
-    .logic-key h4 { margin: 0 0 10px 0; font-size: 9pt; text-transform: uppercase; border-bottom: 1px solid #475569; padding-bottom: 5px; color: #e2e8f0; }
-    
-    /* KPIS */
-    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-    .kpi { padding: 15px; border-bottom: 4px solid #cbd5e1; background: #fff; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-    .kpi-title { font-size: 7.5pt; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-    .kpi-val { font-size: 16pt; font-weight: bold; color: #1a2433; font-family: monospace; }
-    .kpi-sub { font-size: 7pt; color: #94a3b8; margin-top: 4px; }
-    
-    /* CHARTS & TABLES */
-    .chart-container { border: 1px solid #cbd5e1; padding: 15px; background: #fff; height: 320px; position: relative; }
-    
-    .data-table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-top: 20px; }
-    .data-table th { background: #1a2433; color: white; padding: 12px; text-align: left; text-transform: uppercase; letter-spacing: 0.5px; }
-    .data-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155; }
-    
-    /* NARRATIVE */
-    .narrative { margin-top: 50px; border-top: 2px solid #1a2433; padding-top: 30px; }
-    h2 { font-family: 'Georgia', serif; font-size: 18pt; color: #1a2433; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
-    h3 { font-family: 'Segoe UI', sans-serif; font-size: 12pt; font-weight: 700; color: #1a2433; margin-top: 25px; margin-bottom: 10px; text-transform: uppercase; }
-    p { margin-top: 0; margin-bottom: 15px; text-align: justify; }
-    
-    .badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 7.5pt; text-transform: uppercase; }
-    .badge-red { background: #fee2e2; color: #b32525; }
-    .badge-green { background: #dcfce7; color: #27ae60; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Crisis Reconciliation | Austin Sonny Stethem</title>
+    <meta name="description" content="When a flood destroyed the warehouse, the ERP still believed the inventory was intact. A case study in physical-to-digital reconciliation under duress, and the kill-switch architecture that replaces it.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <meta property="og:title" content="ERP Crisis Reconciliation &amp; Operational Continuity">
+    <meta property="og:description" content="A flood destroyed the warehouse; the ERP kept promising the inventory. Severing the phantom fulfillment loop by hand, then designing the automation that makes it unnecessary.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/erp-reconciliation-engine.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="portfolio.css">
+
+    <style>
+        /* Brand tokens come from portfolio.css; only the dashboard palette is local. */
+        :root {
+            --info-bg: #0f172a;
+            --info-panel: #1e293b;
+            --info-border: #334155;
+            --flood: #0369a1;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #333; font-size: 10.5pt; line-height: 1.6;
+            max-width: 950px; margin: 0 auto; padding: 40px 20px 90px;
+            background-color: var(--bg-color, #fbfbfb);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Inter', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, #1a2433); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        p { text-align: justify; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px; }
+        li { margin-bottom: 8px; }
+
+        /* --- DASHBOARD --- */
+        .sim-container {
+            width: 100%; margin: 40px auto; background: var(--info-bg); color: #e2e8f0;
+            border-radius: 12px; display: flex; flex-wrap: wrap;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #1e293b; overflow: hidden;
+        }
+        .sim-sidebar { width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; border-right: 1px solid var(--info-border); display: flex; flex-direction: column; }
+        .sim-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
+
+        .sidebar-header { margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center; }
+        .sidebar-header .sim-title { color: #f8fafc; font-size: 1.6rem; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
+        .sidebar-header .sim-title span { color: #f87171; }
+        .sidebar-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+
+        .control-group { margin-bottom: 25px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; cursor: pointer; gap: 10px; }
+        .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 0.95rem; color: #f87171; white-space: nowrap; }
+        .control-note { font-size: 0.72rem; color: #64748b; font-style: italic; margin-top: 6px; line-height: 1.45; }
+
+        /* Local slider baseline — duplicates portfolio.css so a missing shared sheet
+           does not drop the panel back to the native OS slider. */
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
+        #slide-time::-webkit-slider-thumb { background: var(--flood); box-shadow: 0 0 10px rgba(3,105,161,0.5); }
+        #slide-time::-moz-range-thumb { background: var(--flood); }
+
+        .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: #cbd5e1; text-align: center; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--flood); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; }
+        .logic-box strong { color: #7dd3fc; display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-sub { font-size: 0.72rem; color: #64748b; font-style: italic; min-height: 30px; }
+        .status-safe { border-top-color: #10b981 !important; }
+        .status-warn { border-top-color: #f59e0b !important; }
+        .status-critical { border-top-color: #ef4444 !important; }
+
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .chart-box { position: relative; height: 320px; width: 100%; }
+
+        /* --- PROTOCOL TABLE --- */
+        .protocol-table { width: 100%; border-collapse: collapse; margin: 20px 0 30px; font-size: 9.5pt; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; }
+        .protocol-table th { background: var(--dark-slate-blue, #1a2433); color: #f8fafc; text-align: left; padding: 12px 14px; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 800; }
+        .protocol-table td { padding: 13px 14px; border-bottom: 1px solid #e2e8f0; color: #334155; vertical-align: top; }
+        .protocol-table tr:last-child td { border-bottom: none; }
+        .protocol-table td:first-child { font-weight: 700; color: var(--dark-slate-blue, #1a2433); width: 26%; }
+
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue, #1a2433); padding: 25px; border-radius: 4px; margin: 25px 0 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
+        .impact-box p:last-child { margin-bottom: 0; }
+
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            .sim-container { flex-direction: column; }
+            .sim-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #334155; padding: 22px; }
+            .sim-main { padding: 18px; min-width: 0; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .chart-box { height: 290px; }
+            .protocol-table thead { display: none; }
+            .protocol-table tr { display: block; border-bottom: 1px solid #e2e8f0; padding: 6px 0; }
+            .protocol-table td { display: block; border: none; padding: 6px 0; }
+            .protocol-table td:first-child { width: auto; font-size: 10pt; }
+            .protocol-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: #64748b; font-size: 8pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
+        }
+
+        @media print {
+            .sim-container { display: none !important; }
+            body { background: #fff; max-width: none; }
+            .next-step-box { display: block !important; background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 24px; color: #000; }
+            .next-step-box h3 { color: #000; }
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="doc-header">
-        <p class="doc-tagline">DATA GOVERNANCE & CRISIS ARCHITECTURE</p>
-        <div class="doc-title">Enterprise Crisis Management & Operational Continuity: ERP Reconciliation Engine</div>
-    </div>
-    
+    <a class="skip-link" href="#dashboard">Skip to interactive model</a>
+
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
+    <header class="doc-header">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Data Governance &amp; Crisis Architecture</p>
+        <h1 class="doc-title">ERP Crisis Reconciliation &amp; Operational Continuity</h1>
+    </header>
+
     <table class="meta-table">
+        <tbody>
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value"><strong>Austin Sonny Stethem</strong><br>Pricing & MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Disaster Recovery (DR), Data Reconciliation, Supply Chain Resilience, Distributed Operations</span>
+                <span class="meta-value">Disaster Recovery, Physical-to-Digital Reconciliation, Supply Chain Resilience, Distributed Operations</span>
             </td>
             <td class="meta-cell">
-                <span class="meta-label">Technical Stack</span>
-                <span class="meta-value">ERP Ecosystems, Manual Cycle Matrixing, Remote Network Tunneling</span>
+                <span class="meta-label">Context</span>
+                <span class="meta-value">June 2024 &mdash; Little Sioux River flood, Spencer, Iowa. 80-branch distribution network.</span>
             </td>
         </tr>
+        </tbody>
     </table>
 
     <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, localized Spencer HQ inventory values and branch fulfillment volumes have been replaced with randomized enterprise proxies. The logic models the exact crisis variables executed during the June 2024 Little Sioux River flood: calculating the mathematical consequence of delayed physical-to-digital ERP decoupling during a catastrophic, zero-warning inventory loss event.
+        <strong>Data Governance Note:</strong> Localized inventory values and branch fulfillment volumes have been replaced with randomized enterprise proxies, and the cost-per-failure figure is illustrative. The event, the sequence of decisions, and the failure mode are real. The model below exists to make one relationship legible: the mathematical cost of every hour that physical reality and the ERP disagree.
     </div>
 
-    <div class="dashboard">
-        <div class="controls">
-            <div style="font-weight: 800; color: #1a2433; margin-bottom: 20px; font-size: 11pt; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px;">CRISIS ISOLATION PROTOCOL</div>
-            
-            <div class="control-group">
-                <div class="control-label"><span>HQ Inventory Submerged</span> <span class="val-display" id="val-destruction">40%</span></div>
-                <input type="range" id="slide-destruction" min="10" max="90" value="40" step="5" oninput="updateDashboard()">
-                <div style="font-size: 7.5pt; color: #64748b; margin-top: 5px;">Proxy Value: $10M Total Asset Base</div>
+    <h2>1. The Black Swan: When the Database Outlives the Building</h2>
+
+    <div class="scenario-box">
+        <strong>Why this sits outside the pricing arc</strong>
+        The five-step scenario elsewhere in this portfolio is a pricing narrative &mdash; a cost shock, modeled and defended. This is the other half of the job. Every model in that arc assumes the ERP is telling the truth about what is on the shelf. In June 2024 it wasn't, and no amount of elasticity modeling would have helped.
+    </div>
+
+    <p>In June 2024, a catastrophic municipal failure resulted in a zero-warning, middle-of-the-night crest of the Little Sioux River at 22.2 feet. The Spencer headquarters and primary regional warehousing facilities were submerged in river mud before emergency sirens were activated. With the physical building already a total loss, the immediate strategic objective shifted entirely from physical preservation to digital quarantine.</p>
+
+    <p>When physical infrastructure collapses, cloud redundancies are only as effective as the ground-level team's ability to access them. Operating out of decentralized, primitive command centers, I leveraged off-site Des Moines server backups to maintain the enterprise pricing facade. National pricing matrices and critical tariff adjustments were continuously deployed to the network. To the outside B2B customer base and our 80 branches, corporate operations appeared entirely seamless.</p>
+
+    <h2>2. The Failure Mode: Phantom Fulfillment</h2>
+
+    <p>The most critical threat during the flood was a database disconnect. The <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central system governing inventory, pricing, and fulfillment across the network."><strong>ERP</strong></span> inherently assumed the primary warehouse inventory was intact. Left uncorrected, branches would order destroyed SKUs, resulting in catastrophic unfulfilled <span class="jargon-tooltip" data-tip="An order the system accepts against inventory that no longer physically exists. It consumes a promise date, a customer expectation, and a reroute cost before anyone discovers the stock is gone."><strong>phantom orders</strong></span>.</p>
+
+    <p>This is the part worth dwelling on, because it is counterintuitive. The flood did not break the ERP. The ERP kept working perfectly, confidently allocating stock that was under four feet of river mud. A system that fails loudly gets fixed in an hour. A system that keeps promising things it can no longer deliver compounds quietly, order by order, until the damage is spread across every branch and every customer promise in the network.</p>
+
+    <p>Because automated scanning infrastructure was destroyed, reconciling the digital database required raw, manual execution. I participated in and managed wall-to-wall manual cycle counts of the pitch-black warehouse, using headlamps to identify and catalog mud-covered inventory. By forcing the physical reality into the digital ERP under extreme duress, we severed the fulfillment loop and secured the verifiable data needed to maximize cost-absorption and vendor credits.</p>
+
+    <h2 id="dashboard">3. Modeling the Cost of Delay</h2>
+    <p><em>The single variable that mattered was reconciliation velocity &mdash; how many hours the ERP was allowed to keep selling inventory that no longer existed. Move the sliders to see how that hour count converts into failed fulfillment. The 48-hour mark is what actually happened, achieved by hand. Zero hours is what an automated kill-switch would deliver.</em></p>
+
+    <div class="sim-container" id="dashboard-panel">
+        <div class="sim-sidebar">
+            <div class="sidebar-header">
+                <div class="sim-title">Crisis <span>Isolation</span></div>
+                <p>Protocol Variables</p>
             </div>
 
             <div class="control-group">
-                <div class="control-label"><span>Reconciliation Velocity</span> <span class="val-display" id="val-time">48 Hrs</span></div>
-                <input type="range" id="slide-time" min="0" max="168" value="48" step="6" oninput="updateDashboard()">
-                <div style="font-size: 7.5pt; color: #64748b; margin-top: 5px;">Time to zero-out destroyed SKUs. (0 Hrs = Automated Kill-Switch Engaged)</div>
+                <label for="slide-destruction"><span>HQ Inventory Submerged:</span> <span class="val-readout" id="val-destruction">40%</span></label>
+                <input type="range" id="slide-destruction" min="0" max="100" step="5" value="40" aria-label="Percentage of headquarters inventory submerged">
+                <p class="control-note">Share of the $10M proxy asset base rendered unsellable.</p>
             </div>
 
-            <div class="logic-key">
-                <h4>Phantom Fulfillment Logic</h4>
-                <p style="margin-bottom: 10px;">If physical inventory is destroyed but remains active in the ERP, the network attempts to draw from a "ghost" location.</p>
-                <p style="margin-bottom: 0;"><strong>Cost of Delay:</strong> Every hour of reconciliation delay cascades into unfulfilled network orders, margin deterioration, and false routing logistics.</p>
+            <div class="control-group">
+                <label for="slide-time"><span>Reconciliation Velocity:</span> <span class="val-readout" id="val-time">48 Hrs</span></label>
+                <input type="range" id="slide-time" min="0" max="96" step="6" value="48" aria-label="Hours until destroyed inventory is zeroed out of the ERP">
+                <p class="control-note">Hours until destroyed SKUs are zeroed out. 48 hrs is the manual baseline actually achieved; 0 hrs is an automated kill-switch.</p>
+            </div>
+
+            <div class="sidebar-subheader">Phantom Fulfillment Logic</div>
+            <div class="logic-box">
+                <strong>The compounding mechanism</strong>
+                While destroyed stock stays active in the ERP, the network keeps drawing against a location that no longer exists. Each attempt burns a promise date and a reroute cost before anyone discovers the shelf is empty. Exposure scales linearly with the hours the two realities are allowed to disagree.
             </div>
         </div>
 
-        <div class="sim-panel">
+        <div class="sim-main">
             <div class="kpi-grid">
-                <div class="kpi" style="border-bottom-color: #1a2433;">
-                    <div class="kpi-title">DESTROYED CAPITAL</div>
-                    <div class="kpi-val" id="kpi-capital">--</div>
-                    <div class="kpi-sub">Logged for Vendor Credits</div>
+                <div class="kpi-card status-critical">
+                    <div class="kpi-card-header">Capital Destroyed</div>
+                    <div class="kpi-value" id="kpi-capital" style="color:#ef4444;">--</div>
+                    <div class="kpi-sub">Logged for vendor credits</div>
                 </div>
-                <div class="kpi" style="border-bottom-color: #b32525;">
-                    <div class="kpi-title">PHANTOM ORDERS (RISK)</div>
-                    <div class="kpi-val" id="kpi-phantom">--</div>
-                    <div class="kpi-sub">Failed fulfillment attempts</div>
+                <div class="kpi-card" id="card-phantom">
+                    <div class="kpi-card-header">Phantom Order Lines</div>
+                    <div class="kpi-value" id="kpi-phantom" style="color:#f59e0b;">--</div>
+                    <div class="kpi-sub" id="kpi-phantom-sub">Failed fulfillment attempts</div>
                 </div>
-                <div class="kpi" style="border-bottom-color: #27ae60;">
-                    <div class="kpi-title">EBITDA PROTECTED</div>
-                    <div class="kpi-val" id="kpi-ebitda">--</div>
-                    <div class="kpi-sub">Via concurrent tariff pricing</div>
-                </div>
-                <div class="kpi" style="border-bottom-color: #1a2433;">
-                    <div class="kpi-title">NETWORK UPTIME</div>
-                    <div class="kpi-val">100%</div>
-                    <div class="kpi-sub">80 Branches Operational</div>
+                <div class="kpi-card" id="card-averted">
+                    <div class="kpi-card-header">Exposure vs. Manual Baseline</div>
+                    <div class="kpi-value" id="kpi-averted" style="color:#10b981;">--</div>
+                    <div class="kpi-sub" id="kpi-averted-sub">Against the 48-hour hand count</div>
                 </div>
             </div>
 
-            <div class="chart-container">
-                <canvas id="impactChart"></canvas>
+            <div class="chart-section">
+                <div class="chart-header">Network Fulfillment Integrity &mdash; First 7 Days</div>
+                <div class="chart-box">
+                    <canvas id="impactChart" role="img" aria-label="Line chart comparing network fulfillment integrity under the manual 48-hour reconciliation against the selected reconciliation velocity"></canvas>
+                </div>
             </div>
-
-            <table class="data-table">
-                <thead>
-                    <tr><th>Action Protocol</th><th>Execution Method</th><th>Business Outcome</th></tr>
-                </thead>
-                <tbody>
-                    <tr style="background:#fef2f2;">
-                        <td><strong>Phase 1: Manual Heroics</strong></td>
-                        <td>Wall-to-wall physical cycle counting via headlamp (The "Muddy Clipboard").</td>
-                        <td>Zeroed out destroyed SKUs to prevent cascading network fulfillment failures post-event.</td>
-                    </tr>
-                    <tr style="background:#f0fdf4;">
-                        <td><strong>Phase 2: Architectural Evolution</strong></td>
-                        <td>Linking ERP availability to IoT water sensors and USGS API gauges.</td>
-                        <td>Automates a zero-hour "Quarantine Status" kill-switch, isolating the blast radius instantly.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Concurrent Continuity</strong></td>
-                        <td>Deploying tariff and pricing adjustments via temporary remote network connections.</td>
-                        <td>Protected regional EBITDA from compounding macroeconomic supply chain hits.</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 
-    <div class="narrative">
-        <h2>Executive Narrative: Crisis Management & Data Continuity</h2>
-        
-        <h3>1. The "Black Swan" Event & Digital Quarantine</h3>
-        <p>In June 2024, a catastrophic municipal failure resulted in a zero-warning, middle-of-the-night crest of the Little Sioux River at 22.2 feet[cite: 1]. The Spencer headquarters and primary regional warehousing facilities were submerged in river mud before emergency sirens were activated[cite: 1]. With the physical building already a total loss, the immediate strategic objective shifted entirely from physical preservation to digital quarantine.</p>
-        <p>When physical infrastructure collapses, cloud redundancies are only as effective as the ground-level team’s ability to access them[cite: 1]. Operating out of decentralized, primitive command centers, I leveraged off-site Des Moines server backups to maintain the enterprise pricing facade[cite: 1]. National pricing matrices and critical tariff adjustments were continuously deployed to the network[cite: 1]. To the outside B2B customer base and our 80 branches, corporate operations appeared entirely seamless[cite: 1].</p>
+    <h2>4. From Heroics to Architecture</h2>
 
-        <h3>2. Manual Data Reconciliation (The "Muddy Clipboard")</h3>
-        <p>The most critical threat during the flood was a database disconnect[cite: 1]. The ERP system inherently assumed the primary warehouse inventory was intact[cite: 1]. Left uncorrected, branches would order destroyed SKUs, resulting in catastrophic unfulfilled "phantom" orders[cite: 1].</p>
-        <p>Because automated scanning infrastructure was destroyed, reconciling the digital database required raw, manual execution[cite: 1]. I participated in and managed wall-to-wall manual cycle counts of the pitch-black warehouse, utilizing headlamps to identify and catalog mud-covered inventory[cite: 1]. By forcing the physical reality into the digital ERP under extreme duress, we severed the fulfillment loop and secured verifiable data needed to maximize cost-absorption and vendor credits[cite: 1].</p>
+    <p>While the manual reconciliation saved the network from immediate cascade failure, operational heroics are not a scalable enterprise strategy. It worked because a small number of people were willing to count mud-covered inventory by headlamp for two days. That is not a control; it is a coincidence of staffing. The definitive architectural solution to a zero-warning physical disaster is an automated kill-switch.</p>
 
-        <h3>3. The Architectural Evolution: Automated ERP Decoupling</h3>
-        <p>While the manual "Muddy Clipboard" execution saved the network from immediate cascade failure, operational heroics are not a scalable enterprise strategy. The definitive architectural solution to a zero-warning physical disaster is an <strong>Automated API Kill-Switch</strong>.</p>
-        <p>By linking the ERP's warehouse availability status directly to localized IoT water sensors or USGS river gauge APIs, the system can automatically trip a "Quarantine Status" the millisecond flood thresholds are breached. This severs the phantom fulfillment loop and reroutes network traffic to secondary hubs while the physical reality is still unfolding—entirely removing reliance on human intervention or municipal warnings.</p>
+    <p>By linking the ERP's warehouse availability status directly to localized IoT water sensors or USGS river gauge APIs, the system can trip a "Quarantine Status" the moment flood thresholds are breached. This severs the phantom fulfillment loop and reroutes network traffic to secondary hubs while the physical reality is still unfolding &mdash; entirely removing reliance on human intervention or municipal warnings.</p>
+
+    <table class="protocol-table">
+        <thead>
+            <tr>
+                <th scope="col">Action Protocol</th>
+                <th scope="col">Execution Method</th>
+                <th scope="col">Business Outcome</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td data-label="Protocol">Phase 1 &mdash; Manual Reconciliation</td>
+                <td data-label="Execution">Wall-to-wall physical cycle counting by headlamp in an unpowered, flooded warehouse.</td>
+                <td data-label="Outcome">Zeroed out destroyed SKUs, severing the phantom fulfillment loop before it propagated across the network.</td>
+            </tr>
+            <tr>
+                <td data-label="Protocol">Phase 2 &mdash; Concurrent Continuity</td>
+                <td data-label="Execution">Pricing matrices and tariff adjustments deployed from off-site Des Moines backups over temporary remote connections.</td>
+                <td data-label="Outcome">Network-facing operations stayed continuous; the 80 branches and the B2B customer base saw no interruption.</td>
+            </tr>
+            <tr>
+                <td data-label="Protocol">Phase 3 &mdash; Architectural Evolution</td>
+                <td data-label="Execution">ERP availability status bound to IoT water sensors and USGS river gauge APIs.</td>
+                <td data-label="Outcome">Converts a 48-hour manual response into a zero-hour automated quarantine, isolating the blast radius without human intervention.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="impact-box">
+        <h3>What This Case Study Is Actually About</h3>
+        <p>Not the flood. The flood is the forcing function. The transferable lesson is that a master data system's worst failure mode is not going down &mdash; it is staying up while being wrong, because nothing alerts on confident inaccuracy.</p>
+        <p>Every predictive model elsewhere in this portfolio &mdash; the elasticity tiers, the Monte Carlo risk cone, the cross-subsidization cascade &mdash; rests on the assumption that the underlying data reflects physical reality. This is the discipline that keeps that assumption true, and the reason I treat data governance as a prerequisite to modeling rather than a chore that precedes it.</p>
     </div>
+
+    <div class="next-step-box">
+        <h3>The Pricing Arc</h3>
+        <p>With the data foundation intact, the five-step scenario picks up the other half of the work: mapping competitive exposure, defending blended margin against a cost shock, and validating the result in market.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="index.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Return Home</span>
+                <span class="nav-title">Portfolio Hub</span>
+            </a>
+            <a href="predictive-vio-market-capture.html" class="nav-btn next">
+                <span class="nav-label">Begin the arc &rarr;</span>
+                <span class="nav-title">Step 1: Market Intelligence</span>
+            </a>
+        </nav>
+    </div>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
 
     <script>
-        let impactChart;
+        const slideDestruction = document.getElementById('slide-destruction');
+        const slideTime = document.getElementById('slide-time');
+        let impactChart = null;
+
+        /* --- MODEL CONSTANTS (proxies) ---------------------------------------
+           ASSET_BASE          illustrative total inventory value at the site
+           DRAW_RATE           order lines/hr the network attempts against HQ
+           COST_PER_PHANTOM    reroute + expedite + margin at risk per failed line
+           MANUAL_BASELINE_HRS what was actually achieved by hand. Every result is
+                               expressed relative to this, which is what makes the
+                               automation argument quantitative rather than rhetorical. */
+        const ASSET_BASE = 10000000;
+        const DRAW_RATE = 150;
+        const COST_PER_PHANTOM = 50;
+        const MANUAL_BASELINE_HRS = 48;
+        const HORIZON_HRS = 168;
+
+        const money = v => '$' + Math.round(v).toLocaleString();
+        const isNarrow = () => window.matchMedia('(max-width: 800px)').matches;
+
+        /* Phantom lines accrue only while the ERP still believes the stock exists,
+           and only in proportion to how much of the site is gone. */
+        function phantomLines(destPct, hours) {
+            return DRAW_RATE * (destPct / 100) * hours;
+        }
 
         function updateDashboard() {
-            // Safe Parsing
-            const destPct = parseFloat(document.getElementById('slide-destruction').value) || 0;
-            const recHours = parseFloat(document.getElementById('slide-time').value) || 0;
+            const destPct = parseFloat(slideDestruction.value) || 0;
+            const recHours = parseFloat(slideTime.value) || 0;
 
-            // UI Updates
-            document.getElementById('val-destruction').innerText = destPct + "%";
-            document.getElementById('val-time').innerText = recHours === 0 ? "0 Hrs (Automated)" : recHours + " Hrs";
+            document.getElementById('val-destruction').innerText = destPct + '%';
+            document.getElementById('val-time').innerText =
+                recHours === 0 ? '0 Hrs (Kill-Switch)' : recHours + ' Hrs';
 
-            // Core Logic Variables (Proxies)
-            const baseInventory = 10000000; // $10M
-            const orderDrawRatePerHour = 150; // Network attempts 150 orders/hr against HQ
-            const avgOrderValue = 350;
+            const capitalDestroyed = ASSET_BASE * (destPct / 100);
+            const phantom = phantomLines(destPct, recHours);
+            const exposure = phantom * COST_PER_PHANTOM;
+            const baselineExposure = phantomLines(destPct, MANUAL_BASELINE_HRS) * COST_PER_PHANTOM;
 
-            // Math
-            const capitalDestroyed = baseInventory * (destPct / 100);
-            
-            // Phantom Orders = Orders that attempted to pull destroyed inventory before reconciliation
-            const phantomOrders = Math.floor((destPct / 100) * orderDrawRatePerHour * recHours);
-            
-            // EBITDA Protected = Tariffs deployed + Phantom penalties avoided (assumes $50 penalty/lost margin per phantom order)
-            const tariffRecovery = 125000; // Base baseline
-            const phantomPenaltiesAvoided = phantomOrders * 50;
-            const ebitdaProtected = tariffRecovery + phantomPenaltiesAvoided;
+            /* Signed against the manual baseline. Faster than the hand count is a saving;
+               slower is an additional loss. The original version of this model added
+               phantom-order penalties INTO a "protected" figure, so the metric improved
+               the longer you delayed — the sign was inverted. */
+            const delta = baselineExposure - exposure;
 
-            // Update KPIs
-            document.getElementById('kpi-capital').innerText = "$" + (capitalDestroyed / 1000000).toFixed(1) + "M";
-            document.getElementById('kpi-phantom').innerText = phantomOrders.toLocaleString();
-            document.getElementById('kpi-ebitda').innerText = "$" + ebitdaProtected.toLocaleString();
+            document.getElementById('kpi-capital').innerText =
+                '$' + (capitalDestroyed / 1000000).toFixed(1) + 'M';
 
-            // Chart Data Generation: Network Fulfillment Rate over 7 days (168 hours)
-            let labels = [];
-            let fulfillmentFailing = [];
-            let fulfillmentReconciled = [];
+            document.getElementById('kpi-phantom').innerText = Math.round(phantom).toLocaleString();
+            document.getElementById('kpi-phantom-sub').innerText =
+                phantom === 0
+                    ? 'Loop severed before any draw against ghost stock'
+                    : `${money(exposure)} exposure at ${money(COST_PER_PHANTOM)}/line`;
 
-            for(let hr = 0; hr <= 168; hr += 12) {
-                labels.push("Hr " + hr);
-                
-                // Baseline failure state if untouched (deteriorates as phantom orders pile up)
-                let failRate = 100 - ((destPct * 0.5) * (hr / 168));
-                fulfillmentFailing.push(Math.max(failRate, 20));
+            const cardPhantom = document.getElementById('card-phantom');
+            const phantomEl = document.getElementById('kpi-phantom');
+            cardPhantom.className = 'kpi-card';
+            if (phantom === 0) { cardPhantom.classList.add('status-safe'); phantomEl.style.color = '#10b981'; }
+            else if (recHours <= 12) { cardPhantom.classList.add('status-warn'); phantomEl.style.color = '#f59e0b'; }
+            else { cardPhantom.classList.add('status-critical'); phantomEl.style.color = '#ef4444'; }
 
-                // Reconciled line
-                if(hr <= recHours) {
-                    fulfillmentReconciled.push(Math.max(failRate, 20));
-                } else {
-                    // Post-reconciliation recovery curve
-                    let recovery = Math.min(100, fulfillmentReconciled[fulfillmentReconciled.length-1] + ((hr - recHours) * 0.8));
-                    fulfillmentReconciled.push(recovery);
-                }
+            const avertedEl = document.getElementById('kpi-averted');
+            const avertedSub = document.getElementById('kpi-averted-sub');
+            const cardAverted = document.getElementById('card-averted');
+            cardAverted.className = 'kpi-card';
+
+            if (delta > 0) {
+                cardAverted.classList.add('status-safe');
+                avertedEl.style.color = '#10b981';
+                avertedEl.innerText = '\u2212' + money(delta);
+                avertedSub.innerText = `Exposure avoided vs. the ${MANUAL_BASELINE_HRS}-hour hand count`;
+            } else if (delta === 0) {
+                avertedEl.style.color = '#cbd5e1';
+                avertedEl.innerText = money(0);
+                avertedSub.innerText = 'This is the manual baseline actually achieved';
+            } else {
+                cardAverted.classList.add('status-critical');
+                avertedEl.style.color = '#ef4444';
+                avertedEl.innerText = '+' + money(-delta);
+                avertedSub.innerText = `Additional exposure beyond the ${MANUAL_BASELINE_HRS}-hour baseline`;
             }
 
-            // Render Chart
-            if(impactChart) impactChart.destroy();
-            
-            impactChart = new Chart(document.getElementById('impactChart'), {
+            renderChart(destPct, recHours);
+        }
+
+        /* Fulfillment integrity = share of order attempts the network can actually
+           satisfy. While the ERP still lists destroyed stock, attempts routed to HQ
+           fail at the destruction rate. Once reconciled, traffic reroutes to secondary
+           hubs and integrity recovers over roughly 12 hours. */
+        function integrityAt(hour, destPct, recHours) {
+            if (hour < recHours) return 100 - destPct;
+            const since = hour - recHours;
+            const floor = 100 - destPct;
+            return Math.min(100, floor + (100 - floor) * Math.min(1, since / 12));
+        }
+
+        function renderChart(destPct, recHours) {
+            const el = document.getElementById('impactChart');
+            if (!el || typeof Chart === 'undefined') return;
+            const ctx = el.getContext('2d');
+            if (impactChart) impactChart.destroy();
+
+            const labels = [], manual = [], selected = [];
+            for (let hr = 0; hr <= HORIZON_HRS; hr += 6) {
+                labels.push('Hr ' + hr);
+                manual.push(integrityAt(hr, destPct, MANUAL_BASELINE_HRS));
+                selected.push(integrityAt(hr, destPct, recHours));
+            }
+
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+
+            impactChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Untouched ERP (Phantom Cascade)',
-                            data: fulfillmentFailing,
+                            label: `Manual reconciliation (${MANUAL_BASELINE_HRS} hrs)`,
+                            data: manual,
                             borderColor: '#b32525',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointRadius: 0
+                            backgroundColor: 'rgba(179,37,37,0.10)',
+                            borderWidth: 2, borderDash: [6, 4], pointRadius: 0, tension: 0.2, fill: true
                         },
                         {
-                            label: 'Active Reconciliation Driven',
-                            data: fulfillmentReconciled,
-                            borderColor: '#27ae60',
-                            borderWidth: 3,
-                            fill: true,
-                            backgroundColor: 'rgba(39, 174, 96, 0.1)'
+                            label: recHours === 0 ? 'Automated kill-switch (0 hrs)' : `Selected velocity (${recHours} hrs)`,
+                            data: selected,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16,185,129,0.12)',
+                            borderWidth: 3, pointRadius: 0, tension: 0.2, fill: true
                         }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        title: { display: true, text: 'Network Fulfillment Rate (%) vs. Crisis Timeline' },
-                        legend: { position: 'bottom' }
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { labels: { color: '#cbd5e1', font: { size: 11, weight: '600' }, boxWidth: 14 } },
+                        tooltip: {
+                            backgroundColor: 'rgba(15,23,42,0.95)', padding: 12,
+                            callbacks: { label: c => ` ${c.dataset.label}: ${c.raw.toFixed(1)}% fulfillable` }
+                        }
                     },
                     scales: {
-                        y: { min: 0, max: 100, title: { display: true, text: 'Network Fulfillment %' } }
+                        y: {
+                            min: 0, max: 105,
+                            title: { display: true, text: 'Fulfillment Integrity (%)', color: '#94a3b8', font: { size: 11, weight: 'bold' } },
+                            ticks: { callback: v => v + '%', color: '#cbd5e1', font: { size: 10 } },
+                            grid: { color: '#334155', borderDash: [4, 4] }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#cbd5e1', font: { size: 10 }, maxTicksLimit: isNarrow() ? 6 : 14 }
+                        }
                     }
                 }
             });
         }
 
-        // Init
-        window.onload = updateDashboard;
+        slideDestruction.addEventListener('input', updateDashboard);
+        slideTime.addEventListener('input', updateDashboard);
+
+        let wasNarrow = isNarrow();
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const now = isNarrow();
+                if (now !== wasNarrow) { wasNarrow = now; updateDashboard(); }
+            }, 150);
+        });
+
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js failed to load — the timeline chart is disabled.');
+            const box = document.querySelector('.chart-box');
+            if (box) box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network. The figures above are unaffected.</div>';
+        }
+
+        document.querySelectorAll('.jargon-tooltip').forEach(el => {
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('role', 'note');
+            el.setAttribute('aria-label', el.textContent.trim() + ': ' + el.getAttribute('data-tip'));
+        });
+
+        updateDashboard();
     </script>
 </body>
 </html>
