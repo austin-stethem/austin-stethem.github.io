@@ -614,6 +614,38 @@
                 { name: "Augusta, GA", lat: 33.4735, lng: -81.9748, type: "mid", hasHub: false }
             ];
 
+            /* --- DECAY PROFILES BY TOPOLOGY TIER ------------------------------
+               Previously every hub shipped an identical hardcoded curve
+               (45.2 / 22.1 / 15.4 / 12.3 / 5.0) and an identical "94.2%" confidence.
+               That contradicted the case study on screen: the tiers are DERIVED from
+               distance-decay, so two hubs in different tiers must not show the same
+               decay. Each tier now has a shape consistent with its story, jittered per
+               hub and renormalised so no two hubs are identical and every curve still
+               sums to 100%. */
+            const tierProfiles = {
+                1: [0.22, 0.21, 0.22, 0.20, 0.15],  // rural: captive, customers travel
+                2: [0.33, 0.26, 0.20, 0.14, 0.07],  // regional centre
+                4: [0.52, 0.24, 0.14, 0.08, 0.02]   // urban: competitor on every block
+            };
+
+            function gravityFor(tier) {
+                const base = tierProfiles[tier] || tierProfiles[2];
+                const jittered = base.map(v => Math.max(0.005, v * (1 + (Math.random() - 0.5) * 0.22)));
+                const total = jittered.reduce((a, b) => a + b, 0);
+                const pct = jittered.map(v => (v / total) * 100);
+                return {
+                    '0-5 Miles': pct[0].toFixed(1) + '%',
+                    '5-15 Miles': pct[1].toFixed(1) + '%',
+                    '15-30 Miles': pct[2].toFixed(1) + '%',
+                    '30-50 Miles': pct[3].toFixed(1) + '%',
+                    '50-100 Miles': pct[4].toFixed(1) + '%',
+                    '100+ Miles': '0.0%',
+                    // Cluster confidence: tight, well-separated profiles cluster more
+                    // cleanly than the middle tier, which sits between two centroids.
+                    'confidence': (tier === 2 ? 86 + Math.random() * 6 : 91 + Math.random() * 7).toFixed(1) + '%'
+                };
+            }
+
             const accountPrefixes = ["Commercial Fleet", "Metro Diesel", "City Transit", "Agri-Repair", "Heavy Duty Services", "Express Auto", "Advanced Diagnostics", "Premier Alignment"];
 
             cityAnchors.forEach((city) => {
@@ -658,11 +690,14 @@
                     let hLat = city.lat + (Math.random() - 0.5) * 0.2;
                     let hLng = city.lng + (Math.random() - 0.5) * 0.2;
 
+                    const tier = city.type === "urban" ? 4 : city.type === "mid" ? 2 : 1;
+                    const g = gravityFor(tier);
+
                     data["Meridian Parts"].push({
                         name: `Meridian Hub - ${city.name.split(',')[0]} #${h}`,
                         lat: hLat, lng: hLng, address: `123 Industrial Pkwy, ${city.name}`,
-                        gravity: { 'Total LTM Revenue': totalHubRev, '0-5 Miles': '45.2%', '5-15 Miles': '22.1%', '15-30 Miles': '15.4%', '30-50 Miles': '12.3%', '50-100 Miles': '5.0%', '100+ Miles': '0.0%' },
-                        topology: { tier: city.type === "urban" ? 4 : city.type === "mid" ? 2 : 1, confidence: "94.2%", status: "Locked" },
+                        gravity: Object.assign({ 'Total LTM Revenue': totalHubRev }, g),
+                        topology: { tier: tier, confidence: g.confidence, status: "Locked" },
                         top_accounts: accounts.sort((a,b) => b['Total LTM Revenue'] - a['Total LTM Revenue'])
                     });
                 }
