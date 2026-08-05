@@ -65,7 +65,9 @@ input:focus-visible,
     flex-direction: column;
     align-items: center;
 }
-.doc-tagline {
+/* Doubled class: a page-level `.portfolio-content p` rule is (0,1,1) and outranks a
+   single class, which left the tagline justified instead of centred on two pages. */
+.doc-tagline.doc-tagline {
     font-size: 8.5pt;
     font-weight: 700;
     color: var(--alert-red);
