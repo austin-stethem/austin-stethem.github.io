@@ -31,6 +31,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="portfolio.css">
+
     <style>
         :root {
             --dark-slate-blue: #1a2433;
@@ -64,41 +66,11 @@
             border-radius: 4px;
         }
 
-        .skip-link {
-            position: absolute; left: -9999px; top: 0;
-            background: var(--dark-slate-blue); color: #fff;
-            padding: 10px 16px; border-radius: 0 0 6px 0;
-            font-size: 0.85rem; font-weight: 600; text-decoration: none; z-index: 10000;
-        }
-        .skip-link:focus { left: 0; }
-
-        .back-link { color: var(--alert-red); text-decoration: none; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
-        .back-link:hover { text-decoration: underline; }
-
-        .doc-header { width: 100%; border-bottom: 2px solid var(--dark-slate-blue); padding-bottom: 18px; margin-bottom: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-        .doc-tagline { font-size: 8.5pt; font-weight: 700; color: var(--alert-red); text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px 0; text-align: center; width: 100%; }
-        .doc-title { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(19pt, 5.5vw, 26pt); color: var(--dark-slate-blue); margin: 0 0 10px 0; line-height: 1.2; text-align: center; font-weight: normal; }
-
-        .meta-table { width: 100%; margin: 0 auto 30px auto; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);}
-        .meta-cell { vertical-align: top; padding: 15px; font-size: 9.5pt; text-align: center; border-right: 1px solid #e2e8f0; width: 33%; }
-        .meta-cell:last-child { border-right: none; }
-        .meta-label { display: block; font-size: 7.5pt; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .meta-value { color: #1e293b; font-weight: 500; }
-
-        .nda-note {
-            background: #fff; padding: 15px; margin: 20px 0; font-size: 8.5pt; font-style: italic;
-            color: #334155; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border-radius: 0 6px 6px 0;
-            border: 1px solid #e2e8f0; border-left: 4px solid var(--alert-red);
-        }
-
         h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
         h3 { font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
         p { text-align: justify; margin-bottom: 15px; color: #334155; }
         ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
         li { margin-bottom: 8px; }
-
-        .scenario-box { background: #e0f2fe; border-left: 4px solid #0369a1; padding: 18px 25px; margin-top: -5px; margin-bottom: 30px; border-radius: 0 6px 6px 0; font-size: 10pt; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        .scenario-box > strong:first-child { color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
 
         /* --- DASHBOARD WRAPPER (SaaS Style) --- */
         .dashboard-container {
@@ -191,65 +163,21 @@
         .code-string { color: #98c379; }
         .code-number { color: #d19a66; }
 
-        .jargon-tooltip { position: relative; border-bottom: 1px dashed var(--alert-red); cursor: help; color: var(--dark-slate-blue); white-space: nowrap; transition: border-color 0.2s ease;}
-        .jargon-tooltip strong { font-weight: 700; color: var(--dark-slate-blue); }
-        .jargon-tooltip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 8px 12px; border-radius: 4px; font-size: 8.5pt; font-weight: normal; white-space: normal; width: max-content; max-width: 260px; text-align: center; line-height: 1.4; opacity: 0; visibility: hidden; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 100; pointer-events: none;}
-        .jargon-tooltip::before { content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: #1e293b transparent transparent transparent; opacity: 0; visibility: hidden; transition: all 0.2s; z-index: 100; pointer-events: none;}
-        .jargon-tooltip:hover::after, .jargon-tooltip:hover::before,
-        .jargon-tooltip:focus::after, .jargon-tooltip:focus::before { opacity: 1; visibility: visible; bottom: 135%; }
-
-        .next-step-box { background: var(--dark-slate-blue); color: white; padding: 35px 25px; border-radius: 8px; text-align: center; margin-top: 50px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 4px solid var(--alert-red);}
-        .next-step-box h3 { color: #f8fafc; margin-top: 0; font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); margin-bottom: 12px; border-bottom: none; padding-bottom: 0; text-transform: none; letter-spacing: 0; font-weight: normal;}
-        .next-step-box p { color: #cbd5e1; font-size: 10pt; max-width: 650px; margin: 0 auto 25px auto; text-align: center; line-height: 1.6;}
-
-        .project-navigation { display: flex; justify-content: space-between; align-items: stretch; margin-top: 30px; gap: 15px; flex-wrap: wrap;}
-        .nav-btn { flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; text-decoration: none; border-radius: 6px; transition: all 0.2s ease; text-align: left; display: flex; flex-direction: column; justify-content: center; }
-        .nav-btn.next { text-align: right; background: var(--alert-red); border-color: var(--alert-red); align-items: flex-end;}
-        .nav-btn.prev:hover { background: rgba(255,255,255,0.1); transform: translateX(-4px); border-color: rgba(255,255,255,0.3);}
-        .nav-btn.next:hover { background: #8e1c1c; transform: translateX(4px); box-shadow: 0 4px 12px rgba(179,37,37,0.3);}
-        .nav-label { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
-        .nav-btn.next .nav-label { color: #fca5a5; }
-        .nav-title { font-size: 11pt; font-weight: bold;}
-
-        /* WATERMARK */
-        .watermark {
-            position: fixed; bottom: 12px; right: 15px; font-size: 0.65rem; color: #94a3b8; opacity: 0.6;
-            font-family: 'Inter', sans-serif; letter-spacing: 0.5px; pointer-events: none; user-select: none; z-index: 9999;
-        }
-
         @media (max-width: 800px) {
             body { padding: 28px 16px 40px; }
             p { text-align: left; }
-            .meta-table tr { display: flex; flex-direction: column; }
-            .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; }
             .dashboard-container { flex-direction: column; }
             .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #334155; padding: 22px; }
             .dash-main { padding: 18px; min-width: 0; }
-            .project-navigation { flex-direction: column; }
-            .nav-btn { width: 100%; min-width: 0; align-items: center !important; text-align: center !important; }
             .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
             .chart-wrapper { height: 320px; }
             .scroll-hint { display: block; }
-            .watermark { position: static; display: block; text-align: center; padding-top: 26px; opacity: 0.75; }
-
-            /* Tooltips become a readable bottom sheet instead of a clipped bubble */
-            .jargon-tooltip { white-space: normal; }
-            .jargon-tooltip::before { display: none; }
-            .jargon-tooltip::after,
-            .jargon-tooltip:hover::after,
-            .jargon-tooltip:focus::after {
-                position: fixed; bottom: 16px; top: auto; left: 16px; right: 16px;
-                transform: none; width: auto; max-width: none; font-size: 10pt; padding: 14px 16px;
-            }
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-        }
+        @media (pointer: coarse) { .btn-run { padding: 18px 20px; } }
 
         @media print {
-            .dashboard-container, .watermark, .skip-link { display: none !important; }
-            body { background: #fff; max-width: none; }
+            .dashboard-container, .watermark,            body { background: #fff; max-width: none; }
             pre.code-block { background: #f8fafc; color: #0f172a; box-shadow: none; }
             .code-comment, .code-keyword, .code-function, .code-string, .code-number { color: #334155; }
         }
@@ -409,7 +337,7 @@
                 </div>
             </div>
 
-            <div class="log-section">
+            <div class="log-section" tabindex="0" role="region" aria-label="Algorithm pricing log, scrolls horizontally">
                 <div class="chart-header" style="text-align: left; margin-bottom: 10px;">Algorithm Pricing Log</div>
                 <table class="log-table" id="log-table">
                     <thead>
@@ -438,7 +366,7 @@
         <strong>Phase 1: <span class="jargon-tooltip" data-tip="The process of cleaning and formatting raw data to prevent errors, such as handling missing values before running mathematical algorithms."><strong>Data Sanitization</strong></span> &amp; Mapping</strong>
         We cannot run optimization math on dirty data. This function catches missing vendor costs to prevent division-by-zero errors, and automatically maps our raw ERP data into our new Elasticity Groups.
     </div>
-    <pre class="code-block"><code><span class="code-comment"># Algorithmic Margin Defense &amp; Cross-Subsidization Engine</span>
+    <pre class="code-block" tabindex="0"><code><span class="code-comment"># Algorithmic Margin Defense &amp; Cross-Subsidization Engine</span>
 <span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
 <span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
 
@@ -459,7 +387,7 @@
         <strong>Phase 2: The Deterministic Subsidization Engine</strong>
         The core algorithm. It applies the FIFO windfall shield, converts each tier's permitted markup into the margin points it can actually contribute, and cascades the deficit from the most elastic tier inward so the Anchors are protected for as long as the portfolio can afford it.
     </div>
-    <pre class="code-block"><code><span class="code-keyword">def</span> <span class="code-function">margin_after_markup</span>(margin, markup):
+    <pre class="code-block" tabindex="0"><code><span class="code-keyword">def</span> <span class="code-function">margin_after_markup</span>(margin, markup):
     <span class="code-string">"""A price markup does NOT lift margin point-for-point.
     At 48% margin, a 70% markup yields 69.4% -- a 21.4pt gain, not 70."""</span>
     <span class="code-keyword">return</span> <span class="code-number">1.0</span> - (<span class="code-number">1.0</span> - margin) / (<span class="code-number">1.0</span> + markup)
@@ -662,7 +590,9 @@
             }
 
             // --- KPIs ---
-            const stressBuffer = (fSpike * 3) + (cDrop * 1.5);
+            /* Downside stress applied on top of the defended position. Scaled to the same
+               blended-point units as the deficit, not the old markup-percent scale. */
+            const stressBuffer = (fSpike * 8) + (cDrop * 10);
             const blendedFloor = finalBlendedMargin - stressBuffer;
 
             const medianEl = document.getElementById('out-median');
@@ -672,8 +602,12 @@
             const p95El = document.getElementById('out-p95');
             p95El.innerText = blendedFloor.toFixed(1) + "%";
 
-            const windfallMargin = finalBlendedMargin + (fSpike * 12);
-            const ratioOldStock = Math.min(qohDays / 90, 1.0);
+            /* The FIFO windfall is the new markups landing on old, cheaper stock — so it
+               is worth exactly the recovery the cascade generated, not a freight constant.
+               Depletion tracks the same 120-day horizon the shield uses. */
+            const totalRecovery = recovery.reduce((a, b) => a + b, 0);
+            const windfallMargin = finalBlendedMargin + totalRecovery;
+            const ratioOldStock = Math.min(qohDays / 120, 1.0);
             const realizedQ1 = (windfallMargin * ratioOldStock) + (finalBlendedMargin * (1 - ratioOldStock));
 
             const cardAction = document.getElementById('card-action');
@@ -683,12 +617,12 @@
             actionEl.innerText = realizedQ1.toFixed(1) + "%";
             cardAction.className = "kpi-card";
 
-            if (qohDays > 0 && fSpike > 0) {
+            if (rawDeficit > 0 && qohDays > 0) {
                 cardAction.classList.add("status-safe");
                 actionEl.style.color = "#10b981";
                 subEl.innerText = "FIFO windfall is pushing short-term yield above baseline targets.";
                 subEl.style.color = "#10b981";
-            } else if (fSpike > 0) {
+            } else if (rawDeficit > 0) {
                 cardAction.classList.add("status-warn");
                 actionEl.style.color = "#f59e0b";
                 subEl.innerText = "Zero physical buffer. Q1 yields exactly to defended replacement targets.";
@@ -708,6 +642,14 @@
             const baseData = groups.map(g => g.baseMargin).concat([initialBlendedMargin]);
             const simData = simMargins.concat([finalBlendedMargin]);
             renderComparisonChart(baseData, simData);
+        }
+
+        /* "Group C (Elastic)" x4 does not fit across a 380px viewport; Chart.js would
+           rotate them to near-vertical. Short forms below the breakpoint. */
+        function axisLabels() {
+            return window.matchMedia('(max-width: 800px)').matches
+                ? ['Grp C', 'Grp B', 'Grp A', 'Blended']
+                : groups.map(g => g.title).concat(['Total Blended']);
         }
 
         function renderComparisonChart(baseData, simData) {
@@ -730,7 +672,7 @@
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: groups.map(g => g.title).concat(['Total Blended']),
+                    labels: axisLabels(),
                     datasets: [
                         {
                             label: 'Target Baseline Margin',
@@ -812,6 +754,21 @@
         } else {
             console.warn('chartjs-plugin-datalabels failed to load — bars will render without value labels.');
         }
+
+        // Swap axis labels when the viewport crosses the breakpoint (e.g. rotation)
+        let wasNarrow = window.matchMedia('(max-width: 800px)').matches;
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const nowNarrow = window.matchMedia('(max-width: 800px)').matches;
+                if (nowNarrow !== wasNarrow && chartInstance) {
+                    wasNarrow = nowNarrow;
+                    chartInstance.data.labels = axisLabels();
+                    chartInstance.update();
+                }
+            }, 150);
+        });
 
         runSimulation();
     </script>
