@@ -34,7 +34,6 @@
             --info-bg: #0f172a;
             --info-panel: #1e293b;
             --info-border: #334155;
-            --flood: #0369a1;
         }
 
         body {
@@ -80,14 +79,14 @@
         input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
         input[type="range"]:focus { outline: none; }
         input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
-        #slide-time::-webkit-slider-thumb { background: var(--flood); box-shadow: 0 0 10px rgba(3,105,161,0.5); }
-        #slide-time::-moz-range-thumb { background: var(--flood); }
 
         .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: #cbd5e1; text-align: center; }
-        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--flood); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; }
-        .logic-box strong { color: #7dd3fc; display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--info-blue, #0369a1); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; }
+        .logic-box strong { color: var(--info-blue-bright, #7dd3fc); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
 
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        /* Fixed at two columns. auto-fit picked the count from available width, which
+           left an empty cell beside an odd third card. Four cards, 2x2, no gaps. */
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
         .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s; }
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
@@ -96,6 +95,16 @@
         .status-safe { border-top-color: #10b981 !important; }
         .status-warn { border-top-color: #f59e0b !important; }
         .status-critical { border-top-color: #ef4444 !important; }
+
+        /* Equal tile, completing the 2x2. Slightly lifted because it is the marginal
+           rate the automation argument rests on, but the same size as its neighbours. */
+        .kpi-rate {
+            background: rgba(3, 105, 161, 0.14);
+            border-color: rgba(125, 211, 252, 0.30);
+            border-top: 3px solid var(--info-blue-bright, #7dd3fc) !important;
+        }
+        .kpi-rate .kpi-card-header { color: var(--info-blue-bright, #7dd3fc); }
+        .kpi-rate .kpi-value { color: #f8fafc; }
 
         .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
         .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
@@ -244,6 +253,11 @@
                     <div class="kpi-card-header">Exposure vs. Manual Baseline</div>
                     <div class="kpi-value" id="kpi-averted" style="color:#10b981;">--</div>
                     <div class="kpi-sub" id="kpi-averted-sub">Against the 48-hour hand count</div>
+                </div>
+                <div class="kpi-card kpi-rate" id="card-rate">
+                    <div class="kpi-card-header">Cost of Delay</div>
+                    <div class="kpi-value" id="kpi-rate">--</div>
+                    <div class="kpi-sub" id="kpi-rate-sub">Per hour the ERP and the shelf disagree</div>
                 </div>
             </div>
 
@@ -394,6 +408,17 @@
                 avertedEl.innerText = '+' + money(-delta);
                 avertedSub.innerText = `Additional exposure beyond the ${MANUAL_BASELINE_HRS}-hour baseline`;
             }
+
+            /* Marginal cost of an hour of disagreement. Independent of how long the
+               outage has already run, which is exactly why it is the number to quote
+               when arguing for the automated kill-switch. */
+            const hourlyRate = DRAW_RATE * (destPct / 100) * COST_PER_PHANTOM;
+            const rateEl = document.getElementById('kpi-rate');
+            const rateSub = document.getElementById('kpi-rate-sub');
+            rateEl.innerText = destPct === 0 ? money(0) : money(hourlyRate) + ' / hr';
+            rateSub.innerText = destPct === 0
+                ? 'No inventory loss — the ERP and the shelf agree'
+                : `${Math.round(DRAW_RATE * (destPct / 100))} order lines/hr strike destroyed stock at ${money(COST_PER_PHANTOM)} each`;
 
             renderChart(destPct, recHours);
         }
