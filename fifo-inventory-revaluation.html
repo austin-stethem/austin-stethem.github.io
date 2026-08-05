@@ -83,7 +83,8 @@
         .sidebar-header { margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center; }
         .sidebar-header .sim-title { color: #f8fafc; font-size: 1.6rem; margin: 0; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
         .sidebar-header .sim-title span { color: #f87171; }
-        .sidebar-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        /* text-align must be explicit — a bare `p` rule on this page beats inheritance. */
+        .sidebar-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
         
         .control-group { margin-bottom: 25px; }
         .control-group label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; line-height: 1.3;}
