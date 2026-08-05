@@ -13,9 +13,8 @@
     <meta property="og:description" content="A cash-flow model showing how pricing on replacement cost turns a physical inventory buffer into immediate, quantifiable EBITDA.">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Austin Sonny Stethem">
-    <!-- TODO: replace example.com with your live domain once deployed -->
-    <meta property="og:url" content="https://example.com/fifo-inventory-revaluation.html">
-    <meta property="og:image" content="https://example.com/og-preview.png">
+    <meta property="og:url" content="https://austin-stethem.github.io/fifo-inventory-revaluation.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
@@ -35,11 +34,13 @@
     <link rel="stylesheet" href="portfolio.css">
 
     <style>
-        :root { 
-            --dark-slate-blue: #1a2433; 
-            --alert-red: #ef4444; /* Brightened for dark mode */
-            --success-green: #10b981; 
-            --bg-color: #fbfbfb; 
+        :root {
+            /* A separate token rather than a reassignment of --alert-red. Overriding the
+               shared token would retint every rule portfolio.css paints with it (back
+               link, tagline, NDA border, tooltip underlines, next-step border, Next
+               button), making this the only page off the site's crimson. This brighter
+               red is for the dark dashboard only. */
+            --alert-red-bright: #ef4444;
 
             /* Premium Dark Dashboard Colors */
             --info-bg: #0f172a;
@@ -84,23 +85,16 @@
         .control-group label span:first-child { padding-right: 15px; }
         .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 0.95rem; white-space: nowrap; text-align: right;}
         
-        /* Custom Webkit Sliders - Dark Theme */
-        input[type="range"] { 
-            -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; margin-top: -6px; transition: transform 0.1s;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-        input[type="range"]:focus { outline: none; }
-
-        /* Specific Slider Thumb Colors */
+        /* Slider geometry (track, thumb size, hover, touch scaling) comes from
+           portfolio.css. Only the per-control thumb colours are local, so each slider
+           reads as the series it drives. Firefox equivalents included, since the
+           -webkit- pseudo-element does nothing there. */
         #slider-velocity::-webkit-slider-thumb { background: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); }
-        #slider-increase::-webkit-slider-thumb { background: var(--alert-red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+        #slider-increase::-webkit-slider-thumb { background: var(--alert-red-bright); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
         #slider-qoh::-webkit-slider-thumb { background: var(--success-green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        #slider-velocity::-moz-range-thumb { background: #38bdf8; }
+        #slider-increase::-moz-range-thumb { background: var(--alert-red-bright); }
+        #slider-qoh::-moz-range-thumb { background: var(--success-green); }
 
         .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid #cbd5e1; padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #cbd5e1; margin-top: auto; line-height: 1.5;}
 
@@ -128,6 +122,27 @@
             .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
         }
     
+        @media print {
+            .sim-container { display: none !important; }
+            body { background: #fff; max-width: none; }
+
+            /* portfolio.css hides .next-step-box to spare the toner; the closing
+               narrative still belongs on paper, so re-show it unstyled. */
+            .next-step-box {
+                display: block !important;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-top: 24px;
+                color: #000;
+            }
+            .next-step-box h3 { color: #000; }
+            /* Doubled class: portfolio.css uses .next-step-box.next-step-box p */
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+
         /* --- Added in review: mobile + a11y hardening ------------------------ */
         @media (max-width: 800px) {
             body { padding-left: 16px; padding-right: 16px; }
@@ -212,7 +227,7 @@
             </div>
 
             <div class="control-group">
-                <label for="slider-increase"><span>Weighted Cost Spike (%):</span> <span class="val-readout" style="color: var(--alert-red);" id="val-increase">+12.0%</span></label>
+                <label for="slider-increase"><span>Weighted Cost Spike (%):</span> <span class="val-readout" style="color: var(--alert-red-bright);" id="val-increase">+12.0%</span></label>
                 <input type="range" id="slider-increase" aria-label="Weighted vendor cost spike percentage" min="2" max="25" step="0.5" value="12.0">
                 <div style="font-size: 8pt; color: #94a3b8; margin-top: 4px;">Blended average across KVI/Elastic tiers.</div>
             </div>
@@ -234,9 +249,9 @@
                     <div class="kpi-value" id="out-duration" style="color: #3b82f6;">--</div>
                     <div class="kpi-sub">Time to bleed legacy stock</div>
                 </div>
-                <div class="kpi-card" style="border-top-color: var(--alert-red);">
+                <div class="kpi-card" style="border-top-color: var(--alert-red-bright);">
                     <div class="kpi-title">Peak FIFO Margin</div>
-                    <div class="kpi-value" id="out-peak" style="color: var(--alert-red);">--</div>
+                    <div class="kpi-value" id="out-peak" style="color: var(--alert-red-bright);">--</div>
                     <div class="kpi-sub">Margin realized on old stock</div>
                 </div>
                 <div class="kpi-card" style="border-top-color: var(--success-green);">
@@ -444,6 +459,22 @@
             const box = document.querySelector('.chart-box');
             if (box) box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network. The KPIs above are unaffected.</div>';
         }
+
+        /* The x-axis tick limit is chosen from the viewport at draw time, so a rotation
+           needs a redraw. Throttled, and only fired when the breakpoint is actually
+           crossed — resize fires continuously while a mobile browser chrome animates. */
+        let wasNarrow = window.matchMedia('(max-width: 800px)').matches;
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const nowNarrow = window.matchMedia('(max-width: 800px)').matches;
+                if (nowNarrow !== wasNarrow) {
+                    wasNarrow = nowNarrow;
+                    updateSimulation();
+                }
+            }, 150);
+        });
 
         updateSimulation();
 
