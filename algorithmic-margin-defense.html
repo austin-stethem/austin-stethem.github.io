@@ -749,11 +749,14 @@
             const p95El = document.getElementById('out-p95');
             p95El.innerText = blendedFloor.toFixed(1) + "%";
 
-            /* The FIFO windfall is the new markups landing on old, cheaper stock — so it
-               is worth exactly the recovery the cascade generated, not a freight constant.
-               Depletion tracks the same 120-day horizon the shield uses. */
-            const totalRecovery = recovery.reduce((a, b) => a + b, 0);
-            const windfallMargin = finalBlendedMargin + totalRecovery;
+            /* Legacy stock carries the OLD cost but sells at the NEW marked-up price, so
+               the cost shock never lands on it. Blended margin on that stock is therefore
+               base + recovery, and since finalBlendedMargin = base - shock + recovery,
+               the uplift to add back is the SHOCK, not the recovery.
+               The two are equal only while the portfolio fully absorbs the shock. Once it
+               is breached they diverge, and adding recovery understated Q1 by up to 0.9
+               margin points — in precisely the scenario where the buffer matters most. */
+            const windfallMargin = finalBlendedMargin + shock;
             const ratioOldStock = Math.min(qohDays / 120, 1.0);
             const realizedQ1 = (windfallMargin * ratioOldStock) + (finalBlendedMargin * (1 - ratioOldStock));
 
