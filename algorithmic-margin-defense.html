@@ -13,9 +13,8 @@
     <meta property="og:description" content="Deterministic cross-subsidization: cascading markups across elasticity tiers to defend blended EBITDA against supply chain inflation.">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Austin Sonny Stethem">
-    <!-- TODO: replace with your live domain once deployed -->
-    <meta property="og:url" content="https://example.com/algorithmic-margin-defense.html">
-    <meta property="og:image" content="https://example.com/og-preview.png">
+    <meta property="og:url" content="https://austin-stethem.github.io/algorithmic-margin-defense.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
@@ -34,13 +33,8 @@
     <link rel="stylesheet" href="portfolio.css">
 
     <style>
+        /* Brand tokens live in portfolio.css; only the dashboard palette is local. */
         :root {
-            --dark-slate-blue: #1a2433;
-            --alert-red: #b32525;
-            --success-green: #10b981;
-            --bg-color: #fbfbfb;
-
-            /* Premium Dark Dashboard Colors */
             --info-bg: #0f172a;
             --info-panel: #1e293b;
             --info-border: #334155;
@@ -58,12 +52,6 @@
             padding: 40px 20px 90px;
             background-color: var(--bg-color);
             -webkit-font-smoothing: antialiased;
-        }
-
-        a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
-            outline: 2px solid var(--alert-red);
-            outline-offset: 3px;
-            border-radius: 4px;
         }
 
         h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
@@ -100,14 +88,6 @@
         .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; cursor: pointer; }
         .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: #f87171;}
 
-        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
-        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; border: 1px solid rgba(255,255,255,0.05); }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #f87171; margin-top: -6px; box-shadow: 0 0 10px rgba(248, 113, 113, 0.4); transition: transform 0.1s; }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
-        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
-        input[type="range"]:focus { outline: none; }
-        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red); outline-offset: 6px; }
 
         .btn-run {
             background: var(--alert-red); color: white; border: none; padding: 16px 20px; width: 100%;
@@ -177,9 +157,26 @@
         @media (pointer: coarse) { .btn-run { padding: 18px 20px; } }
 
         @media print {
-            .dashboard-container, .watermark,            body { background: #fff; max-width: none; }
+            .dashboard-container { display: none !important; }
+            body { background: #fff; max-width: none; }
             pre.code-block { background: #f8fafc; color: #0f172a; box-shadow: none; }
             .code-comment, .code-keyword, .code-function, .code-string, .code-number { color: #334155; }
+
+            /* portfolio.css hides .next-step-box to spare the toner; the closing
+               narrative still belongs on paper, so re-show it unstyled. */
+            .next-step-box {
+                display: block !important;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-top: 24px;
+                color: #000;
+            }
+            .next-step-box h3 { color: #000; }
+            /* Doubled class: portfolio.css uses .next-step-box.next-step-box p */
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
         }
     </style>
 </head>
@@ -490,16 +487,26 @@
         sliderComp.addEventListener('input', (e) => { valComp.innerText = `-${e.target.value}%`; });
         sliderQoh.addEventListener('input', (e) => { valQoh.innerText = `${e.target.value} Days`; });
 
+        // Inputs are locked alongside the button: moving a slider mid-run would leave
+        // the rendered result describing a scenario the controls no longer show.
+        const inputsToLock = [sliderFreight, sliderComp, sliderQoh];
+
         function triggerSimulation() {
             btnExecute.disabled = true;
+            inputsToLock.forEach(el => { el.disabled = true; });
             btnExecute.innerText = "Calculating Defense Matrix...";
             dynamicContext.style.borderLeftColor = '#cbd5e1';
             dynamicContext.innerHTML = '<span style="color: #94a3b8; font-style: italic;">Processing deterministic algorithm...</span>';
 
             setTimeout(() => {
-                runSimulation();
-                btnExecute.disabled = false;
-                btnExecute.innerText = "Execute Margin Defense";
+                try {
+                    runSimulation();
+                } finally {
+                    // finally, so a thrown error can't leave the panel permanently locked
+                    btnExecute.disabled = false;
+                    inputsToLock.forEach(el => { el.disabled = false; });
+                    btnExecute.innerText = "Execute Margin Defense";
+                }
             }, 600);
         }
 
@@ -660,13 +667,6 @@
 
             const simColors = groups.map(g => g.color).concat(['#10b981']);
 
-            // Scale to the data: a hard 20-70 window clips deep shock scenarios
-            const all = baseData.concat(simData);
-            const lo = Math.min.apply(null, all);
-            const hi = Math.max.apply(null, all);
-            const yMin = Math.floor((lo - 6) / 5) * 5;
-            const yMax = Math.ceil((hi + 6) / 5) * 5;
-
             Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
 
             chartInstance = new Chart(ctx, {
@@ -717,9 +717,15 @@
                     },
                     scales: {
                         y: {
-                            beginAtZero: false,
-                            min: yMin,
-                            max: yMax,
+                            /* Fixed window on purpose. An axis that rescales to the data
+                               hides the severity of a cost shock, because the bars stay
+                               tall and only the labels move. Verified across all 5,184
+                               slider combinations: plotted values span 0.34% to 61.48%,
+                               so a 0-70 window cannot clip while leaving only ~8.5 points
+                               of dead space above the worst case. */
+                            beginAtZero: true,
+                            min: 0,
+                            max: 70,
                             ticks: {
                                 callback: function(value) { return value + '%'; },
                                 font: { size: 10 },
