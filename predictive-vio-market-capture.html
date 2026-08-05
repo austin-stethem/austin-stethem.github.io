@@ -601,17 +601,23 @@
                 'Chemicals': ['Bulk DEF', 'Synthetic Oil 5W-30']
             };
 
+            /* Tier and hub count are declared per city rather than derived from a loose
+               "urban / mid / rural" label. Two reasons: the written analysis claims an
+               80-branch network and five topology tiers, and the previous generator
+               produced 95 branches across only three tiers (1, 2 and 4) — Tier 3 never
+               existed and Tier 5 was named in the prose but never generated.
+               Hub counts below sum to exactly 80. */
             const cityAnchors = [
-                { name: "Atlanta, GA", lat: 33.7490, lng: -84.3880, type: "urban", hasHub: true },
-                { name: "Nashville, TN", lat: 36.1627, lng: -86.7816, type: "urban", hasHub: true },
-                { name: "Charlotte, NC", lat: 35.2271, lng: -80.8431, type: "urban", hasHub: true },
-                { name: "Birmingham, AL", lat: 33.5186, lng: -86.8104, type: "mid", hasHub: true },
-                { name: "Greenville, SC", lat: 34.8526, lng: -82.3940, type: "mid", hasHub: true },
-                { name: "Knoxville, TN", lat: 35.9606, lng: -83.9207, type: "mid", hasHub: true },
-                { name: "Macon, GA", lat: 32.8407, lng: -83.6324, type: "mid", hasHub: true },
-                { name: "Cookeville, TN", lat: 36.1628, lng: -85.5016, type: "rural", hasHub: true },
-                { name: "Chattanooga, TN", lat: 36.0446, lng: -85.3097, type: "mid", hasHub: false },
-                { name: "Augusta, GA", lat: 33.4735, lng: -81.9748, type: "mid", hasHub: false }
+                { name: "Atlanta, GA",     lat: 33.7490, lng: -84.3880, tier: 5, hubs: 14, comps: 180 },
+                { name: "Nashville, TN",   lat: 36.1627, lng: -86.7816, tier: 4, hubs: 12, comps: 130 },
+                { name: "Charlotte, NC",   lat: 35.2271, lng: -80.8431, tier: 4, hubs: 12, comps: 130 },
+                { name: "Birmingham, AL",  lat: 33.5186, lng: -86.8104, tier: 3, hubs:  9, comps:  85 },
+                { name: "Greenville, SC",  lat: 34.8526, lng: -82.3940, tier: 3, hubs:  9, comps:  85 },
+                { name: "Knoxville, TN",   lat: 35.9606, lng: -83.9207, tier: 2, hubs:  8, comps:  55 },
+                { name: "Macon, GA",       lat: 32.8407, lng: -83.6324, tier: 2, hubs:  8, comps:  55 },
+                { name: "Cookeville, TN",  lat: 36.1628, lng: -85.5016, tier: 1, hubs:  8, comps:  30 },
+                { name: "Chattanooga, TN", lat: 36.0446, lng: -85.3097, tier: 3, hubs:  0, comps:  85 },
+                { name: "Augusta, GA",     lat: 33.4735, lng: -81.9748, tier: 2, hubs:  0, comps:  55 }
             ];
 
             /* --- DECAY PROFILES BY TOPOLOGY TIER ------------------------------
@@ -623,9 +629,11 @@
                hub and renormalised so no two hubs are identical and every curve still
                sums to 100%. */
             const tierProfiles = {
-                1: [0.22, 0.21, 0.22, 0.20, 0.15],  // rural: captive, customers travel
-                2: [0.33, 0.26, 0.20, 0.14, 0.07],  // regional centre
-                4: [0.52, 0.24, 0.14, 0.08, 0.02]   // urban: competitor on every block
+                1: [0.20, 0.20, 0.22, 0.21, 0.17],  // rural monopoly: captive, they travel
+                2: [0.28, 0.24, 0.22, 0.17, 0.09],  // regional market centre
+                3: [0.36, 0.26, 0.20, 0.13, 0.05],  // suburban corridor
+                4: [0.46, 0.25, 0.17, 0.09, 0.03],  // urban fringe
+                5: [0.58, 0.24, 0.12, 0.05, 0.01]   // hyper-dense: competitor per block
             };
 
             function gravityFor(tier) {
@@ -642,14 +650,16 @@
                     '100+ Miles': '0.0%',
                     // Cluster confidence: tight, well-separated profiles cluster more
                     // cleanly than the middle tier, which sits between two centroids.
-                    'confidence': (tier === 2 ? 86 + Math.random() * 6 : 91 + Math.random() * 7).toFixed(1) + '%'
+                    // Tiers 1 and 5 are the extremes and separate cleanly; interior tiers
+                    // sit between centroids and cluster with lower confidence.
+                    'confidence': ((tier === 1 || tier === 5) ? 92 + Math.random() * 6 : 84 + Math.random() * 8).toFixed(1) + '%'
                 };
             }
 
             const accountPrefixes = ["Commercial Fleet", "Metro Diesel", "City Transit", "Agri-Repair", "Heavy Duty Services", "Express Auto", "Advanced Diagnostics", "Premier Alignment"];
 
             cityAnchors.forEach((city) => {
-                let hubCount = city.hasHub ? (city.type === "urban" ? 18 : city.type === "mid" ? 9 : 5) : 0;
+                let hubCount = city.hubs;
 
                 for(let h=1; h<=hubCount; h++) {
                     let totalHubRev = Math.floor(Math.random() * 3000000) + 1000000;
@@ -690,7 +700,7 @@
                     let hLat = city.lat + (Math.random() - 0.5) * 0.2;
                     let hLng = city.lng + (Math.random() - 0.5) * 0.2;
 
-                    const tier = city.type === "urban" ? 4 : city.type === "mid" ? 2 : 1;
+                    const tier = city.tier;
                     const g = gravityFor(tier);
 
                     data["Meridian Parts"].push({
@@ -702,7 +712,7 @@
                     });
                 }
 
-                let compCount = city.type === "urban" ? 180 : city.type === "mid" ? 80 : 30;
+                let compCount = city.comps;
                 for(let i = 0; i < compCount; i++) {
                     let cat = comps[Math.floor(Math.random() * comps.length)];
                     data[cat].push({
@@ -1055,7 +1065,13 @@
                             </div>
                         `;
 
-                        const tierNames = { 1: "Tier 1: Deep Rural Super-Hub", 2: "Tier 2: Regional Market Center", 4: "Tier 4: Urban Fringe / High Density" };
+                        const tierNames = {
+                            1: "Tier 1: Rural Monopoly",
+                            2: "Tier 2: Regional Market Center",
+                            3: "Tier 3: Suburban Corridor",
+                            4: "Tier 4: Urban Fringe",
+                            5: "Tier 5: Hyper-Dense Urban"
+                        };
                         let tierName = tierNames[item.topology.tier] || `Tier ${item.topology.tier}`;
 
                         topologyHtml = `
