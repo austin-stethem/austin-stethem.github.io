@@ -13,9 +13,8 @@
     <meta property="og:description" content="A Monte Carlo random-walk engine that maps the cone of profit risk across 5,000 simulated futures and sweeps the price band for maximum expected profit.">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Austin Sonny Stethem">
-    <!-- TODO: replace example.com with your live domain once deployed -->
-    <meta property="og:url" content="https://example.com/stochastic-margin-optimization.html">
-    <meta property="og:image" content="https://example.com/og-preview.png">
+    <meta property="og:url" content="https://austin-stethem.github.io/stochastic-margin-optimization.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
@@ -35,13 +34,8 @@
     <link rel="stylesheet" href="portfolio.css">
 
     <style>
-        :root { 
-            --dark-slate-blue: #1a2433; 
-            --alert-red: #b32525; 
-            --success-green: #10b981; 
-            --bg-color: #fbfbfb; 
-            
-            /* Premium Dark Dashboard Colors */
+        /* Brand tokens live in portfolio.css; only the dashboard palette is local. */
+        :root {
             --info-bg: #0f172a;
             --info-panel: #1e293b;
             --info-border: #334155;
@@ -91,11 +85,6 @@
         .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
         .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: #f87171;}
         
-        input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
-        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; border: 1px solid rgba(255,255,255,0.05); }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #f87171; margin-top: -6px; box-shadow: 0 0 10px rgba(248, 113, 113, 0.4); transition: transform 0.1s; }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-        input[type="range"]:focus { outline: none; }
 
         select { width: 100%; padding: 10px; background: rgba(0,0,0,0.2); color: #f8fafc; border: 1px solid var(--info-border); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 0.85rem; outline: none; cursor: pointer; transition: border-color 0.2s;}
         select:hover { border-color: #f87171; }
@@ -148,6 +137,29 @@
             .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
         }
     
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: #fff; max-width: none; }
+            pre.code-block { background: #f8fafc; color: #0f172a; box-shadow: none; }
+            .code-comment, .code-keyword, .code-function, .code-string, .code-number { color: #000; }
+
+            /* portfolio.css hides .next-step-box to spare the toner; the closing
+               narrative still belongs on paper, so re-show it unstyled. */
+            .next-step-box {
+                display: block !important;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-top: 24px;
+                color: #000;
+            }
+            .next-step-box h3 { color: #000; }
+            /* Doubled class: portfolio.css uses .next-step-box.next-step-box p */
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+
         /* --- Added in review: mobile + a11y hardening ------------------------ */
         @media (max-width: 800px) {
             body { padding-left: 16px; padding-right: 16px; }
@@ -441,13 +453,23 @@
             return Math.max(BASE_COST * 0.2, BASE_COST * (1 + randomNormal(0, volatility)));
         }
 
+        // Locked together: changing an input mid-run would leave the rendered cone of
+        // risk describing a scenario the controls no longer display.
+        const inputsToLock = [sliderPrice, selectVol, selectElast];
+
         function triggerSimulation() {
             btnExecute.disabled = true;
+            inputsToLock.forEach(el => { el.disabled = true; });
             btnExecute.innerText = "Running 5,000 Realities...";
             setTimeout(() => {
-                runOptimization();
-                btnExecute.disabled = false;
-                btnExecute.innerText = "Run 5,000 Permutations";
+                try {
+                    runOptimization();
+                } finally {
+                    // finally, so a thrown error can't leave the panel permanently locked
+                    btnExecute.disabled = false;
+                    inputsToLock.forEach(el => { el.disabled = false; });
+                    btnExecute.innerText = "Run 5,000 Permutations";
+                }
             }, 600);
         }
 
@@ -487,6 +509,18 @@
             runPriceSweep(targetPrice, volatility, elasticity);
         }
 
+        /* Strict equality against the price array is brittle: the slider is integer
+           stepped today, but any future step value (or a locale/rounding quirk) yields a
+           float that matches nothing. indexOf would return -1 and the marker would
+           silently vanish. Snap to the closest sampled price instead. */
+        function nearestIndex(arr, target) {
+            let best = 0;
+            for (let i = 1; i < arr.length; i++) {
+                if (Math.abs(arr[i] - target) < Math.abs(arr[best] - target)) best = i;
+            }
+            return best;
+        }
+
         /* --- THE OPTIMISATION STEP -------------------------------------------
            A single price point tells you the risk of that price; it does not find
            the best one. This sweeps the whole slider range under the same market
@@ -521,8 +555,8 @@
             const optPrice = prices[bestIdx];
             document.getElementById('out-optimal').innerText = `$${optPrice.toFixed(2)}`;
 
-            const curIdx = prices.indexOf(currentPrice);
-            const deltaVsCurrent = curIdx >= 0 ? (medians[bestIdx] - medians[curIdx]) : 0;
+            const curIdx = nearestIndex(prices, currentPrice);
+            const deltaVsCurrent = medians[bestIdx] - medians[curIdx];
             const sub = document.getElementById('out-optimal-sub');
             const atEdge = (optPrice === SWEEP_MIN || optPrice === SWEEP_MAX);
             if (Math.abs(optPrice - currentPrice) < 0.01) {
@@ -538,7 +572,7 @@
                 sub.style.color = '#94a3b8';
             }
 
-            renderSweepChart(prices, medians, currentPrice, optPrice);
+            renderSweepChart(prices, medians, curIdx, bestIdx);
         }
 
         function renderSpaghettiChart(allPaths, p5Path, p50Path, p95Path, months) {
@@ -614,14 +648,15 @@
             });
         }
 
-        function renderSweepChart(prices, medians, currentPrice, optPrice) {
+        function renderSweepChart(prices, medians, curIdx, bestIdx) {
             const el = document.getElementById('sweepChart');
             if (!el || typeof Chart === 'undefined') return;
             const ctx = el.getContext('2d');
             if (sweepChart) sweepChart.destroy();
 
-            const markers = prices.map((p, i) => (p === optPrice ? medians[i] : null));
-            const youAreHere = prices.map((p, i) => (p === currentPrice ? medians[i] : null));
+            // Index-based so the two pins cannot disappear on a float comparison
+            const markers = prices.map((p, i) => (i === bestIdx ? medians[i] : null));
+            const youAreHere = prices.map((p, i) => (i === curIdx ? medians[i] : null));
 
             sweepChart = new Chart(ctx, {
                 type: 'line',
