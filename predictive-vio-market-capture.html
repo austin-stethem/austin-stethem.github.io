@@ -518,6 +518,21 @@
         <p>I then fed these <span class="jargon-tooltip" data-tip="Mathematical models representing how fast revenue drops off as drive-time increases."><strong>decay curves</strong></span> into an unsupervised <span class="jargon-tooltip" data-tip="An unsupervised AI algorithm that automatically groups data points into distinct clusters based on their underlying similarities."><strong>K-Means Machine Learning Algorithm</strong></span> (via <code><span class="jargon-tooltip" data-tip="The industry-standard machine learning library for Python, used for complex predictive data analysis."><strong>scikit-learn</strong></span></code>). Instead of relying on subjective opinions from regional managers, the algorithm mathematically clustered our 80-branch network into 5 distinct <em>Strategic Topology Tiers</em> based on their actual friction profiles.</p>
         <p>This fundamentally changed how the enterprise priced its catalog. We now knew with mathematical certainty which branches operated as <span style="white-space: nowrap;"><strong>"Tier 1: Rural Monopolies"</strong></span> (capable of absorbing aggressive, network-funding price increases) and which were <span style="white-space: nowrap;"><strong>"Tier 5: Hyper-Dense Urban"</strong></span> (requiring strict, defensive margin floors to survive block-by-block warfare without destroying volume).</p>
 
+        <h3>Making an Unsupervised Model Answer to a Business Question</h3>
+
+        <p>K-Means returns cluster labels, not tiers. The integers it assigns carry no order and no meaning &mdash; cluster 3 is not between cluster 2 and cluster 4 in any sense &mdash; and shipping them to a pricing coordinator as "Tier 3" would be presenting noise as hierarchy. Two steps sit between the raw output and something a pricing decision can rest on.</p>
+
+        <p><strong>The clusters are ordered against a business axis.</strong> After fitting, each cluster's mean dependency on its core five-mile band is computed, and the clusters are sorted on that single figure. The least core-dependent becomes Tier 1, the most becomes Tier 5. The result is an ordinal scale where the number itself carries the strategic meaning: a higher tier is measurably more exposed to a competitor across the street, and that is what licenses a tighter margin floor. Feature scaling happens before fitting, because K-Means is a distance-based algorithm and an unstandardised band with a wider spread would silently dominate the geometry.</p>
+
+        <p><strong>Every assignment carries a confidence figure, and it is derived rather than asserted.</strong> For each branch the model records the distance to its assigned cluster centre and the distance to the next-nearest, and reports one minus their ratio. A branch sitting midway between two centres scores near zero; a decisively placed one approaches 100%. Anything below 20% is flagged as borderline and excluded from automated action.</p>
+
+        <div class="scenario-box">
+            <strong>Why the borderline flag matters more than the tiers do</strong>
+            Roughly one branch in eight does not classify cleanly. Those are the branches where a rural profile shades into a regional one, and where an automated price increase justified by "Tier 1 can absorb it" would be justified by a coin flip. A model that reports which of its own outputs it is unsure about can be trusted with the rest; one that returns five confident tiers for every branch cannot.
+        </div>
+
+        <p>The interactive model above runs this same calculation. The confidence figure in each hub popup is computed from that hub's own decay profile against the cluster centres, not attached as decoration &mdash; which is why some hubs report a borderline status and why a hub occasionally classifies into a neighbouring tier rather than the one its geography would suggest.</p>
+
         <h2>3. Enterprise Ecosystem: Scaling the Architecture</h2>
         <p>This geospatial engine was not a single-use script; it was architected as a foundational data ecosystem. Using this exact <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture."><strong>Python</strong></span> &amp; <span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases."><strong>SQL</strong></span> backbone, I expanded the architecture to solve massive operational inefficiencies across the enterprise:</p>
         <ul style="margin-top: 15px; margin-bottom: 25px; color: #334155; padding-left: 20px; line-height: 1.6;">
@@ -630,13 +645,47 @@
                sums to 100%. */
             /* Six bands, matching the production enterprise_gravity_matrix schema:
                0-5 | 5-15 | 15-30 | 30-50 | 50-100 | 100+ */
+            /* Band order: 0-5, 5-15, 15-30, 30-50, 50-100, 100+.
+               Shapes follow the gradient the production clustering actually produced:
+               dependency on the core five-mile band rises monotonically from the rural
+               tier to the hyper-dense one, and the rural tier carries a long-haul tail
+               that the urban tiers do not. Values are proxies; the structure is not. */
             const tierProfiles = {
-                1: [0.19, 0.19, 0.21, 0.20, 0.16, 0.05],  // rural monopoly: captive, they travel
-                2: [0.27, 0.23, 0.21, 0.16, 0.09, 0.04],  // regional market centre
-                3: [0.35, 0.25, 0.19, 0.13, 0.05, 0.03],  // suburban corridor
-                4: [0.45, 0.24, 0.16, 0.09, 0.04, 0.02],  // urban fringe
-                5: [0.57, 0.23, 0.12, 0.05, 0.02, 0.01]   // hyper-dense: competitor per block
+                1: [0.26, 0.06, 0.09, 0.05, 0.12, 0.42],  // rural monopoly: long-haul tail
+                2: [0.31, 0.19, 0.35, 0.07, 0.04, 0.04],  // regional market centre
+                3: [0.38, 0.36, 0.17, 0.04, 0.03, 0.02],  // suburban corridor
+                4: [0.49, 0.20, 0.17, 0.08, 0.04, 0.02],  // urban fringe
+                5: [0.67, 0.21, 0.08, 0.02, 0.01, 0.01]   // hyper-dense: competitor per block
             };
+
+            /* --- CLUSTER CONFIDENCE ------------------------------------------------
+               The production model does not assert a confidence figure; it derives one
+               from how decisively K-Means placed the branch. For each branch it takes the
+               distance to its assigned centroid and the distance to the next-nearest, and
+               reports 1 - (d1/d2). A branch sitting midway between two cluster centres
+               scores near zero; a decisively assigned one approaches 100%. Anything under
+               20% is flagged BORDERLINE rather than being presented as settled.
+
+               This demo runs the same calculation against the synthetic profiles, so the
+               confidence figure in each popup is computed, not decorative — and a hub
+               whose jitter pushes it toward a neighbouring centroid will genuinely report
+               low confidence. Production standardises the features first, since K-Means is
+               distance-based and an unscaled band would dominate the geometry. */
+            const TIER_KEYS = [1, 2, 3, 4, 5];
+
+            function euclid(a, b) {
+                let s = 0;
+                for (let i = 0; i < a.length; i++) s += (a[i] - b[i]) ** 2;
+                return Math.sqrt(s);
+            }
+
+            function assignCluster(vec) {
+                const dists = TIER_KEYS.map(t => ({ tier: t, d: euclid(vec, tierProfiles[t]) }))
+                                       .sort((x, y) => x.d - y.d);
+                const d1 = dists[0].d, d2 = dists[1].d;
+                const conf = d2 === 0 ? 100 : (1 - d1 / d2) * 100;
+                return { tier: dists[0].tier, conf: Math.max(0, conf) };
+            }
 
             /* --- DRIVE-TIME CONTOURS ---------------------------------------------
                Miles are the wrong unit for a trade area; drive time is the real
@@ -648,7 +697,12 @@
 
             function gravityFor(tier) {
                 const base = tierProfiles[tier] || tierProfiles[2];
-                const jittered = base.map(v => Math.max(0.005, v * (1 + (Math.random() - 0.5) * 0.22)));
+                /* Jitter width is set so the resulting confidence distribution matches the
+                   production one — roughly one hub in eight lands close enough to a second
+                   centroid to flag BORDERLINE. A tighter spread would make every hub look
+                   decisively classified, which is exactly the false comfort the confidence
+                   metric exists to prevent. */
+                const jittered = base.map(v => Math.max(0.005, v * (1 + (Math.random() - 0.5) * 0.75)));
                 const total = jittered.reduce((a, b) => a + b, 0);
                 /* --- THE UNMAPPED RESIDUAL ---------------------------------------
                    Some revenue never resolves to a distance band: a ship-to that will not
@@ -661,11 +715,11 @@
                 const scale = (100 - unmapped) / total;
                 const pct = jittered.map(v => v * scale);
 
-                // Tiers 1 and 5 are the extremes and separate cleanly; interior tiers sit
-                // between centroids and cluster with lower confidence.
-                const conf = (tier === 1 || tier === 5) ? 92 + Math.random() * 6 : 84 + Math.random() * 8;
-                // Confidence_Status is derived from the score, not asserted
-                const status = conf >= 92 ? 'Locked' : (conf >= 86 ? 'Provisional' : 'Review');
+                // Cluster assignment and confidence are computed from this hub's own
+                // profile vector, exactly as the production model does it.
+                const assigned = assignCluster(jittered.map(v => v / total));
+                const conf = assigned.conf;
+                const status = conf < 20 ? 'Borderline' : (conf < 45 ? 'Provisional' : 'Locked');
 
                 return {
                     '0-5 Miles': pct[0].toFixed(1) + '%',
@@ -675,7 +729,8 @@
                     '50-100 Miles': pct[4].toFixed(1) + '%',
                     '100+ Miles': pct[5].toFixed(1) + '%',
                     'Unmapped': unmapped.toFixed(1) + '%',
-                    'geoClass': GEO_CLASS[tier] || 'suburban',
+                    'assignedTier': assigned.tier,
+                    'geoClass': GEO_CLASS[assigned.tier] || 'suburban',
                     'confidence': conf.toFixed(1) + '%',
                     'status': status
                 };
@@ -733,7 +788,7 @@
                         lat: hLat, lng: hLng, address: `123 Industrial Pkwy, ${city.name}`,
                         gravity: Object.assign({ 'Total LTM Revenue': totalHubRev }, g),
                         geoClass: g.geoClass,
-                        topology: { tier: tier, confidence: g.confidence, status: g.status },
+                        topology: { tier: g.assignedTier, confidence: g.confidence, status: g.status },
                         top_accounts: accounts.sort((a,b) => b['Total LTM Revenue'] - a['Total LTM Revenue'])
                     });
                 }
