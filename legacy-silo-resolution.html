@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Silo Resolution | Austin Sonny Stethem</title>
+    <meta name="description" content="An Entity Resolution engine using fuzzy-matching and geocoding to fuse duplicated legacy accounts into single Golden Records.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <meta property="og:title" content="Legacy Silo Resolution & Entity Resolution">
+    <meta property="og:description" content="Fusing messy, duplicated customer records from legacy ERP acquisitions into a single Golden Record to unmask true credit exposure.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/legacy-silo-resolution.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="portfolio.css?v=3">
+
+    <style>
+        :root {
+            --info-bg: #0f172a;
+            --info-panel: #1e293b;
+            --info-border: #334155;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #333;
+            font-size: 10.5pt;
+            line-height: 1.6;
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 40px 20px 90px;
+            background-color: var(--bg-color, #fbfbfb);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, #1a2433); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        p { text-align: justify; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px;}
+        li { margin-bottom: 8px; }
+
+        .dashboard-container {
+            width: 100%; margin: 40px auto;
+            background: var(--info-bg); color: #e2e8f0;
+            border-radius: 12px; display: flex; flex-wrap: wrap;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid #1e293b; overflow: hidden;
+        }
+
+        .dash-sidebar {
+            width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px;
+            border-right: 1px solid var(--info-border); display: flex; flex-direction: column;
+        }
+
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
+
+        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center;}
+        .dash-header .dash-title { color: #f8fafc; font-size: 1.6rem; margin: 0; font-family: 'Inter', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
+        .dash-header .dash-title span { color: #f87171; }
+        .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center;}
+
+        .control-group { margin-bottom: 25px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; cursor: pointer; }
+        .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: #f87171;}
+
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
+
+        /* Custom Checkbox */
+        .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; min-height: 32px; }
+        .layer-toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+        .custom-checkbox { width: 18px; height: 18px; border-radius: 4px; background: rgba(0,0,0,0.3); margin-right: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; border: 1px solid #64748b;}
+        .layer-toggle input:checked + .custom-checkbox { background: #3b82f6; border-color: #3b82f6; }
+        .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
+        .layer-toggle input:focus-visible + .custom-checkbox { outline: 2px solid var(--alert-red, #b32525); outline-offset: 2px; }
+
+        .btn-run {
+            background: var(--alert-red, #b32525); color: white; border: none; padding: 16px 20px; width: 100%;
+            font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 800; text-transform: uppercase;
+            cursor: pointer; margin-top: 10px; margin-bottom: 10px; letter-spacing: 1.5px;
+            transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(179,37,37,0.3);
+        }
+        .btn-run:hover { background: #8e1c1c; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(179,37,37,0.4); }
+
+        .rule-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); padding: 15px; border-radius: 6px; font-size: 0.8rem; color: #94a3b8; margin-bottom: 25px; line-height: 1.5; }
+        .rule-box strong { color: var(--info-blue-bright, #7dd3fc); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; line-height: 1.2;}
+        .kpi-value { font-size: 1.8rem; font-family: 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px;}
+
+        /* Split Tables */
+        .split-tables { display: flex; gap: 20px; align-items: flex-start; }
+        .table-column { flex: 1; min-width: 0; }
+        .table-header { font-size: 0.75rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; text-align: center; border-bottom: 1px solid var(--info-border); padding-bottom: 10px;}
+        
+        .record-card { padding: 12px; border-radius: 6px; margin-bottom: 10px; font-size: 0.8rem; border: 1px solid var(--info-border); background: rgba(0,0,0,0.15); transition: all 0.3s; }
+        .record-card .r-name { font-weight: 700; color: #f8fafc; font-size: 0.85rem; margin-bottom: 2px;}
+        .record-card .r-meta { color: #94a3b8; margin-bottom: 6px; font-size: 0.75rem;}
+        .record-card .r-stats { display: flex; justify-content: space-between; font-family: 'Fira Code', monospace; font-size: 0.75rem; }
+        
+        .swamp-card { border-left: 4px solid #475569; }
+        .golden-card { border-left: 4px solid #10b981; background: rgba(16, 185, 129, 0.05); }
+        .golden-card .r-name { color: #10b981; font-size: 0.9rem; }
+        
+        .code-annotation { background: #e2e8f0; border-left: 4px solid #3b82f6; padding: 12px 18px; font-size: 9.5pt; color: #334155; border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Inter', sans-serif;}
+        .code-annotation > strong:first-child { color: #0f172a; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+
+        pre.code-block { background-color: #0f172a; color: #e2e8f0; padding: 20px; border-radius: 0 0 6px 6px; overflow-x: auto; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 9pt; border-left: 4px solid #3b82f6; line-height: 1.5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); margin-top: 0; margin-bottom: 30px; }
+        .code-comment { color: #94a3b8; font-style: italic; }
+        .code-keyword { color: #c678dd; font-weight: bold; }
+        .code-function { color: #61afef; }
+        .code-string { color: #98c379; }
+        .code-number { color: #d19a66; }
+
+        @media (max-width: 800px) {
+            body { padding: 28px 16px 40px; }
+            p { text-align: left; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #334155; padding: 22px; }
+            .dash-main { padding: 18px; min-width: 0; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .split-tables { flex-direction: column; }
+        }
+
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: #fff; max-width: none; }
+            pre.code-block { background: #f8fafc; color: #0f172a; box-shadow: none; }
+            .code-comment, .code-keyword, .code-function, .code-string, .code-number { color: #334155; }
+            .next-step-box { display: block !important; background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 24px; color: #000; }
+            .next-step-box h3 { color: #000; }
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive dashboard</a>
+
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
+    <header class="doc-header">
+        <!-- CUSTOM BRAND LOGO -->
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Data Governance &amp; Entity Resolution</p>
+        <h1 class="doc-title">Legacy Silo Resolution &amp; MDM</h1>
+    </header>
+
+    <table class="meta-table">
+        <tbody>
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Master Data Management (MDM), Entity Resolution, Fuzzy Matching, Data Governance</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Technical Stack</span>
+                <span class="meta-value">Python (Pandas, RecordLinkage), SQL, Levenshtein Distance algorithms</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="scenario-box">
+        <strong>The Enterprise Scenario</strong>
+        The business grew by acquisition, inheriting three siloed ERPs. "Jim's Fleet Service" (System A), "James Fleet LLC" (System B), and "Jim Fleet Inc" (System C) are the same customer. Because the systems don't talk, the sales team cannot see the true aggregated volume of national accounts, and customers are exploiting the blind spots to exceed credit limits across multiple disconnected IDs. We must programmatically collapse these duplicates into a single Golden Record.
+    </div>
+
+    <h2>1. The M&amp;A Data Hangover</h2>
+
+    <p>When enterprise distribution networks grow through regional acquisitions, the underlying data architecture rarely integrates smoothly. You ingest a competitor's legacy AS400 database into your modern SAP environment, and suddenly your system is functionally blind. Accounts are duplicated, revenue is fractured, and credit limits are disconnected.</p>
+    
+    <p>A sales representative reviewing their territory might see "Apex Logistics" listed as a minor $90,000/year account, completely unaware that a misspelled duplicate entry in the acquired ERP holds another $120,000. As a result, the account isn't receiving National Tier pricing, and the business risks losing a major client to a competitor who treats them like a VIP. Worse, that same customer might have a $15,000 credit limit in both systems, effectively floating $30,000 of unsecured debt across the administrative blind spot.</p>
+
+    <h2>2. Building the Entity Resolution Engine</h2>
+
+    <p>You cannot fix this with a standard SQL <code>JOIN</code> or an Excel <code>VLOOKUP</code>, because the strings are fundamentally dirty. You need a programmatic Entity Resolution Engine.</p>
+
+    <p>The architecture relies on two distinct mathematical passes:</p>
+    <ul>
+        <li><strong>Fuzzy String Matching:</strong> The engine strips meaningless corporate suffixes ("LLC", "Inc", "Service") and uses the Levenshtein Distance algorithm to mathematically score how many keystrokes it takes to turn string A into string B.</li>
+        <li><strong>Geospatial Tie-Breaking:</strong> High text similarity isn't enough. "Springfield Auto" exists in twenty different states. The engine cross-references the geocoded address coordinates. If two similarly named accounts sit in different physical regions, the algorithm flags them as false positives and prevents the merge.</li>
+    </ul>
+
+    <h2 id="dashboard">3. Interactive MDM Dashboard</h2>
+    <p><em>Adjust the fuzzy-match confidence threshold below. As you lower the threshold, watch the algorithm collapse the disconnected "Swamp" data on the left into clean, unified "Golden Records" on the right. Notice how the geospatial tie-breaker prevents identically named businesses in different states from improperly merging.</em></p>
+
+    <div class="dashboard-container">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <div class="dash-title">Entity <span>Resolution</span></div>
+                <p>Algorithm Controls</p>
+            </div>
+
+            <div class="control-group">
+                <label for="slider-threshold"><span>Match Confidence Threshold:</span> <span class="val-readout" id="val-threshold">95%</span></label>
+                <input type="range" id="slider-threshold" min="60" max="100" step="1" value="95" aria-label="Fuzzy string match confidence threshold percentage">
+            </div>
+
+            <label class="layer-toggle mt-4">
+                <input type="checkbox" id="toggle-geo" checked>
+                <div class="custom-checkbox"></div>
+                <span class="text-sm font-semibold text-gray-300">Enforce Geospatial Tie-Breaking</span>
+            </label>
+
+            <button class="btn-run" id="btn-execute" onclick="runEngine()">Process Master Data</button>
+
+            <div class="rule-box mt-4">
+                <strong>System Logic</strong>
+                Lower the threshold to allow looser string matches (catching typos and abbreviations). Disable Geospatial tracking to see what happens when the algorithm merges accounts based purely on text matching.
+            </div>
+        </div>
+
+        <div class="dash-main">
+            <div class="kpi-grid">
+                <div class="kpi-card" id="card-entities">
+                    <div class="kpi-card-header">Total Unique Entities</div>
+                    <div class="kpi-value" id="out-entities" style="color: #cbd5e1;">--</div>
+                </div>
+                <div class="kpi-card" id="card-vips" style="border-top-color: #10b981;">
+                    <div class="kpi-card-header" style="color: #10b981;">Hidden VIPs Unmasked</div>
+                    <div class="kpi-value" id="out-vips" style="color: #10b981;">--</div>
+                </div>
+                <div class="kpi-card" id="card-credit" style="border-top-color: #ef4444;">
+                    <div class="kpi-card-header" style="color: #ef4444;">Credit Breaches Exposed</div>
+                    <div class="kpi-value" id="out-credit" style="color: #ef4444;">--</div>
+                </div>
+            </div>
+
+            <div class="split-tables">
+                <div class="table-column">
+                    <div class="table-header">The Swamp (Siloed ERP Data)</div>
+                    <div id="swamp-container"></div>
+                </div>
+                <div class="table-column">
+                    <div class="table-header" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3);">Golden Records (Master Data)</div>
+                    <div id="golden-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. Production Python Architecture</h2>
+    
+    <div class="code-annotation">
+        <strong>Data Normalization &amp; NLP</strong>
+        In production, Entity Resolution uses Natural Language Processing to strip meaningless corporate suffixes before running Levenshtein distance matrices. It then uses geospatial data as a hard tie-breaker.
+    </div>
+    <pre class="code-block" tabindex="0"><code><span class="code-comment"># Master Data Management: Entity Resolution Engine</span>
+<span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
+<span class="code-keyword">import</span> recordlinkage
+<span class="code-keyword">from</span> recordlinkage.preprocessing <span class="code-keyword">import</span> clean
+
+<span class="code-keyword">def</span> <span class="code-function">normalize_corporate_names</span>(df):
+    <span class="code-string">"""
+    Strips noise so 'James Fleet LLC' and 'Jims Fleet Service' 
+    produce a higher baseline similarity score before the fuzzy match.
+    """</span>
+    df[<span class="code-string">'clean_name'</span>] = clean(df[<span class="code-string">'account_name'</span>])
+    
+    <span class="code-comment"># Remove meaningless corporate suffixes</span>
+    noise_tokens = [<span class="code-string">r'\bllc\b'</span>, <span class="code-string">r'\binc\b'</span>, <span class="code-string">r'\bservice\b'</span>, <span class="code-string">r'\bgroup\b'</span>, <span class="code-string">r'\bcorp\b'</span>]
+    <span class="code-keyword">for</span> token <span class="code-keyword">in</span> noise_tokens:
+        df[<span class="code-string">'clean_name'</span>] = df[<span class="code-string">'clean_name'</span>].str.replace(token, <span class="code-string">''</span>, regex=<span class="code-keyword">True</span>)
+        
+    <span class="code-keyword">return</span> df
+
+<span class="code-keyword">def</span> <span class="code-function">generate_golden_records</span>(df_swamp, confidence_threshold=<span class="code-number">0.85</span>):
+    <span class="code-comment"># Initialize indexing and comparison logic</span>
+    indexer = recordlinkage.Index()
+    indexer.block(<span class="code-string">'state_code'</span>) <span class="code-comment"># Geospatial Tie-Breaker: Must be in same state</span>
+    
+    candidate_links = indexer.index(df_swamp)
+    
+    compare_cl = recordlinkage.Compare()
+    compare_cl.string(<span class="code-string">'clean_name'</span>, <span class="code-string">'clean_name'</span>, method=<span class="code-string">'levenshtein'</span>, threshold=confidence_threshold, label=<span class="code-string">'name_match'</span>)
+    
+    <span class="code-comment"># Extract matches that pass the threshold</span>
+    features = compare_cl.compute(candidate_links, df_swamp)
+    matches = features[features[<span class="code-string">'name_match'</span>] == <span class="code-number">1</span>]
+    
+    <span class="code-keyword">return</span> matches</code></pre>
+
+    <div class="next-step-box">
+        <h3>Ecosystem Return</h3>
+        <p>With the legacy data cleaned and the silos resolved, we now know exactly who our customers are. This clean data foundation allows us to execute offensive strategies—like hunting whitespace or cross-selling empty market baskets.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="index.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Return Home</span>
+                <span class="nav-title">Portfolio Hub</span>
+            </a>
+            <a href="market-capture-engine.html" class="nav-btn next">
+                <span class="nav-label">Continue Offense &rarr;</span>
+                <span class="nav-title">Market Capture Engine</span>
+            </a>
+        </nav>
+    </div>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        const sliderThreshold = document.getElementById('slider-threshold');
+        const valThreshold = document.getElementById('val-threshold');
+        const toggleGeo = document.getElementById('toggle-geo');
+
+        sliderThreshold.addEventListener('input', (e) => {
+            valThreshold.innerText = `${e.target.value}%`;
+        });
+
+        const rawData = [
+            { id: 'A-101', name: "Jims Fleet Service", address: "100 Industrial Pkwy", geo: "Zone 1", rev: 250000, credit: 20000, sys: "Legacy AS400" },
+            { id: 'B-402', name: "James Fleet LLC", address: "100 Industrial Parkway", geo: "Zone 1", rev: 180000, credit: 15000, sys: "Acquired SAP" },
+            { id: 'C-991', name: "Jim's Fleet, Inc.", address: "100 Ind. Pkwy", geo: "Zone 1", rev: 85000, credit: 10000, sys: "Local DB" },
+            { id: 'A-102', name: "Apex Logistics", address: "400 West Ave", geo: "Zone 2", rev: 120000, credit: 15000, sys: "Legacy AS400" },
+            { id: 'C-992', name: "Apex Logistics Group", address: "400 West Avenue", geo: "Zone 2", rev: 90000, credit: 5000, sys: "Local DB" },
+            { id: 'A-103', name: "Springfield Auto", address: "55 Main St, Springfield IL", geo: "Zone 3", rev: 60000, credit: 5000, sys: "Legacy AS400" },
+            { id: 'B-403', name: "Springfield Auto", address: "12 Oak St, Springfield MA", geo: "Zone 4", rev: 75000, credit: 5000, sys: "Acquired SAP" }
+        ];
+
+        const clusterColors = ['#3b82f6', '#f59e0b', '#8b5cf6', '#ec4899', '#10b981', '#6366f1', '#f43f5e'];
+
+        function normalize(str) {
+            return str.toLowerCase()
+                      .replace(/\b(llc|inc|service|group|co|corp)\b/g, '')
+                      .replace(/[^a-z0-9]/g, '');
+        }
+
+        function levenshtein(a, b) {
+            if(a.length === 0) return b.length;
+            if(b.length === 0) return a.length;
+            let matrix = [];
+            for(let i = 0; i <= b.length; i++) matrix[i] = [i];
+            for(let j = 0; j <= a.length; j++) matrix[0][j] = j;
+            for(let i = 1; i <= b.length; i++) {
+                for(let j = 1; j <= a.length; j++) {
+                    if(b.charAt(i-1) === a.charAt(j-1)) {
+                        matrix[i][j] = matrix[i-1][j-1];
+                    } else {
+                        matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, Math.min(matrix[i][j-1] + 1, matrix[i-1][j] + 1));
+                    }
+                }
+            }
+            let maxLen = Math.max(a.length, b.length);
+            return maxLen === 0 ? 1 : (maxLen - matrix[b.length][a.length]) / maxLen;
+        }
+
+        function stringSim(s1, s2) {
+            return levenshtein(normalize(s1), normalize(s2));
+        }
+
+        function runEngine() {
+            const threshold = parseInt(sliderThreshold.value) / 100;
+            const useGeo = toggleGeo.checked;
+            
+            let clusters = [];
+            let colorIdx = 0;
+            
+            rawData.forEach(record => {
+                let matched = false;
+                for(let c of clusters) {
+                    let sim = stringSim(record.name, c.baseName);
+                    let geoMatch = useGeo ? (record.geo === c.geo) : true;
+                    
+                    if (sim >= threshold && geoMatch) {
+                        c.records.push(record);
+                        c.rev += record.rev;
+                        c.credit += record.credit;
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) {
+                    clusters.push({
+                        baseName: record.name.replace(/ LLC| Inc.| Service| Group|,/gi, ''),
+                        geo: record.geo,
+                        color: clusterColors[colorIdx % clusterColors.length],
+                        records: [record],
+                        rev: record.rev,
+                        credit: record.credit
+                    });
+                    colorIdx++;
+                }
+            });
+            
+            render(clusters);
+        }
+
+        function render(clusters) {
+            let swampHTML = '';
+            let goldenHTML = '';
+            let vips = 0;
+            let breaches = 0;
+            
+            clusters.forEach(c => {
+                let isVip = c.rev >= 400000;
+                let isBreach = c.credit > 30000;
+                
+                if (isVip) vips++;
+                if (isBreach) breaches++;
+                
+                // Render Golden Record
+                goldenHTML += `
+                    <div class="record-card golden-card" style="border-left-color: ${c.color};">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div class="r-name">${c.baseName} <span style="font-size: 10px; color: #64748b; font-weight: normal;">(Aggregated)</span></div>
+                            ${isVip ? '<span style="background: #10b981; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold;">VIP</span>' : ''}
+                            ${isBreach ? '<span style="background: #ef4444; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold;">CREDIT BREACH</span>' : ''}
+                        </div>
+                        <div class="r-meta">${c.records.length} Silo Record(s) Merged</div>
+                        <div class="r-stats">
+                            <span style="color: ${isVip ? '#10b981' : '#cbd5e1'};">$${c.rev.toLocaleString()} Rev</span>
+                            <span style="color: ${isBreach ? '#ef4444' : '#cbd5e1'};">$${c.credit.toLocaleString()} Credit</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Render Swamp Records mapped to this cluster
+                c.records.forEach(r => {
+                    swampHTML += `
+                        <div class="record-card swamp-card" style="border-left-color: ${c.color};">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div class="r-name">${r.name}</div>
+                                <div style="font-size: 9px; color: #94a3b8;">${r.sys}</div>
+                            </div>
+                            <div class="r-meta">${r.address}</div>
+                            <div class="r-stats">
+                                <span>$${r.rev.toLocaleString()} Rev</span>
+                                <span>$${r.credit.toLocaleString()} Credit</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+            
+            document.getElementById('swamp-container').innerHTML = swampHTML;
+            document.getElementById('golden-container').innerHTML = goldenHTML;
+            
+            document.getElementById('out-entities').innerText = clusters.length;
+            document.getElementById('out-vips').innerText = vips;
+            document.getElementById('out-credit').innerText = breaches;
+        }
+
+        // Initialize
+        runEngine();
+    </script>
+</body>
+</html>
