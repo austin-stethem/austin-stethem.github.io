@@ -148,6 +148,13 @@
 
         /* Locked Blueprint Cards */
         .locked-card { background: transparent; border: 1px dashed #cbd5e1; box-shadow: none; opacity: 0.85; }
+
+        /* Deployed internally but not yet written up. Solid border, muted CTA -- visually
+           distinct from both a live case study and a blueprint, because "running in
+           production without a public write-up" is a third state and conflating it with
+           either of the others misrepresents the work. */
+        .deployed-btn { background: #f1f5f9; border-color: #94a3b8; color: #475569; cursor: default; font-size: 0.8rem; }
+        .deployed-btn:hover { background: #f1f5f9; border-color: #94a3b8; color: #475569; transform: none; }
         .locked-card:hover { transform: translateY(-2px); box-shadow: none; border-color: #94a3b8; opacity: 1; }
         .locked-card .tech { color: #94a3b8; }
         .locked-card h3 { color: #64748b; }
@@ -233,7 +240,7 @@
                 <p class="tech">Python, Jupyter, SQL, Leaflet.js</p>
                 <h3>Predictive VIO Market Capture</h3>
                 <p class="desc">Geospatial intelligence mapping physical assets against competitors to identify exposure via K-Means Topological Risk Modeling.</p>
-                <a href="predictive-vio-market-capture.html" class="btn" aria-label="Review the Predictive VIO Market Capture case study">Execute Node &rarr;</a>
+                <a href="predictive-vio-market-capture.html" class="btn" aria-label="Review the Predictive VIO Market Capture case study">Review Case Study &rarr;</a>
             </article>
 
             <div class="tree-arrow"></div>
@@ -242,7 +249,7 @@
                 <p class="tech">Python (Pandas), SQL, KVI P-Tiers</p>
                 <h3>Algorithmic Margin Defense</h3>
                 <p class="desc">A deterministic cross-subsidization engine cascading cost deficits to defend baseline EBITDA against supply chain inflation.</p>
-                <a href="algorithmic-margin-defense.html" class="btn" aria-label="Review Margin Defense">Execute Node &rarr;</a>
+                <a href="algorithmic-margin-defense.html" class="btn" aria-label="Review Margin Defense">Review Case Study &rarr;</a>
             </article>
 
             <div class="tree-arrow"></div>
@@ -251,7 +258,7 @@
                 <p class="tech">Python (NumPy), Monte Carlo</p>
                 <h3>Stochastic Optimization</h3>
                 <p class="desc">A 5,000-path random walk injecting statistical noise into demand curves to probabilistically map the cone of profit risk.</p>
-                <a href="stochastic-margin-optimization.html" class="btn" aria-label="Review Stochastic Optimization">Execute Node &rarr;</a>
+                <a href="stochastic-margin-optimization.html" class="btn" aria-label="Review Stochastic Optimization">Review Case Study &rarr;</a>
             </article>
 
             <div class="tree-arrow"></div>
@@ -260,7 +267,7 @@
                 <p class="tech">Python (SciPy), Chart.js</p>
                 <h3>A/B Testing &amp; Validation</h3>
                 <p class="desc">A randomized Two-Proportion Z-Test to empirically prove dynamic pricing algorithms do not erode B2B conversion rates.</p>
-                <a href="ab-testing-framework.html" class="btn" aria-label="Review A/B Testing">Execute Node &rarr;</a>
+                <a href="ab-testing-framework.html" class="btn" aria-label="Review A/B Testing">Review Case Study &rarr;</a>
             </article>
 
             <div class="tree-arrow"></div>
@@ -269,7 +276,7 @@
                 <p class="tech">Cash Flow Modeling, Chart.js</p>
                 <h3>FIFO Inventory Revaluation</h3>
                 <p class="desc">Cash flow modeling demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
-                <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review FIFO Inventory Revaluation">Execute Node &rarr;</a>
+                <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review FIFO Inventory Revaluation">Review Case Study &rarr;</a>
             </article>
         </section>
 
@@ -283,8 +290,8 @@
             <article class="card capture-card" style="animation-delay: 0.1s;">
                 <p class="tech">Python (GeoPy), API Pipelines</p>
                 <h3>Market Capture Engine</h3>
-                <p class="desc">1,021 competitor rooftops harvested to forecast closing stores when two chains merge &mdash; turning proximity into a ranked call list.</p>
-                <a href="market-capture-engine.html" class="btn" aria-label="Review the Market Capture Engine case study">Execute Node &rarr;</a>
+                <p class="desc">3,768 competitor rooftops across ten brand families, harvested to forecast which stores close when two chains merge &mdash; turning proximity into a ranked call list.</p>
+                <a href="market-capture-engine.html" class="btn" aria-label="Review the Market Capture Engine case study">Review Case Study &rarr;</a>
             </article>
 
             <div class="tree-arrow"></div>
@@ -318,7 +325,7 @@
         <!-- COLUMN 3: SPECIALTY -->
         <section class="tree-column">
             <div class="tree-header">
-                <h2>Specialty</h2>
+                <h2>Foundations</h2>
                 <p>Data Governance &amp; Ops</p>
             </div>
 
@@ -326,7 +333,7 @@
                 <p class="tech">Disaster Recovery, IoT / APIs</p>
                 <h3>ERP Crisis Reconciliation</h3>
                 <p class="desc">A flood destroyed the warehouse. Severing the phantom fulfillment loop across an 80-branch network, and designing an automated kill-switch.</p>
-                <a href="erp-reconciliation-engine.html" class="btn" aria-label="Review the ERP Crisis Reconciliation case study">Execute Node &rarr;</a>
+                <a href="erp-reconciliation-engine.html" class="btn" aria-label="Review the ERP Crisis Reconciliation case study">Review Case Study &rarr;</a>
             </article>
 
             <div class="tree-arrow"></div>
@@ -336,7 +343,7 @@
                 <p class="tech">Fuzzy Matching (TF-IDF), Geocoding</p>
                 <h3>Legacy Silo Resolution</h3>
                 <p class="desc">Fusing messy, duplicated customer records from legacy ERP acquisitions into a single "Golden Record" to unmask true credit exposure.</p>
-                <a href="legacy-silo-resolution.html" class="btn" aria-label="Review the Legacy Silo Resolution case study">Execute Node &rarr;</a>
+                <span class="btn locked-btn">Blueprint Phase</span>
             </article>
 
             <div class="tree-arrow"></div>
@@ -344,8 +351,15 @@
             <article class="card locked-card" style="animation-delay: 0.25s;">
                 <p class="tech">Vector Mapping, Network Graphing</p>
                 <h3>Logistics Spider-Mapping</h3>
-                <p class="desc">Plotting Hub-to-Customer vectors to expose where overlapping branch delivery routes are cannibalizing freight costs and driver time.</p>
-                <span class="btn locked-btn">Blueprint Phase</span>
+                <p class="desc">Plotting Hub-to-Customer vectors across 32,000 mapped delivery points to expose where overlapping branch routes cannibalize freight cost and driver time. Deployed internally; write-up in progress.</p>
+                <span class="btn deployed-btn">Deployed &middot; Write-Up Pending</span>
+            </article>
+
+            <article class="card" style="animation-delay: 0.3s;">
+                <p class="tech">Radius Analysis, Workload Balancing</p>
+                <h3>Territory Balancer</h3>
+                <p class="desc">Mapping 10,280 rep-assigned accounts against their hub store to check radius discipline, surface over- and under-tasked territories, and flag towns where multiple reps converge on the same customers.</p>
+                <span class="btn deployed-btn">Deployed &middot; Write-Up Pending</span>
             </article>
         </section>
 
