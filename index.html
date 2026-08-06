@@ -80,32 +80,37 @@
 
         .portfolio-desc { max-width: 750px; margin: 30px auto 0; color: var(--muted); font-size: 1.05rem; }
 
-        /* --- TECH TREE GRID ARCHITECTURE --- */
+        /* --- TECH TREE CSS SUBGRID ARCHITECTURE --- */
         .tech-tree {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
+            grid-template-rows: repeat(6, auto); /* 1 header row + up to 5 card/arrow rows */
+            gap: 0 30px;
             margin-top: 40px;
+            align-items: start;
         }
 
-        .tree-column { display: flex; flex-direction: column; align-items: center; }
+        .tree-column {
+            display: grid;
+            grid-template-rows: subgrid;
+            grid-row: span 6;
+            gap: 0;
+        }
         
-        .tree-header { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--line); width: 100%; }
+        .tree-header { 
+            text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--line); width: 100%; 
+            align-self: start;
+        }
         .tree-header h2 { margin: 0; font-size: 1.6rem; color: var(--ink); font-family: 'Inter', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         .tree-header p { margin: 5px 0 0 0; color: var(--muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .tree-arrow {
-            color: var(--line);
-            margin: 10px 0;
-            height: 25px;
-            width: 2px;
-            background: var(--line);
-            position: relative;
-            flex-shrink: 0;
-        }
-        .tree-arrow::after {
-            content: ''; position: absolute; bottom: -5px; left: -4px;
-            border-width: 5px 5px 0; border-style: solid; border-color: var(--line) transparent transparent transparent;
+        /* Node Wrapper enforces layout across rows without altering the card size */
+        .node-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            width: 100%;
         }
 
         /* Base Card Styling (Uniform) */
@@ -123,6 +128,7 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             box-shadow: 0 4px 8px rgba(0,0,0,0.04);
             opacity: 0;
+            flex-shrink: 0;
             animation: rise 0.5s ease forwards;
         }
         
@@ -154,7 +160,7 @@
         .featured-card .btn { background: var(--crimson); border-color: var(--crimson); color: #ffffff; }
         .featured-card .btn:hover { background: var(--crimson-dark); border-color: var(--crimson-dark); color: #ffffff; transform: translateY(-2px); }
 
-        /* Inactive Buttons for standard cards */
+        /* Inactive Buttons */
         .locked-btn, .deployed-btn {
             display: inline-block; align-self: center; margin-top: auto; padding: 10px 20px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9rem; border-radius: 6px;
             background: #e2e8f0; border: 1px solid #cbd5e1; color: #64748b; cursor: default; box-shadow: none;
@@ -162,11 +168,31 @@
         .deployed-btn { font-size: 0.8rem; }
         .card:hover .locked-btn, .card:hover .deployed-btn { border-color: #94a3b8; }
 
+        /* Arrow dynamically absorbs varying card heights in the row */
+        .tree-arrow {
+            color: var(--line);
+            margin: 10px 0;
+            width: 2px;
+            background: var(--line);
+            position: relative;
+            flex-shrink: 0;
+            flex-grow: 1; 
+            min-height: 25px;
+        }
+        .tree-arrow::after {
+            content: ''; position: absolute; bottom: -5px; left: -4px;
+            border-width: 5px 5px 0; border-style: solid; border-color: var(--line) transparent transparent transparent;
+        }
+
         .ai-disclaimer { margin-top: 60px; padding: 25px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.85rem; color: var(--muted); text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
         .ai-disclaimer strong { color: var(--body); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; display: block; margin-bottom: 8px; }
 
+        /* Mobile Layout Fallback - Cards stack naturally, disabling cross-row alignment */
         @media (max-width: 900px) {
-            .tech-tree { grid-template-columns: 1fr; gap: 50px; }
+            .tech-tree { display: flex; flex-direction: column; gap: 50px; }
+            .tree-column { display: flex; flex-direction: column; gap: 0; }
+            .node-wrapper { height: auto; }
+            .tree-arrow { flex-grow: 0; height: 25px; }
             body { padding: 28px 16px 70px; }
             .tree-header { margin-bottom: 15px; }
         }
@@ -223,48 +249,54 @@
                 <p>Margin &amp; Risk Architecture</p>
             </div>
             
-            <article class="card featured-card" style="animation-delay: 0.05s;">
-                <p class="tech">Python, Jupyter, SQL, Leaflet.js</p>
-                <h3>Predictive VIO Market Capture</h3>
-                <p class="desc">Geospatial intelligence mapping physical assets against competitors to identify exposure via K-Means Topological Risk Modeling.</p>
-                <a href="predictive-vio-market-capture.html" class="btn" aria-label="Review the Predictive VIO Market Capture case study">Review Case Study &rarr;</a>
-            </article>
+            <div class="node-wrapper">
+                <article class="card featured-card" style="animation-delay: 0.05s;">
+                    <p class="tech">Python, Jupyter, SQL, Leaflet.js</p>
+                    <h3>Predictive VIO Market Capture</h3>
+                    <p class="desc">Geospatial intelligence mapping physical assets against competitors to identify exposure via K-Means Topological Risk Modeling.</p>
+                    <a href="predictive-vio-market-capture.html" class="btn" aria-label="Review the Predictive VIO Market Capture case study">Review Case Study &rarr;</a>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <div class="tree-arrow"></div>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.1s;">
+                    <p class="tech">Python (Pandas), SQL, KVI P-Tiers</p>
+                    <h3>Algorithmic Margin Defense</h3>
+                    <p class="desc">A deterministic cross-subsidization engine cascading cost deficits to defend baseline EBITDA against supply chain inflation.</p>
+                    <a href="algorithmic-margin-defense.html" class="btn" aria-label="Review Margin Defense">Review Case Study &rarr;</a>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <article class="card" style="animation-delay: 0.1s;">
-                <p class="tech">Python (Pandas), SQL, KVI P-Tiers</p>
-                <h3>Algorithmic Margin Defense</h3>
-                <p class="desc">A deterministic cross-subsidization engine cascading cost deficits to defend baseline EBITDA against supply chain inflation.</p>
-                <a href="algorithmic-margin-defense.html" class="btn" aria-label="Review Margin Defense">Review Case Study &rarr;</a>
-            </article>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.15s;">
+                    <p class="tech">Python (NumPy), Monte Carlo</p>
+                    <h3>Stochastic Optimization</h3>
+                    <p class="desc">A 5,000-path random walk injecting statistical noise into demand curves to probabilistically map the cone of profit risk.</p>
+                    <a href="stochastic-margin-optimization.html" class="btn" aria-label="Review Stochastic Optimization">Review Case Study &rarr;</a>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <div class="tree-arrow"></div>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.2s;">
+                    <p class="tech">Python (SciPy), Chart.js</p>
+                    <h3>A/B Testing &amp; Validation</h3>
+                    <p class="desc">A randomized Two-Proportion Z-Test to empirically prove dynamic pricing algorithms do not erode B2B conversion rates.</p>
+                    <a href="ab-testing-framework.html" class="btn" aria-label="Review A/B Testing">Review Case Study &rarr;</a>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <article class="card" style="animation-delay: 0.15s;">
-                <p class="tech">Python (NumPy), Monte Carlo</p>
-                <h3>Stochastic Optimization</h3>
-                <p class="desc">A 5,000-path random walk injecting statistical noise into demand curves to probabilistically map the cone of profit risk.</p>
-                <a href="stochastic-margin-optimization.html" class="btn" aria-label="Review Stochastic Optimization">Review Case Study &rarr;</a>
-            </article>
-
-            <div class="tree-arrow"></div>
-
-            <article class="card" style="animation-delay: 0.2s;">
-                <p class="tech">Python (SciPy), Chart.js</p>
-                <h3>A/B Testing &amp; Validation</h3>
-                <p class="desc">A randomized Two-Proportion Z-Test to empirically prove dynamic pricing algorithms do not erode B2B conversion rates.</p>
-                <a href="ab-testing-framework.html" class="btn" aria-label="Review A/B Testing">Review Case Study &rarr;</a>
-            </article>
-
-            <div class="tree-arrow"></div>
-
-            <article class="card" style="animation-delay: 0.25s;">
-                <p class="tech">Cash Flow Modeling, Chart.js</p>
-                <h3>FIFO Inventory Revaluation</h3>
-                <p class="desc">Cash flow modeling demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
-                <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review FIFO Inventory Revaluation">Review Case Study &rarr;</a>
-            </article>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.25s;">
+                    <p class="tech">Cash Flow Modeling, Chart.js</p>
+                    <h3>FIFO Inventory Revaluation</h3>
+                    <p class="desc">Cash flow modeling demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
+                    <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review FIFO Inventory Revaluation">Review Case Study &rarr;</a>
+                </article>
+            </div>
         </section>
 
         <!-- COLUMN 2: ATTACK -->
@@ -274,39 +306,44 @@
                 <p>Market &amp; Revenue Capture</p>
             </div>
 
-            <article class="card featured-card" style="animation-delay: 0.1s;">
-                <p class="tech">Python (GeoPy), API Pipelines</p>
-                <h3>Market Capture Engine</h3>
-                <p class="desc">3,768 competitor rooftops across ten brand families, harvested to forecast which stores close when two chains merge &mdash; turning proximity into a ranked call list.</p>
-                <a href="market-capture-engine.html" class="btn" aria-label="Review the Market Capture Engine case study">Review Case Study &rarr;</a>
-            </article>
+            <div class="node-wrapper">
+                <article class="card featured-card" style="animation-delay: 0.1s;">
+                    <p class="tech">Python (GeoPy), API Pipelines</p>
+                    <h3>Market Capture Engine</h3>
+                    <p class="desc">3,768 competitor rooftops across ten brand families, harvested to forecast which stores close when two chains merge &mdash; turning proximity into a ranked call list.</p>
+                    <a href="market-capture-engine.html" class="btn" aria-label="Review the Market Capture Engine case study">Review Case Study &rarr;</a>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <div class="tree-arrow"></div>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.15s;">
+                    <p class="tech">ArcGIS, VIO Data, Spatial Math</p>
+                    <h3>Greenfield VIO Expansion</h3>
+                    <p class="desc">Subtracting service polygons from high-density registration data to pinpoint "whitespace" markets and justify new branch deployments.</p>
+                    <span class="locked-btn">Blueprint Phase</span>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <article class="card" style="animation-delay: 0.15s;">
-                <p class="tech">ArcGIS, VIO Data, Spatial Math</p>
-                <h3>Greenfield VIO Expansion</h3>
-                <p class="desc">Subtracting service polygons from high-density registration data to pinpoint "whitespace" markets and justify new branch deployments.</p>
-                <span class="locked-btn">Blueprint Phase</span>
-            </article>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.2s;">
+                    <p class="tech">Association Rule Learning, SQL</p>
+                    <h3>Wallet Share &amp; Affinity</h3>
+                    <p class="desc">Mining POS history to flag B2B accounts buying high volumes of Item A but zero of linked Item B, generating a targeted cross-sell hitlist.</p>
+                    <span class="locked-btn">Blueprint Phase</span>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <div class="tree-arrow"></div>
-
-            <article class="card" style="animation-delay: 0.2s;">
-                <p class="tech">Association Rule Learning, SQL</p>
-                <h3>Wallet Share &amp; Affinity</h3>
-                <p class="desc">Mining POS history to flag B2B accounts buying high volumes of Item A but zero of linked Item B, generating a targeted cross-sell hitlist.</p>
-                <span class="locked-btn">Blueprint Phase</span>
-            </article>
-
-            <div class="tree-arrow"></div>
-
-            <article class="card" style="animation-delay: 0.25s;">
-                <p class="tech">Time-Series TTM, ERP Logic</p>
-                <h3>Contract Tier Clawbacks</h3>
-                <p class="desc">Tracking accounts that negotiated elite volume discounts but dropped below the buying thresholds, halting margin leakage.</p>
-                <span class="locked-btn">Blueprint Phase</span>
-            </article>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.25s;">
+                    <p class="tech">Time-Series TTM, ERP Logic</p>
+                    <h3>Contract Tier Clawbacks</h3>
+                    <p class="desc">Tracking accounts that negotiated elite volume discounts but dropped below the buying thresholds, halting margin leakage.</p>
+                    <span class="locked-btn">Blueprint Phase</span>
+                </article>
+            </div>
         </section>
 
         <!-- COLUMN 3: SPECIALTY -->
@@ -316,37 +353,44 @@
                 <p>Data Governance &amp; Ops</p>
             </div>
 
-            <article class="card featured-card" style="animation-delay: 0.15s;">
-                <p class="tech">Disaster Recovery, IoT / APIs</p>
-                <h3>ERP Crisis Reconciliation</h3>
-                <p class="desc">A flood destroyed the warehouse. Severing the phantom fulfillment loop across an 80-branch network, and designing an automated kill-switch.</p>
-                <a href="erp-reconciliation-engine.html" class="btn" aria-label="Review the ERP Crisis Reconciliation case study">Review Case Study &rarr;</a>
-            </article>
+            <div class="node-wrapper">
+                <article class="card featured-card" style="animation-delay: 0.15s;">
+                    <p class="tech">Disaster Recovery, IoT / APIs</p>
+                    <h3>ERP Crisis Reconciliation</h3>
+                    <p class="desc">A flood destroyed the warehouse. Severing the phantom fulfillment loop across an 80-branch network, and designing an automated kill-switch.</p>
+                    <a href="erp-reconciliation-engine.html" class="btn" aria-label="Review the ERP Crisis Reconciliation case study">Review Case Study &rarr;</a>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <div class="tree-arrow"></div>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.2s;">
+                    <p class="tech">Entity Resolution, Key Normalisation</p>
+                    <h3>Legacy Silo Resolution</h3>
+                    <p class="desc">Resolving branch and account identity across a legacy transaction extract and a location master to prevent silent exact-match join failures.</p>
+                    <a href="legacy-silo-resolution.html" class="btn" aria-label="Review the Legacy Silo Resolution case study">Review Case Study &rarr;</a>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <article class="card" style="animation-delay: 0.2s;">
-                <p class="tech">Entity Resolution, Key Normalisation</p>
-                <h3>Legacy Silo Resolution</h3>
-                <p class="desc">Resolving branch and account identity across a legacy transaction extract and a location master to prevent silent exact-match join failures.</p>
-                <a href="legacy-silo-resolution.html" class="btn" aria-label="Review the Legacy Silo Resolution case study">Review Case Study &rarr;</a>
-            </article>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.25s;">
+                    <p class="tech">Vector Mapping, Network Graphing</p>
+                    <h3>Logistics Spider-Mapping</h3>
+                    <p class="desc">Plotting Hub-to-Customer vectors across 32,000 mapped delivery points to expose where overlapping branch routes cannibalize freight cost and driver time. Deployed internally; write-up in progress.</p>
+                    <span class="deployed-btn">Deployed &middot; Write-Up Pending</span>
+                </article>
+                <div class="tree-arrow"></div>
+            </div>
 
-            <div class="tree-arrow"></div>
-
-            <article class="card" style="animation-delay: 0.25s;">
-                <p class="tech">Vector Mapping, Network Graphing</p>
-                <h3>Logistics Spider-Mapping</h3>
-                <p class="desc">Plotting Hub-to-Customer vectors across 32,000 mapped delivery points to expose where overlapping branch routes cannibalize freight cost and driver time. Deployed internally; write-up in progress.</p>
-                <span class="deployed-btn">Deployed &middot; Write-Up Pending</span>
-            </article>
-
-            <article class="card" style="animation-delay: 0.3s;">
-                <p class="tech">Radius Analysis, Workload Balancing</p>
-                <h3>Territory Balancer</h3>
-                <p class="desc">Mapping 10,280 rep-assigned accounts against their hub store to check radius discipline, surface over- and under-tasked territories, and flag towns where multiple reps converge on the same customers.</p>
-                <span class="deployed-btn">Deployed &middot; Write-Up Pending</span>
-            </article>
+            <div class="node-wrapper">
+                <article class="card" style="animation-delay: 0.3s;">
+                    <p class="tech">Radius Analysis, Workload Balancing</p>
+                    <h3>Territory Balancer</h3>
+                    <p class="desc">Mapping 10,280 rep-assigned accounts against their hub store to check radius discipline, surface over- and under-tasked territories, and flag towns where multiple reps converge on the same customers.</p>
+                    <span class="deployed-btn">Deployed &middot; Write-Up Pending</span>
+                </article>
+            </div>
         </section>
 
     </main>
