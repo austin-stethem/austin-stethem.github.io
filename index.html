@@ -88,25 +88,30 @@
             margin-top: 40px;
         }
 
-        .tree-column { display: flex; flex-direction: column; align-items: center; }
+        /* Uniform grid rather than a flex stack with connectors between cards. The
+           gap is the only thing setting vertical rhythm now, so spacing is identical
+           everywhere by construction instead of being tuned per-gap. */
+        /* Cards sit on a uniform grid; the connector is drawn inside the gap as a
+           pseudo-element rather than as its own grid child. A separate element would claim
+           a full 320px row and destroy the even spacing. */
+        .tree-column { display: grid; grid-auto-rows: minmax(320px, auto); gap: 46px; align-content: start; }
+
+        .tree-column .card:not(:last-child)::after {
+            content: ''; position: absolute; left: 50%; top: 100%;
+            transform: translateX(-50%);
+            width: 2px; height: 30px; background: var(--line);
+        }
+        .tree-column .card:not(:last-child)::before {
+            content: ''; position: absolute; left: 50%; top: calc(100% + 30px);
+            transform: translateX(-50%);
+            border-width: 7px 5px 0 5px; border-style: solid;
+            border-color: var(--line) transparent transparent transparent;
+        }
         
         .tree-header { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--line); width: 100%; }
         .tree-header h2 { margin: 0; font-size: 1.6rem; color: var(--ink); font-family: 'Inter', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         .tree-header p { margin: 5px 0 0 0; color: var(--muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .tree-arrow {
-            color: var(--line);
-            margin: 10px 0;
-            height: 25px;
-            width: 2px;
-            background: var(--line);
-            position: relative;
-            flex-shrink: 0;
-        }
-        .tree-arrow::after {
-            content: ''; position: absolute; bottom: -5px; left: -4px;
-            border-width: 5px 5px 0; border-style: solid; border-color: var(--line) transparent transparent transparent;
-        }
 
         /* Base Card Styling */
         .card {
@@ -131,20 +136,17 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        .card:hover, .card:focus-within { border-color: var(--crimson); transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.05); }
+        .card:hover, .card:focus-within { border-color: var(--crimson); transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.06); }
 
         .featured-card { background: var(--navy); color: var(--surface); border: 1px solid transparent; }
         .featured-card:hover, .featured-card:focus-within { border-color: transparent; box-shadow: 0 15px 25px rgba(26, 36, 51, 0.2); }
         .featured-card h3 { color: #ffffff; }
-        .featured-card .desc, .featured-card .tech { color: var(--line); }
+        .featured-card .desc { color: var(--line); }
+        .featured-card .tech { color: #f87171; }
 
-        .capture-card { background: #fffaf3; border-color: #d9a441; }
-        .capture-card .tech { color: #a16207; }
-        .capture-card:hover { border-color: #a16207; }
-
-        .resilience-card { background: #eef2f7; border-color: #94a3b8; }
-        .resilience-card .tech { color: #0369a1; }
-        .resilience-card:hover { border-color: #0369a1; }
+        /* One lead card per track, all navy. Previously each track had its own accent
+           (navy / amber / slate), which read as three unrelated sections rather than
+           three views of one body of work. */
 
         /* Locked Blueprint Cards */
         .locked-card { background: transparent; border: 1px dashed #cbd5e1; box-shadow: none; opacity: 0.85; }
@@ -188,7 +190,8 @@
             body { background: #fff; padding: 0; max-width: none; }
             .card, .featured-card, .locked-card { break-inside: avoid; box-shadow: none; background: #fff; color: #000; opacity: 1; animation: none; border: 1px solid #ccc; }
             .featured-card h3, .featured-card .desc, .featured-card .tech, .locked-card h3 { color: #000; }
-            .btn, .tree-arrow { display: none; }
+            .btn { display: none; }
+            .tree-column .card::before, .tree-column .card::after { display: none; }
         }
     </style>
 </head>
@@ -240,43 +243,39 @@
                 <p class="tech">Python, Jupyter, SQL, Leaflet.js</p>
                 <h3>Predictive VIO Market Capture</h3>
                 <p class="desc">Geospatial intelligence mapping physical assets against competitors to identify exposure via K-Means Topological Risk Modeling.</p>
-                <a href="predictive-vio-market-capture.html" class="btn" aria-label="Review the Predictive VIO Market Capture case study">Review Case Study &rarr;</a>
+                <a href="predictive-vio-market-capture.html" class="btn" aria-label="Review the Predictive VIO Market Capture case study">Review Case Study</a>
             </article>
 
-            <div class="tree-arrow"></div>
 
             <article class="card" style="animation-delay: 0.1s;">
                 <p class="tech">Python (Pandas), SQL, KVI P-Tiers</p>
                 <h3>Algorithmic Margin Defense</h3>
                 <p class="desc">A deterministic cross-subsidization engine cascading cost deficits to defend baseline EBITDA against supply chain inflation.</p>
-                <a href="algorithmic-margin-defense.html" class="btn" aria-label="Review Margin Defense">Review Case Study &rarr;</a>
+                <a href="algorithmic-margin-defense.html" class="btn" aria-label="Review Margin Defense">Review Case Study</a>
             </article>
 
-            <div class="tree-arrow"></div>
 
             <article class="card" style="animation-delay: 0.15s;">
                 <p class="tech">Python (NumPy), Monte Carlo</p>
                 <h3>Stochastic Optimization</h3>
                 <p class="desc">A 5,000-path random walk injecting statistical noise into demand curves to probabilistically map the cone of profit risk.</p>
-                <a href="stochastic-margin-optimization.html" class="btn" aria-label="Review Stochastic Optimization">Review Case Study &rarr;</a>
+                <a href="stochastic-margin-optimization.html" class="btn" aria-label="Review Stochastic Optimization">Review Case Study</a>
             </article>
 
-            <div class="tree-arrow"></div>
 
             <article class="card" style="animation-delay: 0.2s;">
                 <p class="tech">Python (SciPy), Chart.js</p>
                 <h3>A/B Testing &amp; Validation</h3>
                 <p class="desc">A randomized Two-Proportion Z-Test to empirically prove dynamic pricing algorithms do not erode B2B conversion rates.</p>
-                <a href="ab-testing-framework.html" class="btn" aria-label="Review A/B Testing">Review Case Study &rarr;</a>
+                <a href="ab-testing-framework.html" class="btn" aria-label="Review A/B Testing">Review Case Study</a>
             </article>
 
-            <div class="tree-arrow"></div>
 
             <article class="card" style="animation-delay: 0.25s;">
                 <p class="tech">Cash Flow Modeling, Chart.js</p>
                 <h3>FIFO Inventory Revaluation</h3>
                 <p class="desc">Cash flow modeling demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
-                <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review FIFO Inventory Revaluation">Review Case Study &rarr;</a>
+                <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review FIFO Inventory Revaluation">Review Case Study</a>
             </article>
         </section>
 
@@ -287,14 +286,13 @@
                 <p>Market &amp; Revenue Capture</p>
             </div>
 
-            <article class="card capture-card" style="animation-delay: 0.1s;">
+            <article class="card featured-card" style="animation-delay: 0.1s;">
                 <p class="tech">Python (GeoPy), API Pipelines</p>
                 <h3>Market Capture Engine</h3>
                 <p class="desc">3,768 competitor rooftops across ten brand families, harvested to forecast which stores close when two chains merge &mdash; turning proximity into a ranked call list.</p>
-                <a href="market-capture-engine.html" class="btn" aria-label="Review the Market Capture Engine case study">Review Case Study &rarr;</a>
+                <a href="market-capture-engine.html" class="btn" aria-label="Review the Market Capture Engine case study">Review Case Study</a>
             </article>
 
-            <div class="tree-arrow"></div>
 
             <article class="card locked-card" style="animation-delay: 0.15s;">
                 <p class="tech">ArcGIS, VIO Data, Spatial Math</p>
@@ -303,7 +301,6 @@
                 <span class="btn locked-btn">Blueprint Phase</span>
             </article>
 
-            <div class="tree-arrow"></div>
 
             <article class="card locked-card" style="animation-delay: 0.2s;">
                 <p class="tech">Association Rule Learning, SQL</p>
@@ -312,7 +309,6 @@
                 <span class="btn locked-btn">Blueprint Phase</span>
             </article>
 
-            <div class="tree-arrow"></div>
 
             <article class="card locked-card" style="animation-delay: 0.25s;">
                 <p class="tech">Time-Series TTM, ERP Logic</p>
@@ -322,33 +318,30 @@
             </article>
         </section>
 
-        <!-- COLUMN 3: SPECIALTY -->
+        <!-- COLUMN 3: FOUNDATIONS -->
         <section class="tree-column">
             <div class="tree-header">
                 <h2>Foundations</h2>
                 <p>Data Governance &amp; Ops</p>
             </div>
 
-            <article class="card resilience-card" style="animation-delay: 0.15s;">
+            <article class="card featured-card" style="animation-delay: 0.15s;">
                 <p class="tech">Disaster Recovery, IoT / APIs</p>
                 <h3>ERP Crisis Reconciliation</h3>
                 <p class="desc">A flood destroyed the warehouse. Severing the phantom fulfillment loop across an 80-branch network, and designing an automated kill-switch.</p>
-                <a href="erp-reconciliation-engine.html" class="btn" aria-label="Review the ERP Crisis Reconciliation case study">Review Case Study &rarr;</a>
+                <a href="erp-reconciliation-engine.html" class="btn" aria-label="Review the ERP Crisis Reconciliation case study">Review Case Study</a>
             </article>
 
-            <div class="tree-arrow"></div>
 
-            <!-- UNLOCKED NODE -->
             <article class="card" style="animation-delay: 0.2s;">
-                <p class="tech">Fuzzy Matching (TF-IDF), Geocoding</p>
-                <h3>Legacy Silo Resolution</h3>
-                <p class="desc">Fusing messy, duplicated customer records from legacy ERP acquisitions into a single "Golden Record" to unmask true credit exposure.</p>
-                <span class="btn locked-btn">Blueprint Phase</span>
+                <p class="tech">Entity Resolution, Join Integrity, Alias Governance</p>
+                <h3>Master Data Reconciliation</h3>
+                <p class="desc">An exact-match join silently removed 12.5% of an 80-branch network from the model. A taxonomy of name mismatches, and the normalisation pipeline that recovers them without merging the wrong records.</p>
+                <a href="legacy-silo-resolution.html" class="btn" aria-label="Review the Master Data Reconciliation case study">Review Case Study</a>
             </article>
 
-            <div class="tree-arrow"></div>
 
-            <article class="card locked-card" style="animation-delay: 0.25s;">
+            <article class="card" style="animation-delay: 0.25s;">
                 <p class="tech">Vector Mapping, Network Graphing</p>
                 <h3>Logistics Spider-Mapping</h3>
                 <p class="desc">Plotting Hub-to-Customer vectors across 32,000 mapped delivery points to expose where overlapping branch routes cannibalize freight cost and driver time. Deployed internally; write-up in progress.</p>
