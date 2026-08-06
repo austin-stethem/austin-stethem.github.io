@@ -108,7 +108,7 @@
             border-width: 5px 5px 0; border-style: solid; border-color: var(--line) transparent transparent transparent;
         }
 
-        /* Base Card Styling */
+        /* Base Card Styling (Uniform) */
         .card {
             width: 100%;
             position: relative;
@@ -133,47 +133,34 @@
 
         .card:hover, .card:focus-within { border-color: var(--crimson); transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.05); }
 
+        /* Featured Navy Card (Top Row) */
         .featured-card { background: var(--navy); color: var(--surface); border: 1px solid transparent; }
         .featured-card:hover, .featured-card:focus-within { border-color: transparent; box-shadow: 0 15px 25px rgba(26, 36, 51, 0.2); }
         .featured-card h3 { color: #ffffff; }
         .featured-card .desc, .featured-card .tech { color: var(--line); }
 
-        .capture-card { background: #fffaf3; border-color: #d9a441; }
-        .capture-card .tech { color: #a16207; }
-        .capture-card:hover { border-color: #a16207; }
-
-        .resilience-card { background: #eef2f7; border-color: #94a3b8; }
-        .resilience-card .tech { color: #0369a1; }
-        .resilience-card:hover { border-color: #0369a1; }
-
-        /* Locked Blueprint Cards */
-        .locked-card { background: transparent; border: 1px dashed #cbd5e1; box-shadow: none; opacity: 0.85; }
-
-        /* Deployed internally but not yet written up. Solid border, muted CTA -- visually
-           distinct from both a live case study and a blueprint, because "running in
-           production without a public write-up" is a third state and conflating it with
-           either of the others misrepresents the work. */
-        .deployed-btn { background: #f1f5f9; border-color: #94a3b8; color: #475569; cursor: default; font-size: 0.8rem; }
-        .deployed-btn:hover { background: #f1f5f9; border-color: #94a3b8; color: #475569; transform: none; }
-        .locked-card:hover { transform: translateY(-2px); box-shadow: none; border-color: #94a3b8; opacity: 1; }
-        .locked-card .tech { color: #94a3b8; }
-        .locked-card h3 { color: #64748b; }
-        .locked-card .desc { color: #94a3b8; }
-        .locked-btn { background: transparent; border: 1px solid #e2e8f0; color: #94a3b8; cursor: default; box-shadow: none; }
-        .locked-card:hover .locked-btn { border-color: #cbd5e1; color: #64748b; }
-
-        .card h3 { margin-top: 0; font-size: 1.3rem; margin-bottom: 10px; }
+        /* Typography */
+        .card h3 { margin-top: 0; font-size: 1.3rem; margin-bottom: 10px; color: var(--ink); }
         .tech { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: var(--crimson); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
         .desc { font-size: 0.9rem; margin-bottom: 20px; color: #475569; line-height: 1.6; }
 
+        /* Buttons */
         .btn {
             display: inline-block; align-self: center; margin-top: auto; background: #ffffff; color: var(--ink); border: 1px solid var(--line);
             padding: 10px 20px; font-family: 'Inter', sans-serif; font-weight: 600; text-decoration: none; font-size: 0.9rem; border-radius: 6px; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
-        .btn:hover { background: #f1f5f9; border-color: #94a3b8; color: var(--crimson); text-decoration: none; }
+        .btn:hover { background: #fff; border-color: var(--crimson); color: var(--crimson); text-decoration: none; }
 
         .featured-card .btn { background: var(--crimson); border-color: var(--crimson); color: #ffffff; }
         .featured-card .btn:hover { background: var(--crimson-dark); border-color: var(--crimson-dark); color: #ffffff; transform: translateY(-2px); }
+
+        /* Inactive Buttons for standard cards */
+        .locked-btn, .deployed-btn {
+            display: inline-block; align-self: center; margin-top: auto; padding: 10px 20px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9rem; border-radius: 6px;
+            background: #e2e8f0; border: 1px solid #cbd5e1; color: #64748b; cursor: default; box-shadow: none;
+        }
+        .deployed-btn { font-size: 0.8rem; }
+        .card:hover .locked-btn, .card:hover .deployed-btn { border-color: #94a3b8; }
 
         .ai-disclaimer { margin-top: 60px; padding: 25px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.85rem; color: var(--muted); text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
         .ai-disclaimer strong { color: var(--body); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; display: block; margin-bottom: 8px; }
@@ -186,9 +173,9 @@
 
         @media print {
             body { background: #fff; padding: 0; max-width: none; }
-            .card, .featured-card, .locked-card { break-inside: avoid; box-shadow: none; background: #fff; color: #000; opacity: 1; animation: none; border: 1px solid #ccc; }
-            .featured-card h3, .featured-card .desc, .featured-card .tech, .locked-card h3 { color: #000; }
-            .btn, .tree-arrow { display: none; }
+            .card, .featured-card { break-inside: avoid; box-shadow: none; background: #fff; color: #000; opacity: 1; animation: none; border: 1px solid #ccc; }
+            .featured-card h3, .featured-card .desc, .featured-card .tech, .card h3 { color: #000; }
+            .btn, .locked-btn, .deployed-btn, .tree-arrow { display: none; }
         }
     </style>
 </head>
@@ -287,7 +274,7 @@
                 <p>Market &amp; Revenue Capture</p>
             </div>
 
-            <article class="card capture-card" style="animation-delay: 0.1s;">
+            <article class="card featured-card" style="animation-delay: 0.1s;">
                 <p class="tech">Python (GeoPy), API Pipelines</p>
                 <h3>Market Capture Engine</h3>
                 <p class="desc">3,768 competitor rooftops across ten brand families, harvested to forecast which stores close when two chains merge &mdash; turning proximity into a ranked call list.</p>
@@ -296,29 +283,29 @@
 
             <div class="tree-arrow"></div>
 
-            <article class="card locked-card" style="animation-delay: 0.15s;">
+            <article class="card" style="animation-delay: 0.15s;">
                 <p class="tech">ArcGIS, VIO Data, Spatial Math</p>
                 <h3>Greenfield VIO Expansion</h3>
                 <p class="desc">Subtracting service polygons from high-density registration data to pinpoint "whitespace" markets and justify new branch deployments.</p>
-                <span class="btn locked-btn">Blueprint Phase</span>
+                <span class="locked-btn">Blueprint Phase</span>
             </article>
 
             <div class="tree-arrow"></div>
 
-            <article class="card locked-card" style="animation-delay: 0.2s;">
+            <article class="card" style="animation-delay: 0.2s;">
                 <p class="tech">Association Rule Learning, SQL</p>
                 <h3>Wallet Share &amp; Affinity</h3>
                 <p class="desc">Mining POS history to flag B2B accounts buying high volumes of Item A but zero of linked Item B, generating a targeted cross-sell hitlist.</p>
-                <span class="btn locked-btn">Blueprint Phase</span>
+                <span class="locked-btn">Blueprint Phase</span>
             </article>
 
             <div class="tree-arrow"></div>
 
-            <article class="card locked-card" style="animation-delay: 0.25s;">
+            <article class="card" style="animation-delay: 0.25s;">
                 <p class="tech">Time-Series TTM, ERP Logic</p>
                 <h3>Contract Tier Clawbacks</h3>
                 <p class="desc">Tracking accounts that negotiated elite volume discounts but dropped below the buying thresholds, halting margin leakage.</p>
-                <span class="btn locked-btn">Blueprint Phase</span>
+                <span class="locked-btn">Blueprint Phase</span>
             </article>
         </section>
 
@@ -329,7 +316,7 @@
                 <p>Data Governance &amp; Ops</p>
             </div>
 
-            <article class="card resilience-card" style="animation-delay: 0.15s;">
+            <article class="card featured-card" style="animation-delay: 0.15s;">
                 <p class="tech">Disaster Recovery, IoT / APIs</p>
                 <h3>ERP Crisis Reconciliation</h3>
                 <p class="desc">A flood destroyed the warehouse. Severing the phantom fulfillment loop across an 80-branch network, and designing an automated kill-switch.</p>
@@ -338,7 +325,6 @@
 
             <div class="tree-arrow"></div>
 
-            <!-- UNLOCKED NODE -->
             <article class="card" style="animation-delay: 0.2s;">
                 <p class="tech">Entity Resolution, Key Normalisation</p>
                 <h3>Legacy Silo Resolution</h3>
@@ -348,18 +334,18 @@
 
             <div class="tree-arrow"></div>
 
-            <article class="card locked-card" style="animation-delay: 0.25s;">
+            <article class="card" style="animation-delay: 0.25s;">
                 <p class="tech">Vector Mapping, Network Graphing</p>
                 <h3>Logistics Spider-Mapping</h3>
                 <p class="desc">Plotting Hub-to-Customer vectors across 32,000 mapped delivery points to expose where overlapping branch routes cannibalize freight cost and driver time. Deployed internally; write-up in progress.</p>
-                <span class="btn deployed-btn">Deployed &middot; Write-Up Pending</span>
+                <span class="deployed-btn">Deployed &middot; Write-Up Pending</span>
             </article>
 
             <article class="card" style="animation-delay: 0.3s;">
                 <p class="tech">Radius Analysis, Workload Balancing</p>
                 <h3>Territory Balancer</h3>
                 <p class="desc">Mapping 10,280 rep-assigned accounts against their hub store to check radius discipline, surface over- and under-tasked territories, and flag towns where multiple reps converge on the same customers.</p>
-                <span class="btn deployed-btn">Deployed &middot; Write-Up Pending</span>
+                <span class="deployed-btn">Deployed &middot; Write-Up Pending</span>
             </article>
         </section>
 
