@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="A randomized two-proportion Z-test with power analysis, proving dynamic pricing does not erode B2B quote-to-order conversion.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <!-- Open Graph / Twitter Tags -->
+    <meta property="og:title" content="B2B Pricing Algorithm A/B Test">
+    <meta property="og:description" content="A randomized two-proportion Z-test with power analysis, proving dynamic pricing does not erode B2B quote-to-order conversion.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/ab-testing-framework.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>A/B Testing &amp; Statistical Validation | Austin Sonny Stethem</title>
+
+    <!-- Custom SVG Favicon (Perfectly Centered) -->
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+    
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="portfolio.css?v=5">
+
+    <style>
+        /* Base Brand Colors and Typography */
+        /* Brand tokens live in portfolio.css; only the chart palette is local. */
+        :root {
+            /* Infographic Specific Dark Theme Colors */
+            --info-bg: #0f172a;
+            --info-panel: #1e293b;
+            --info-border: #334155;
+            --curve-control: #3b82f6; /* Blue */
+            --curve-variant: #10b981; /* Green */
+            --curve-danger: #ef4444; /* Red */
+        }
+
+        body { 
+            font-family: 'Archivo', sans-serif; 
+            margin: 0; padding: 0; 
+            background-color: var(--bg-color, var(--bg-color, #f3f5f7)); 
+            color: var(--body-text, #334155); 
+            font-size: 10.5pt;
+            line-height: 1.6;
+        }
+
+        /* --- PORTFOLIO SPECIFIC STYLES --- */
+        .portfolio-content { max-width: 950px; margin: 0 auto; padding: 40px 20px; }
+        
+        .portfolio-content h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; }
+        .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: var(--body-text, #334155); }
+
+        .impact-box { background: var(--surface-alt, #f8fafc); border: 1px solid var(--line, #cbd5e1); border-left: 4px solid var(--dark-slate-blue, var(--ink, #131a21)); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue, var(--ink, #131a21)); font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box p { color: var(--body-text, #334155); font-size: 10pt; line-height: 1.6; }
+
+        /* --- DASHBOARD WRAPPER (Infographic Style) --- */
+        .dashboard-container {
+            width: 95%; max-width: 1200px; margin: 40px auto;
+            background: var(--info-bg); color: var(--hairline, #e2e8f0);
+            border-radius: 12px; padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid #1e293b;
+        }
+
+        /* Stacked and centred to match the sidebar headers on the other four tools.
+             Previously a space-between row with the status badge pushed to the right,
+             which read as a different design language. Centring also promotes the badge
+             — the live verdict — to a hero element instead of a corner ornament. */
+        .dash-header { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 20px;}
+        .dash-title h3 { font-size: 2.2rem; font-weight: 900; margin: 0; letter-spacing: -1px; font-family: 'Archivo', sans-serif;}
+        .dash-title span { color: var(--curve-control); }
+        .dash-subtitle { font-size: 0.9rem; color: var(--panel-muted, #94a3b8); margin-top: 5px; max-width: 600px; margin-left: auto; margin-right: auto;}
+        
+        .logic-instruction-box { background: rgba(3, 105, 161, 0.12); border: 1px solid rgba(3, 105, 161, 0.35); border-left: 4px solid var(--info-blue, var(--info-blue, #0369a1)); padding: 15px 20px; border-radius: 4px; font-size: 0.9rem; color: var(--line, #cbd5e1); margin-bottom: 25px; line-height: 1.5; }
+        
+        /* THE FIX: Changed from .logic-instruction-box strong to specifically target the first child */
+        .logic-instruction-box > strong:first-child { color: var(--info-blue-bright, #7dd3fc); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem; display: block; margin-bottom: 5px;}
+
+        /* Chart Area */
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; margin-bottom: 25px; position: relative;}
+        .chart-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: var(--panel-dim, #64748b); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
+        .chart-wrapper { width: 100%; height: 350px; }
+
+        /* KPI / Input Grid */
+        /* Five cards on one row. auto-fit picked four across this full-width panel and
+           orphaned three cells underneath. */
+        .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px; text-align: center; transition: all 0.3s;}
+        .kpi-card-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .kpi-value { font-size: 2rem; font-weight: 900; font-family: 'IBM Plex Mono', 'Fira Code', monospace; }
+        .kpi-desc { font-size: 0.75rem; color: var(--panel-muted, #94a3b8); margin-top: 8px; line-height: 1.4; }
+
+        /* Interactive Sliders */
+        .control-group { margin-bottom: 15px; text-align: left; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: var(--panel-text, #cbd5e1); margin-bottom: 8px; }
+
+        /* Local slider baseline. Duplicates portfolio.css deliberately: without it, a
+           missing shared sheet drops the page back to the native OS slider, which looks
+           nothing like the rest of the dashboard. Geometry matches the shared rules so
+           the touch scaling in portfolio.css still lines up. */
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, var(--signal, #ae571d)); outline-offset: 6px; }
+
+        /* --- Colour-coded slider thumbs ------------------------------------------
+           Each control is tinted to match the curve it drives, so the eye can link a
+           slider to its distribution without reading the labels. This overrides only
+           the thumb colour; track geometry and touch sizing stay in portfolio.css.
+           Note: accent-color cannot be used here, because the shared baseline sets
+           appearance:none, which disables it. The thumb pseudo-elements are the hook. */
+        #slider-cr::-webkit-slider-thumb {
+            background: var(--curve-variant);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
+        }
+        #slider-cr::-moz-range-thumb { background: var(--curve-variant); }
+
+        #slider-n::-webkit-slider-thumb {
+            background: var(--muted, #64748b);
+            box-shadow: 0 0 8px rgba(100, 116, 139, 0.45);
+        }
+        #slider-n::-moz-range-thumb { background: var(--muted, #64748b); }
+
+        /* The control arm is fixed at 10%, so its slider is disabled and decorative.
+           It is the only disabled range on the page. */
+        input[type="range"]:disabled::-webkit-slider-thumb {
+            background: var(--curve-control);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+        }
+        input[type="range"]:disabled::-moz-range-thumb { background: var(--curve-control); }
+        /* portfolio.css dims disabled inputs to 0.55; lift it enough for the blue to read */
+        input[type="range"]:disabled { opacity: 0.75; }
+
+        /* Bottom Three Columns */
+
+        /* Status Indicator */
+        .status-badge { display: inline-block; padding: 10px 20px; border-radius: 6px; font-weight: 900; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase; border: 2px solid transparent;}
+        .status-safe { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .status-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);}
+        .status-uplift { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.4); }
+
+        
+        .dashboard-container        .dashboard-container .jargon-tooltip:hover { border-bottom-color: var(--surface, #ffffff); }
+
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: var(--surface, #fff); max-width: none; }
+
+            /* portfolio.css hides .next-step-box to spare the toner; the closing
+               narrative still belongs on paper, so re-show it unstyled. */
+            .next-step-box {
+                display: block !important;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-top: 24px;
+                color: #000;
+            }
+            .next-step-box h3 { color: #000; }
+            /* Doubled class: portfolio.css uses .next-step-box.next-step-box p */
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+
+        /* --- Added in review: mobile + a11y hardening ------------------------ */
+        /* Five columns get cramped before the mobile breakpoint; step to two. */
+        @media (max-width: 1100px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            /* Two 160px columns cannot hold a monospace KPI value plus its label */
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            /* Two spans justified apart collapse into each other at phone widths */
+            .chart-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .chart-wrapper { height: 300px; }
+        }
+</style>
+<script>
+/* Applied before paint: an explicit stored choice beats the system preference,
+   and the absence of both leaves prefers-color-scheme to decide in CSS. */
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+
+    <script defer src="tour.js"></script>
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive dashboard</a>
+
+    <!-- PORTFOLIO HEADER -->
+    <div class="portfolio-content">
+        <div class="page-bar">
+            <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+            <span class="theme-switch"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><label class="sw"><input type="checkbox" class="themeToggle" aria-label="Dark mode"><span class="track"></span></label><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span>
+        </div>
+
+        <div class="doc-header">
+            <!-- CUSTOM BRAND LOGO -->
+            <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+            <p class="doc-tagline">Defense &middot; Step 4 of 5</p>
+            <h1 class="doc-title">B2B E-Commerce: Pricing Algorithm A/B Test</h1>
+        </div>
+
+        <table class="meta-table">
+            <tbody>
+            <tr>
+                <td class="meta-cell">
+                    <span class="meta-label">Principal Engineer</span>
+                    <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & MDM Analyst</span>
+                </td>
+                <td class="meta-cell">
+                    <span class="meta-label">Core Competencies</span>
+                    <span class="meta-value">Statistical Significance, Z-Tests, P-Values, Data Science Integration</span>
+                </td>
+                <td class="meta-cell">
+                    <span class="meta-label">Technical Stack</span>
+                    <span class="meta-value">Python (SciPy/StatsModels), SQL, JavaScript (Chart.js)</span>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+
+        <div class="nda-note">
+            <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live B2B conversion metrics, exact pricing adjustments, and true order volumes have been replaced with randomized abstractions. The statistical methodology, Two-Proportion Z-Test architecture, and hypothesis validation frameworks accurately reflect the mathematical rigor utilized in the production environment.
+        </div>
+
+        <h2>1. The Problem: Testing Market Resistance</h2>
+        
+        <div class="scenario-box">
+            <strong>The Enterprise Scenario (Step 4 of 5)</strong>
+            Our deterministic algorithm (Step 2) successfully identified the price floors needed to defend our margins, and our Monte Carlo models (Step 3) confirmed our risk boundaries. However, mathematical theory must be validated by actual market behavior. Before we fully commit, we must run a controlled A/B test on the live B2B portal to mathematically prove the higher prices are not destroying quote-to-order conversion volume.
+        </div>
+
+        <p>Before deploying the <em>Algorithmic Margin Defense</em> engine across the entire network, executive leadership needed empirical proof that dynamic pricing wouldn't erode B2B conversion rates. A mathematical model that protects margins is entirely useless if it causes customers to abandon their shopping carts in protest.</p>
+        <p>To validate the algorithm safely, I architected a randomized A/B test on our B2B E-Commerce portal. <strong>Group A (Control)</strong> received our legacy static pricing. <strong>Group B (Treatment)</strong> received the new dynamic, algorithmic pricing. To prove that any subsequent changes in customer conversion rates were real (and not just random daily variance), I applied a <span class="jargon-tooltip" data-tip="A statistical method comparing two different conversion rates to prove if the difference is real or just random daily variance."><strong>Two-Proportion Z-Test</strong></span> to the results.</p>
+    </div>
+
+    <!-- INFOGRAPHIC DASHBOARD -->
+    <p class="tour-launch"><button type="button" data-tour-start class="tour-btn">&#9654; Guided walkthrough</button> <span class="tour-hint">4 steps. Moves the controls for you.</span></p>
+
+    <div class="dashboard-container" id="dashboard">
+        
+        <div class="dash-header">
+            <div class="dash-title">
+                <h3>A/B <span>Validation Engine</span></h3>
+                <div class="dash-subtitle">Measuring true market resistance using a Two-Proportion Z-Test.</div>
+            </div>
+            <div>
+                <span class="status-badge" id="significance-badge">Awaiting Input...</span>
+            </div>
+        </div>
+
+        <!-- Plain English Instructions -->
+        <div class="logic-instruction-box">
+            <strong>How to read this simulator:</strong> 
+            We just raised prices on the B2B portal. Naturally, we expect some customers to walk away (Conversion Rate drops). Use the green slider below to drop the <strong>Variant Conversion</strong> to simulate losing sales.<br><br>
+            If the <span style="color: #10b981; font-weight: bold;">Green Curve (New Prices)</span> completely separates from the <span style="color: #3b82f6; font-weight: bold;">Blue Curve (Old Prices)</span>, the drop is mathematically real, meaning the prices are too high. <strong>However, if the curves overlap, the drop cannot be separated from random daily noise.</strong> That makes it defensible to hold the higher prices &mdash; but note the Minimum Detectable Effect below: an inconclusive test means the drop is smaller than this sample can resolve, not that it is zero.
+        </div>
+
+        <!-- Interactive Chart Section -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <span>Market Behavior: Baseline vs. New Price Point</span>
+                <span>Confidence Threshold = 95%</span>
+            </div>
+            
+            <div class="chart-wrapper">
+                <canvas id="bellChart" role="img" aria-label="Overlaid sampling distributions for the control and variant conversion rates, with the 95 percent significance boundary marked"></canvas>
+            </div>
+            <p style="margin: 14px 0 0 0; font-size: 0.75rem; line-height: 1.5; color: #64748b; text-align: left; font-style: italic;">Reading note: the two curves are the sampling distributions of each arm's conversion rate. The dashed boundary is drawn on the pooled standard error of the <em>difference</em>, which is &radic;2 wider &mdash; so it sits further out than 1.96&sigma; of either curve on its own. Significance is the Z-score and p-value above, not whether a curve visually clears the line.</p>
+            <p id="inference-caveat" role="status" aria-live="polite" style="margin: 14px 0 0 0; font-size: 0.8rem; line-height: 1.55; color: #94a3b8; text-align: left; border-left: 3px solid #334155; padding-left: 14px;"></p>
+        </div>
+
+        <!-- Interactive Controls & KPIs -->
+        <div class="kpi-grid">
+            <!-- Simulator Controls -->
+            <div class="kpi-card" style="border-top-color: var(--curve-control);">
+                <div class="kpi-card-header" style="color: var(--curve-control);">Control: Old Prices</div>
+                <div class="control-group">
+                    <label>Baseline Conversion <span>10.0%</span></label>
+                    <input type="range" disabled value="10" aria-hidden="true" tabindex="-1" min="5" max="20">
+                </div>
+                <div class="control-group">
+                    <label for="slider-n">Traffic Sample (N) <span id="n-val-display">5,000</span></label>
+                    <input type="range" id="slider-n" aria-label="Traffic sample size per arm" value="5000" min="1000" max="20000" step="500" oninput="updateSimulation()">
+                </div>
+            </div>
+
+            <div class="kpi-card" style="border-top-color: var(--curve-variant);">
+                <div class="kpi-card-header" style="color: var(--curve-variant);">Variant: New Prices</div>
+                <div class="control-group">
+                    <label for="slider-cr">Variant Conversion <span id="cr-val-display">9.5%</span></label>
+                    <input type="range" id="slider-cr" aria-label="Variant conversion rate percentage" value="9.5" min="8.0" max="11.0" step="0.1" oninput="updateSimulation()">
+                </div>
+                <div class="kpi-desc" style="text-align: left; margin-top: 15px;">
+                    *Drop the conversion rate to see if the drop breaks the statistical proof boundary.
+                </div>
+            </div>
+
+            <!-- Dynamic KPIs -->
+            <div class="kpi-card" style="border-top-color: #64748b;">
+                <div class="kpi-card-header" style="color: #cbd5e1;">Z-Score (Test Statistic)</div>
+                <div class="kpi-value" id="out-zscore" style="color: #f8fafc;">0.00</div>
+                <div class="kpi-desc">How far the new results are from our old baseline.</div>
+            </div>
+
+            <div class="kpi-card" style="border-top-color: #64748b;">
+                <div class="kpi-card-header" style="color: #cbd5e1;">P-Value</div>
+                <div class="kpi-value" id="out-pvalue" style="color: #f8fafc;">0.000</div>
+                <div class="kpi-desc">The mathematical probability that this drop in sales is just random noise.</div>
+            </div>
+
+            <div class="kpi-card" style="border-top-color: #f59e0b;">
+                <div class="kpi-card-header" style="color: #f59e0b;">Minimum Detectable Effect</div>
+                <div class="kpi-value" id="out-mde" style="color: #f8fafc;">--</div>
+                <div class="kpi-desc" id="out-mde-sub">Smallest true shift this sample could reliably detect.</div>
+            </div>
+        </div>
+
+    </div> <!-- END DASHBOARD -->
+
+    <div class="portfolio-content">
+        <h2>2. Translating Math to Business Strategy</h2>
+        
+        <div class="impact-box">
+            <h3>The Power of "Inconclusive" Tests</h3>
+            <p>If you look at the simulator's default state, you will notice a massive business advantage hidden inside the math. We raised prices, and as expected, our conversion rate dropped from 10.0% down to 9.5%. The sales team panicked, demanding we revert the pricing.</p>
+            <p><strong>But the A/B test showed the drop was statistically inconclusive.</strong> Because the green curve still overlapped the blue baseline curve, the drop in volume couldn't be mathematically blamed on the price increase—it was within the normal bounds of daily random variance. By trusting the data science rather than the emotional reaction, we held the higher prices firm. We generated substantial <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability."><strong>EBITDA</strong></span> without triggering a measurable exodus of customer volume.</p>
+            <p style="margin-bottom: 0;"><strong>The discipline that makes this defensible:</strong> a non-significant result is not proof of no effect, so the decision was paired with a power calculation. We sized the test to detect the smallest volume loss that would have made the price increase EBITDA-negative. Passing that bar is what justified holding; the p-value alone would not have.</p>
+        </div>
+
+        <p>This strict adherence to statistical modeling acts as an organizational guardrail. It prevents knee-jerk price drops when sales are slightly sluggish, but it also instantly rings the alarm bell (flashing the "Volume Loss" warning) the moment a price increase actually crosses the mathematical threshold of destroying demand.</p>
+
+        <!-- NEXT STEP NAVIGATION -->
+        <div class="next-step-box">
+            <h3>Ecosystem Step 5: FIFO Inventory Revaluation</h3>
+            <p>With our algorithmic pricing changes statistically validated in the market, we hit the final, most lucrative part of the cycle. Because we decoupled our retail logic from our physical receiving docks, we are now raising prices <em>today</em> on inventory we bought <em>yesterday</em> at the old, cheaper cost. Let's model the resulting cash windfall.</p>
+            <nav class="project-navigation" aria-label="Case study navigation">
+                <a href="stochastic-margin-optimization.html" class="nav-btn prev">
+                    <span class="nav-label">&larr; Previous Phase</span>
+                    <span class="nav-title">Step 3: Stochastic Optimization</span>
+                </a>
+                <a href="fifo-inventory-revaluation.html" class="nav-btn next">
+                    <span class="nav-label">Next Phase &rarr;</span>
+                    <span class="nav-title">Step 5: FIFO Revaluation</span>
+                </a>
+            </nav>
+        </div>
+    </div> <!-- END PORTFOLIO CONTENT -->
+
+    <!-- Watermark for Portfolio Protection -->
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        let bellChart = null;
+
+        const P_CONTROL = 0.10;   // Baseline conversion, fixed
+        const ALPHA = 0.05;
+        const Z_ALPHA = 1.959964; // two-sided 95%
+        const Z_POWER = 0.841621; // 80% power
+        const X_MIN = 7.0, X_MAX = 13.0;  // chart domain, in percent
+
+        function normalPDF(x, mean, stdDev) {
+            return Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2)) / (stdDev * Math.sqrt(2 * Math.PI));
+        }
+
+        // Abramowitz & Stegun 7.1.26 approximation
+        function erf(x) {
+            const sign = (x >= 0) ? 1 : -1;
+            x = Math.abs(x);
+            const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
+            const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+            const t = 1.0 / (1.0 + p * x);
+            const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            return sign * y;
+        }
+
+        function cdf(x) { return 0.5 * (1.0 + erf(x / Math.sqrt(2.0))); }
+
+        function updateSimulation() {
+            const pA = P_CONTROL;
+            const pB = parseFloat(document.getElementById('slider-cr').value) / 100;
+            const n = parseInt(document.getElementById('slider-n').value, 10);
+
+            document.getElementById('cr-val-display').innerText = (pB * 100).toFixed(1) + '%';
+            document.getElementById('n-val-display').innerText = n.toLocaleString();
+
+            /* Two-Proportion Z-Test. The pooled proportion is (xA + xB) / (nA + nB);
+               with equal group sizes that reduces to the simple mean below. */
+            const pPool = (pA + pB) / 2;
+            const se = Math.sqrt(pPool * (1 - pPool) * (2 / n));
+            const zScore = (pB - pA) / se;
+            const pValue = 2 * (1 - cdf(Math.abs(zScore)));
+
+            document.getElementById('out-zscore').innerText = zScore.toFixed(2);
+            document.getElementById('out-pvalue').innerText = pValue.toFixed(4);
+
+            /* Minimum Detectable Effect at 80% power. Without this, "not significant"
+               is easily misread as "no effect" — when at small N the test simply
+               cannot see an effect this size either way. */
+            const mdeAbs = (Z_ALPHA + Z_POWER) * se;
+            const mdePts = mdeAbs * 100;
+            const mdeRel = (mdeAbs / pA) * 100;
+            const observedDropPts = (pA - pB) * 100;
+            document.getElementById('out-mde').innerText = '\u00B1' + mdePts.toFixed(2) + ' pts';
+            document.getElementById('out-mde-sub').innerText =
+                `Smallest true shift this sample could reliably detect (${mdeRel.toFixed(1)}% relative).`;
+
+            const badge = document.getElementById('significance-badge');
+            const caveat = document.getElementById('inference-caveat');
+
+            if (pValue < ALPHA) {
+                if (zScore > 0) {
+                    badge.innerHTML = "VOLUME UPLIFT DETECTED<br><span style='font-size: 0.65rem; font-weight: normal;'>The price change actually increased sales.</span>";
+                    badge.className = "status-badge status-uplift";
+                    caveat.innerHTML = `The observed gain clears the 95% threshold, so it is unlikely to be daily noise.`;
+                } else {
+                    badge.innerHTML = "VOLUME LOSS DETECTED (Revert Prices)<br><span style='font-size: 0.65rem; font-weight: normal;'>The drop in sales is statistically real.</span>";
+                    badge.className = "status-badge status-danger";
+                    caveat.innerHTML = `The ${observedDropPts.toFixed(1)}pt drop clears the 95% threshold. Treat it as a real demand response, not variance.`;
+                }
+            } else {
+                badge.innerHTML = "INCONCLUSIVE — SAFE TO HOLD<br><span style='font-size: 0.65rem; font-weight: normal;'>Any drop in sales is statistically inconclusive.</span>";
+                badge.className = "status-badge status-safe";
+                caveat.innerHTML = `<strong>Read this carefully:</strong> inconclusive is not the same as "no effect." At N = ${n.toLocaleString()} per arm this test can only reliably detect a shift of about ${mdePts.toFixed(2)}pts. A real drop smaller than that would look exactly like this result. Holding the price is defensible; claiming zero impact is not.`;
+            }
+
+            const stdDevA = Math.sqrt(pA * (1 - pA) / n);
+            const stdDevB = Math.sqrt(pB * (1 - pB) / n);
+
+            const labels = [], dataA = [], dataB = [];
+            // Integer stepping: `i += 0.001` on a float accumulates drift across 60 steps
+            const STEPS = 60;
+            for (let k = 0; k <= STEPS; k++) {
+                const i = (X_MIN + (X_MAX - X_MIN) * (k / STEPS)) / 100;
+                labels.push((i * 100).toFixed(1));
+                dataA.push(normalPDF(i, pA, stdDevA));
+                dataB.push(normalPDF(i, pB, stdDevB));
+            }
+
+            /* The p-value is two-sided, so the acceptance region has two edges. Drawing
+               only the left one implied a one-tailed test and hid the fact that a large
+               enough UPLIFT is equally significant. */
+            const critValLeft = pA - (Z_ALPHA * se);
+            const critValRight = pA + (Z_ALPHA * se);
+            drawChart(labels, dataA, dataB, critValLeft * 100, critValRight * 100, pA * 100, pB * 100);
+        }
+
+        function drawChart(labels, dataA, dataB, critValLeft, critValRight, meanA, meanB) {
+            const el = document.getElementById('bellChart');
+            if (!el || typeof Chart === 'undefined') return;
+            const ctx = el.getContext('2d');
+            if (bellChart) bellChart.destroy();
+
+            const verticalLinePlugin = {
+                id: 'verticalLine',
+                afterDraw: (chart) => {
+                    const c = chart.ctx;
+                    const xAxis = chart.scales.x;
+                    const yAxis = chart.scales.y;
+
+                    // Clamp so a value outside the plotted domain can never draw off-canvas
+                    const getXPixel = (val) => {
+                        const t = Math.min(Math.max((val - X_MIN) / (X_MAX - X_MIN), 0), 1);
+                        return xAxis.left + t * xAxis.width;
+                    };
+
+                    c.save();
+                    c.lineWidth = 2;
+                    c.strokeStyle = '#ef4444';
+                    c.setLineDash([5, 5]);
+                    [critValLeft, critValRight].forEach(v => {
+                        const x = getXPixel(v);
+                        c.beginPath();
+                        c.moveTo(x, yAxis.top);
+                        c.lineTo(x, yAxis.bottom);
+                        c.stroke();
+                    });
+
+                    // Explicit font and alignment: without these the labels inherit
+                    // whatever Chart.js last set and hang off to the right of the peak
+                    c.setLineDash([]);
+                    c.font = "600 12px 'Archivo', sans-serif";
+                    c.textAlign = 'center';
+                    c.textBaseline = 'middle';
+
+                    c.fillStyle = '#3b82f6';
+                    c.fillText('Old Prices', getXPixel(meanA), yAxis.top + 22);
+                    c.fillStyle = '#10b981';
+                    c.fillText('New Prices', getXPixel(meanB), yAxis.top + 44);
+                    c.restore();
+                }
+            };
+
+            Chart.defaults.font.family = "'Archivo', 'Inter', sans-serif";
+
+            bellChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '95% boundary on the difference (\u00B11.96 \u00D7 pooled SE)',
+                            data: [],
+                            borderColor: '#ef4444', borderWidth: 2, borderDash: [5, 5],
+                            backgroundColor: 'transparent', pointRadius: 0
+                        },
+                        {
+                            label: 'Old Prices (Baseline Variance)',
+                            data: dataA,
+                            borderColor: '#3b82f6', borderWidth: 3,
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true, pointRadius: 0, tension: 0.4
+                        },
+                        {
+                            label: 'New Prices (Variant Variance)',
+                            data: dataB,
+                            borderColor: '#10b981', borderWidth: 3,
+                            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                            fill: true, pointRadius: 0, tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: { padding: { top: 15 } },
+                    animation: { duration: 400 },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: { color: '#cbd5e1', font: { family: "'Inter', sans-serif", weight: 'bold' }, boxWidth: 14 }
+                        },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Conversion Rate (%)', color: '#94a3b8', font: { weight: 'bold' } },
+                            grid: { color: '#334155', borderDash: [4, 4] },
+                            ticks: { color: '#cbd5e1', maxTicksLimit: window.matchMedia('(max-width: 800px)').matches ? 6 : 10 }
+                        },
+                        y: {
+                            title: { display: false },
+                            grid: { display: false },
+                            ticks: { display: false },
+                            grace: '25%'
+                        }
+                    }
+                },
+                plugins: [verticalLinePlugin]
+            });
+        }
+
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js failed to load — the distribution chart is disabled.');
+            const w = document.querySelector('.chart-wrapper');
+            if (w) w.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;">Chart library unavailable on this network. The Z-score and p-value below are unaffected.</div>';
+        }
+
+        /* The x-axis tick density is chosen from the viewport at draw time, so a
+           rotation has to trigger a redraw. Throttled, and only when the breakpoint is
+           actually crossed — resize fires continuously on some mobile browsers. */
+        let wasNarrow = window.matchMedia('(max-width: 800px)').matches;
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const nowNarrow = window.matchMedia('(max-width: 800px)').matches;
+                if (nowNarrow !== wasNarrow) {
+                    wasNarrow = nowNarrow;
+                    updateSimulation();
+                }
+            }, 150);
+        });
+
+        updateSimulation();
+
+        // Jargon tooltips are hover-only in CSS; this makes them keyboard and tap reachable.
+        document.querySelectorAll('.jargon-tooltip').forEach(el => {
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('role', 'note');
+            el.setAttribute('aria-label', el.textContent.trim() + ': ' + el.getAttribute('data-tip'));
+        });
+    
+/* ── theme switch ──────────────────────────────────────────────────────────────
+   Shares the choice with every other page through localStorage. While no explicit
+   choice exists the switch tracks the operating system. */
+(function(){
+  var boxes=document.querySelectorAll('.themeToggle');
+  if(!boxes.length) return;
+  var root=document.documentElement, mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function stored(){ try{ return localStorage.getItem('theme'); }catch(e){ return null; } }
+  function set(v){ boxes.forEach(function(b){ b.checked=v; }); }
+  set(stored()? stored()==='dark' : mq.matches);
+  boxes.forEach(function(b){
+    b.addEventListener('change',function(){
+      var mode=b.checked?'dark':'light';
+      root.setAttribute('data-theme',mode); set(b.checked);
+      try{ localStorage.setItem('theme',mode); }catch(e){}
+    });
+  });
+  mq.addEventListener('change',function(){ if(!stored()) set(mq.matches); });
+})();
+
+/* ── guided walkthrough ─────────────────────────────────────────────────────── */
+window.TOUR = [
+  { el: '#slider-n',
+    text: 'The engines upstream produce a recommended price. This page answers what has to come before deployment: <b>would we be able to tell whether it worked?</b>',
+    before: function(){ document.getElementById('slider-n').value=1000; updateSimulation(); } },
+  { el: '#slider-n',
+    text: 'At a thousand observations per arm the two distributions overlap almost entirely. A result here means nothing — and it would still arrive as a number somebody could put in a deck.',
+    settle: 600 },
+  { el: '#slider-n',
+    text: 'Raise the sample and they separate. Where they stop overlapping is where the test can actually detect the effect we are looking for.',
+    action: function(){ document.getElementById('slider-n').value=14000; updateSimulation(); }, settle: 800 },
+  { el: '#dashboard',
+    text: 'That threshold is the deliverable. A pilot too small to resolve the effect is worse than no pilot, because it produces a confident answer indistinguishable from noise.' }
+];
+</script>
+</body>
+</html>

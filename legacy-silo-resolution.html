@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Data Reconciliation | Austin Sonny Stethem</title>
+    <meta name="description" content="Two systems that never agreed on a name. Resolving branch and account identity across a legacy transaction extract and a location master, and why a failed join deletes data instead of erroring.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <meta property="og:title" content="Master Data Reconciliation — Entity Resolution Across Legacy Systems">
+    <meta property="og:description" content="An exact-match join silently removed 12.5% of an 80-branch network from the model. Nothing errored. The output looked complete.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/legacy-silo-resolution.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="portfolio.css?v=5">
+
+    <style>
+        :root {
+            --info-bg: #0f172a;
+            --info-panel: #1e293b;
+            --info-border: #334155;
+        }
+
+        body {
+            font-family: 'Archivo', 'Inter', system-ui, sans-serif;
+            color: var(--body-text, #333); font-size: 10.5pt; line-height: 1.6;
+            max-width: 950px; margin: 0 auto; padding: 40px 20px 90px;
+            background-color: var(--bg-color, var(--bg-color, #f3f5f7));
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; }
+        h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        p { text-align: justify; margin-bottom: 15px; color: var(--body-text, #334155); }
+        ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text, #334155); padding-left: 25px; }
+        li { margin-bottom: 8px; }
+        code { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.88em; background: var(--surface-sunken, #f1f5f9); padding: 1px 5px; border-radius: 3px; color: var(--dark-slate-blue, var(--ink, #131a21)); }
+
+        .data-table { width: 100%; border-collapse: collapse; margin: 20px 0 30px; font-size: 9pt; background: var(--surface, #fff); border: 1px solid var(--hairline, #e2e8f0); border-radius: 4px; table-layout: fixed; }
+        .data-table th { background: var(--ink-surface, #131a21); color: var(--on-ink, #f8fafc); text-align: left; padding: 10px 9px; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; vertical-align: bottom; }
+        .data-table td { padding: 10px 9px; border-bottom: 1px solid var(--row-line, #eef2f7); color: var(--body-text, #334155); overflow-wrap: break-word; vertical-align: top; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table td:first-child { font-weight: 700; color: var(--dark-slate-blue, var(--ink, #131a21)); }
+        .data-table .mono { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 8.5pt; }
+
+        .dashboard-container {
+            width: 100%; margin: 40px auto; background: var(--info-bg); color: var(--hairline, #e2e8f0);
+            border-radius: 12px; display: flex; flex-wrap: wrap;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #1e293b; overflow: hidden;
+        }
+        .dash-sidebar { width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; border-right: 1px solid var(--info-border); display: flex; flex-direction: column; }
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
+
+        .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center; }
+        .dash-header .dash-title { color: var(--panel-bright, #f8fafc); font-size: 1.6rem; font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title span { color: var(--signal-bright, #f87171); }
+        .dash-header p { color: var(--panel-muted, #94a3b8); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+
+        .stage-list { list-style: none; padding: 0; margin: 0 0 20px 0; }
+        .stage-list li { margin-bottom: 10px; }
+        .stage-toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 0.82rem; color: var(--panel-text, #cbd5e1); cursor: pointer; line-height: 1.4; padding: 8px 10px; border-radius: 4px; border: 1px solid transparent; transition: background 0.15s; }
+        .stage-toggle:hover { background: rgba(255,255,255,0.04); }
+        .stage-toggle input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--data-info, #7dd3fc); cursor: pointer; flex-shrink: 0; }
+        .stage-toggle input:disabled { cursor: not-allowed; }
+        .stage-toggle .rule { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.7rem; color: var(--panel-dim, #64748b); display: block; margin-top: 2px; }
+        .stage-toggle.locked { opacity: 0.7; }
+
+        .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: var(--panel-text, #cbd5e1); text-align: center; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--info-blue, #0369a1); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: var(--panel-text, #cbd5e1); line-height: 1.5; }
+        .logic-box strong { color: var(--info-blue-bright, var(--data-info, #7dd3fc)); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); }
+        .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted, #94a3b8); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-sub { font-size: 0.72rem; color: var(--panel-dim, #64748b); font-style: italic; min-height: 30px; }
+        .k-res { border-top-color: var(--data-positive, #10b981) !important; } .k-res .kpi-value { color: var(--data-positive, #10b981); }
+        .k-amb { border-top-color: var(--data-warning, #f59e0b) !important; } .k-amb .kpi-value { color: var(--data-warning, #f59e0b); }
+        .k-unr { border-top-color: var(--data-negative, #ef4444) !important; } .k-unr .kpi-value { color: var(--data-negative, #ef4444); }
+        .k-rev { border-top-color: var(--info-blue-bright, var(--data-info, #7dd3fc)) !important; } .k-rev .kpi-value { color: var(--data-info, #7dd3fc); }
+
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text, #cbd5e1); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .chart-box { position: relative; height: 280px; width: 100%; }
+
+        .match-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .match-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; color: var(--panel-text, #e2e8f0); table-layout: auto; }
+        .match-table th { background: var(--panel-bg, #0f172a); color: var(--panel-muted, #94a3b8); padding: 9px 6px; text-align: left; text-transform: uppercase; letter-spacing: 0.3px; font-size: 0.64rem; font-weight: 800; border-bottom: 1px solid var(--info-border); vertical-align: bottom; }
+        .match-table td { padding: 10px 6px; border-bottom: 1px solid var(--info-border); color: var(--panel-text, #cbd5e1); vertical-align: middle; }
+        .match-table tr:last-child td { border-bottom: none; }
+        .match-table td:first-child { font-weight: 700; color: var(--panel-text, #e2e8f0); font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.72rem; }
+        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; line-height: 1.4; }
+        .t-res { background: rgba(16,185,129,0.15); color: var(--data-positive, #10b981); border: 1px solid rgba(16,185,129,0.3); }
+        .t-amb { background: rgba(245,158,11,0.15); color: var(--data-warning, #f59e0b); border: 1px solid rgba(245,158,11,0.3); }
+        .t-unr { background: rgba(239,68,68,0.15); color: var(--data-negative, #ef4444); border: 1px solid rgba(239,68,68,0.3); }
+
+        .impact-box { background: var(--surface-alt, #f8fafc); border: 1px solid var(--line, #cbd5e1); border-left: 4px solid var(--dark-slate-blue, var(--ink, #131a21)); padding: 25px; border-radius: 4px; margin: 25px 0 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; margin-bottom: 15px; }
+        .impact-box p:last-child { margin-bottom: 0; }
+
+        .alert-box { background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid var(--alert-red, var(--signal, #ae571d)); padding: 18px 22px; border-radius: 4px; margin: 25px 0 30px; font-size: 9.5pt; }
+        .alert-box strong { display: block; color: #7f1d1d; text-transform: uppercase; letter-spacing: 0.5px; font-size: 8pt; margin-bottom: 6px; }
+        .alert-box p { margin-bottom: 0; color: #7f1d1d; }
+
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--panel-border, #334155); padding: 22px; }
+            .dash-main { padding: 18px; min-width: 0; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .chart-box { height: 260px; }
+
+            .data-table { table-layout: auto; }
+            .data-table thead { display: none; }
+            .data-table tr { display: block; border-bottom: 1px solid var(--hairline, #e2e8f0); padding: 8px 0; }
+            .data-table td { display: block; border: none; padding: 5px 0; }
+            .data-table td:first-child { font-size: 10pt; padding-bottom: 7px; border-bottom: 1px solid var(--row-line, #eef2f7); margin-bottom: 4px; }
+            .data-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: var(--muted, #64748b); font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.4px; display: block; }
+            .data-table td:first-child[data-label]::before { content: none; }
+
+            .match-section { padding: 16px 12px; }
+            .match-table, .match-table tbody, .match-table tr, .match-table td { display: block; width: 100%; }
+            .match-table thead { display: none; }
+            .match-table tr { border: 1px solid var(--info-border); border-radius: 8px; background: rgba(0,0,0,0.18); padding: 4px 14px 10px; margin-bottom: 12px; }
+            .match-table tr:last-child { margin-bottom: 0; }
+            .match-table td { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 9px 0; border-bottom: 1px dashed rgba(255,255,255,0.08); text-align: right; }
+            .match-table td:last-child { border-bottom: none; padding-bottom: 2px; }
+            .match-table td::before { content: attr(data-label); color: var(--panel-muted, #94a3b8); font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; flex-shrink: 0; }
+            .match-table td:first-child { display: block; text-align: left; font-size: 0.82rem; padding: 10px 0 9px; border-bottom: 1px solid var(--info-border); }
+            .match-table td:first-child::before { content: none; }
+        }
+
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: var(--surface, #fff); max-width: none; }
+            .next-step-box { display: block !important; background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 24px; color: #000; }
+            .next-step-box h3 { color: #000; }
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+
+        .tour-launch { margin: 6px 0 22px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tour-btn { font: 600 0.86rem/1 'Archivo', sans-serif; background: var(--signal, #ae571d);
+            color: var(--on-signal, #fff); border: 1px solid var(--signal, #ae571d);
+            padding: 10px 16px; border-radius: 4px; cursor: pointer; }
+        .tour-btn:hover { background: var(--signal-dark, #86400f); border-color: var(--signal-dark, #86400f); }
+        .tour-hint { font-size: 0.82rem; color: var(--muted, #5a6a78); font-style: italic; }
+        @media print { .tour-launch { display: none; } }
+    </style>
+<script>
+/* Applied before paint: an explicit stored choice beats the system preference,
+   and the absence of both leaves prefers-color-scheme to decide in CSS. */
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+
+    <script defer src="tour.js"></script>
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive model</a>
+
+    <div class="page-bar">
+        <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+        <span class="theme-switch"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><label class="sw"><input type="checkbox" class="themeToggle" aria-label="Dark mode"><span class="track"></span></label><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span>
+    </div>
+
+    <header class="doc-header">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Foundations &middot; Step 2 of 5</p>
+        <h1 class="doc-title">Two Systems That Never Agreed on a Name</h1>
+    </header>
+
+    <table class="meta-table">
+        <tbody>
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Entity Resolution, Key Normalisation, Alias Governance, Non-Destructive Merge, Join Integrity Auditing</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Context</span>
+                <span class="meta-value">Reconciling an 80-branch location master against a legacy transaction extract, and a 3,848-record location census across ten brand families.</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> Branch names, division prefixes and revenue figures below are anonymised substitutes. Each one preserves the exact string-mismatch pattern found in production &mdash; the transposition, the dropped prefix, the single hyphen &mdash; because the patterns are the subject. The failure taxonomy, the resolution order, and the consequence are real.
+    </div>
+
+    <h2>1. The Failure That Doesn't Announce Itself</h2>
+
+    <div class="scenario-box">
+        <strong>Where this sits</strong>
+        Every model elsewhere in this portfolio &mdash; the elasticity tiers, the trade-area decay, the merger overlap &mdash; begins with a join between a transaction extract and a location master. This is the page about that join, and about what happens when it quietly fails.
+    </div>
+
+    <p>A distribution network that has grown by acquisition, and that carried a mainframe-era system for decades, does not have one name for anything. The location directory calls a site by its division prefix and its facility role. The transaction extract calls it whatever a branch manager typed into a terminal in 1998. Both are correct inside their own system, and neither knows the other exists.</p>
+
+    <p>Joining them with an exact string match produced a file that looked complete. It was not. <strong>Ten of eighty branches &mdash; twelve and a half percent of the network &mdash; silently failed to match and were dropped from the analysis entirely.</strong> No exception was raised. No row count looked wrong, because the row count was never compared against anything. The tier model that followed was trained on a network with a hole in it.</p>
+
+    <div class="alert-box">
+        <strong>The reason this class of bug is dangerous</strong>
+        <p>A join that fails loudly costs an hour. A join that fails silently produces a smaller, cleaner-looking dataset and every downstream number is confidently wrong. An inner join is a filter wearing the costume of a lookup, and nothing in the output tells you it removed anything.</p>
+    </div>
+
+    <h2>2. The Taxonomy of a Name Mismatch</h2>
+
+    <p>The ten failures were not random noise. Sorted, they fall into six recognisable patterns &mdash; and knowing which pattern you are looking at determines which normalisation will fix it.</p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th scope="col" style="width:21%;">Pattern</th>
+                <th scope="col" style="width:22%;">Location master</th>
+                <th scope="col" style="width:22%;">Transaction extract</th>
+                <th scope="col" style="width:35%;">Why it breaks, and what fixes it</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td data-label="Pattern">Division prefix</td>
+                <td data-label="Master" class="mono">AMS Fairview</td>
+                <td data-label="Extract" class="mono">Fairview</td>
+                <td data-label="Why">The directory qualifies the site by operating division; the terminal never did. Fixed by stripping a known prefix set &mdash; not by fuzzy matching, which would also happily match a different town.</td>
+            </tr>
+            <tr>
+                <td data-label="Pattern">Facility suffix</td>
+                <td data-label="Master" class="mono">Northgate DC</td>
+                <td data-label="Extract" class="mono">Northgate</td>
+                <td data-label="Why">A role marker distinguishing a distribution centre from a retail branch, present in one system only. Fixed by a controlled suffix list.</td>
+            </tr>
+            <tr>
+                <td data-label="Pattern">Token transposition</td>
+                <td data-label="Master" class="mono">Riverton West</td>
+                <td data-label="Extract" class="mono">West Riverton</td>
+                <td data-label="Why">Identical tokens, opposite order. Edit distance scores this <em>badly</em> despite the strings being semantically identical &mdash; the case where a Levenshtein threshold tuned to catch typos will still miss. Fixed by comparing token sets rather than sequences.</td>
+            </tr>
+            <tr>
+                <td data-label="Pattern">Punctuation</td>
+                <td data-label="Master" class="mono">IPD-Sutton</td>
+                <td data-label="Extract" class="mono">IPD Sutton</td>
+                <td data-label="Why">One hyphen. An exact join fails on a single character that no human reader would notice. Fixed by normalising to alphanumerics and single spaces before comparison.</td>
+            </tr>
+            <tr>
+                <td data-label="Pattern">Opposing convention</td>
+                <td data-label="Master" class="mono">Orchard DC</td>
+                <td data-label="Extract" class="mono">APW Orchard</td>
+                <td data-label="Why">One system marks the facility with a suffix, the other with a division prefix. Requires both normalisations to run before either match succeeds &mdash; which is why the order of operations matters.</td>
+            </tr>
+            <tr>
+                <td data-label="Pattern">Genuinely absent</td>
+                <td data-label="Master" class="mono">Cylinder Works</td>
+                <td data-label="Extract" class="mono">&mdash;</td>
+                <td data-label="Why">A specialty operation with no matching transaction stream. The correct outcome is an explicit unresolved record, not a silent omission. A pipeline that cannot distinguish "no match" from "not attempted" cannot be audited.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="dashboard">3. Resolution, One Rule at a Time</h2>
+
+    <p><em>Enable the normalisation stages in order and watch the match rate climb. Each rule is deliberately narrow &mdash; a controlled list rather than a similarity threshold &mdash; because a rule that can only make one kind of mistake is a rule you can reason about. Turn off the geospatial veto to see what a purely textual match does when two different places share a name.</em></p>
+
+    <p class="tour-launch"><button type="button" data-tour-start class="tour-btn">&#9654; Guided walkthrough</button> <span class="tour-hint">5 steps. Moves the controls for you.</span></p>
+
+    <div class="dashboard-container" id="dashboard-panel">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <div class="dash-title">Entity <span>Resolution</span></div>
+                <p>Normalisation Pipeline</p>
+            </div>
+
+            <ul class="stage-list">
+                <li>
+                    <label class="stage-toggle locked" for="stage1">
+                        <input type="checkbox" id="stage1" checked disabled aria-label="Exact string match, always enabled">
+                        <span>Exact string match
+                            <span class="rule">master == extract</span>
+                        </span>
+                    </label>
+                </li>
+                <li>
+                    <label class="stage-toggle" for="stage2">
+                        <input type="checkbox" id="stage2" aria-label="Normalise case and punctuation">
+                        <span>Case &amp; punctuation
+                            <span class="rule">lower, strip non-alphanumeric</span>
+                        </span>
+                    </label>
+                </li>
+                <li>
+                    <label class="stage-toggle" for="stage3">
+                        <input type="checkbox" id="stage3" aria-label="Strip division prefixes">
+                        <span>Division prefixes
+                            <span class="rule">AMS / IPD / APW</span>
+                        </span>
+                    </label>
+                </li>
+                <li>
+                    <label class="stage-toggle" for="stage4">
+                        <input type="checkbox" id="stage4" aria-label="Strip facility suffixes">
+                        <span>Facility suffixes
+                            <span class="rule">DC / warehouse</span>
+                        </span>
+                    </label>
+                </li>
+                <li>
+                    <label class="stage-toggle" for="stage5">
+                        <input type="checkbox" id="stage5" aria-label="Token set comparison, order insensitive">
+                        <span>Token-set comparison
+                            <span class="rule">order-insensitive</span>
+                        </span>
+                    </label>
+                </li>
+            </ul>
+
+            <div class="sidebar-subheader">Safeguard</div>
+            <ul class="stage-list">
+                <li>
+                    <label class="stage-toggle" for="geoVeto">
+                        <input type="checkbox" id="geoVeto" checked aria-label="Geospatial veto on ambiguous matches">
+                        <span>Geospatial veto
+                            <span class="rule">reject match if regions differ</span>
+                        </span>
+                    </label>
+                </li>
+            </ul>
+
+            <div class="logic-box">
+                <strong>Why a veto and not a score</strong>
+                Text similarity cannot tell two towns of the same name apart, and no threshold setting will. Coordinates can. The veto is a hard constraint rather than another weighted signal, because a wrong merge is far more expensive than a missed one &mdash; it fuses two real customers into a record that belongs to neither.
+            </div>
+        </div>
+
+        <div class="dash-main">
+            <div class="kpi-grid">
+                <div class="kpi-card k-res">
+                    <div class="kpi-card-header">Resolved</div>
+                    <div class="kpi-value" id="kpi-resolved">--</div>
+                    <div class="kpi-sub" id="kpi-resolved-sub">Exactly one confident counterpart</div>
+                </div>
+                <div class="kpi-card k-rev">
+                    <div class="kpi-card-header">Revenue Reconciled</div>
+                    <div class="kpi-value" id="kpi-rev">--</div>
+                    <div class="kpi-sub" id="kpi-rev-sub">Attached to a matched branch</div>
+                </div>
+                <div class="kpi-card k-amb">
+                    <div class="kpi-card-header">Ambiguous</div>
+                    <div class="kpi-value" id="kpi-amb">--</div>
+                    <div class="kpi-sub" id="kpi-amb-sub">Multiple candidates &mdash; needs a human</div>
+                </div>
+                <div class="kpi-card k-unr">
+                    <div class="kpi-card-header">Unresolved</div>
+                    <div class="kpi-value" id="kpi-unr">--</div>
+                    <div class="kpi-sub" id="kpi-unr-sub">No candidate &mdash; quarantined, not dropped</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-header">Revenue Reconciled &mdash; Credited to the Rule That Resolved It</div>
+                <div class="chart-box">
+                    <canvas id="ruleChart" role="img" aria-label="Bar chart of revenue reconciled, attributed to the normalisation rule that first produced a match"></canvas>
+                </div>
+            </div>
+
+            <div class="match-section">
+                <div class="chart-header" style="margin-bottom:12px;">Reconciliation Ledger</div>
+                <table class="match-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Location Master</th>
+                            <th scope="col">Matched To</th>
+                            <th scope="col">Resolved By</th>
+                            <th scope="col">Revenue</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledger-body">
+                        <tr><td colspan="5" data-label="" style="text-align:center;color:#64748b;font-style:italic;">Awaiting pipeline run...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. What Production Actually Does</h2>
+
+    <p>The dashboard above is the reasoning; the pipeline is the implementation. Six controls carry it, and each exists because a specific failure happened first.</p>
+
+    <h3>A normalised key, computed before any join</h3>
+
+    <p>Branch identifiers arrive in different shapes from different systems &mdash; one carries an alphabetic prefix and zero-padding, the other does not. Rather than joining on the raw value, both sides are reduced to a canonical key: prefix stripped, leading zeros removed, case folded. The join happens on the key, never on the display name, because the display name is the thing that disagrees.</p>
+
+    <h3>Alias sets, not similarity scores</h3>
+
+    <p>The location census spans ten brand families, and brand identity does not map to a single string. A regional co-operative trades under its own name while operating another banner's stores. An acquired chain keeps old signage for years. A distributor runs several internal divisions that are one competitor for footprint purposes. Each family therefore has a multi-alias signature set, and membership is a lookup against curated aliases rather than a distance calculation &mdash; because the relationship between a co-op's trading name and its banner is not a string-similarity fact. It is a fact about the industry.</p>
+
+    <h3>An authoritative source per entity class</h3>
+
+    <p>Records for our own branches are purged from the harvested census and re-injected from the internal directory. Scraped data is trusted for competitors and never for us. That is a governance decision rather than a technical one: a scraper must not be permitted to become the system of record for entities the business already maintains authoritatively.</p>
+
+    <h3>Merges that cannot destroy what they touch</h3>
+
+    <p>When recovered records are folded back into the master, a blank value in the incoming record never overwrites a populated value in the existing one. This is the single most common way a repair script does damage &mdash; a naive update writes nulls over good data and reports success. Deduplication follows the same principle: rows are ordered so populated records sort first, so that keeping the first occurrence keeps the <em>useful</em> one rather than an arbitrary one.</p>
+
+    <h3>Disambiguation instead of deletion</h3>
+
+    <p>Genuine near-duplicates &mdash; several operations at one physical address &mdash; are separated by a small coordinate offset so all of them remain visible and selectable on the map. The instinct to collapse coincident records is what erases real locations. Dedupe requires the name, the classification <em>and</em> the rounded coordinates to agree before anything is removed.</p>
+
+    <h3>Bidirectional geocoding</h3>
+
+    <p>Forward resolution turns an address into coordinates; reverse resolution turns coordinates back into an address for records that arrived with one and not the other. Running both directions closes the loop, and means an incomplete record can be repaired from whichever half of it survived.</p>
+
+    <h2>5. The Question No Algorithm Answers</h2>
+
+    <p>One of the ten failures is not a matching problem at all, and it is the one worth ending on.</p>
+
+    <p>Two separate master records &mdash; two operating divisions, physically co-located in the same town &mdash; both normalise to the same single name in the transaction extract. Every rule in the pipeline resolves them to the identical counterpart. The pipeline has not failed; it has correctly identified that <strong>the transaction stream does not distinguish between two businesses that the directory does.</strong></p>
+
+    <p>No threshold setting resolves that. No library resolves it. Answering it requires knowing that one division sells parts over a counter and the other serves industrial accounts, that they share a lot, and which of them a given class of invoice belongs to. The correct engineering response is to stop, flag the record as ambiguous, and route it to somebody who knows the business &mdash; which is precisely why the dashboard reports an ambiguous count as a first-class outcome rather than folding it into a match rate.</p>
+
+    <div class="impact-box">
+        <h3>What This Case Study Is Actually About</h3>
+        <p>Not fuzzy matching. The algorithms are the easy part and they are all in libraries. The work is knowing that an inner join is a filter in disguise, that a transposed pair of words defeats edit distance while looking obvious to a human, that a co-op's trading name is a fact about the industry rather than about strings, and that the honest output of a resolution pipeline includes a column for the records it could not resolve.</p>
+        <p>Every predictive model in this portfolio rests on this layer being right. A margin cascade computed across a network missing twelve percent of its branches produces confident, presentable, wrong numbers &mdash; and nothing in the output would tell you.</p>
+    </div>
+
+    <div class="next-step-box">
+        <h3>Where This Feeds</h3>
+        <p>With identity reconciled, the transaction data can be attached to physical geography &mdash; which is the input the trade-area model and the competitive footprint both depend on.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="erp-reconciliation-engine.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Step 1</span>
+                <span class="nav-title">ERP Crisis Reconciliation</span>
+            </a>
+            <a href="logistics-spider-mapping.html" class="nav-btn next">
+                <span class="nav-label">Step 3 &rarr;</span>
+                <span class="nav-title">Logistics Spider-Mapping</span>
+            </a>
+        </nav>
+    </div>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        /* ============================================================
+           Anonymised stand-ins for the real mismatch set. Each entry reproduces one
+           of the six patterns catalogued above; revenue figures are illustrative.
+           ============================================================ */
+        const MASTER = [
+            { name: 'AMS Fairview',        region: 'A', rev: 4200000 },
+            { name: 'IPD Fairview',        region: 'A', rev: 1100000 },
+            { name: 'Northgate DC',        region: 'B', rev: 6800000 },
+            { name: 'Riverton West',       region: 'C', rev: 2400000 },
+            { name: 'IPD-Sutton',          region: 'L', rev:  700000 },
+            { name: 'Brookfield',          region: 'F', rev: 3100000 },
+            { name: 'Calder',              region: 'G', rev: 2200000 },
+            { name: 'Kestrel',             region: 'I', rev: 1800000 },
+            { name: 'Orchard DC',          region: 'K', rev: 2900000 },
+            { name: 'Pinehurst DC',        region: 'H', rev: 5000000 },
+            { name: 'AMS Ashland',         region: 'D', rev: 1600000 },
+            { name: 'AMS Ashland Heights', region: 'M', rev:  900000 },
+            { name: 'Cylinder Works',      region: 'A', rev:  400000 },
+            { name: 'Vale Junction East',  region: 'J', rev: 1300000 }
+        ];
+
+        const EXTRACT = [
+            { name: 'Fairview',           region: 'A' },
+            { name: 'Northgate',          region: 'B' },
+            { name: 'West Riverton',      region: 'C' },
+            { name: 'IPD Sutton',         region: 'L' },
+            { name: 'Brookfield',         region: 'F' },
+            { name: 'Calder',             region: 'G' },
+            { name: 'Kestrel',            region: 'I' },
+            { name: 'APW Orchard',        region: 'K' },
+            { name: 'Pinehurst',          region: 'H' },
+            { name: 'Ashland',            region: 'D' },
+            { name: 'Ashland',            region: 'M' },
+            { name: 'East Vale Junction', region: 'J' }
+        ];
+
+        const PREFIXES = ['ams ', 'ipd ', 'apw '];
+        const SUFFIXES = [' dc', ' warehouse', ' distribution center'];
+
+        const RULES = [
+            { id: 'stage1', label: 'Exact match',        colour: '#64748b' },
+            { id: 'stage2', label: 'Case & punctuation', colour: '#0369a1' },
+            { id: 'stage3', label: 'Division prefix',    colour: '#7dd3fc' },
+            { id: 'stage4', label: 'Facility suffix',    colour: '#10b981' },
+            { id: 'stage5', label: 'Token set',          colour: '#f59e0b' }
+        ];
+
+        const el = id => document.getElementById(id);
+        const money = v => '$' + Math.round(v).toLocaleString();
+        const isNarrow = () => window.matchMedia('(max-width: 800px)').matches;
+
+        function normalise(s, level) {
+            let out = s;
+            if (level >= 2) out = out.toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+            if (level >= 3) PREFIXES.forEach(p => { if (out.startsWith(p)) out = out.slice(p.length); });
+            if (level >= 4) SUFFIXES.forEach(x => { if (out.endsWith(x)) out = out.slice(0, -x.length); });
+            return out.trim();
+        }
+
+        const tokenKey = s => s.split(' ').filter(Boolean).sort().join(' ');
+
+        /* Attribute each match to the EARLIEST enabled rule that produces it, so the chart
+           credits the rule that actually did the work rather than the last one switched on. */
+        function resolve(enabledLevels, useTokens, geoVeto) {
+            return MASTER.map(m => {
+                let matched = null, rule = null;
+
+                for (const level of enabledLevels) {
+                    const mKey = normalise(m.name, level);
+                    const hits = EXTRACT.filter(e => {
+                        const eKey = normalise(e.name, level);
+                        const same = eKey === mKey;
+                        return same && (!geoVeto || e.region === m.region);
+                    });
+                    if (hits.length === 1) { matched = hits[0]; rule = level; break; }
+                    if (hits.length > 1)   { matched = hits;    rule = level; break; }
+                }
+
+                if (!matched && useTokens) {
+                    const mKey = tokenKey(normalise(m.name, Math.max(...enabledLevels)));
+                    const hits = EXTRACT.filter(e => {
+                        const eKey = tokenKey(normalise(e.name, Math.max(...enabledLevels)));
+                        const same = eKey === mKey;
+                        return same && (!geoVeto || e.region === m.region);
+                    });
+                    if (hits.length >= 1) { matched = hits.length === 1 ? hits[0] : hits; rule = 5; }
+                }
+
+                const ambiguous = Array.isArray(matched);
+                return {
+                    master: m,
+                    match: ambiguous ? null : matched,
+                    candidates: ambiguous ? matched : null,
+                    rule: matched ? rule : null,
+                    status: ambiguous ? 'ambiguous' : (matched ? 'resolved' : 'unresolved')
+                };
+            });
+        }
+
+        let ruleChart = null;
+
+        function update() {
+            const on = n => el('stage' + n).checked;
+            const geoVeto = el('geoVeto').checked;
+
+            // Level 1 is always active; higher levels are cumulative normalisations.
+            const levels = [1];
+            if (on(2)) levels.push(2);
+            if (on(3)) levels.push(3);
+            if (on(4)) levels.push(4);
+            const useTokens = on(5);
+
+            // Try the least aggressive rule first so attribution is honest.
+            const rows = resolve(levels.slice().sort((a, b) => a - b), useTokens, geoVeto);
+
+            const resolved = rows.filter(r => r.status === 'resolved');
+            const ambiguous = rows.filter(r => r.status === 'ambiguous');
+            const unresolved = rows.filter(r => r.status === 'unresolved');
+            const revTotal = MASTER.reduce((s, m) => s + m.rev, 0);
+            const revMatched = resolved.reduce((s, r) => s + r.master.rev, 0);
+
+            el('kpi-resolved').innerText = `${resolved.length}/${MASTER.length}`;
+            el('kpi-resolved-sub').innerText = `${(resolved.length / MASTER.length * 100).toFixed(0)}% of master records`;
+
+            el('kpi-rev').innerText = '$' + (revMatched / 1e6).toFixed(1) + 'M';
+            el('kpi-rev-sub').innerText = `${(revMatched / revTotal * 100).toFixed(0)}% of ${money(revTotal)} attached`;
+
+            el('kpi-amb').innerText = ambiguous.length;
+            el('kpi-amb-sub').innerText = ambiguous.length
+                ? 'Two candidates the extract cannot separate'
+                : 'None &mdash; every match is unique';
+
+            el('kpi-unr').innerText = unresolved.length;
+            el('kpi-unr-sub').innerText = unresolved.length
+                ? money(unresolved.reduce((s, r) => s + r.master.rev, 0)) + ' held for review'
+                : 'Nothing outstanding';
+
+            renderLedger(rows);
+            renderChart(rows);
+        }
+
+        function renderLedger(rows) {
+            const tags = { resolved: 't-res', ambiguous: 't-amb', unresolved: 't-unr' };
+            const labels = { resolved: 'Resolved', ambiguous: 'Ambiguous', unresolved: 'Unresolved' };
+            el('ledger-body').innerHTML = rows.map(r => {
+                const ruleName = r.rule ? RULES[r.rule - 1].label : '&mdash;';
+                let target;
+                if (r.status === 'resolved') target = r.match.name;
+                else if (r.status === 'ambiguous') target = r.candidates.map(c => c.name + ' (' + c.region + ')').join(' / ');
+                else target = '<span style="color:#64748b;">no candidate</span>';
+                return `<tr>
+                    <td data-label="Location Master">${r.master.name}<br><span style="font-weight:400;color:#64748b;font-size:0.68rem;">region ${r.master.region}</span></td>
+                    <td data-label="Matched To">${target}</td>
+                    <td data-label="Resolved By">${ruleName}</td>
+                    <td data-label="Revenue">${money(r.master.rev)}</td>
+                    <td data-label="Status"><span class="tag ${tags[r.status]}">${labels[r.status]}</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function renderChart(rows) {
+            const node = el('ruleChart');
+            if (!node || typeof Chart === 'undefined') return;
+            if (ruleChart) ruleChart.destroy();
+
+            const byRule = RULES.map((rule, i) =>
+                rows.filter(r => r.status === 'resolved' && r.rule === i + 1)
+                    .reduce((s, r) => s + r.master.rev, 0));
+            const outstanding = rows.filter(r => r.status !== 'resolved')
+                                    .reduce((s, r) => s + r.master.rev, 0);
+
+            Chart.defaults.font.family = "'Archivo', 'Inter', sans-serif";
+
+            ruleChart = new Chart(node.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: RULES.map(r => r.label).concat(['Outstanding']),
+                    datasets: [{
+                        data: byRule.concat([outstanding]),
+                        backgroundColor: RULES.map(r => r.colour + 'cc').concat(['#ef4444cc']),
+                        borderColor: RULES.map(r => r.colour).concat(['#ef4444']),
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15,23,42,0.95)', padding: 12,
+                            callbacks: { label: c => ' ' + money(c.raw) }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Revenue (USD)', color: '#94a3b8', font: { size: 11, weight: 'bold' } },
+                            ticks: { color: '#cbd5e1', font: { size: 10 }, callback: v => '$' + (v / 1e6).toFixed(1) + 'M' },
+                            grid: { color: '#334155', borderDash: [4, 4] }
+                        },
+                        y: { grid: { display: false }, ticks: { color: '#cbd5e1', font: { size: isNarrow() ? 9 : 10 } } }
+                    }
+                }
+            });
+        }
+
+        ['stage2', 'stage3', 'stage4', 'stage5', 'geoVeto'].forEach(id =>
+            el(id).addEventListener('change', update));
+
+        let wasNarrow = isNarrow();
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const now = isNarrow();
+                if (now !== wasNarrow) { wasNarrow = now; update(); }
+            }, 150);
+        });
+
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js failed to load - the attribution chart is disabled.');
+            const box = document.querySelector('.chart-box');
+            if (box) box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network. The ledger below is unaffected.</div>';
+        }
+
+        document.querySelectorAll('.jargon-tooltip').forEach(node => {
+            node.setAttribute('tabindex', '0');
+            node.setAttribute('role', 'note');
+            node.setAttribute('aria-label', node.textContent.trim() + ': ' + node.getAttribute('data-tip'));
+        });
+
+        update();
+    
+/* ── theme switch ──────────────────────────────────────────────────────────────
+   Shares the choice with every other page through localStorage. While no explicit
+   choice exists the switch tracks the operating system. */
+(function(){
+  var boxes=document.querySelectorAll('.themeToggle');
+  if(!boxes.length) return;
+  var root=document.documentElement, mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function stored(){ try{ return localStorage.getItem('theme'); }catch(e){ return null; } }
+  function set(v){ boxes.forEach(function(b){ b.checked=v; }); }
+  set(stored()? stored()==='dark' : mq.matches);
+  boxes.forEach(function(b){
+    b.addEventListener('change',function(){
+      var mode=b.checked?'dark':'light';
+      root.setAttribute('data-theme',mode); set(b.checked);
+      try{ localStorage.setItem('theme',mode); }catch(e){}
+    });
+  });
+  mq.addEventListener('change',function(){ if(!stored()) set(mq.matches); });
+})();
+
+/* ── guided walkthrough ─────────────────────────────────────────────────────── */
+window.TOUR = [
+  { el: '#kpi-resolved',
+    text: 'Two systems, one network, no agreement on what anything is called. An exact string match resolves a fraction of it — and produces a file that looks complete.',
+    before: function(){ ['stage2','stage3','stage4','stage5'].forEach(function(id){ var e=el(id); if(e) e.checked=false; }); var g=el('geoVeto'); if(g) g.checked=true; update(); } },
+  { el: '#stage3',
+    text: 'Each normalisation is deliberately narrow — a curated list rather than a similarity threshold, because a rule that can only make one kind of mistake is one you can reason about.',
+    action: function(){ el('stage2').checked=true; el('stage3').checked=true; update(); }, settle: 700 },
+  { el: '#stage5',
+    text: 'Token-set comparison catches the transpositions. <b>“Riverton West”</b> and <b>“West Riverton”</b> are the same place, and edit distance scores that pair badly despite it being obvious to a human.',
+    action: function(){ el('stage4').checked=true; el('stage5').checked=true; update(); }, settle: 700 },
+  { el: '#geoVeto',
+    text: 'Now turn off the geospatial veto. Text similarity cannot tell two towns of the same name apart, and no threshold setting will. Coordinates can.',
+    action: function(){ el('geoVeto').checked=false; update(); }, settle: 700 },
+  { el: '#kpi-amb',
+    text: 'A wrong merge fuses two real customers into a record belonging to neither — far more expensive than a missed one. So the veto is a hard constraint, and <b>ambiguous</b> is reported as a first-class outcome rather than folded into a match rate.',
+    action: function(){ el('geoVeto').checked=true; update(); } }
+];
+</script>
+</body>
+</html>
