@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Territory Balancer | Austin Sonny Stethem</title>
+    <meta name="description" content="Mapping every rep-assigned account against its hub to expose workload imbalance, radius drift, and the towns where several representatives call on the same customers.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <meta property="og:title" content="Territory Balancer — Who Actually Owns the Account">
+    <meta property="og:description" content="Only one representative in four carries a workload near the median. The other three are covering too much or too little, and no report shows it.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/territory-balancer.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="portfolio.css?v=5">
+
+    <style>
+        :root { --info-bg: var(--ink, #0f172a); --info-panel: #1e293b; --info-border: var(--body-text, #334155); }
+
+        body { font-family: 'Archivo', 'Inter', system-ui, sans-serif; color: var(--body-text, #333); font-size: 10.5pt; line-height: 1.6; max-width: 950px; margin: 0 auto; padding: 40px 20px 90px; background-color: var(--bg-color, var(--bg-color, #f3f5f7)); -webkit-font-smoothing: antialiased; }
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; }
+        h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        p { text-align: justify; margin-bottom: 15px; color: var(--body-text, #334155); }
+        ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text, #334155); padding-left: 25px; }
+        li { margin-bottom: 8px; }
+
+        .data-table { width: 100%; border-collapse: collapse; margin: 20px 0 30px; font-size: 9pt; background: var(--surface, #fff); border: 1px solid var(--hairline, #e2e8f0); border-radius: 4px; table-layout: fixed; }
+        .data-table th { background: var(--ink-surface, #131a21); color: var(--on-ink, #f8fafc); text-align: left; padding: 10px 9px; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; vertical-align: bottom; }
+        .data-table td { padding: 10px 9px; border-bottom: 1px solid var(--row-line, #eef2f7); color: var(--body-text, #334155); overflow-wrap: break-word; vertical-align: top; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table td:first-child { font-weight: 700; color: var(--dark-slate-blue, var(--ink, #131a21)); }
+        .data-table .mono { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 8.5pt; }
+
+        .dashboard-container { width: 100%; margin: 40px auto; background: var(--info-bg); color: var(--hairline, #e2e8f0); border-radius: 12px; display: flex; flex-wrap: wrap; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #1e293b; overflow: hidden; }
+        .dash-sidebar { width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; border-right: 1px solid var(--info-border); display: flex; flex-direction: column; }
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
+        .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center; }
+        .dash-header .dash-title { color: var(--panel-bright, #f8fafc); font-size: 1.6rem; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title span { color: var(--signal-bright, #f87171); }
+        .dash-header p { color: var(--panel-muted, #94a3b8); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+
+        .control-group { margin-bottom: 22px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: var(--panel-text, #cbd5e1); margin-bottom: 8px; cursor: pointer; gap: 10px; }
+        .val-readout { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: bold; font-size: 0.95rem; color: var(--signal-bright, #f87171); white-space: nowrap; }
+        .control-note { font-size: 0.72rem; color: var(--panel-dim, #64748b); font-style: italic; margin-top: 6px; line-height: 1.45; }
+
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, var(--signal, #ae571d)); outline-offset: 6px; }
+
+        .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: var(--panel-text, #cbd5e1); text-align: center; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--info-blue, #0369a1); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: var(--panel-text, #cbd5e1); line-height: 1.5; }
+        .logic-box strong { color: var(--info-blue-bright, var(--data-info, #7dd3fc)); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); }
+        .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted, #94a3b8); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-sub { font-size: 0.72rem; color: var(--panel-dim, #64748b); font-style: italic; min-height: 30px; }
+        .k-green { border-top-color: var(--data-positive, #10b981) !important; } .k-green .kpi-value { color: var(--data-positive, #10b981); }
+        .k-red { border-top-color: var(--data-negative, #ef4444) !important; } .k-red .kpi-value { color: var(--data-negative, #ef4444); }
+        .k-amber { border-top-color: var(--data-warning, #f59e0b) !important; } .k-amber .kpi-value { color: var(--data-warning, #f59e0b); }
+        .k-blue { border-top-color: var(--data-info, #7dd3fc) !important; } .k-blue .kpi-value { color: var(--data-info, #7dd3fc); }
+
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text, #cbd5e1); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .chart-box { position: relative; height: 300px; width: 100%; }
+
+        .hit-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .hit-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; color: var(--panel-text, #e2e8f0); }
+        .hit-table th { background: var(--panel-bg, #0f172a); color: var(--panel-muted, #94a3b8); padding: 9px 6px; text-align: left; text-transform: uppercase; letter-spacing: 0.3px; font-size: 0.64rem; font-weight: 800; border-bottom: 1px solid var(--info-border); vertical-align: bottom; }
+        .hit-table td { padding: 10px 6px; border-bottom: 1px solid var(--info-border); color: var(--panel-text, #cbd5e1); vertical-align: middle; }
+        .hit-table tr:last-child td { border-bottom: none; }
+        .hit-table td:first-child { font-weight: 700; color: var(--panel-text, #e2e8f0); }
+        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
+        .t-over { background: rgba(239,68,68,0.15); color: var(--data-negative, #ef4444); border: 1px solid rgba(239,68,68,0.3); }
+        .t-under { background: rgba(125,211,252,0.15); color: var(--data-info, #7dd3fc); border: 1px solid rgba(125,211,252,0.3); }
+        .t-far { background: rgba(245,158,11,0.15); color: var(--data-warning, #f59e0b); border: 1px solid rgba(245,158,11,0.3); }
+
+        .impact-box { background: var(--surface-alt, #f8fafc); border: 1px solid var(--line, #cbd5e1); border-left: 4px solid var(--dark-slate-blue, var(--ink, #131a21)); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
+        .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; margin-bottom: 15px; }
+        .impact-box p:last-child { margin-bottom: 0; }
+
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--panel-border, #334155); padding: 22px; }
+            .dash-main { padding: 18px; min-width: 0; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .chart-box { height: 270px; }
+            .data-table { table-layout: auto; }
+            .data-table thead { display: none; }
+            .data-table tr { display: block; border-bottom: 1px solid var(--hairline, #e2e8f0); padding: 8px 0; }
+            .data-table td { display: block; border: none; padding: 5px 0; }
+            .data-table td:first-child { font-size: 10pt; padding-bottom: 7px; border-bottom: 1px solid var(--row-line, #eef2f7); margin-bottom: 4px; }
+            .data-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: var(--muted, #64748b); font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.4px; display: block; }
+            .data-table td:first-child[data-label]::before { content: none; }
+            .hit-section { padding: 16px 12px; }
+            .hit-table, .hit-table tbody, .hit-table tr, .hit-table td { display: block; width: 100%; }
+            .hit-table thead { display: none; }
+            .hit-table tr { border: 1px solid var(--info-border); border-radius: 8px; background: rgba(0,0,0,0.18); padding: 4px 14px 10px; margin-bottom: 12px; }
+            .hit-table tr:last-child { margin-bottom: 0; }
+            .hit-table td { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 9px 0; border-bottom: 1px dashed rgba(255,255,255,0.08); text-align: right; }
+            .hit-table td:last-child { border-bottom: none; }
+            .hit-table td::before { content: attr(data-label); color: var(--panel-muted, #94a3b8); font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; flex-shrink: 0; }
+            .hit-table td:first-child { display: block; text-align: left; font-size: 0.86rem; padding: 10px 0 9px; border-bottom: 1px solid var(--info-border); }
+            .hit-table td:first-child::before { content: none; }
+        }
+
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: var(--surface, #fff); max-width: none; }
+            .next-step-box { display: block !important; background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 24px; color: #000; }
+            .next-step-box h3 { color: #000; }
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+    </style>
+<script>
+/* Applied before paint: an explicit stored choice beats the system preference,
+   and the absence of both leaves prefers-color-scheme to decide in CSS. */
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive model</a>
+    <div class="page-bar">
+        <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+        <span class="theme-switch"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><label class="sw"><input type="checkbox" class="themeToggle" aria-label="Dark mode"><span class="track"></span></label><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span>
+    </div>
+
+    <header class="doc-header">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/><circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/><circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Foundations &middot; Step 4 of 5</p>
+        <h1 class="doc-title">Territory Balancer</h1>
+    </header>
+
+    <table class="meta-table">
+        <tbody>
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Workload Distribution Analysis, Radius Discipline, Coverage Conflict Detection, Assignment Modelling</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Deployment</span>
+                <span class="meta-value">Built and in use. 10,280 rep-assigned accounts mapped against their hub locations, at 97.1% match rate.</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> Representative identifiers and town names are synthetic. The workload distribution reproduces the shape of the production one &mdash; same spread, same share of representatives outside a reasonable band &mdash; because the shape is the finding.
+    </div>
+
+    <h2>1. Who Owns the Account?</h2>
+
+    <div class="scenario-box">
+        <strong>Where this sits in the track</strong>
+        The previous step asked where the customer physically is. This one asks who is responsible for them &mdash; a question the system answers confidently and, in about a thousand towns, answers more than once.
+    </div>
+
+    <p>Sales assignment is recorded as a field on the customer master. One account, one representative, unambiguous. That field is correct in the sense that it contains a value, and it is the basis for commission, for reporting, and for who gets a call when something goes wrong.</p>
+
+    <p>What it does not encode is geography. Assignments accumulate over years: a representative picks up an account because they knew the owner, or covered for somebody, or because the account was small when it was assigned and is not small any more. Each individual decision was sensible. The aggregate is a coverage map that nobody designed and nobody can see, because the customer master lists assignments one row at a time and no report renders them as territory.</p>
+
+    <p>Mapping every assigned account against its representative's hub makes three things visible at once, none of which appear in any existing report.</p>
+
+    <h2>2. Three Questions the Assignment Field Cannot Answer</h2>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th scope="col" style="width:24%;">Question</th>
+                <th scope="col" style="width:32%;">What the mapping shows</th>
+                <th scope="col" style="width:44%;">Why it matters</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td data-label="Question">Workload balance</td>
+                <td data-label="Shows">Accounts per representative, against the network median</td>
+                <td data-label="Why">A representative carrying three times the median cannot service the tail of their book, and the accounts at the bottom of it receive no contact at all. That is invisible as attrition rather than as a coverage failure.</td>
+            </tr>
+            <tr>
+                <td data-label="Question">Radius discipline</td>
+                <td data-label="Shows">Distance from each account to its representative's hub</td>
+                <td data-label="Why">A long-distance assignment costs windscreen time that produces nothing. It usually exists because of a relationship, which makes it defensible &mdash; but it should be a deliberate exception rather than an accident nobody has looked at.</td>
+            </tr>
+            <tr>
+                <td data-label="Question">Coverage conflict</td>
+                <td data-label="Shows">Towns where several representatives hold accounts</td>
+                <td data-label="Why">Two representatives in one town is normal. Nine is a signal that the assignment logic has stopped corresponding to anything. It also means several people are driving to the same place on different days.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="impact-box">
+        <h3>The Distribution Is the Finding</h3>
+        <p>Across the mapped book, the median representative carries roughly a hundred accounts and the largest carries three times that. What matters is not the extremes but the middle: <strong>only about one representative in four sits within twenty-five percent of the median.</strong> The other three quarters are meaningfully over or under.</p>
+        <p>That is not a few outliers to correct. It is the absence of a target &mdash; and it is what you get when assignments are made one at a time, correctly, for twenty years, with nothing aggregating them.</p>
+    </div>
+
+    <h2 id="dashboard">3. Setting a Target and Seeing Who Falls Outside It</h2>
+
+    <p><em>Set the target book size and the tolerance you are willing to accept around it. The model reports how many representatives fall outside the band and how many accounts would need to move to bring everybody inside it &mdash; which is the number that determines whether a rebalance is a conversation or a reorganisation.</em></p>
+
+    <div class="dashboard-container" id="dashboard-panel">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <div class="dash-title">Territory <span>Balance</span></div>
+                <p>Coverage Model</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-target"><span>Target Book Size:</span> <span class="val-readout" id="v-target">120</span></label>
+                <input type="range" id="s-target" min="60" max="220" step="5" value="120" aria-label="Target accounts per representative">
+                <p class="control-note">Accounts per representative. Defaults to the current median rather than an aspiration.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-tol"><span>Tolerance Band:</span> <span class="val-readout" id="v-tol">&plusmn;25%</span></label>
+                <input type="range" id="s-tol" min="10" max="60" step="5" value="25" aria-label="Acceptable variation around the target">
+                <p class="control-note">How far from target is acceptable before a book is flagged.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-radius"><span>Radius Limit:</span> <span class="val-readout" id="v-radius">25 mi</span></label>
+                <input type="range" id="s-radius" min="10" max="80" step="5" value="25" aria-label="Maximum reasonable distance from hub">
+                <p class="control-note">Beyond this, an assignment is treated as an exception requiring a reason.</p>
+            </div>
+
+            <div class="sidebar-subheader">The Constraint</div>
+            <div class="logic-box">
+                <strong>Accounts are not interchangeable</strong>
+                A rebalance that moves accounts purely to equalise counts will break relationships that took years to build and hand a competitor an opening. The model therefore reports the size of the gap rather than proposing reassignments &mdash; the arithmetic identifies where to look, and a sales manager decides what can actually move.
+            </div>
+        </div>
+
+        <div class="dash-main">
+            <div class="kpi-grid">
+                <div class="kpi-card k-green">
+                    <div class="kpi-card-header">Inside the Band</div>
+                    <div class="kpi-value" id="k-inband">--</div>
+                    <div class="kpi-sub" id="k-inband-sub">Representatives near target</div>
+                </div>
+                <div class="kpi-card k-red">
+                    <div class="kpi-card-header">Over-Tasked</div>
+                    <div class="kpi-value" id="k-over">--</div>
+                    <div class="kpi-sub" id="k-over-sub">Above the upper bound</div>
+                </div>
+                <div class="kpi-card k-blue">
+                    <div class="kpi-card-header">Under-Tasked</div>
+                    <div class="kpi-value" id="k-under">--</div>
+                    <div class="kpi-sub" id="k-under-sub">Capacity available</div>
+                </div>
+                <div class="kpi-card k-amber">
+                    <div class="kpi-card-header">Accounts to Move</div>
+                    <div class="kpi-value" id="k-move">--</div>
+                    <div class="kpi-sub" id="k-move-sub">To bring everyone inside the band</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-header">Book Size by Representative, Against the Target Band</div>
+                <div class="chart-box"><canvas id="loadChart" role="img" aria-label="Bar chart of accounts per representative with the target band marked"></canvas></div>
+            </div>
+
+            <div class="hit-section">
+                <div class="chart-header" style="margin-bottom:12px;">Books Furthest From Target</div>
+                <table class="hit-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Representative</th>
+                            <th scope="col">Accounts</th>
+                            <th scope="col">vs Target</th>
+                            <th scope="col">Median Distance</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rep-body">
+                        <tr><td colspan="5" data-label="" style="text-align:center;color:#64748b;font-style:italic;">Awaiting model run...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. Capacity: What Is Mathematically Serviceable</h2>
+
+    <p>Workload imbalance describes a distribution. It does not answer the question a sales director actually has, which is whether the books at the top of that distribution can be covered at all.</p>
+
+    <p>That question has an arithmetic answer and does not require anybody's opinion. A representative makes a certain number of calls in a day. A visit cycle specifies how often each account should be seen. Multiply those out and the maximum serviceable book falls out of it:</p>
+
+    <div class="scenario-box">
+        <strong>Maximum serviceable book</strong>
+        calls per day &times; working days per week &times; cycle length in weeks
+        <br><br>
+        At eight calls a day on a six-week cycle, one representative can see 240 accounts once each. A book of 285 is not a stretch target &mdash; it is 45 accounts that will not be visited in the cycle, and the arithmetic says so before anyone looks at performance.
+    </div>
+
+    <p>Run that across the field and the output is not a judgement about any individual. It is a count of <strong>accounts that sit beyond anyone's capacity to service on the stated cycle</strong> &mdash; and those accounts are where revenue quietly decays, because nothing in the reporting distinguishes an account nobody visited from an account that simply bought less.</p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th scope="col" style="width:18%;">Calls / day</th>
+                <th scope="col" style="width:18%;">Cycle</th>
+                <th scope="col" style="width:20%;">Serviceable book</th>
+                <th scope="col" style="width:20%;">Books over</th>
+                <th scope="col" style="width:24%;">Accounts beyond capacity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td data-label="Calls/day">6</td><td data-label="Cycle">4 weeks</td><td data-label="Serviceable" class="mono">120</td><td data-label="Books over">47 of 97</td><td data-label="Beyond capacity"><strong>2,341</strong> &mdash; 21% of the field</td></tr>
+            <tr><td data-label="Calls/day">8</td><td data-label="Cycle">4 weeks</td><td data-label="Serviceable" class="mono">160</td><td data-label="Books over">26 of 97</td><td data-label="Beyond capacity">900 &mdash; 8%</td></tr>
+            <tr><td data-label="Calls/day">6</td><td data-label="Cycle">6 weeks</td><td data-label="Serviceable" class="mono">180</td><td data-label="Books over">13 of 97</td><td data-label="Beyond capacity">488 &mdash; 4%</td></tr>
+            <tr><td data-label="Calls/day">8</td><td data-label="Cycle">6 weeks</td><td data-label="Serviceable" class="mono">240</td><td data-label="Books over">3 of 97</td><td data-label="Beyond capacity">75 &mdash; under 1%</td></tr>
+            <tr><td data-label="Calls/day">10</td><td data-label="Cycle">6 weeks</td><td data-label="Serviceable" class="mono">300</td><td data-label="Books over">0</td><td data-label="Beyond capacity">none</td></tr>
+        </tbody>
+    </table>
+
+    <p>The table is the argument. Whether the field is fully covered is not a matter of effort or intent &mdash; it is a function of two numbers that leadership sets, often without realising they are setting them. Decide that every account deserves a visit every four weeks and a fifth of the book becomes uncoverable overnight. Decide on six weeks and the problem nearly disappears. Neither decision is currently being made explicitly, which is how a coverage policy ends up being an accident.</p>
+
+    <div class="impact-box">
+        <h3>Why Hand-Managed Assignment Degrades on Its Own</h3>
+        <p>No individual assignment causes this. Each one is made for a good reason: a representative knows the owner, covers a vacancy, inherits a retiring colleague's book, or picks up an account that was small at the time. What no single decision can account for is the aggregate, because the aggregate is not visible to anyone making the decisions.</p>
+        <p>Left alone, the drift has three predictable outputs. <strong>Representatives become frustrated</strong>, because carrying twice a peer's book for the same expectations is legible to the person carrying it long before it is legible to management. <strong>Accounts go unserved</strong>, invisibly, at the bottom of the largest books. And <strong>geographic coverage frays</strong>, because assignments made one at a time never optimise for travel, so two representatives end up crossing each other's paths in the same town on different days.</p>
+        <p>All three are consequences of process rather than of people, and all three are measurable the moment the assignments are rendered against geography instead of listed as rows. That is the whole intervention: not a reorganisation, but a report that did not previously exist.</p>
+    </div>
+
+    <h2>5. Coverage Conflict, and Why It Is Not Automatically Wrong</h2>
+
+    <p>Roughly a thousand towns in the mapped book have accounts held by more than one representative. The distribution has a long tail: most have two, a substantial number have three or four, and a handful have nine or more.</p>
+
+    <p>Two representatives in one town is usually correct. Accounts differ &mdash; a heavy-duty fleet and a two-bay independent are different sales conversations, and specialisation beats geography. The signal is not the existence of overlap but its depth. When a town reaches five or six representatives, the assignments have almost certainly stopped tracking any deliberate segmentation and started reflecting the order in which accounts happened to be picked up.</p>
+
+    <p>The output is therefore ranked by depth rather than flagged by existence, and the towns at the top of that list are worth an hour of a sales manager's attention each. Not to be reassigned automatically &mdash; to be explained, and reassigned only where no explanation exists.</p>
+
+    <div class="impact-box">
+        <h3>Why Ownership Belongs in a Data Governance Track</h3>
+        <p>Territory looks like a sales management topic rather than a master data one, and that is exactly why it drifts. The assignment field is never wrong in a way that fails validation &mdash; every account has exactly one representative, the referential integrity is perfect, and no report will ever flag it.</p>
+        <p>It is wrong in the only way that matters: the single recorded owner is, in about a thousand towns, one of several people actually calling on that customer. A field can be internally consistent and still not describe reality, and no amount of database discipline surfaces that. Only rendering it against geography does.</p>
+    </div>
+
+    <div class="next-step-box">
+        <h3>Foundations &middot; Step 5</h3>
+        <p>Inventory, identity, location and ownership all describe <em>what</em> the data points at. The last step in the track deals with the number attached to it &mdash; and with the fact that cost is a convention rather than a measurement.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="logistics-spider-mapping.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Step 3</span>
+                <span class="nav-title">Logistics Spider-Mapping</span>
+            </a>
+            <a href="extract-layer.html" class="nav-btn next">
+                <span class="nav-label">Step 5 &rarr;</span>
+                <span class="nav-title">The Extract Layer</span>
+            </a>
+        </nav>
+    </div>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        /* Book sizes for 97 representatives. Generated to reproduce the production
+           distribution's shape — median near 120, a long upper tail to roughly 285, and
+           only about a quarter of the field sitting within 25% of the median. */
+        const BOOKS = [6,21,23,31,32,35,35,36,37,37,37,38,38,42,44,44,46,48,48,48,48,49,51,53,54,54,
+                       55,55,59,60,62,64,70,71,71,74,76,88,89,89,97,100,101,107,108,110,112,112,118,
+                       120,124,124,126,128,129,131,132,133,137,137,137,142,144,145,147,149,149,149,
+                       150,150,158,162,163,166,167,170,171,173,174,175,177,177,177,180,193,193,195,
+                       201,202,203,208,208,214,216,244,266,285];
+
+        /* Median distance from hub per representative, correlated with book size:
+           a larger book is generally a wider one. */
+        const REPS = BOOKS.map((n, i) => ({
+            id: 'Rep ' + String(i + 1).padStart(2, '0'),
+            accts: n,
+            medDist: +(5.5 + (n / 285) * 16 + ((i * 37) % 11) * 0.8).toFixed(1)
+        }));
+
+        const el = id => document.getElementById(id);
+        const isNarrow = () => window.matchMedia('(max-width: 800px)').matches;
+        let chart = null;
+
+        function update() {
+            const target = +el('s-target').value;
+            const tol = +el('s-tol').value / 100;
+            const radius = +el('s-radius').value;
+
+            el('v-target').innerText = target;
+            el('v-tol').innerText = '\u00B1' + (tol * 100).toFixed(0) + '%';
+            el('v-radius').innerText = radius + ' mi';
+
+            const lo = target * (1 - tol), hi = target * (1 + tol);
+            const over = REPS.filter(r => r.accts > hi);
+            const under = REPS.filter(r => r.accts < lo);
+            const inband = REPS.filter(r => r.accts >= lo && r.accts <= hi);
+
+            // Accounts that would have to move is the surplus above the upper bound —
+            // the deficit below is capacity to receive them, not a second problem.
+            const surplus = over.reduce((s, r) => s + (r.accts - hi), 0);
+            const capacity = under.reduce((s, r) => s + (lo - r.accts), 0);
+
+            el('k-inband').innerText = `${inband.length}/${REPS.length}`;
+            el('k-inband-sub').innerText = `${(inband.length / REPS.length * 100).toFixed(0)}% of the field`;
+
+            el('k-over').innerText = over.length;
+            el('k-over-sub').innerText = over.length
+                ? `largest book ${Math.max(...over.map(r => r.accts))} accounts`
+                : 'nobody above the bound';
+
+            el('k-under').innerText = under.length;
+            el('k-under-sub').innerText = under.length
+                ? `${Math.round(capacity).toLocaleString()} accounts of headroom`
+                : 'no spare capacity';
+
+            el('k-move').innerText = Math.round(surplus).toLocaleString();
+            el('k-move-sub').innerText = capacity >= surplus
+                ? 'the field can absorb this internally'
+                : `exceeds available headroom by ${Math.round(surplus - capacity).toLocaleString()}`;
+
+            renderTable(REPS, lo, hi, target, radius);
+            renderChart(REPS, lo, hi);
+        }
+
+        function renderTable(reps, lo, hi, target, radius) {
+            const scored = reps.map(r => ({
+                ...r,
+                gap: r.accts > hi ? r.accts - hi : (r.accts < lo ? r.accts - lo : 0),
+                far: r.medDist > radius
+            })).filter(r => r.gap !== 0);
+            if (!scored.length) {
+                el('rep-body').innerHTML = '<tr><td colspan="5" data-label="" style="text-align:center;color:#64748b;font-style:italic;">Every book sits inside the band at these settings.</td></tr>';
+                return;
+            }
+            const top = scored.sort((a, b) => Math.abs(b.gap) - Math.abs(a.gap)).slice(0, 8);
+            el('rep-body').innerHTML = top.map(r => {
+                const pct = ((r.accts - target) / target * 100);
+                const tag = r.gap > 0 ? ['t-over', 'Over'] : ['t-under', 'Under'];
+                return `<tr>
+                    <td data-label="Representative">${r.id}</td>
+                    <td data-label="Accounts">${r.accts}</td>
+                    <td data-label="vs Target" style="color:${pct > 0 ? '#ef4444' : '#7dd3fc'};font-weight:700;">${pct > 0 ? '+' : ''}${pct.toFixed(0)}%</td>
+                    <td data-label="Median Distance">${r.medDist} mi ${r.far ? '<span class="tag t-far">wide</span>' : ''}</td>
+                    <td data-label="Status"><span class="tag ${tag[0]}">${tag[1]}</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        function renderChart(reps, lo, hi) {
+            const node = el('loadChart');
+            if (!node || typeof Chart === 'undefined') return;
+            if (chart) chart.destroy();
+            const colour = r => r.accts > hi ? '#ef4444' : (r.accts < lo ? '#7dd3fc' : '#10b981');
+            Chart.defaults.font.family = "'Archivo', 'Inter', sans-serif";
+            chart = new Chart(node.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: reps.map(r => r.id),
+                    datasets: [{
+                        label: 'Accounts',
+                        data: reps.map(r => r.accts),
+                        backgroundColor: reps.map(r => colour(r) + 'cc'),
+                        borderColor: reps.map(colour),
+                        borderWidth: 0.5
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(15,23,42,0.95)', padding: 12,
+                            callbacks: {
+                                label: c => ` ${c.raw} accounts` +
+                                    (c.raw > hi ? '  \u2014 above band' : c.raw < lo ? '  \u2014 below band' : '  \u2014 in band')
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false },
+                             ticks: { color: '#64748b', font: { size: 8 }, maxRotation: 90, minRotation: 90,
+                                      callback: function(v, i) { return i % (isNarrow() ? 12 : 6) === 0 ? this.getLabelForValue(v) : ''; } } },
+                        y: { beginAtZero: true,
+                             title: { display: true, text: 'Accounts in Book', color: '#94a3b8', font: { size: 11, weight: 'bold' } },
+                             ticks: { color: '#cbd5e1', font: { size: 10 } },
+                             grid: { color: '#334155', borderDash: [4, 4] } }
+                    }
+                }
+            });
+        }
+
+        ['s-target', 's-tol', 's-radius'].forEach(id => el(id).addEventListener('input', update));
+
+        let wasNarrow = isNarrow(), t = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(t);
+            t = setTimeout(() => { const n = isNarrow(); if (n !== wasNarrow) { wasNarrow = n; update(); } }, 150);
+        });
+
+        if (typeof Chart === 'undefined') {
+            const box = document.querySelector('.chart-box');
+            if (box) box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network. The table below is unaffected.</div>';
+        }
+
+        document.querySelectorAll('.jargon-tooltip').forEach(n => {
+            n.setAttribute('tabindex', '0'); n.setAttribute('role', 'note');
+            n.setAttribute('aria-label', n.textContent.trim() + ': ' + n.getAttribute('data-tip'));
+        });
+
+        update();
+    
+/* ── theme switch ──────────────────────────────────────────────────────────────
+   Shares the choice with every other page through localStorage. While no explicit
+   choice exists the switch tracks the operating system. */
+(function(){
+  var boxes=document.querySelectorAll('.themeToggle');
+  if(!boxes.length) return;
+  var root=document.documentElement, mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function stored(){ try{ return localStorage.getItem('theme'); }catch(e){ return null; } }
+  function set(v){ boxes.forEach(function(b){ b.checked=v; }); }
+  set(stored()? stored()==='dark' : mq.matches);
+  boxes.forEach(function(b){
+    b.addEventListener('change',function(){
+      var mode=b.checked?'dark':'light';
+      root.setAttribute('data-theme',mode); set(b.checked);
+      try{ localStorage.setItem('theme',mode); }catch(e){}
+    });
+  });
+  mq.addEventListener('change',function(){ if(!stored()) set(mq.matches); });
+})();
+</script>
+</body>
+</html>

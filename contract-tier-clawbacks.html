@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Tier Clawbacks | Austin Sonny Stethem</title>
+    <meta name="description" content="Accounts holding volume-tier pricing they no longer earn. Measuring the leakage, and the churn risk of correcting it.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <meta property="og:title" content="Contract Tier Clawbacks — Margin Already Being Given Away">
+    <meta property="og:description" content="Volume tiers are granted on a forecast and almost never revisited. The cheapest revenue in the business is the discount an account stopped earning three years ago.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/contract-tier-clawbacks.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="portfolio.css?v=5">
+
+    <style>
+        :root { --info-bg: var(--ink, #0f172a); --info-panel: #1e293b; --info-border: var(--body-text, #334155); }
+
+        body { font-family: 'Archivo', 'Inter', system-ui, sans-serif; color: var(--body-text, #333); font-size: 10.5pt; line-height: 1.6; max-width: 950px; margin: 0 auto; padding: 40px 20px 90px; background-color: var(--bg-color, var(--bg-color, #f3f5f7)); -webkit-font-smoothing: antialiased; }
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; }
+        h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        p { text-align: justify; margin-bottom: 15px; color: var(--body-text, #334155); }
+        ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text, #334155); padding-left: 25px; }
+        li { margin-bottom: 8px; }
+
+        .data-table { width: 100%; border-collapse: collapse; margin: 20px 0 30px; font-size: 9pt; background: var(--surface, #fff); border: 1px solid var(--hairline, #e2e8f0); border-radius: 4px; table-layout: fixed; }
+        .data-table th { background: var(--ink-surface, #131a21); color: var(--on-ink, #f8fafc); text-align: left; padding: 10px 9px; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; vertical-align: bottom; }
+        .data-table td { padding: 10px 9px; border-bottom: 1px solid var(--row-line, #eef2f7); color: var(--body-text, #334155); overflow-wrap: break-word; vertical-align: top; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table td:first-child { font-weight: 700; color: var(--dark-slate-blue, var(--ink, #131a21)); }
+        .data-table .mono { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 8.5pt; }
+
+        .dashboard-container { width: 100%; margin: 40px auto; background: var(--info-bg); color: var(--hairline, #e2e8f0); border-radius: 12px; display: flex; flex-wrap: wrap; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #1e293b; overflow: hidden; }
+        .dash-sidebar { width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; border-right: 1px solid var(--info-border); display: flex; flex-direction: column; }
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
+        .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center; }
+        .dash-header .dash-title { color: var(--panel-bright, #f8fafc); font-size: 1.6rem; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title span { color: var(--signal-bright, #f87171); }
+        .dash-header p { color: var(--panel-muted, #94a3b8); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+
+        .control-group { margin-bottom: 22px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: var(--panel-text, #cbd5e1); margin-bottom: 8px; cursor: pointer; gap: 10px; }
+        .val-readout { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: bold; font-size: 0.95rem; color: var(--signal-bright, #f87171); white-space: nowrap; }
+        .control-note { font-size: 0.72rem; color: var(--panel-dim, #64748b); font-style: italic; margin-top: 6px; line-height: 1.45; }
+
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, var(--signal, #ae571d)); outline-offset: 6px; }
+
+        .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: var(--panel-text, #cbd5e1); text-align: center; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--info-blue, #0369a1); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: var(--panel-text, #cbd5e1); line-height: 1.5; }
+        .logic-box strong { color: var(--info-blue-bright, var(--data-info, #7dd3fc)); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); }
+        .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted, #94a3b8); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-sub { font-size: 0.72rem; color: var(--panel-dim, #64748b); font-style: italic; min-height: 30px; }
+        .k-red { border-top-color: var(--data-negative, #ef4444) !important; } .k-red .kpi-value { color: var(--data-negative, #ef4444); }
+        .k-green { border-top-color: var(--data-positive, #10b981) !important; } .k-green .kpi-value { color: var(--data-positive, #10b981); }
+        .k-amber { border-top-color: var(--data-warning, #f59e0b) !important; } .k-amber .kpi-value { color: var(--data-warning, #f59e0b); }
+        .k-blue { border-top-color: var(--data-info, #7dd3fc) !important; } .k-blue .kpi-value { color: var(--data-info, #7dd3fc); }
+
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text, #cbd5e1); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .chart-box { position: relative; height: 290px; width: 100%; }
+
+        .hit-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .hit-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; color: var(--panel-text, #e2e8f0); }
+        .hit-table th { background: var(--panel-bg, #0f172a); color: var(--panel-muted, #94a3b8); padding: 9px 6px; text-align: left; text-transform: uppercase; letter-spacing: 0.3px; font-size: 0.64rem; font-weight: 800; border-bottom: 1px solid var(--info-border); vertical-align: bottom; }
+        .hit-table td { padding: 10px 6px; border-bottom: 1px solid var(--info-border); color: var(--panel-text, #cbd5e1); vertical-align: middle; }
+        .hit-table tr:last-child td { border-bottom: none; }
+        .hit-table td:first-child { font-weight: 700; color: var(--panel-text, #e2e8f0); }
+        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
+        .t-act { background: rgba(16,185,129,0.15); color: var(--data-positive, #10b981); border: 1px solid rgba(16,185,129,0.3); }
+        .t-care { background: rgba(245,158,11,0.15); color: var(--data-warning, #f59e0b); border: 1px solid rgba(245,158,11,0.3); }
+        .t-hold { background: rgba(239,68,68,0.15); color: var(--data-negative, #ef4444); border: 1px solid rgba(239,68,68,0.3); }
+
+        .impact-box { background: var(--surface-alt, #f8fafc); border: 1px solid var(--line, #cbd5e1); border-left: 4px solid var(--dark-slate-blue, var(--ink, #131a21)); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
+        .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; margin-bottom: 15px; }
+        .impact-box p:last-child { margin-bottom: 0; }
+
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--panel-border, #334155); padding: 22px; }
+            .dash-main { padding: 18px; min-width: 0; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .chart-box { height: 260px; }
+            .data-table { table-layout: auto; }
+            .data-table thead { display: none; }
+            .data-table tr { display: block; border-bottom: 1px solid var(--hairline, #e2e8f0); padding: 8px 0; }
+            .data-table td { display: block; border: none; padding: 5px 0; }
+            .data-table td:first-child { font-size: 10pt; padding-bottom: 7px; border-bottom: 1px solid var(--row-line, #eef2f7); margin-bottom: 4px; }
+            .data-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: var(--muted, #64748b); font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.4px; display: block; }
+            .data-table td:first-child[data-label]::before { content: none; }
+            .hit-section { padding: 16px 12px; }
+            .hit-table, .hit-table tbody, .hit-table tr, .hit-table td { display: block; width: 100%; }
+            .hit-table thead { display: none; }
+            .hit-table tr { border: 1px solid var(--info-border); border-radius: 8px; background: rgba(0,0,0,0.18); padding: 4px 14px 10px; margin-bottom: 12px; }
+            .hit-table tr:last-child { margin-bottom: 0; }
+            .hit-table td { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 9px 0; border-bottom: 1px dashed rgba(255,255,255,0.08); text-align: right; }
+            .hit-table td:last-child { border-bottom: none; }
+            .hit-table td::before { content: attr(data-label); color: var(--panel-muted, #94a3b8); font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; flex-shrink: 0; }
+            .hit-table td:first-child { display: block; text-align: left; font-size: 0.86rem; padding: 10px 0 9px; border-bottom: 1px solid var(--info-border); }
+            .hit-table td:first-child::before { content: none; }
+        }
+
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: var(--surface, #fff); max-width: none; }
+            .next-step-box { display: block !important; background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 24px; color: #000; }
+            .next-step-box h3 { color: #000; }
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+    </style>
+<script>
+/* Applied before paint: an explicit stored choice beats the system preference,
+   and the absence of both leaves prefers-color-scheme to decide in CSS. */
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive model</a>
+    <div class="page-bar">
+        <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+        <span class="theme-switch"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><label class="sw"><input type="checkbox" class="themeToggle" aria-label="Dark mode"><span class="track"></span></label><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span>
+    </div>
+
+    <header class="doc-header">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/><circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/><circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Attack &middot; Step 5 of 5</p>
+        <h1 class="doc-title">Contract Tier Clawbacks</h1>
+    </header>
+
+    <table class="meta-table">
+        <tbody>
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Contract Compliance Auditing, Tier Entitlement Testing, Leakage Quantification, Churn-Weighted Recovery</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Position In Track</span>
+                <span class="meta-value">Fifth of five. No acquisition cost at all &mdash; the customer is already buying, at a price they no longer qualify for.</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> Account names match the roster used in Steps 3 and 4. Discount percentages, volumes and thresholds are synthetic proxies. The entitlement test, the leakage arithmetic and the churn-weighting are the production ones.
+    </div>
+
+    <h2>1. Discounts Are Granted Once and Reviewed Never</h2>
+
+    <div class="scenario-box">
+        <strong>Where this sits in the track</strong>
+        Every previous step spends something &mdash; a building, a rep's day, a phone call. This one spends nothing. The revenue is already flowing; it is simply flowing at a price the account stopped earning some time ago.
+    </div>
+
+    <p>Volume tiers are negotiated on a forecast. An account projects annual purchases at a level that justifies a deeper discount, the tier is granted, and the pricing is written into the customer master. What happens next is that the forecast turns out to be wrong, or the business changes, or a fleet downsizes &mdash; and the tier stays exactly where it was, because nothing in the system re-tests entitlement.</p>
+
+    <p>The result is an account buying at a national-fleet discount on regional-shop volume, for years, entirely inside the rules as written. Nobody did anything wrong. The tier simply outlived the volume that justified it, and no report exists that would surface the mismatch, because the account still looks healthy: it buys consistently, it pays on time, and its revenue is stable.</p>
+
+    <p>This is the least glamorous analysis in the track and reliably the highest return, because the recovery requires no new customer, no new product, and no new territory.</p>
+
+    <h2>2. Testing Entitlement Rather Than Assuming It</h2>
+
+    <p>The audit compares two numbers per account: the discount the contract grants, and the discount the trailing volume would earn under the standard tier schedule. Where the contracted discount is deeper than the earned one, the difference multiplied by annual volume is the leakage.</p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th scope="col" style="width:26%;">Test</th>
+                <th scope="col" style="width:30%;">Rule</th>
+                <th scope="col" style="width:44%;">Why it is not simply a query</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td data-label="Test">Earned tier</td>
+                <td data-label="Rule" class="mono">trailing 12-month units &rarr; tier</td>
+                <td data-label="Why">Trailing volume has to be measured on the same basis as the original commitment. An account committing on units and measured on dollars will drift purely with price changes, and the audit will fire on inflation rather than behaviour.</td>
+            </tr>
+            <tr>
+                <td data-label="Test">Entitlement gap</td>
+                <td data-label="Rule" class="mono">contracted &minus; earned</td>
+                <td data-label="Why">Positive values only. An account earning a <em>deeper</em> tier than it holds is under-discounted, which is a different finding entirely and belongs on a different list.</td>
+            </tr>
+            <tr>
+                <td data-label="Test">Grace period</td>
+                <td data-label="Rule" class="mono">months below threshold</td>
+                <td data-label="Why">One soft quarter is not a tier change. Without a minimum sustained period the audit fires on seasonality and destroys its own credibility with the sales organisation.</td>
+            </tr>
+            <tr>
+                <td data-label="Test">Materiality floor</td>
+                <td data-label="Rule" class="mono">annual leakage &gt; threshold</td>
+                <td data-label="Why">A $400 gap is not worth a conversation that risks a $60,000 account. The floor is what keeps the list short enough to be worked.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 id="dashboard">3. Leakage, and the Risk of Collecting It</h2>
+
+    <p><em>Every row on this list is money currently being given away. Not every row should be acted on &mdash; repricing an account that is already contested is how a margin recovery becomes a churn event. The exposure score from Step 1 is what separates the two.</em></p>
+
+    <div class="dashboard-container" id="dashboard-panel">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <div class="dash-title">Tier <span>Audit</span></div>
+                <p>Entitlement Rules</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-grace"><span>Grace Period:</span> <span class="val-readout" id="v-grace">6 mo</span></label>
+                <input type="range" id="s-grace" min="0" max="18" step="1" value="6" aria-label="Months below threshold before a tier is challenged">
+                <p class="control-note">Sustained months below the tier threshold before the account is flagged.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-floor"><span>Materiality Floor:</span> <span class="val-readout" id="v-floor">$5k</span></label>
+                <input type="range" id="s-floor" min="0" max="40" step="1" value="5" aria-label="Minimum annual leakage in thousands to appear on the list">
+                <p class="control-note">Annual leakage below this is not worth the conversation.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-risk"><span>Churn Risk Tolerance:</span> <span class="val-readout" id="v-risk">Balanced</span></label>
+                <input type="range" id="s-risk" min="0" max="2" step="1" value="1" aria-label="How much competitive exposure is tolerated before holding">
+                <p class="control-note">How much competitive exposure to accept before holding an account back from repricing.</p>
+            </div>
+
+            <div class="sidebar-subheader">The Trade-Off</div>
+            <div class="logic-box">
+                <strong>Recovery is not free of risk</strong>
+                An account sitting inside a contested pocket has somewhere else to go. Repricing it recovers the gap and hands a competitor a reason to call. The expected value of a clawback is the leakage multiplied by the probability the account stays &mdash; which is why the exposure score from Step 1 belongs in this decision.
+            </div>
+        </div>
+
+        <div class="dash-main">
+            <div class="kpi-grid">
+                <div class="kpi-card k-red">
+                    <div class="kpi-card-header">Total Leakage</div>
+                    <div class="kpi-value" id="k-leak">--</div>
+                    <div class="kpi-sub">Annual, all accounts out of entitlement</div>
+                </div>
+                <div class="kpi-card k-green">
+                    <div class="kpi-card-header">Safe to Reprice</div>
+                    <div class="kpi-value" id="k-act">--</div>
+                    <div class="kpi-sub" id="k-act-sub">Low exposure, above the floor</div>
+                </div>
+                <div class="kpi-card k-amber">
+                    <div class="kpi-card-header">Expected Recovery</div>
+                    <div class="kpi-value" id="k-exp">--</div>
+                    <div class="kpi-sub">Leakage weighted by retention odds</div>
+                </div>
+                <div class="kpi-card k-blue">
+                    <div class="kpi-card-header">Held Back</div>
+                    <div class="kpi-value" id="k-hold">--</div>
+                    <div class="kpi-sub" id="k-hold-sub">Contested &mdash; recovery not worth the risk</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-header">Leakage Against Competitive Exposure</div>
+                <div class="chart-box"><canvas id="leakChart" role="img" aria-label="Scatter of annual leakage against competitive exposure by account"></canvas></div>
+            </div>
+
+            <div class="hit-section">
+                <div class="chart-header" style="margin-bottom:12px;">Audit Findings</div>
+                <table class="hit-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Account</th>
+                            <th scope="col">Contracted</th>
+                            <th scope="col">Earned</th>
+                            <th scope="col">Below For</th>
+                            <th scope="col">Leakage</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="audit-body">
+                        <tr><td colspan="6" data-label="" style="text-align:center;color:#64748b;font-style:italic;">Awaiting audit...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. Closing the Loop</h2>
+
+    <p>A clawback list is trivially easy to generate and surprisingly hard to act on, because every row is a relationship somebody in sales owns. The analysis earns its place by arriving with the objection already answered: here is the gap, here is how long it has persisted, here is how exposed the account is, and here is the recommendation with the risk priced in.</p>
+
+    <p>It also closes the track. Step 1 mapped where competitors are. That same exposure score, built to identify where <em>they</em> could take business from us, turns out to be the thing that decides whether we can safely reprice our own accounts. The offensive asset and the defensive constraint are the same number read in opposite directions.</p>
+
+    <div class="impact-box">
+        <h3>The Honest Limitation</h3>
+        <p>Entitlement is only testable where the commitment was recorded in a form the data can check. Tiers granted verbally, granted as a relationship concession, or granted on a basis nobody wrote down cannot be audited &mdash; they can only be surfaced as anomalies and referred to whoever remembers the arrangement.</p>
+        <p>In practice that is a meaningful share of the book, and the audit's real first output is often a list of accounts whose pricing nobody can explain. That is a less satisfying finding than a leakage figure, and a more useful one, because it is the thing that has to be fixed before any of this becomes routine.</p>
+    </div>
+
+    <div class="next-step-box">
+        <h3>End of the Attack Track</h3>
+        <p>Five steps, ordered by what each costs to execute: a building, a lost customer, a conversation, and finally nothing at all. The defensive track runs the same scenario from the other direction &mdash; holding margin when a cost shock arrives rather than finding revenue when it does not.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="wallet-share-affinity.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Step 4</span>
+                <span class="nav-title">Wallet Share &amp; Affinity</span>
+            </a>
+            <a href="index.html" class="nav-btn next">
+                <span class="nav-label">Return &rarr;</span>
+                <span class="nav-title">Portfolio Hub</span>
+            </a>
+        </nav>
+    </div>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        /* Standard volume-tier schedule: annual units to earned discount. */
+        const TIERS = [
+            { min: 20000, disc: 0.32, label: 'National' },
+            { min: 12000, disc: 0.28, label: 'Fleet' },
+            { min:  6000, disc: 0.24, label: 'Regional' },
+            { min:  2500, disc: 0.20, label: 'Trade' },
+            { min:     0, disc: 0.15, label: 'Standard' }
+        ];
+        const LIST_PRICE = 42;
+
+        /* Same roster as Steps 3 and 4. contracted = discount written into the customer
+           master; units = trailing twelve-month volume; monthsBelow = sustained months
+           under the threshold for the contracted tier; exposure = competitive contest
+           index carried over from Step 1, 0 to 1. */
+        const ACCOUNTS = [
+            { name: 'Rock Haven Transit',       contracted: 0.32, units: 14200, monthsBelow: 14, exposure: 0.22 },
+            { name: 'Bent Creek Diesel',        contracted: 0.28, units:  5100, monthsBelow: 11, exposure: 0.71 },
+            { name: 'Red Oak Truck Center',     contracted: 0.32, units: 21500, monthsBelow:  0, exposure: 0.34 },
+            { name: 'Harvest Point Logistics',  contracted: 0.28, units:  7400, monthsBelow:  9, exposure: 0.18 },
+            { name: 'Ash Grove Fleet Services', contracted: 0.24, units:  2100, monthsBelow:  7, exposure: 0.46 },
+            { name: 'Lone Butte Freight',       contracted: 0.28, units: 11800, monthsBelow:  3, exposure: 0.29 },
+            { name: 'Pine Hollow Equipment',    contracted: 0.24, units:  6400, monthsBelow:  0, exposure: 0.55 },
+            { name: 'Quarry Hill Excavating',   contracted: 0.32, units:  9200, monthsBelow: 22, exposure: 0.12 },
+            { name: 'Cold Spring Motors',       contracted: 0.20, units:  3050, monthsBelow:  0, exposure: 0.38 },
+            { name: 'Mill Race Machine',        contracted: 0.24, units:  1900, monthsBelow: 16, exposure: 0.63 },
+            { name: 'Amber Fields Co-op',       contracted: 0.20, units:  1150, monthsBelow:  8, exposure: 0.25 },
+            { name: 'Blue Stem Ag Repair',      contracted: 0.24, units:  8900, monthsBelow:  0, exposure: 0.31 },
+            { name: 'Granite Flats Collision',  contracted: 0.28, units:  2400, monthsBelow: 19, exposure: 0.49 },
+            { name: 'Birch Run Auto Works',     contracted: 0.20, units:  2900, monthsBelow:  0, exposure: 0.41 },
+            { name: 'Green Bluff Garage',       contracted: 0.15, units:  1400, monthsBelow:  0, exposure: 0.27 }
+        ];
+
+        const RISK_CAPS = [0.35, 0.55, 0.80];      // conservative / balanced / aggressive
+        const RISK_LABELS = ['Conservative', 'Balanced', 'Aggressive'];
+
+        const el = id => document.getElementById(id);
+        const money = v => '$' + Math.round(v).toLocaleString();
+        const isNarrow = () => window.matchMedia('(max-width: 800px)').matches;
+        let chart = null;
+
+        const earnedTier = units => TIERS.find(t => units >= t.min);
+
+        function model() {
+            const grace = +el('s-grace').value;
+            const floor = +el('s-floor').value * 1000;
+            const riskIdx = +el('s-risk').value;
+            const cap = RISK_CAPS[riskIdx];
+
+            el('v-grace').innerText = grace + ' mo';
+            el('v-floor').innerText = '$' + (floor / 1000) + 'k';
+            el('v-risk').innerText = RISK_LABELS[riskIdx];
+
+            const rows = ACCOUNTS.map(a => {
+                const earned = earnedTier(a.units);
+                // Only a contracted discount DEEPER than the earned one is leakage.
+                // The reverse case is an under-discounted account, a different finding.
+                const gap = Math.max(0, a.contracted - earned.disc);
+                const leakage = gap * a.units * LIST_PRICE;
+                const qualifies = gap > 0 && a.monthsBelow >= grace && leakage >= floor;
+                const retention = 1 - a.exposure;
+                const action = !qualifies ? 'none'
+                             : a.exposure <= cap ? 'act' : 'hold';
+                return { ...a, earned, gap, leakage, qualifies, retention, action,
+                         expected: leakage * retention };
+            });
+
+            const flagged = rows.filter(r => r.qualifies);
+            const act = flagged.filter(r => r.action === 'act');
+            const hold = flagged.filter(r => r.action === 'hold');
+
+            const totalLeak = flagged.reduce((s, r) => s + r.leakage, 0);
+            el('k-leak').innerText = totalLeak >= 1e6 ? '$' + (totalLeak / 1e6).toFixed(2) + 'M' : money(totalLeak);
+
+            el('k-act').innerText = act.length;
+            el('k-act-sub').innerText = act.length
+                ? money(act.reduce((s, r) => s + r.leakage, 0)) + ' recoverable'
+                : 'nothing clears both the floor and the risk cap';
+
+            const expected = act.reduce((s, r) => s + r.expected, 0);
+            el('k-exp').innerText = expected >= 1e6 ? '$' + (expected / 1e6).toFixed(2) + 'M' : money(expected);
+
+            el('k-hold').innerText = hold.length;
+            el('k-hold-sub').innerText = hold.length
+                ? money(hold.reduce((s, r) => s + r.leakage, 0)) + ' left in place deliberately'
+                : 'no account is too contested to reprice';
+
+            renderTable(flagged);
+            renderChart(rows, cap, floor);
+        }
+
+        function renderTable(rows) {
+            if (!rows.length) {
+                el('audit-body').innerHTML = '<tr><td colspan="6" data-label="" style="text-align:center;color:#64748b;font-style:italic;">No account is out of entitlement at these rules.</td></tr>';
+                return;
+            }
+            const tags = { act: ['t-act', 'Reprice'], hold: ['t-hold', 'Hold'] };
+            const top = rows.slice().sort((a, b) => b.leakage - a.leakage).slice(0, 8);
+            el('audit-body').innerHTML = top.map(r => `
+                <tr>
+                    <td data-label="Account">${r.name}<br><span style="font-weight:400;color:#64748b;font-size:0.68rem;">${r.units.toLocaleString()} units \u00B7 exposure ${(r.exposure * 100).toFixed(0)}%</span></td>
+                    <td data-label="Contracted">${(r.contracted * 100).toFixed(0)}%</td>
+                    <td data-label="Earned">${(r.earned.disc * 100).toFixed(0)}% <span style="color:#64748b;">${r.earned.label}</span></td>
+                    <td data-label="Below For">${r.monthsBelow} mo</td>
+                    <td data-label="Leakage" style="color:#ef4444;font-weight:700;">${money(r.leakage)}</td>
+                    <td data-label="Action"><span class="tag ${tags[r.action][0]}">${tags[r.action][1]}</span></td>
+                </tr>`).join('');
+        }
+
+        function renderChart(rows, cap, floor) {
+            const node = el('leakChart');
+            if (!node || typeof Chart === 'undefined') return;
+            if (chart) chart.destroy();
+            const pt = r => ({ x: r.exposure * 100, y: r.leakage, n: r.name });
+            const act = rows.filter(r => r.action === 'act');
+            const hold = rows.filter(r => r.action === 'hold');
+            const none = rows.filter(r => !r.qualifies);
+            Chart.defaults.font.family = "'Archivo', 'Inter', sans-serif";
+            chart = new Chart(node.getContext('2d'), {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        { label: 'Reprice', data: act.map(pt), backgroundColor: 'rgba(16,185,129,0.85)', borderColor: '#10b981', pointRadius: 8, pointHoverRadius: 10 },
+                        { label: 'Hold \u2014 too contested', data: hold.map(pt), backgroundColor: 'rgba(239,68,68,0.75)', borderColor: '#ef4444', pointRadius: 8, pointHoverRadius: 10 },
+                        { label: 'Within entitlement', data: none.map(pt), backgroundColor: 'rgba(148,163,184,0.45)', borderColor: '#94a3b8', pointRadius: 6, pointHoverRadius: 8 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#cbd5e1', font: { size: 11, weight: '600' }, boxWidth: 12 } },
+                        tooltip: {
+                            backgroundColor: 'rgba(15,23,42,0.95)', padding: 12,
+                            callbacks: { label: c => ` ${c.raw.n}: ${money(c.raw.y)} leaking, ${c.raw.x.toFixed(0)}% exposure` }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: `Competitive Exposure (%)  \u2014 risk cap at ${(cap * 100).toFixed(0)}%`, color: '#94a3b8', font: { size: 11, weight: 'bold' } },
+                             ticks: { color: '#cbd5e1', font: { size: 10 }, callback: v => v + '%' },
+                             grid: { color: '#334155', borderDash: [4, 4] }, beginAtZero: true, max: 100 },
+                        y: { title: { display: true, text: 'Annual Leakage (USD)', color: '#94a3b8', font: { size: 11, weight: 'bold' } },
+                             ticks: { color: '#cbd5e1', font: { size: 10 }, callback: v => '$' + (v / 1000).toFixed(0) + 'k' },
+                             grid: { color: '#334155', borderDash: [4, 4] }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        ['s-grace', 's-floor', 's-risk'].forEach(id => el(id).addEventListener('input', model));
+
+        let wasNarrow = isNarrow(), t = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(t);
+            t = setTimeout(() => { const n = isNarrow(); if (n !== wasNarrow) { wasNarrow = n; model(); } }, 150);
+        });
+
+        if (typeof Chart === 'undefined') {
+            const box = document.querySelector('.chart-box');
+            if (box) box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network. The audit findings below are unaffected.</div>';
+        }
+
+        document.querySelectorAll('.jargon-tooltip').forEach(n => {
+            n.setAttribute('tabindex', '0'); n.setAttribute('role', 'note');
+            n.setAttribute('aria-label', n.textContent.trim() + ': ' + n.getAttribute('data-tip'));
+        });
+
+        model();
+    
+/* ── theme switch ──────────────────────────────────────────────────────────────
+   Shares the choice with every other page through localStorage. While no explicit
+   choice exists the switch tracks the operating system. */
+(function(){
+  var boxes=document.querySelectorAll('.themeToggle');
+  if(!boxes.length) return;
+  var root=document.documentElement, mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function stored(){ try{ return localStorage.getItem('theme'); }catch(e){ return null; } }
+  function set(v){ boxes.forEach(function(b){ b.checked=v; }); }
+  set(stored()? stored()==='dark' : mq.matches);
+  boxes.forEach(function(b){
+    b.addEventListener('change',function(){
+      var mode=b.checked?'dark':'light';
+      root.setAttribute('data-theme',mode); set(b.checked);
+      try{ localStorage.setItem('theme',mode); }catch(e){}
+    });
+  });
+  mq.addEventListener('change',function(){ if(!stored()) set(mq.matches); });
+})();
+</script>
+</body>
+</html>

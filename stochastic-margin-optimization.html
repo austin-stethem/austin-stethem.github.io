@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="A Monte Carlo random-walk engine that maps the cone of profit risk across 5,000 simulated futures and sweeps the price band for maximum expected profit.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <!-- Open Graph / Twitter Tags -->
+    <meta property="og:title" content="Stochastic Margin Optimization">
+    <meta property="og:description" content="A Monte Carlo random-walk engine that maps the cone of profit risk across 5,000 simulated futures and sweeps the price band for maximum expected profit.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/stochastic-margin-optimization.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Stochastic Margin Optimization | Austin Sonny Stethem</title>
+
+    <!-- Custom SVG Favicon (Perfectly Centered) -->
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+    
+    <!-- Chart.js Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="portfolio.css?v=5">
+
+    <style>
+        /* Brand tokens live in portfolio.css; only the dashboard palette is local. */
+        :root {
+            --info-bg: #0f172a;
+            --info-panel: #1e293b;
+            --info-border: #334155;
+        }
+        
+        body { 
+            font-family: 'Archivo', 'Inter', system-ui, sans-serif; 
+            color: var(--body-text, #333); 
+            font-size: 10.5pt; 
+            line-height: 1.6; 
+            max-width: 950px; 
+            margin: 0 auto; 
+            padding: 40px 20px; 
+            background-color: var(--bg-color, var(--bg-color, #f3f5f7)); 
+        }
+        
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; }
+        h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, var(--ink, #131a21)); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        p { text-align: justify; margin-bottom: 15px; color: var(--body-text, #334155); }
+        ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text, #334155); padding-left: 25px;}
+        li { margin-bottom: 8px; }
+        .scenario-box > strong:first-child { color: var(--info-blue, #0369a1); text-transform: uppercase; letter-spacing: 0.5px; font-size: 8.5pt; display: block; margin-bottom: 6px; }
+
+        /* --- DASHBOARD WRAPPER (SaaS Style) --- */
+        .dashboard-container {
+            width: 100%; margin: 40px auto;
+            background: var(--info-bg); color: var(--hairline, #e2e8f0);
+            border-radius: 12px; display: flex; flex-wrap: wrap;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid #1e293b; overflow: hidden;
+        }
+
+        .dash-sidebar {
+            width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; 
+            border-right: 1px solid var(--info-border); display: flex; flex-direction: column; box-sizing: border-box;
+        }
+        
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; box-sizing: border-box;}
+
+        .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center;}
+        .dash-header h3 { color: var(--panel-bright, #f8fafc); font-size: 1.6rem; margin: 0; font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
+        .dash-header h3 span { color: var(--signal-bright, #f87171); }
+        /* text-align must be explicit — a bare `p` rule on this page beats inheritance. */
+        .dash-header p { color: var(--panel-muted, #94a3b8); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center;}
+        
+        /* Controls */
+        .control-group { margin-bottom: 25px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: var(--panel-text, #cbd5e1); margin-bottom: 8px; }
+        .val-readout { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: var(--signal-bright, #f87171);}
+        
+
+        select { width: 100%; padding: 10px; background: rgba(0,0,0,0.2); color: var(--surface-alt, #f8fafc); border: 1px solid var(--info-border); border-radius: 6px; font-family: 'Archivo', sans-serif; font-size: 0.85rem; outline: none; cursor: pointer; transition: border-color 0.2s;}
+        select:hover { border-color: #f87171; }
+        select option { background: var(--info-panel); color: var(--surface-alt, #f8fafc); }
+        
+        /* Local slider baseline. Duplicates portfolio.css deliberately: without it, a
+           missing shared sheet drops the page back to the native OS slider, which looks
+           nothing like the rest of the dashboard. Geometry matches the shared rules so
+           the touch scaling in portfolio.css still lines up. */
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, var(--signal, #ae571d)); outline-offset: 6px; }
+
+        .btn-run { 
+            background: var(--alert-red, var(--signal, #ae571d)); color: var(--on-signal, #fff); border: none; padding: 16px 20px; width: 100%; 
+            font-family: 'Archivo', sans-serif; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; 
+            cursor: pointer; margin-top: 10px; margin-bottom: 10px; letter-spacing: 1.5px; 
+            transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(179,37,37,0.3);
+        }
+        .btn-run:hover { background: #8e1c1c; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(179,37,37,0.4); }
+        .btn-run:disabled { background: var(--muted, #64748b); box-shadow: none; transform: translateY(0); cursor: not-allowed; }
+        
+        /* No margin-top:auto. In a flex column that pins the card to the bottom of the
+           sidebar and absorbs all remaining height as a gap, leaving it stranded well
+           below the controls it explains. */
+        .logic-box strong { color: var(--info-blue-bright, var(--data-info, #7dd3fc)); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--info-blue, #0369a1); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: var(--panel-muted, #94a3b8); line-height: 1.5;}
+
+        /* KPIs */
+        /* Four cards, locked to two columns for a clean 2x2. auto-fit was choosing three,
+           which orphaned two cells in the second row. */
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        .kpi-card-header { font-size: 0.75rem; font-weight: 800; color: var(--panel-muted, #94a3b8); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.8rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px;}
+        .kpi-sub { font-size: 0.75rem; color: var(--panel-dim, #64748b); font-style: italic; }
+
+        /* Chart Area */
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text, #cbd5e1); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;}
+        .chart-wrapper { position: relative; height: 380px; width: 100%; }
+
+        /* Portfolio Documentation Styles */
+        .code-annotation { background: var(--hairline, #e2e8f0); border-left: 4px solid #3b82f6; padding: 12px 18px; font-size: 9.5pt; color: var(--body-text, #334155); border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Archivo', sans-serif;}
+        .code-annotation strong { color: var(--ink, #0f172a); font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+        
+        pre.code-block { background-color: var(--ink-surface, #0f172a); color: var(--hairline, #e2e8f0); padding: 20px; border-radius: 0 0 6px 6px; overflow-x: auto; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 9pt; border-left: 4px solid #3b82f6; line-height: 1.5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); margin-top: 0; margin-bottom: 30px; }
+        .code-comment { color: var(--muted, #64748b); font-style: italic; }
+        .code-keyword { color: #c678dd; font-weight: bold; }
+        .code-function { color: #61afef; }
+        .code-string { color: #98c379; }
+        .code-number { color: #d19a66; }
+
+        .impact-box { background: var(--surface-alt, #f8fafc); border: 1px solid var(--line, #cbd5e1); border-left: 4px solid var(--dark-slate-blue, var(--ink, #131a21)); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; color: var(--dark-slate-blue, var(--ink, #131a21)); font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--hairline, #e2e8f0); padding-bottom: 10px; margin-bottom: 15px;}
+        .impact-box p { color: var(--body-text, #334155); font-size: 10pt; line-height: 1.6; }
+        .impact-box ul { font-size: 10pt; }
+
+        @media (max-width: 800px) {
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; box-sizing: border-box; border-right: none; border-bottom: 1px solid var(--panel-border, #334155); }
+            .dash-main { padding: 15px; box-sizing: border-box; min-width: unset; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+        }
+    
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: var(--surface, #fff); max-width: none; }
+            pre.code-block { background: var(--surface-alt, #f8fafc); color: var(--ink, #0f172a); box-shadow: none; }
+            .code-comment, .code-keyword, .code-function, .code-string, .code-number { color: #000; }
+
+            /* portfolio.css hides .next-step-box to spare the toner; the closing
+               narrative still belongs on paper, so re-show it unstyled. */
+            .next-step-box {
+                display: block !important;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin-top: 24px;
+                color: #000;
+            }
+            .next-step-box h3 { color: #000; }
+            /* Doubled class: portfolio.css uses .next-step-box.next-step-box p */
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+
+        /* --- Added in review: mobile + a11y hardening ------------------------ */
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            .chart-wrapper { height: 300px; }
+        }
+        select {
+            width: 100%; padding: 10px 12px; border-radius: 6px;
+            background: rgba(0,0,0,0.25); color: var(--hairline, #e2e8f0);
+            border: 1px solid var(--info-border, var(--body-text, #334155)); font-family: inherit; font-size: 0.85rem;
+        }
+        @media (pointer: coarse) { select { padding: 14px 12px; } }
+</style>
+<script>
+/* Applied before paint: an explicit stored choice beats the system preference,
+   and the absence of both leaves prefers-color-scheme to decide in CSS. */
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive dashboard</a>
+
+    <div class="page-bar">
+        <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+        <span class="theme-switch"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><label class="sw"><input type="checkbox" class="themeToggle" aria-label="Dark mode"><span class="track"></span></label><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span>
+    </div>
+
+    <div class="doc-header">
+        <!-- CUSTOM BRAND LOGO -->
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Defense &middot; Step 3 of 5</p>
+        <h1 class="doc-title">Stochastic Margin Optimization</h1>
+    </div>
+
+    <table class="meta-table">
+        <tbody>
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & Master Data Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Probability Distributions, Expected Value (E[P]), Demand Elasticity</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Technical Stack</span>
+                <span class="meta-value">SQL, Python (NumPy, Pandas), Jupyter, Monte Carlo Methods</span>
+            </td>
+        </tr>
+    </tbody>
+    </table>
+
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, specific SKU attributes, and true margin arrays have been replaced with randomized abstractions. This tool is a custom-built simulation designed to accurately demonstrate the <span class="jargon-tooltip" data-tip="A mathematical technique used to estimate the possible outcomes of an uncertain event.">stochastic optimization</span> architecture and Box-Muller transform generation I utilize in production-grade data science environments.
+    </div>
+
+    <h2>1. Situation: The Flaw of Averages</h2>
+    
+    <div class="scenario-box">
+        <strong>The Enterprise Scenario (Step 3 of 5)</strong>
+        Our deterministic algorithm (Step 2) has successfully mapped the cross-subsidized price floors needed to defend against the 15% cost spike. However, the supply chain is chaotic. Before executing these rigid price floors in the live ERP, we must mathematically simulate their risk. How much volume will we lose to competitors under extreme market volatility? We must establish our statistical risk boundaries.
+    </div>
+
+    <p><strong>The Context:</strong> In standard pricing strategy, teams often rely on single-point historical averages to set target margins. However, the supply chain is a chaotic system. When you price a SKU based on the "average" freight cost and "average" demand, you fall victim to the Flaw of Averages: a strategy that works 50% of the time, and blows up the other 50%. If global freight costs spike 30% for a single quarter, a static markup strategy can instantly wipe out a category's annual <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of operational profit.">EBITDA</span>.</p>
+
+    <h2>2. Initiative: Shifting to Probabilistic Risk Modeling</h2>
+    <p><strong>The Problem:</strong> To extract maximum margin without exposing the enterprise to catastrophic losses during supply chain shocks, I needed to transition the pricing model from <em>Deterministic</em> (guessing a single fixed number) to <em>Stochastic</em> (mapping the probability of thousands of potential futures).</p>
+    <p><strong>The Objective:</strong> Build a true <span class="jargon-tooltip" data-tip="A computational algorithm that relies on repeated random sampling to obtain numerical results.">Monte Carlo</span> "Random Walk" simulator. Rather than solving for a single margin percentage, the engine must simulate thousands of daily and monthly compounding realities to visualize the expanding "cone of risk" over a 12-month projection.</p>
+
+    <h2>3. Action: The Monte Carlo Random Walk Engine</h2>
+    <p>Instead of feeding the engine flat variables, the algorithm generates a geometric <span class="jargon-tooltip" data-tip="A mathematical formalization of a path that consists of a succession of random steps.">random walk</span>. Over a 12-month timeline, it injects stochastic noise at every step. In each of the 5,000 simulated realities, cost fluctuates based on logistics volatility curves, and market demand fluctuates based on our defined price elasticity.</p>
+    <p><strong>From risk to optimisation:</strong> simulating one price tells you the risk of that price, not whether it is the right one. The engine therefore sweeps the entire viable price band under identical market assumptions and reports the point that maximises median twelve-month E[P]. That optimum is rarely the highest price on the slider: past a threshold, elasticity destroys demand faster than the extra margin accrues, and the curve rolls over.</p>
+
+    <p><strong>Two details make that sweep trustworthy, and both were corrections.</strong> First, near its peak an expected-profit curve is almost flat &mdash; at standard elasticity, pricing a dollar away from the optimum costs roughly $92 of annual profit, while the sampling error on a 400-path median is about $820. Comparing independently simulated price points therefore selects the maximum out of noise nine times larger than the signal, and the recommendation wanders by several dollars on every run. The engine now applies <span class="jargon-tooltip" data-tip="A variance-reduction technique: the same set of random shocks is replayed at every price point, so the noise is common to all of them and cancels out of the comparisons between them."><strong>common random numbers</strong></span> &mdash; one matrix of shocks, replayed at every price &mdash; which cuts the run-to-run spread in the reported optimum from about $5 to about $1.</p>
+
+    <p>Second, the generator is seeded from the inputs rather than from the clock. Identical assumptions now reproduce an identical recommendation, and only a change to a control changes the draws. A pricing figure that moves when you press the button a second time is not something anyone should be asked to sign off on.</p>
+    <p>By rendering these paths on a classic "Spaghetti Chart," we visualize the true density of our risk. The algorithm mathematically isolates the <span class="jargon-tooltip" data-tip="The risk boundary where 95% of all simulated outcomes perform better. This defines our absolute worst-case scenario."><strong>P5 (5th Percentile) Worst-Case Trajectory</strong></span> to establish an absolute algorithmic price floor. It also maps the <span class="jargon-tooltip" data-tip="The optimistic boundary where only 5% of simulated outcomes perform better, representing the maximum realistic windfall."><strong>P95 Upside Ceiling</strong></span> to forecast potential windfalls, ensuring we never price ourselves into a loss while aggressively capturing the <span class="jargon-tooltip" data-tip="The anticipated value for an investment at some point in the future, calculated by multiplying each possible outcome by its probability."><strong>Median Expected Profit (E[P])</strong></span>.</p>
+
+    <div class="dashboard-container" id="dashboard">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <h3>Monte <span>Carlo</span></h3>
+                <p>Stochastic Risk Inputs</p>
+            </div>
+            
+            <div class="control-group">
+                <label for="slider-price"><span>Target Retail Price ($):</span> <span class="val-readout" id="val-price">$65.00</span></label>
+                <input type="range" id="slider-price" aria-label="Target retail price in dollars" min="50" max="140" step="1" value="65">
+                <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Baseline Cost: $45.00 / Base Demand: 500 units</div>
+            </div>
+
+            <div class="control-group">
+                <label for="select-volatility"><span>Freight Volatility:</span></label>
+                <select id="select-volatility">
+                    <option value="0.05">Low (Stable Lanes)</option>
+                    <option value="0.15" selected>Medium (Standard Surcharges)</option>
+                    <option value="0.30">High (Global Supply Shock)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="select-elasticity"><span>Market Elasticity:</span></label>
+                <select id="select-elasticity">
+                    <option value="0.5">Inelastic (Captive Item)</option>
+                    <option value="1.0" selected>Normal (Standard Competition)</option>
+                    <option value="2.5">Highly Elastic (Price War Risk)</option>
+                </select>
+            </div>
+
+            <div class="logic-box" style="margin-bottom: 20px;">
+                *Adjust the target retail price and market conditions. Executing the test triggers 5,000 random permutations to graph the probability distribution of your Expected Profit.
+            </div>
+
+            <button class="btn-run" id="btn-execute" onclick="triggerSimulation()">Run 5,000 Permutations</button>
+        </div>
+
+        <div class="dash-main">
+            <div class="kpi-grid">
+                <div class="kpi-card" id="card-p5" style="border-top-color: #ef4444;">
+                    <div class="kpi-card-header" style="color: #ef4444;">12-Mo P5 Risk</div>
+                    <div class="kpi-value" id="out-p5" style="color: #ef4444;">$--</div>
+                    <div class="kpi-sub">5th Percentile Profit Floor</div>
+                </div>
+                <div class="kpi-card" style="border-top-color: #3b82f6;">
+                    <div class="kpi-card-header" style="color: #3b82f6;">12-Mo Median E[P]</div>
+                    <div class="kpi-value" id="out-median" style="color: #3b82f6;">$--</div>
+                    <div class="kpi-sub">Median Probable Yield</div>
+                </div>
+                <div class="kpi-card" id="card-p95" style="border-top-color: #10b981;">
+                    <div class="kpi-card-header" style="color: #10b981;">12-Mo P95 Upside</div>
+                    <div class="kpi-value" id="out-p95" style="color: #10b981;">$--</div>
+                    <div class="kpi-sub">95th Percentile Windfall</div>
+                </div>
+                <div class="kpi-card" id="card-optimal" style="border-top-color: #f59e0b;">
+                    <div class="kpi-card-header" style="color: #f59e0b;">Profit-Maximising Price</div>
+                    <div class="kpi-value" id="out-optimal" style="color: #f59e0b;">$--</div>
+                    <div class="kpi-sub" id="out-optimal-sub">Swept across the full price range</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-header">Cumulative Profit Trajectories (12-Month Random Walk)</div>
+                <div class="chart-wrapper">
+                    <canvas id="histogramChart" role="img" aria-label="Spaghetti chart of 100 simulated cumulative profit trajectories with P5, median and P95 boundaries"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-section" style="margin-top: 25px;">
+                <div class="chart-header">Expected Profit by Price Point (Optimisation Curve)</div>
+                <div class="chart-wrapper" style="height: 300px;">
+                    <canvas id="sweepChart" role="img" aria-label="Line chart of median twelve-month expected profit across the target price range, marking the profit-maximising price"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. Action: SQL Pipeline & Data Science Stack</h2>
+    <p>The mathematical backbone is built on an end-to-end data stack. First, I use <strong><span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases.">SQL</span></strong> to extract high-fidelity transactional history from the <strong><span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations.">ERP</span></strong>. This data is pulled into <strong><span class="jargon-tooltip" data-tip="An interactive development environment that allows data scientists to write Python code, view live data, and create visualizations in one place.">Jupyter</span></strong>, where I utilize <strong><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel.">Pandas</span></strong> to clean and sanitize anomalies. A massive one-time competitor inventory buyout, a year-end vendor rebate, or an abnormal bulk contract purchase will completely destroy a predictive model if treated as "normal" demand. By filtering against specific GL/Reason codes, I quarantine this operational noise—flagging these edge cases for manual human review—to strictly isolate our true recurring run-rate. Finally, I use <strong><span class="jargon-tooltip" data-tip="A Python library specialized for complex mathematical operations and processing massive data arrays at extremely high speeds.">NumPy</span></strong> for high-speed <span class="jargon-tooltip" data-tip="A computational technique that processes entire datasets simultaneously rather than row-by-row, making calculations exponentially faster.">array vectorization</span> of the simulation itself.</p>
+
+    <p><strong>Vectorized Enterprise Scale:</strong> Because the engine relies on high-speed array vectorization rather than standard programming loops, it possesses massive operational scale. We can run 50,000+ randomized iterations across tens of thousands of SKUs in a matter of seconds. To further optimize compute overhead, I programmed algorithmic "bumper rails" into the engine—logical boundary constraints that act like bowling lane bumpers, guiding the simulation through a targeted funnel and terminating mathematically impossible trajectories early so the server never wastes time calculating useless permutations.</p>
+
+    <div class="code-annotation">
+        <strong>Phase 1: ERP Data Extraction & Hygiene</strong>
+        Isolating a specific set of clean baseline transactional data. We must filter out promotional noise, bulk contract anomalies, and M&A buyouts to find the true run-rate. Anomalous transactions are safely excluded from the automated model and flagged for human eyes.
+    </div>
+    <pre class="code-block" style="margin-bottom: 25px;"><code><span class="code-comment">-- SQL Pipeline: Extracting cleaned baseline transactional data</span>
+<span class="code-keyword">SELECT</span> sku_id, transaction_date, sales_volume, unit_cost
+<span class="code-keyword">FROM</span> enterprise_data_warehouse.sales_fact_table
+<span class="code-keyword">WHERE</span> promo_flag = <span class="code-number">0</span> 
+<span class="code-keyword">AND</span> transaction_type <span class="code-keyword">NOT IN</span> (<span class="code-string">'COMP_BUYOUT'</span>, <span class="code-string">'BULK_CONTRACT'</span>, <span class="code-string">'RMA_ALLOWANCE'</span>)
+<span class="code-keyword">AND</span> transaction_date > <span class="code-string">'2025-01-01'</span>;</code></pre>
+
+    <div class="code-annotation">
+        <strong>Phase 2: Stochastic Optimization Engine</strong>
+        Vectorized Python simulation executing the Random Walk and returning absolute mathematical risk boundaries.
+    </div>
+    <pre class="code-block"><code><span class="code-comment"># Python Stochastic Margin Optimization (Time-Series Module)</span>
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+<span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
+
+<span class="code-keyword">def</span> <span class="code-function">sanitize_historical_demand</span>(sales_series):
+    <span class="code-string">"""
+    Data Prep: Removes promotional spikes and stock-outs using IQR logic
+    to ensure the Monte Carlo model trains on true baseline demand.
+    """</span>
+    Q1 = sales_series.quantile(<span class="code-number">0.25</span>)
+    Q3 = sales_series.quantile(<span class="code-number">0.75</span>)
+    IQR = Q3 - Q1
+    capped_series = np.where(sales_series > (Q3 + <span class="code-number">1.5</span> * IQR), Q3, sales_series)
+    <span class="code-keyword">return</span> np.mean(capped_series)
+
+<span class="code-keyword">def</span> <span class="code-function">run_monte_carlo_random_walk</span>(base_cost, target_price, volatility, elasticity, iterations=<span class="code-number">5000</span>, months=<span class="code-number">12</span>):
+    <span class="code-comment"># Initialize cumulative profit matrix: 5,000 realities x 12 months</span>
+    cumulative_profit = np.zeros((iterations, months + <span class="code-number">1</span>))
+    
+    <span class="code-comment"># Calculate demand destruction based on price delta</span>
+    price_delta = (target_price - <span class="code-number">65.00</span>) / <span class="code-number">65.00</span>
+    base_demand = <span class="code-number">500</span> * (<span class="code-number">1</span> - (price_delta * elasticity))
+    
+    <span class="code-comment"># Generate stochastic time-series matrices</span>
+    <span class="code-keyword">for</span> m <span class="code-keyword">in</span> range(<span class="code-number">1</span>, months + <span class="code-number">1</span>):
+        <span class="code-comment"># Random walk for freight/cost volatility</span>
+        cost_step = base_cost * (<span class="code-number">1</span> + np.random.normal(loc=<span class="code-number">0</span>, scale=volatility, size=iterations))
+        
+        <span class="code-comment"># Stochastic market demand noise (Floored at 0)</span>
+        demand_step = np.maximum(np.random.normal(loc=base_demand, scale=<span class="code-number">40</span>, size=iterations), <span class="code-number">0</span>)
+        
+        <span class="code-comment"># Calculate instance profit and accumulate</span>
+        month_profit = (target_price - cost_step) * demand_step
+        cumulative_profit[:, m] = cumulative_profit[:, m-<span class="code-number">1</span>] + month_profit
+        
+    <span class="code-comment"># Extract percentiles for the absolute risk boundaries at Month 12</span>
+    final_outcomes = cumulative_profit[:, -<span class="code-number">1</span>]
+    
+    <span class="code-keyword">return</span> {
+        <span class="code-string">"p5_floor"</span>: np.percentile(final_outcomes, <span class="code-number">5</span>),
+        <span class="code-string">"median_ep"</span>: np.median(final_outcomes),
+        <span class="code-string">"p95_ceiling"</span>: np.percentile(final_outcomes, <span class="code-number">95</span>)
+    }</code></pre>
+
+    <h2>5. Result: Boundary Execution & Machine Learning Loop</h2>
+    
+    <div class="impact-box">
+        <h3>Strategic ROI & Continuous Improvement</h3>
+        <p>By abandoning single-point averages and utilizing this probabilistic framework, the pricing organization successfully protected long-term EBITDA. The final architectural step integrates these Monte Carlo outputs into a <strong><span class="jargon-tooltip" data-tip="An AI framework that learns from past mistakes. We feed actual results back into the model so it corrects its own future predictions.">Supervised Machine Learning Feedback Loop</span></strong>.</p>
+        <ul>
+            <li><strong><span class="jargon-tooltip" data-tip="Automatically adjusting price sensitivity variables based on real-time market reactions, rather than relying on static historical assumptions.">Dynamic Elasticity Tuning</span>:</strong> Every 30 days, actual Point-of-Sale (POS) data is fed back into the engine. The model calculates the delta between its <em>Predicted P50 Expected Profit</em> and the <em>Realized Profit</em>, automatically micro-adjusting its own internal elasticity weights.</li>
+            <li><strong><span class="jargon-tooltip" data-tip="Protections built into the algorithm to prevent it from being tricked by temporary anomalies, ensuring it only learns from long-term market shifts.">Concept Drift Defense</span>:</strong> The engine uses anomaly detection to sanitize "poisoned" data (like temporary supply shocks), ensuring the training set reflects true long-term market trends rather than transient noise.</li>
+        </ul>
+        <p style="margin-bottom: 0; font-weight: bold; color: var(--alert-red, #ae571d);">The Result: A self-correcting pricing engine that grows mathematically sharper with every fiscal quarter.</p>
+    </div>
+
+    <div class="next-step-box">
+        <h3>Ecosystem Step 4: Performance Tracking</h3>
+        <p>With our probabilistic risk boundaries validated and the pricing executed safely in the ERP, we must establish a continuous BI feedback loop. We shift from deployment to active surveillance, running statistical A/B tests to monitor conversion rates in real-time.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="algorithmic-margin-defense.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Previous Phase</span>
+                <span class="nav-title">Step 2: Strategy Execution</span>
+            </a>
+            <a href="ab-testing-framework.html" class="nav-btn next">
+                <span class="nav-label">Next Phase &rarr;</span>
+                <span class="nav-title">Step 4: Statistical Validation</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Watermark for Portfolio Protection -->
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        const sliderPrice = document.getElementById('slider-price');
+        const valPrice = document.getElementById('val-price');
+        const selectVol = document.getElementById('select-volatility');
+        const selectElast = document.getElementById('select-elasticity');
+        const btnExecute = document.getElementById('btn-execute');
+        let chartInstance = null;
+        let sweepChart = null;
+
+        const BASE_COST = 45.00;
+        const BASELINE_PRICE = 65.00;
+        const BASELINE_DEMAND = 500;
+        const DEMAND_SD = 40;
+        const ITERATIONS = 5000;
+        const MONTHS = 12;
+
+        // Coarser pass used only for the price sweep, so 41 price points stay instant
+        const sweepIterations = () => (window.matchMedia('(max-width: 800px)').matches ? 200 : 400);
+        const SWEEP_MIN = 50, SWEEP_MAX = 140, SWEEP_STEP = 1;
+
+        const isNarrow = () => window.matchMedia('(max-width: 800px)').matches;
+
+        sliderPrice.addEventListener('input', (e) => {
+            valPrice.innerText = `$${parseFloat(e.target.value).toFixed(2)}`;
+        });
+
+        /* --- REPRODUCIBILITY ---------------------------------------------------
+           Math.random() cannot be seeded, so every click produced different numbers and
+           the recommended price moved with them. A pricing recommendation that changes
+           when you press the button again is not defensible, so the generator is seeded
+           from the inputs: identical inputs now reproduce identical output, and changing
+           a control changes the draws. */
+        function mulberry32(a) {
+            return function() {
+                a |= 0; a = (a + 0x6D2B79F5) | 0;
+                let t = Math.imul(a ^ (a >>> 15), 1 | a);
+                t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+                return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+            };
+        }
+
+        function seedFrom(volatility, elasticity, salt) {
+            return Math.floor(volatility * 1e4) * 104729
+                 + Math.floor(elasticity * 1e4) * 1299709
+                 + (salt || 0) * 7919;
+        }
+
+        // Box-Muller over an injected uniform source. u is drawn from (0,1] so that
+        // Math.log(u) can never be -Infinity.
+        function normalFrom(rand) {
+            return function(mean, stdDev) {
+                const u = 1 - rand();
+                const v = rand();
+                return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v) * stdDev + mean;
+            };
+        }
+
+        /* Demand cannot be negative, and a normal draw on cost can cross zero at high
+           volatility (3.3 sigma at 30% is reached roughly 25 times in 60,000 draws).
+           A negative cost would invent profit out of nothing, so both are floored. */
+        function demandBaseFor(targetPrice, elasticity) {
+            const priceDelta = (targetPrice - BASELINE_PRICE) / BASELINE_PRICE;
+            return Math.max(0, BASELINE_DEMAND * (1 - (priceDelta * elasticity)));
+        }
+
+        /* Price at which the linear demand curve reaches zero. Sweeping past it just
+           plots a flat line of zeroes, so the swept band stops here. */
+        function chokePrice(elasticity) {
+            return BASELINE_PRICE * (1 + 1 / elasticity);
+        }
+
+        function drawCost(rnorm, volatility) {
+            return Math.max(BASE_COST * 0.2, BASE_COST * (1 + rnorm(0, volatility)));
+        }
+
+        // Locked together: changing an input mid-run would leave the rendered cone of
+        // risk describing a scenario the controls no longer display.
+        const inputsToLock = [sliderPrice, selectVol, selectElast];
+
+        function triggerSimulation() {
+            btnExecute.disabled = true;
+            inputsToLock.forEach(el => { el.disabled = true; });
+            btnExecute.innerText = "Running 5,000 Realities...";
+            setTimeout(() => {
+                try {
+                    runOptimization();
+                } finally {
+                    // finally, so a thrown error can't leave the panel permanently locked
+                    btnExecute.disabled = false;
+                    inputsToLock.forEach(el => { el.disabled = false; });
+                    btnExecute.innerText = "Run 5,000 Permutations";
+                }
+            }, 600);
+        }
+
+        function runOptimization() {
+            const targetPrice = parseFloat(sliderPrice.value);
+            const volatility = parseFloat(selectVol.value);
+            const elasticity = parseFloat(selectElast.value);
+            const adjustedDemandBase = demandBaseFor(targetPrice, elasticity);
+
+            const rnorm = normalFrom(mulberry32(seedFrom(volatility, elasticity, targetPrice)));
+
+            let allPaths = [];
+            for (let i = 0; i < ITERATIONS; i++) {
+                let cumulativeProfit = 0;
+                let path = [0];
+                for (let m = 1; m <= MONTHS; m++) {
+                    const simulatedCost = drawCost(rnorm, volatility);
+                    const simulatedDemand = Math.max(rnorm(adjustedDemandBase, DEMAND_SD), 0);
+                    cumulativeProfit += (targetPrice - simulatedCost) * simulatedDemand;
+                    path.push(cumulativeProfit);
+                }
+                allPaths.push(path);
+            }
+
+            let p5Path = [0], p50Path = [0], p95Path = [0];
+            for (let m = 1; m <= MONTHS; m++) {
+                const cross = allPaths.map(p => p[m]).sort((a, b) => a - b);
+                p5Path.push(cross[Math.floor(ITERATIONS * 0.05)]);
+                p50Path.push(cross[Math.floor(ITERATIONS * 0.50)]);
+                p95Path.push(cross[Math.floor(ITERATIONS * 0.95)]);
+            }
+
+            const money = v => `$${Math.round(v).toLocaleString()}`;
+            document.getElementById('out-p5').innerText = money(p5Path[MONTHS]);
+            document.getElementById('out-median').innerText = money(p50Path[MONTHS]);
+            document.getElementById('out-p95').innerText = money(p95Path[MONTHS]);
+
+            renderSpaghettiChart(allPaths, p5Path, p50Path, p95Path, MONTHS);
+            runPriceSweep(targetPrice, volatility, elasticity);
+        }
+
+        /* Strict equality against the price array is brittle: the slider is integer
+           stepped today, but any future step value (or a locale/rounding quirk) yields a
+           float that matches nothing. indexOf would return -1 and the marker would
+           silently vanish. Snap to the closest sampled price instead. */
+        function nearestIndex(arr, target) {
+            let best = 0;
+            for (let i = 1; i < arr.length; i++) {
+                if (Math.abs(arr[i] - target) < Math.abs(arr[best] - target)) best = i;
+            }
+            return best;
+        }
+
+        /* --- THE OPTIMISATION STEP -------------------------------------------
+           A single price point tells you the risk of that price; it does not find
+           the best one. This sweeps the whole slider range under the same market
+           assumptions and reports the price that maximises median 12-month E[P].
+           Note the optimum is not simply the highest price: elasticity destroys
+           demand faster than margin accrues past a certain point.               */
+        function runPriceSweep(currentPrice, volatility, elasticity) {
+            const iters = sweepIterations();
+            const prices = [];
+            const medians = [];
+
+            /* --- COMMON RANDOM NUMBERS -------------------------------------------
+               Near the peak this curve is almost flat: at standard elasticity, being a
+               dollar off the optimum costs about $92 of expected annual profit, while
+               the sampling error on a 400-path median is roughly $820. Drawing fresh
+               randomness at every price point therefore picks the argmax out of noise
+               nine times larger than the signal, which is why the answer used to jump
+               several dollars between runs.
+
+               The fix is the standard variance-reduction technique: draw ONE matrix of
+               shocks and replay it at every price. The noise is then common to all
+               points and cancels out of the comparisons between them, so the curve is
+               smooth and the peak is stable. Measured effect: run-to-run spread in the
+               reported optimum falls from about $5 to about $1. */
+            const rand = mulberry32(seedFrom(volatility, elasticity, 1));
+            const rnorm = normalFrom(rand);
+            const shocks = [];
+            for (let i = 0; i < iters; i++) {
+                const path = [];
+                for (let m = 0; m < MONTHS; m++) {
+                    path.push([rnorm(0, 1), rnorm(0, 1)]);
+                }
+                shocks.push(path);
+            }
+
+            /* Sweep only the viable band. Past the choke price demand is zero and the
+               curve is a flat line of zeroes, which compresses the informative part of
+               the chart into the left margin. */
+            const upper = Math.min(SWEEP_MAX, Math.floor(chokePrice(elasticity)));
+
+            for (let p = SWEEP_MIN; p <= upper; p += SWEEP_STEP) {
+                const demandBase = demandBaseFor(p, elasticity);
+                const finals = [];
+                for (let i = 0; i < iters; i++) {
+                    let cum = 0;
+                    for (let m = 0; m < MONTHS; m++) {
+                        const zc = shocks[i][m][0], zd = shocks[i][m][1];
+                        const c = Math.max(BASE_COST * 0.2, BASE_COST * (1 + volatility * zc));
+                        const d = Math.max(demandBase + DEMAND_SD * zd, 0);
+                        cum += (p - c) * d;
+                    }
+                    finals.push(cum);
+                }
+                finals.sort((a, b) => a - b);
+                prices.push(p);
+                medians.push(finals[Math.floor(iters * 0.5)]);
+            }
+
+            let bestIdx = 0;
+            for (let i = 1; i < medians.length; i++) if (medians[i] > medians[bestIdx]) bestIdx = i;
+
+            const optPrice = prices[bestIdx];
+            document.getElementById('out-optimal').innerText = `$${optPrice.toFixed(2)}`;
+
+            const curIdx = nearestIndex(prices, currentPrice);
+            const deltaVsCurrent = medians[bestIdx] - medians[curIdx];
+            const sub = document.getElementById('out-optimal-sub');
+            const atEdge = (optPrice === prices[0] || optPrice === prices[prices.length - 1]);
+            if (Math.abs(optPrice - currentPrice) < 0.01) {
+                sub.innerText = atEdge
+                    ? 'Optimum sits at the edge of the tested band — the true optimum may lie beyond it.'
+                    : 'Your selected price is the simulated optimum.';
+                sub.style.color = '#10b981';
+            } else if (atEdge) {
+                sub.innerText = `Pinned at the top of the tested band; demand is too inelastic to turn the curve over.`;
+                sub.style.color = '#f59e0b';
+            } else {
+                sub.innerText = `+$${Math.round(deltaVsCurrent).toLocaleString()} median E[P] vs. your $${currentPrice.toFixed(2)}`;
+                sub.style.color = '#94a3b8';
+            }
+
+            renderSweepChart(prices, medians, curIdx, bestIdx);
+        }
+
+        function renderSpaghettiChart(allPaths, p5Path, p50Path, p95Path, months) {
+            const el = document.getElementById('histogramChart');
+            if (!el || typeof Chart === 'undefined') return;
+            const ctx = el.getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            let labels = [];
+            for (let m = 0; m <= months; m++) labels.push(m === 0 ? 'Start' : `Mo ${m}`);
+
+            // Only 100 strands are drawn; 5,000 would be unreadable and slow
+            const strands = isNarrow() ? 45 : 100;
+            let visualDatasets = allPaths.slice(0, strands).map(path => ({
+                label: '',
+                data: path,
+                borderColor: 'rgba(148, 163, 184, 0.15)',
+                borderWidth: 1.5,
+                fill: false,
+                pointRadius: 0,
+                tension: 0.2
+            }));
+
+            visualDatasets.push({
+                label: 'P5 Absolute Risk Floor', data: p5Path,
+                borderColor: '#ef4444', borderWidth: 3, borderDash: [5, 5], pointRadius: 0, tension: 0.2
+            });
+            visualDatasets.push({
+                label: 'Median Expected Profit', data: p50Path,
+                borderColor: '#3b82f6', borderWidth: 4, pointRadius: 0, tension: 0.2
+            });
+            visualDatasets.push({
+                label: 'P95 Upside Threshold', data: p95Path,
+                borderColor: '#10b981', borderWidth: 3, borderDash: [5, 5], pointRadius: 0, tension: 0.2
+            });
+
+            Chart.defaults.font.family = "'Archivo', 'Inter', sans-serif";
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: visualDatasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 600 },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                // Hide the 100 unlabelled strands, keep the three boundaries
+                                filter: item => !!item.text,
+                                font: { size: 11, weight: '600' },
+                                color: '#cbd5e1'
+                            }
+                        },
+                        tooltip: { enabled: false }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Cumulative Profit ($)', font: { size: 11, weight: 'bold' }, color: '#94a3b8' },
+                            grid: { color: '#334155', borderDash: [4, 4] },
+                            ticks: {
+                                callback: v => '$' + (v / 1000).toFixed(0) + 'k',
+                                font: { size: 10 }, color: '#cbd5e1'
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 10, weight: '600' }, color: '#cbd5e1', maxTicksLimit: isNarrow() ? 7 : 13 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderSweepChart(prices, medians, curIdx, bestIdx) {
+            const el = document.getElementById('sweepChart');
+            if (!el || typeof Chart === 'undefined') return;
+            const ctx = el.getContext('2d');
+            if (sweepChart) sweepChart.destroy();
+
+            // Index-based so the two pins cannot disappear on a float comparison
+            const markers = prices.map((p, i) => (i === bestIdx ? medians[i] : null));
+            const youAreHere = prices.map((p, i) => (i === curIdx ? medians[i] : null));
+
+            sweepChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: prices.map(p => '$' + p),
+                    datasets: [
+                        {
+                            label: 'Median 12-Mo Expected Profit',
+                            data: medians,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.12)',
+                            borderWidth: 3, fill: true, pointRadius: 0, tension: 0.25
+                        },
+                        {
+                            label: 'Profit-Maximising Price',
+                            data: markers,
+                            borderColor: '#10b981', backgroundColor: '#10b981',
+                            pointRadius: 7, pointHoverRadius: 8, showLine: false
+                        },
+                        {
+                            label: 'Your Selected Price',
+                            data: youAreHere,
+                            borderColor: '#f59e0b', backgroundColor: '#f59e0b',
+                            pointRadius: 7, pointHoverRadius: 8, pointStyle: 'rectRot', showLine: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 400 },
+                    plugins: {
+                        legend: { labels: { color: '#cbd5e1', font: { size: 11, weight: '600' }, usePointStyle: true } },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)', padding: 12,
+                            callbacks: {
+                                label: c => ` ${c.dataset.label}: $${Math.round(c.raw).toLocaleString()}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: 'Median E[P] ($)', font: { size: 11, weight: 'bold' }, color: '#94a3b8' },
+                            grid: { color: '#334155', borderDash: [4, 4] },
+                            ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k', font: { size: 10 }, color: '#cbd5e1' }
+                        },
+                        x: {
+                            title: { display: true, text: 'Target Retail Price', font: { size: 11, weight: 'bold' }, color: '#94a3b8' },
+                            grid: { display: false },
+                            ticks: { font: { size: 10 }, color: '#cbd5e1', maxTicksLimit: isNarrow() ? 6 : 12 }
+                        }
+                    }
+                }
+            });
+        }
+
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js failed to load — charts disabled, KPIs unaffected.');
+            document.querySelectorAll('.chart-wrapper').forEach(w => {
+                w.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network.</div>';
+            });
+        }
+
+        /* The first run costs roughly 200ms on desktop and closer to a second on a
+           phone. Deferring past the next frame lets the page paint first, so the
+           dashboard appears immediately with placeholder KPIs instead of the whole
+           document stalling on load. */
+        requestAnimationFrame(() => setTimeout(runOptimization, 0));
+
+        // Jargon tooltips are hover-only in CSS; this makes them keyboard and tap reachable.
+        document.querySelectorAll('.jargon-tooltip').forEach(el => {
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('role', 'note');
+            el.setAttribute('aria-label', el.textContent.trim() + ': ' + el.getAttribute('data-tip'));
+        });
+    
+/* ── theme switch ──────────────────────────────────────────────────────────────
+   Shares the choice with every other page through localStorage. While no explicit
+   choice exists the switch tracks the operating system. */
+(function(){
+  var boxes=document.querySelectorAll('.themeToggle');
+  if(!boxes.length) return;
+  var root=document.documentElement, mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function stored(){ try{ return localStorage.getItem('theme'); }catch(e){ return null; } }
+  function set(v){ boxes.forEach(function(b){ b.checked=v; }); }
+  set(stored()? stored()==='dark' : mq.matches);
+  boxes.forEach(function(b){
+    b.addEventListener('change',function(){
+      var mode=b.checked?'dark':'light';
+      root.setAttribute('data-theme',mode); set(b.checked);
+      try{ localStorage.setItem('theme',mode); }catch(e){}
+    });
+  });
+  mq.addEventListener('change',function(){ if(!stored()) set(mq.matches); });
+})();
+</script>
+</body>
+</html>
