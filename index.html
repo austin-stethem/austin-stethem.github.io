@@ -84,22 +84,26 @@
         .tech-tree {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
+            /* Header row sizes to content. The five card rows are a bare `1fr` each:
+               in a container of indefinite height, equal fr rows all resolve to the
+               tallest row's content, so every card on the board ends up the same height.
+               A minmax() floor here breaks that — the fr maximum then resolves per row
+               and the rows size independently again. */
+            grid-template-rows: auto repeat(5, 1fr);
+            grid-auto-flow: column;
+            gap: 46px 30px;
             margin-top: 40px;
         }
 
-        /* Uniform grid rather than a flex stack with connectors between cards. The
-           gap is the only thing setting vertical rhythm now, so spacing is identical
-           everywhere by construction instead of being tuned per-gap. */
-        /* Cards sit on a uniform grid; the connector is drawn inside the gap as a
-           pseudo-element rather than as its own grid child. A separate element would claim
-           a full 320px row and destroy the even spacing. */
-        /* grid-auto-rows must stay `auto` here: the track header is a grid child, and any
-           row minimum applies to it too — which is what produced a 320px void between the
-           heading and the first card. The card minimum belongs on the card. */
-        .tree-column { display: grid; grid-auto-rows: auto; gap: 46px; align-content: start; }
-        .tree-column .card { min-height: 320px; }
+        /* `display: contents` dissolves the three column wrappers so their headers and
+           cards become direct children of the one grid above. That is what lets rows
+           align across tracks; three separate grids never can. */
+        .tree-column { display: contents; }
         .tree-column .tree-header { margin-bottom: 0; }
+        /* Cards stretch to fill their row, so every box on the page is the same height.
+           The card is already a column flex container and .btn already carries
+           margin-top:auto, so the buttons now line up across all three tracks too. */
+        .tree-column .card { height: 100%; min-height: 300px; }
 
         .tree-column .card:not(:last-child)::after {
             content: ''; position: absolute; left: 50%; top: 100%;
@@ -186,7 +190,9 @@
         .ai-disclaimer strong { color: var(--body); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; display: block; margin-bottom: 8px; }
 
         @media (max-width: 900px) {
-            .tech-tree { grid-template-columns: 1fr; gap: 50px; }
+            .tech-tree { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; gap: 50px; }
+            .tree-column { display: grid; grid-auto-rows: auto; gap: 46px; }
+            .tree-column .card { height: auto; min-height: 0; }
             body { padding: 28px 16px 70px; }
             .tree-header { margin-bottom: 15px; }
         }
@@ -201,7 +207,7 @@
     </style>
 </head>
 <body>
-    <!-- build: 2026-08-07a -->
+    <!-- build: 2026-08-07b -->
 
     <a class="skip-link" href="#projects">Skip to projects</a>
 
