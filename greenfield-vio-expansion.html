@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenfield VIO Expansion | Austin Sonny Stethem</title>
+    <meta name="description" content="Subtracting service coverage from vehicle population density to find uncovered corridors, then testing whether the whitespace actually pays for a building.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <meta property="og:title" content="Greenfield VIO Expansion — Whitespace to Capex Case">
+    <meta property="og:description" content="Finding uncovered demand is the easy half. The question that decides anything is whether the corridor carries enough addressable spend to pay back a building.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/greenfield-vio-expansion.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="portfolio.css?v=3">
+
+    <style>
+        :root { --info-bg: #0f172a; --info-panel: #1e293b; --info-border: #334155; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #333; font-size: 10.5pt; line-height: 1.6;
+            max-width: 950px; margin: 0 auto; padding: 40px 20px 90px;
+            background-color: var(--bg-color, #fbfbfb);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Inter', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, #1a2433); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        p { text-align: justify; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px; }
+        li { margin-bottom: 8px; }
+
+        .data-table { width: 100%; border-collapse: collapse; margin: 20px 0 30px; font-size: 9pt; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; table-layout: fixed; }
+        .data-table th { background: var(--dark-slate-blue, #1a2433); color: #f8fafc; text-align: left; padding: 10px 9px; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; vertical-align: bottom; }
+        .data-table td { padding: 10px 9px; border-bottom: 1px solid #eef2f7; color: #334155; overflow-wrap: break-word; vertical-align: top; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table td:first-child { font-weight: 700; color: var(--dark-slate-blue, #1a2433); }
+
+        .dashboard-container { width: 100%; margin: 40px auto; background: var(--info-bg); color: #e2e8f0; border-radius: 12px; display: flex; flex-wrap: wrap; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #1e293b; overflow: hidden; }
+        .dash-sidebar { width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; border-right: 1px solid var(--info-border); display: flex; flex-direction: column; }
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
+
+        .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center; }
+        .dash-header .dash-title { color: #f8fafc; font-size: 1.6rem; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title span { color: #f87171; }
+        .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+
+        .control-group { margin-bottom: 22px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; cursor: pointer; gap: 10px; }
+        .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 0.95rem; color: #f87171; white-space: nowrap; }
+        .control-note { font-size: 0.72rem; color: #64748b; font-style: italic; margin-top: 6px; line-height: 1.45; }
+
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
+
+        .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: #cbd5e1; text-align: center; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--info-blue, #0369a1); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; }
+        .logic-box strong { color: var(--info-blue-bright, #7dd3fc); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); }
+        .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-sub { font-size: 0.72rem; color: #64748b; font-style: italic; min-height: 30px; }
+        .k-blue { border-top-color: #7dd3fc !important; } .k-blue .kpi-value { color: #7dd3fc; }
+        .k-green { border-top-color: #10b981 !important; } .k-green .kpi-value { color: #10b981; }
+        .k-amber { border-top-color: #f59e0b !important; } .k-amber .kpi-value { color: #f59e0b; }
+        .k-red { border-top-color: #ef4444 !important; } .k-red .kpi-value { color: #ef4444; }
+
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .chart-box { position: relative; height: 290px; width: 100%; }
+
+        .hit-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .hit-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; color: #e2e8f0; }
+        .hit-table th { background: #0f172a; color: #94a3b8; padding: 9px 6px; text-align: left; text-transform: uppercase; letter-spacing: 0.3px; font-size: 0.64rem; font-weight: 800; border-bottom: 1px solid var(--info-border); vertical-align: bottom; }
+        .hit-table td { padding: 10px 6px; border-bottom: 1px solid var(--info-border); color: #cbd5e1; vertical-align: middle; }
+        .hit-table tr:last-child td { border-bottom: none; }
+        .hit-table td:first-child { font-weight: 700; color: #e2e8f0; }
+        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
+        .t-go { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+        .t-marginal { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+        .t-no { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue, #1a2433); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
+        .impact-box h3 { margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
+        .impact-box p:last-child { margin-bottom: 0; }
+
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #334155; padding: 22px; }
+            .dash-main { padding: 18px; min-width: 0; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .chart-box { height: 260px; }
+            .data-table { table-layout: auto; }
+            .data-table thead { display: none; }
+            .data-table tr { display: block; border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
+            .data-table td { display: block; border: none; padding: 5px 0; }
+            .data-table td:first-child { font-size: 10pt; padding-bottom: 7px; border-bottom: 1px solid #eef2f7; margin-bottom: 4px; }
+            .data-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: #64748b; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.4px; display: block; }
+            .data-table td:first-child[data-label]::before { content: none; }
+            .hit-section { padding: 16px 12px; }
+            .hit-table, .hit-table tbody, .hit-table tr, .hit-table td { display: block; width: 100%; }
+            .hit-table thead { display: none; }
+            .hit-table tr { border: 1px solid var(--info-border); border-radius: 8px; background: rgba(0,0,0,0.18); padding: 4px 14px 10px; margin-bottom: 12px; }
+            .hit-table tr:last-child { margin-bottom: 0; }
+            .hit-table td { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 9px 0; border-bottom: 1px dashed rgba(255,255,255,0.08); text-align: right; }
+            .hit-table td:last-child { border-bottom: none; }
+            .hit-table td::before { content: attr(data-label); color: #94a3b8; font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; flex-shrink: 0; }
+            .hit-table td:first-child { display: block; text-align: left; font-size: 0.86rem; padding: 10px 0 9px; border-bottom: 1px solid var(--info-border); }
+            .hit-table td:first-child::before { content: none; }
+        }
+
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: #fff; max-width: none; }
+            .next-step-box { display: block !important; background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 24px; color: #000; }
+            .next-step-box h3 { color: #000; }
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive model</a>
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
+    <header class="doc-header">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/><circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/><circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Attack &middot; Step 2 of 5</p>
+        <h1 class="doc-title">Greenfield VIO Expansion</h1>
+    </header>
+
+    <table class="meta-table">
+        <tbody>
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Spatial Coverage Analysis, Addressable Market Sizing, Capital Payback Modelling, Drive-Time Isochrones</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Position In Track</span>
+                <span class="meta-value">Second of five. Step 1 maps the terrain; this step asks which uncovered part of it is worth building into.</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> Corridor names, vehicle counts and cost figures are synthetic. The coverage-subtraction method, the drive-time scaling and the payback structure are the production ones.
+    </div>
+
+    <h2>1. Finding Whitespace Is the Easy Half</h2>
+
+    <div class="scenario-box">
+        <strong>Where this sits in the track</strong>
+        Step 1 built the competitive footprint and used it defensively &mdash; who is near our accounts, and what happens when they consolidate. The same asset inverted answers a different question: where is there demand that <em>nobody</em> is serving.
+    </div>
+
+    <p>Whitespace analysis has an obvious first move. Take vehicle population by geography, subtract the areas already inside somebody's service coverage, and what remains is demand without a supplier. That produces a map with holes in it, and the holes look like opportunities.</p>
+
+    <p>The problem is that a map with holes in it is not a business case. Every uncovered corridor is uncovered for a reason, and the most common reason is that it does not contain enough addressable spend to support a building. A whitespace map that cannot distinguish a corridor worth $2M a year from one worth $300,000 will send you to both, and the second one will lose money for a decade.</p>
+
+    <p>So the analysis has to run in two stages: find the gaps, then <span class="jargon-tooltip" data-tip="The annual gross profit a location must generate before it covers its own operating cost, ahead of any return on the capital spent building it."><strong>test each gap against the cost of standing a branch in it</strong></span>. The second stage is the one that produces a decision.</p>
+
+    <h2>2. Subtracting Coverage From Demand</h2>
+
+    <p>Coverage is not a radius. A branch does not serve a circle; it serves the area a delivery vehicle can reach and return from inside a working window, which is a drive-time contour, and drive time converts to distance very differently in a metro than on open highway. The same scaling used in the trade-area model applies here: an urban location covers a tighter footprint in miles than a rural one covering the same time band.</p>
+
+    <p>Coverage subtraction therefore runs against contours rather than circles, and it counts competitor coverage as well as our own. A corridor already served by two national chains is not whitespace; it is a fight. Genuine whitespace is demand outside <em>everyone's</em> reach.</p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th scope="col" style="width:26%;">Input</th>
+                <th scope="col" style="width:30%;">Source</th>
+                <th scope="col" style="width:44%;">Why it is needed</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td data-label="Input">Vehicle population by geography</td><td data-label="Source">Registration data, aggregated to corridor</td><td data-label="Why">The demand denominator. Parts consumption tracks the installed vehicle base far more closely than it tracks population.</td></tr>
+            <tr><td data-label="Input">Our service contours</td><td data-label="Source">Branch coordinates plus drive-time scaling</td><td data-label="Why">Defines what is already served, in time rather than miles.</td></tr>
+            <tr><td data-label="Input">Competitor contours</td><td data-label="Source">The rooftop census from Step 1</td><td data-label="Why">Uncovered by us but covered by two rivals is not an opportunity.</td></tr>
+            <tr><td data-label="Input">Addressable spend per vehicle</td><td data-label="Source">Internal revenue against known trade-area vehicle counts</td><td data-label="Why">Converts a vehicle count into a revenue ceiling. This is the figure most whitespace analyses get wrong by an order of magnitude, because it is not the retail price of a part &mdash; it is the distributor-channel spend attributable to a vehicle per year.</td></tr>
+            <tr><td data-label="Input">Branch operating cost and buildout</td><td data-label="Source">Finance</td><td data-label="Why">Without it the model can only ever say yes.</td></tr>
+        </tbody>
+    </table>
+
+    <h2 id="dashboard">3. Testing a Corridor Against a Building</h2>
+
+    <p><em>Each corridor below is uncovered. Adjust the assumptions and watch which ones survive. The capture rate is the share of addressable spend a new location would win &mdash; higher in genuine whitespace, lower where a competitor is within reach.</em></p>
+
+    <div class="dashboard-container" id="dashboard-panel">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <div class="dash-title">Greenfield <span>Case</span></div>
+                <p>Capital Assumptions</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-capture"><span>Capture Rate:</span> <span class="val-readout" id="v-capture">45%</span></label>
+                <input type="range" id="s-capture" min="10" max="70" step="5" value="45" aria-label="Share of addressable spend captured">
+                <p class="control-note">Share of the corridor's addressable spend a new branch wins.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-spend"><span>Spend Per Vehicle:</span> <span class="val-readout" id="v-spend">$320</span></label>
+                <input type="range" id="s-spend" min="150" max="500" step="10" value="320" aria-label="Annual addressable spend per vehicle">
+                <p class="control-note">Annual distributor-channel parts spend attributable to one vehicle.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-opex"><span>Branch Operating Cost:</span> <span class="val-readout" id="v-opex">$1.10M</span></label>
+                <input type="range" id="s-opex" min="600" max="1800" step="50" value="1100" aria-label="Annual branch operating cost in thousands">
+                <p class="control-note">Annual cost to run the location, before capital.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-build"><span>Buildout Capital:</span> <span class="val-readout" id="v-build">$2.20M</span></label>
+                <input type="range" id="s-build" min="1000" max="4000" step="100" value="2200" aria-label="One-time buildout capital in thousands">
+                <p class="control-note">One-time cost to open. Divided by annual contribution to give payback.</p>
+            </div>
+
+            <div class="sidebar-subheader">Decision Rule</div>
+            <div class="logic-box">
+                <strong>Contribution before payback</strong>
+                A corridor whose gross profit does not exceed the branch's own operating cost never pays back at any horizon &mdash; the capital question does not arise. Only corridors clearing that bar get a payback period, and the threshold for approval sits at four years.
+            </div>
+        </div>
+
+        <div class="dash-main">
+            <div class="kpi-grid">
+                <div class="kpi-card k-blue">
+                    <div class="kpi-card-header">Uncovered Vehicles</div>
+                    <div class="kpi-value" id="k-vio">--</div>
+                    <div class="kpi-sub">Outside every service contour</div>
+                </div>
+                <div class="kpi-card k-green">
+                    <div class="kpi-card-header">Viable Corridors</div>
+                    <div class="kpi-value" id="k-viable">--</div>
+                    <div class="kpi-sub" id="k-viable-sub">Clearing the four-year threshold</div>
+                </div>
+                <div class="kpi-card k-amber">
+                    <div class="kpi-card-header">Addressable Revenue</div>
+                    <div class="kpi-value" id="k-rev">--</div>
+                    <div class="kpi-sub">Across viable corridors only</div>
+                </div>
+                <div class="kpi-card k-red">
+                    <div class="kpi-card-header">Rejected</div>
+                    <div class="kpi-value" id="k-reject">--</div>
+                    <div class="kpi-sub" id="k-reject-sub">Uncovered but not fundable</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-header">Annual Contribution After Branch Operating Cost</div>
+                <div class="chart-box"><canvas id="corridorChart" role="img" aria-label="Bar chart of annual contribution by corridor after operating cost"></canvas></div>
+            </div>
+
+            <div class="hit-section">
+                <div class="chart-header" style="margin-bottom:12px;">Corridor Ranking</div>
+                <table class="hit-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Corridor</th>
+                            <th scope="col">Uncovered VIO</th>
+                            <th scope="col">Revenue</th>
+                            <th scope="col">Contribution</th>
+                            <th scope="col">Payback</th>
+                            <th scope="col">Verdict</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corridor-body">
+                        <tr><td colspan="6" data-label="" style="text-align:center;color:#64748b;font-style:italic;">Awaiting model run...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. What the Model Is For</h2>
+
+    <p>The value is not the list of viable corridors. It is that the same tool produces the list of <em>rejected</em> ones, with a number attached to each rejection. A corridor carrying 9,500 uncovered vehicles looks like an opportunity on a map and fails on contribution at every realistic capture rate &mdash; and being able to show that in a sentence is worth more than another green pin.</p>
+
+    <p>It also makes the assumptions arguable, which is the point of putting them on sliders. Nobody is going to agree with a single capture-rate estimate. What they can agree on is a threshold: at what capture rate does this corridor become fundable, and is that rate plausible given who else is nearby. That converts a forecast into a conversation about one number.</p>
+
+    <div class="impact-box">
+        <h3>The Honest Limitation</h3>
+        <p>Vehicle population is a proxy for demand, not a measure of it. A corridor full of vehicles whose owners service them at dealerships, or a corridor whose shops are locked into a competitor's programme agreement, will register as demand and deliver none. The model sizes the ceiling; it does not predict penetration.</p>
+        <p>The correction is to calibrate the capture rate against branches already open in comparable geographies rather than assuming one &mdash; which is possible, because the trade-area work in the defensive track already measures exactly that for every existing location.</p>
+    </div>
+
+    <div class="next-step-box">
+        <h3>Attack &middot; Step 3</h3>
+        <p>Building into new territory is the most expensive way to add revenue. The next three steps work inward &mdash; toward customers who already know us, starting with the ones we have already lost.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="market-capture-engine.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Step 1</span>
+                <span class="nav-title">Market Capture Engine</span>
+            </a>
+            <a href="win-back-engine.html" class="nav-btn next">
+                <span class="nav-label">Step 3 &rarr;</span>
+                <span class="nav-title">Lost Account Win-Back</span>
+            </a>
+        </nav>
+    </div>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        const CORRIDORS = [
+            { name: 'Long Meadow Corridor', vio: 38000, note: 'no coverage within 45 min' },
+            { name: 'Copper Vale Gap',           vio: 26500, note: 'one rival at the far edge' },
+            { name: 'Iron Gate Junction',     vio: 21000, note: 'no coverage within 30 min' },
+            { name: 'Elk Crossing Flats',           vio: 14200, note: 'two rivals inside 40 min' },
+            { name: 'Dry Fork Spur',         vio:  9500, note: 'no coverage within 60 min' },
+            { name: 'Half Moon Reach',       vio:  6100, note: 'no coverage within 60 min' }
+        ];
+        const GM = 0.34;
+        const PAYBACK_THRESHOLD = 4.0;
+
+        const el = id => document.getElementById(id);
+        const money = v => '$' + Math.round(v).toLocaleString();
+        const isNarrow = () => window.matchMedia('(max-width: 800px)').matches;
+        let chart = null;
+
+        function model() {
+            const capture = +el('s-capture').value / 100;
+            const spend   = +el('s-spend').value;
+            const opex    = +el('s-opex').value * 1000;
+            const build   = +el('s-build').value * 1000;
+
+            el('v-capture').innerText = (capture * 100).toFixed(0) + '%';
+            el('v-spend').innerText   = '$' + spend;
+            el('v-opex').innerText    = '$' + (opex / 1e6).toFixed(2) + 'M';
+            el('v-build').innerText   = '$' + (build / 1e6).toFixed(2) + 'M';
+
+            const rows = CORRIDORS.map(c => {
+                const revenue = c.vio * spend * capture;
+                const gp = revenue * GM;
+                const contribution = gp - opex;
+                // A corridor that cannot cover the branch's own running cost never pays
+                // back, at any horizon. Payback is only defined above that line.
+                const payback = contribution > 0 ? build / contribution : null;
+                const verdict = payback === null ? 'no'
+                              : payback <= PAYBACK_THRESHOLD ? 'go' : 'marginal';
+                return { ...c, revenue, gp, contribution, payback, verdict };
+            }).sort((a, b) => b.contribution - a.contribution);
+
+            const viable = rows.filter(r => r.verdict === 'go');
+            const rejected = rows.filter(r => r.verdict !== 'go');
+
+            el('k-vio').innerText = CORRIDORS.reduce((s, c) => s + c.vio, 0).toLocaleString();
+            el('k-viable').innerText = `${viable.length}/${rows.length}`;
+            el('k-viable-sub').innerText = viable.length
+                ? `fastest payback ${Math.min(...viable.map(v => v.payback)).toFixed(1)} yr`
+                : 'none clear the threshold at these assumptions';
+            const rev = viable.reduce((s, r) => s + r.revenue, 0);
+            el('k-rev').innerText = rev >= 1e6 ? '$' + (rev / 1e6).toFixed(2) + 'M' : money(rev);
+            el('k-reject').innerText = rejected.length;
+            el('k-reject-sub').innerText = rejected.length
+                ? money(rejected.reduce((s, r) => s + r.vio, 0) * spend * capture) + ' of demand left on the table'
+                : 'every corridor is fundable';
+
+            renderTable(rows);
+            renderChart(rows);
+        }
+
+        function renderTable(rows) {
+            const tags = { go: 't-go', marginal: 't-marginal', no: 't-no' };
+            const labels = { go: 'Fund', marginal: 'Marginal', no: 'Reject' };
+            el('corridor-body').innerHTML = rows.map(r => `
+                <tr>
+                    <td data-label="Corridor">${r.name}<br><span style="font-weight:400;color:#64748b;font-size:0.68rem;">${r.note}</span></td>
+                    <td data-label="Uncovered VIO">${r.vio.toLocaleString()}</td>
+                    <td data-label="Revenue">${money(r.revenue)}</td>
+                    <td data-label="Contribution" style="color:${r.contribution > 0 ? '#10b981' : '#ef4444'};font-weight:700;">${money(r.contribution)}</td>
+                    <td data-label="Payback">${r.payback ? r.payback.toFixed(1) + ' yr' : '&mdash;'}</td>
+                    <td data-label="Verdict"><span class="tag ${tags[r.verdict]}">${labels[r.verdict]}</span></td>
+                </tr>`).join('');
+        }
+
+        function renderChart(rows) {
+            const node = el('corridorChart');
+            if (!node || typeof Chart === 'undefined') return;
+            if (chart) chart.destroy();
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+            chart = new Chart(node.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: rows.map(r => r.name),
+                    datasets: [{
+                        data: rows.map(r => r.contribution),
+                        backgroundColor: rows.map(r => r.contribution > 0 ? 'rgba(16,185,129,0.55)' : 'rgba(239,68,68,0.5)'),
+                        borderColor: rows.map(r => r.contribution > 0 ? '#10b981' : '#ef4444'),
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { backgroundColor: 'rgba(15,23,42,0.95)', padding: 12,
+                                   callbacks: { label: c => ' ' + money(c.raw) + ' after operating cost' } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Annual Contribution (USD)', color: '#94a3b8', font: { size: 11, weight: 'bold' } },
+                             ticks: { color: '#cbd5e1', font: { size: 10 }, callback: v => '$' + (v / 1000).toFixed(0) + 'k' },
+                             grid: { color: '#334155', borderDash: [4, 4] } },
+                        y: { grid: { display: false }, ticks: { color: '#cbd5e1', font: { size: isNarrow() ? 9 : 10 } } }
+                    }
+                }
+            });
+        }
+
+        ['s-capture', 's-spend', 's-opex', 's-build'].forEach(id => el(id).addEventListener('input', model));
+
+        let wasNarrow = isNarrow(), t = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(t);
+            t = setTimeout(() => { const n = isNarrow(); if (n !== wasNarrow) { wasNarrow = n; model(); } }, 150);
+        });
+
+        if (typeof Chart === 'undefined') {
+            const box = document.querySelector('.chart-box');
+            if (box) box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network. The ranking below is unaffected.</div>';
+        }
+
+        document.querySelectorAll('.jargon-tooltip').forEach(n => {
+            n.setAttribute('tabindex', '0'); n.setAttribute('role', 'note');
+            n.setAttribute('aria-label', n.textContent.trim() + ': ' + n.getAttribute('data-tip'));
+        });
+
+        model();
+    </script>
+</body>
+</html>

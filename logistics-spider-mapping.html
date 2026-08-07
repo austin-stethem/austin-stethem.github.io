@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Spider-Mapping | Austin Sonny Stethem</title>
+    <meta name="description" content="Plotting every branch-to-customer delivery vector to expose route overlap, and being honest about a geocoding input that cannot be fixed at source.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <meta property="og:title" content="Logistics Spider-Mapping — Route Overlap and Honest Inputs">
+    <meta property="og:description" content="Most towns are served by more than one branch. Some of that is redundancy, some is stocking depth, and the difference is worth several hundred routes.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/logistics-spider-mapping.html">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="portfolio.css?v=3">
+
+    <style>
+        :root { --info-bg: #0f172a; --info-panel: #1e293b; --info-border: #334155; }
+
+        body { font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif; color: #333; font-size: 10.5pt; line-height: 1.6; max-width: 950px; margin: 0 auto; padding: 40px 20px 90px; background-color: var(--bg-color, #fbfbfb); -webkit-font-smoothing: antialiased; }
+        h2 { font-family: 'Georgia', serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--dark-slate-blue, #1a2433); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+        h3 { font-family: 'Inter', sans-serif; font-size: 11pt; font-weight: 700; color: var(--dark-slate-blue, #1a2433); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        p { text-align: justify; margin-bottom: 15px; color: #334155; }
+        ul { margin-top: 0; margin-bottom: 20px; color: #334155; padding-left: 25px; }
+        li { margin-bottom: 8px; }
+
+        .data-table { width: 100%; border-collapse: collapse; margin: 20px 0 30px; font-size: 9pt; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; table-layout: fixed; }
+        .data-table th { background: var(--dark-slate-blue, #1a2433); color: #f8fafc; text-align: left; padding: 10px 9px; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; vertical-align: bottom; }
+        .data-table td { padding: 10px 9px; border-bottom: 1px solid #eef2f7; color: #334155; overflow-wrap: break-word; vertical-align: top; }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table td:first-child { font-weight: 700; color: var(--dark-slate-blue, #1a2433); }
+
+        .dashboard-container { width: 100%; margin: 40px auto; background: var(--info-bg); color: #e2e8f0; border-radius: 12px; display: flex; flex-wrap: wrap; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid #1e293b; overflow: hidden; }
+        .dash-sidebar { width: 340px; flex-shrink: 0; background: var(--info-panel); padding: 30px; border-right: 1px solid var(--info-border); display: flex; flex-direction: column; }
+        .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--info-bg); display: flex; flex-direction: column; }
+        .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--info-border); padding-bottom: 15px; text-align: center; }
+        .dash-header .dash-title { color: #f8fafc; font-size: 1.6rem; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title span { color: #f87171; }
+        .dash-header p { color: #94a3b8; font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+
+        .control-group { margin-bottom: 22px; }
+        .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; cursor: pointer; gap: 10px; }
+        .val-readout { font-family: 'Fira Code', monospace; font-weight: bold; font-size: 0.95rem; color: #f87171; white-space: nowrap; }
+        .control-note { font-size: 0.72rem; color: #64748b; font-style: italic; margin-top: 6px; line-height: 1.45; }
+
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: #f87171; box-shadow: 0 0 10px rgba(248,113,113,0.4); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
+        input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: #f87171; }
+        input[type="range"]:focus { outline: none; }
+        input[type="range"]:focus-visible { outline: 2px solid var(--alert-red, #b32525); outline-offset: 6px; }
+
+        .sidebar-subheader { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--info-border); padding-bottom: 8px; color: #cbd5e1; text-align: center; }
+        .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--info-border); border-left: 3px solid var(--info-blue, #0369a1); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; }
+        .logic-box strong { color: var(--info-blue-bright, #7dd3fc); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+        .kpi-card { background: var(--info-panel); border: 1px solid var(--info-border); border-top: 3px solid var(--info-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); }
+        .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-sub { font-size: 0.72rem; color: #64748b; font-style: italic; min-height: 30px; }
+        .k-amber { border-top-color: #f59e0b !important; } .k-amber .kpi-value { color: #f59e0b; }
+        .k-red { border-top-color: #ef4444 !important; } .k-red .kpi-value { color: #ef4444; }
+        .k-blue { border-top-color: #7dd3fc !important; } .k-blue .kpi-value { color: #7dd3fc; }
+        .k-slate { border-top-color: #94a3b8 !important; } .k-slate .kpi-value { color: #cbd5e1; }
+
+        .chart-section { background: var(--info-panel); border: 1px solid var(--info-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
+        .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: #cbd5e1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .chart-box { position: relative; height: 290px; width: 100%; }
+
+        .hit-section { background: var(--info-panel); border: 1px solid var(--info-border); border-radius: 8px; padding: 20px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .hit-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; color: #e2e8f0; }
+        .hit-table th { background: #0f172a; color: #94a3b8; padding: 9px 6px; text-align: left; text-transform: uppercase; letter-spacing: 0.3px; font-size: 0.64rem; font-weight: 800; border-bottom: 1px solid var(--info-border); vertical-align: bottom; }
+        .hit-table td { padding: 10px 6px; border-bottom: 1px solid var(--info-border); color: #cbd5e1; vertical-align: middle; }
+        .hit-table tr:last-child td { border-bottom: none; }
+        .hit-table td:first-child { font-weight: 700; color: #e2e8f0; }
+        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
+        .t-review { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+        .t-watch { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+
+        .impact-box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid var(--dark-slate-blue, #1a2433); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
+        .impact-box h3 { margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
+        .impact-box p:last-child { margin-bottom: 0; }
+
+        @media (max-width: 800px) {
+            body { padding-left: 16px; padding-right: 16px; }
+            p { text-align: left; }
+            .dashboard-container { flex-direction: column; }
+            .dash-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #334155; padding: 22px; }
+            .dash-main { padding: 18px; min-width: 0; }
+            .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
+            .chart-box { height: 260px; }
+            .data-table { table-layout: auto; }
+            .data-table thead { display: none; }
+            .data-table tr { display: block; border-bottom: 1px solid #e2e8f0; padding: 8px 0; }
+            .data-table td { display: block; border: none; padding: 5px 0; }
+            .data-table td:first-child { font-size: 10pt; padding-bottom: 7px; border-bottom: 1px solid #eef2f7; margin-bottom: 4px; }
+            .data-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: #64748b; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.4px; display: block; }
+            .data-table td:first-child[data-label]::before { content: none; }
+            .hit-section { padding: 16px 12px; }
+            .hit-table, .hit-table tbody, .hit-table tr, .hit-table td { display: block; width: 100%; }
+            .hit-table thead { display: none; }
+            .hit-table tr { border: 1px solid var(--info-border); border-radius: 8px; background: rgba(0,0,0,0.18); padding: 4px 14px 10px; margin-bottom: 12px; }
+            .hit-table tr:last-child { margin-bottom: 0; }
+            .hit-table td { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 9px 0; border-bottom: 1px dashed rgba(255,255,255,0.08); text-align: right; }
+            .hit-table td:last-child { border-bottom: none; }
+            .hit-table td::before { content: attr(data-label); color: #94a3b8; font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; flex-shrink: 0; }
+            .hit-table td:first-child { display: block; text-align: left; font-size: 0.86rem; padding: 10px 0 9px; border-bottom: 1px solid var(--info-border); }
+            .hit-table td:first-child::before { content: none; }
+        }
+
+        @media print {
+            .dashboard-container { display: none !important; }
+            body { background: #fff; max-width: none; }
+            .next-step-box { display: block !important; background: transparent; border: none; box-shadow: none; padding: 0; margin-top: 24px; color: #000; }
+            .next-step-box h3 { color: #000; }
+            .next-step-box.next-step-box p { color: #000; }
+            .project-navigation { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <a class="skip-link" href="#dashboard">Skip to interactive model</a>
+    <a href="index.html" class="back-link">&larr; Back to Portfolio</a>
+
+    <header class="doc-header">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/><circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/><circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+        <p class="doc-tagline">Foundations &middot; Step 3 of 5</p>
+        <h1 class="doc-title">Logistics Spider-Mapping</h1>
+    </header>
+
+    <table class="meta-table">
+        <tbody>
+        <tr>
+            <td class="meta-cell">
+                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Core Competencies</span>
+                <span class="meta-value">Vector Mapping, Route Overlap Detection, Geocoding at Scale, Bounded-Error Disclosure</span>
+            </td>
+            <td class="meta-cell">
+                <span class="meta-label">Deployment</span>
+                <span class="meta-value">Built and in use by the VP of Sales. 32,174 delivery points across the operating footprint.</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="nda-note">
+        <strong>Data Governance Note:</strong> Town names, account counts and cost figures below are synthetic and consistent with the other pages in this track. The overlap definition, the proximity shield and the error disclosure are the production ones.
+    </div>
+
+    <h2>1. Where Does the Truck Actually Go?</h2>
+
+    <div class="scenario-box">
+        <strong>Where this sits in the track</strong>
+        Step 1 asked whether the inventory record matches physical reality. Step 2 asked whether two records describe the same entity. This step asks a simpler question that turns out to be harder: where is the customer.
+    </div>
+
+    <p>A distribution network runs on delivery. Every branch sends vehicles out on routes, and the shape of those routes determines freight cost, driver hours and how quickly a customer gets a part. None of it appears in the ERP as geography. It appears as a branch identifier and a customer identifier, and the physical relationship between the two is inferred rather than recorded.</p>
+
+    <p>Plotting that relationship &mdash; a line from every branch to every account it delivers to &mdash; produces a map that looks like overlapping spiders. The value is not the picture. It is that the picture makes two things visible that no report shows: how far the average delivery actually travels, and how often two branches are driving into the same town.</p>
+
+    <h2>2. The Input Problem, Stated Rather Than Hidden</h2>
+
+    <p>The customer's physical location is not reliably recorded. Branches are not required to populate a ship-to address distinct from the billing address, and in practice they frequently do not &mdash; because the drivers already know the routes. From an operational standpoint that is entirely rational. From a mapping standpoint it means a meaningful share of delivery points are geocoded from a billing address, and some of those are post office boxes or corporate accounts payable departments in another town.</p>
+
+    <p>This cannot be fixed at source. Asking eighty branches to maintain a field that provides them no operational benefit is a request that will be complied with for about a fortnight. So the correct response is not to pretend the input is clean, but to bound the error and publish the bound.</p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th scope="col" style="width:30%;">Control</th>
+                <th scope="col" style="width:70%;">What it does</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td data-label="Control">Proximity shield</td>
+                <td data-label="Effect">Any account resolving more than 75 miles from the branch that delivers to it is excluded and the count logged. A branch does not run a daily route 200 miles out; a point that far away is a billing address, not a delivery address.</td>
+            </tr>
+            <tr>
+                <td data-label="Control">Postal-box flagging</td>
+                <td data-label="Effect">Points geocoded from a post office box are identifiable and can be reported separately, so their contribution to any conclusion is visible rather than blended in.</td>
+            </tr>
+            <tr>
+                <td data-label="Control">Published residual</td>
+                <td data-label="Effect">The share of points affected is reported alongside the map, so a reader can judge whether the error is material to the question they are asking. For route overlap it is not; for individual account placement it can be.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="impact-box">
+        <h3>The Residual, Measured</h3>
+        <p>Across the surviving delivery set, <strong>57.6%</strong> of points sit within ten miles of their branch and <strong>88%</strong> within twenty-five. Only <strong>0.3%</strong> fall in the last five miles before the shield boundary &mdash; so the shield is clipping a handful of genuine outliers rather than truncating a long tail that would change the picture.</p>
+        <p>Roughly <strong>4%</strong> of points are geocoded from a postal box. Those sit further out on every measure, with a median distance about three miles greater than street-addressed points. That is the size of the known distortion, and it is small enough that it does not move a conclusion about route overlap, which is what the map is for.</p>
+        <p>Leadership was told this when the tool was delivered. A map presented as precise would have been wrong; a map presented as bounded, with the bound stated, is usable.</p>
+    </div>
+
+    <h2 id="dashboard">3. Overlap Is Not Automatically Waste</h2>
+
+    <p><em>Most towns receive deliveries from more than one branch. Some of that is genuine redundancy and some is stocking depth &mdash; a second branch carrying a line the nearest one does not. The model below separates recurring routes from occasional drops, because the distinction is where the entire finding lives.</em></p>
+
+    <div class="dashboard-container" id="dashboard-panel">
+        <div class="dash-sidebar">
+            <div class="dash-header">
+                <div class="dash-title">Route <span>Overlap</span></div>
+                <p>Redundancy Model</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-minacct"><span>Route Threshold:</span> <span class="val-readout" id="v-minacct">5 accts</span></label>
+                <input type="range" id="s-minacct" min="1" max="20" step="1" value="5" aria-label="Minimum accounts for a branch-town pair to count as a recurring route">
+                <p class="control-note">Minimum accounts before a branch-town pair counts as a scheduled route rather than an occasional drop.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-trips"><span>Trips Per Week:</span> <span class="val-readout" id="v-trips">3</span></label>
+                <input type="range" id="s-trips" min="1" max="6" step="1" value="3" aria-label="Delivery trips per week per route">
+                <p class="control-note">How often a scheduled route runs. The single largest assumption in the model, so it is a control rather than a constant.</p>
+            </div>
+
+            <div class="control-group">
+                <label for="s-cpm"><span>Cost Per Mile:</span> <span class="val-readout" id="v-cpm">$1.42</span></label>
+                <input type="range" id="s-cpm" min="80" max="260" step="2" value="142" aria-label="Fully loaded cost per mile in cents">
+                <p class="control-note">Fully loaded: fuel, maintenance, driver time, depreciation.</p>
+            </div>
+
+            <div class="sidebar-subheader">Why the Threshold Matters</div>
+            <div class="logic-box">
+                <strong>Most overlap is a long tail</strong>
+                A large share of branch-town pairs exist to serve a single customer, and together they carry a small fraction of revenue. Counting those as redundant routes inflates the finding by an order of magnitude and produces a number no operations manager will believe. Raise the threshold and the exposure falls sharply &mdash; what remains is routes that genuinely run.
+            </div>
+        </div>
+
+        <div class="dash-main">
+            <div class="kpi-grid">
+                <div class="kpi-card k-amber">
+                    <div class="kpi-card-header">Recurring Routes</div>
+                    <div class="kpi-value" id="k-routes">--</div>
+                    <div class="kpi-sub" id="k-routes-sub">Branch-town pairs above the threshold</div>
+                </div>
+                <div class="kpi-card k-red">
+                    <div class="kpi-card-header">With a Closer Branch</div>
+                    <div class="kpi-value" id="k-redundant">--</div>
+                    <div class="kpi-sub" id="k-redundant-sub">Another branch is nearer that town</div>
+                </div>
+                <div class="kpi-card k-blue">
+                    <div class="kpi-card-header">Excess Miles / Year</div>
+                    <div class="kpi-value" id="k-miles">--</div>
+                    <div class="kpi-sub">Round trip, above the nearest-branch baseline</div>
+                </div>
+                <div class="kpi-card k-slate">
+                    <div class="kpi-card-header">Annual Exposure</div>
+                    <div class="kpi-value" id="k-cost">--</div>
+                    <div class="kpi-sub">To investigate, not to bank</div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-header">Redundant Routes Retained as the Threshold Rises</div>
+                <div class="chart-box"><canvas id="thresholdChart" role="img" aria-label="Line chart of redundant route count against the account threshold"></canvas></div>
+            </div>
+
+            <div class="hit-section">
+                <div class="chart-header" style="margin-bottom:12px;">Towns Worth a Conversation</div>
+                <table class="hit-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Town</th>
+                            <th scope="col">Branches</th>
+                            <th scope="col">Redundant</th>
+                            <th scope="col">Excess</th>
+                            <th scope="col">Annual</th>
+                            <th scope="col">Flag</th>
+                        </tr>
+                    </thead>
+                    <tbody id="town-body">
+                        <tr><td colspan="6" data-label="" style="text-align:center;color:#64748b;font-style:italic;">Awaiting model run...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <h2>4. What the Map Is Allowed to Conclude</h2>
+
+    <p>A redundant route is not proof of waste. The second branch may stock a product line the nearest one does not, in which case the extra miles buy something. It may serve an account with a contractual relationship to that specific location. It may be covering for a vehicle shortage that resolved months ago and was never revisited.</p>
+
+    <p>What the analysis produces is therefore an ordered list of conversations, not a savings figure. The output that gets used is the short version: the towns where a recurring route runs past a nearer branch, ranked by annual exposure, handed to the person who can say in one sentence whether there is a reason.</p>
+
+    <p>That framing matters for adoption. An analysis that arrives claiming a dollar saving invites an argument about the dollar. An analysis that arrives saying <em>here are eleven routes I cannot explain, and here is what each costs if the explanation turns out to be nothing</em> invites an answer.</p>
+
+    <div class="next-step-box">
+        <h3>Foundations &middot; Step 4</h3>
+        <p>The same geocoded account base, cut by representative rather than by branch, answers a different ownership question: whether the people calling on those accounts are covering territory that makes sense.</p>
+        <nav class="project-navigation" aria-label="Case study navigation">
+            <a href="legacy-silo-resolution.html" class="nav-btn prev">
+                <span class="nav-label">&larr; Step 2</span>
+                <span class="nav-title">Master Data Reconciliation</span>
+            </a>
+            <a href="territory-balancer.html" class="nav-btn next">
+                <span class="nav-label">Step 4 &rarr;</span>
+                <span class="nav-title">Territory Balancer</span>
+            </a>
+        </nav>
+    </div>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+    <script>
+        /* Synthetic footprint sized to the real one: a majority of towns receive
+           deliveries from more than one branch, and a large share of branch-town pairs
+           serve only one or two accounts. Names match the roster used across this site. */
+        const TOWNS = [
+            { name: 'Amber Fields',   nearest:  6.2, routes: [0, 18.4, 24.1, 31.0, 12.7, 9.9, 27.3, 15.2, 21.6], accts: [64, 11, 3, 1, 22, 41, 2, 1, 1] },
+            { name: 'Blue Stem',      nearest:  9.8, routes: [0, 14.2, 22.9, 8.6, 19.4, 26.0, 1.9],              accts: [88, 24, 1, 37, 2, 1, 9] },
+            { name: 'Pine Hollow',    nearest: 11.4, routes: [0, 16.8, 9.2, 23.7, 30.1, 6.4],                    accts: [73, 6, 31, 1, 2, 14] },
+            { name: 'Ash Grove',      nearest:  7.1, routes: [0, 12.9, 20.4, 5.8, 17.2],                         accts: [98, 19, 2, 44, 1] },
+            { name: 'Granite Flats',  nearest: 13.6, routes: [0, 21.1, 8.9, 26.5],                               accts: [121, 8, 33, 1] },
+            { name: 'Rock Haven',     nearest:  5.4, routes: [0, 19.7, 11.3],                                    accts: [155, 12, 27] },
+            { name: 'Bent Creek',     nearest: 15.2, routes: [0, 9.4, 24.8],                                     accts: [142, 21, 3] },
+            { name: 'Red Oak',        nearest:  8.7, routes: [0, 16.1],                                          accts: [210, 34] },
+            { name: 'Cold Spring',    nearest: 10.9, routes: [0, 13.5],                                          accts: [176, 7] },
+            { name: 'Birch Run',      nearest: 12.3, routes: [0, 22.6],                                          accts: [188, 16] }
+        ];
+        const WEEKS = 50;
+
+        const el = id => document.getElementById(id);
+        const money = v => '$' + Math.round(v).toLocaleString();
+        const isNarrow = () => window.matchMedia('(max-width: 800px)').matches;
+        let chart = null;
+
+        /* A branch-town pair counts as a recurring route only if it serves at least the
+           threshold number of accounts. Below that it is an occasional drop, and counting
+           it as a scheduled run is what inflates this class of analysis into fiction. */
+        function analyse(minAccts, trips, cpm) {
+            let routes = 0, redundant = 0, excessMiles = 0;
+            const rows = [];
+            TOWNS.forEach(t => {
+                let townExcess = 0, townRedundant = 0, branches = 0;
+                t.routes.forEach((extra, i) => {
+                    if (t.accts[i] < minAccts) return;
+                    branches++; routes++;
+                    if (extra > 1) {
+                        redundant++; townRedundant++;
+                        const yearly = extra * 2 * trips * WEEKS;
+                        excessMiles += yearly;
+                        townExcess += yearly;
+                    }
+                });
+                if (townRedundant > 0) {
+                    rows.push({ name: t.name, branches, redundant: townRedundant,
+                                excess: townExcess, cost: townExcess * cpm,
+                                meanExtra: townExcess / (townRedundant * 2 * trips * WEEKS) });
+                }
+            });
+            return { routes, redundant, excessMiles, cost: excessMiles * cpm, rows };
+        }
+
+        function update() {
+            const minAccts = +el('s-minacct').value;
+            const trips = +el('s-trips').value;
+            const cpm = +el('s-cpm').value / 100;
+
+            el('v-minacct').innerText = minAccts + (minAccts === 1 ? ' acct' : ' accts');
+            el('v-trips').innerText = trips;
+            el('v-cpm').innerText = '$' + cpm.toFixed(2);
+
+            const r = analyse(minAccts, trips, cpm);
+
+            el('k-routes').innerText = r.routes.toLocaleString();
+            const dropped = TOWNS.reduce((s, t) => s + t.accts.filter(a => a < minAccts).length, 0);
+            el('k-routes-sub').innerText = dropped
+                ? `${dropped} pair${dropped === 1 ? '' : 's'} below the threshold, treated as drops`
+                : 'every pair counted, including single-account drops';
+
+            el('k-redundant').innerText = r.redundant.toLocaleString();
+            el('k-redundant-sub').innerText = r.routes
+                ? `${(r.redundant / r.routes * 100).toFixed(0)}% of recurring routes`
+                : 'no routes above the threshold';
+
+            el('k-miles').innerText = r.excessMiles >= 1000
+                ? Math.round(r.excessMiles / 1000).toLocaleString() + 'k'
+                : Math.round(r.excessMiles).toLocaleString();
+            el('k-cost').innerText = r.cost >= 1e6 ? '$' + (r.cost / 1e6).toFixed(2) + 'M' : money(r.cost);
+
+            renderTable(r.rows);
+            renderChart(trips, cpm);
+        }
+
+        function renderTable(rows) {
+            if (!rows.length) {
+                el('town-body').innerHTML = '<tr><td colspan="6" data-label="" style="text-align:center;color:#64748b;font-style:italic;">No redundant recurring routes at this threshold.</td></tr>';
+                return;
+            }
+            const top = rows.slice().sort((a, b) => b.cost - a.cost).slice(0, 8);
+            el('town-body').innerHTML = top.map(r => `
+                <tr>
+                    <td data-label="Town">${r.name}</td>
+                    <td data-label="Branches">${r.branches}</td>
+                    <td data-label="Redundant">${r.redundant}</td>
+                    <td data-label="Excess">${r.meanExtra.toFixed(1)} mi avg</td>
+                    <td data-label="Annual" style="color:#f59e0b;font-weight:700;">${money(r.cost)}</td>
+                    <td data-label="Flag"><span class="tag ${r.redundant >= 3 ? 't-review' : 't-watch'}">${r.redundant >= 3 ? 'Review' : 'Watch'}</span></td>
+                </tr>`).join('');
+        }
+
+        function renderChart(trips, cpm) {
+            const node = el('thresholdChart');
+            if (!node || typeof Chart === 'undefined') return;
+            if (chart) chart.destroy();
+            const xs = [], ys = [], cs = [];
+            for (let t = 1; t <= 20; t++) {
+                const r = analyse(t, trips, cpm);
+                xs.push(t); ys.push(r.redundant); cs.push(r.cost);
+            }
+            Chart.defaults.font.family = "'Inter', 'Segoe UI', sans-serif";
+            chart = new Chart(node.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: xs,
+                    datasets: [
+                        { label: 'Redundant routes', data: ys, borderColor: '#ef4444',
+                          backgroundColor: 'rgba(239,68,68,0.12)', borderWidth: 3, pointRadius: 0, tension: 0.2, fill: true, yAxisID: 'y' },
+                        { label: 'Annual exposure', data: cs, borderColor: '#7dd3fc',
+                          backgroundColor: 'rgba(125,211,252,0.10)', borderWidth: 2, borderDash: [5, 4], pointRadius: 0, tension: 0.2, fill: false, yAxisID: 'y1' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { labels: { color: '#cbd5e1', font: { size: 11, weight: '600' }, boxWidth: 12 } },
+                        tooltip: { backgroundColor: 'rgba(15,23,42,0.95)', padding: 12,
+                                   callbacks: { label: c => c.datasetIndex === 0
+                                       ? ` ${c.raw} redundant routes`
+                                       : ` ${money(c.raw)} exposure` } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Route Threshold (minimum accounts)', color: '#94a3b8', font: { size: 11, weight: 'bold' } },
+                             ticks: { color: '#cbd5e1', font: { size: 10 } }, grid: { display: false } },
+                        y: { position: 'left', beginAtZero: true,
+                             title: { display: true, text: 'Redundant Routes', color: '#ef4444', font: { size: 10, weight: 'bold' } },
+                             ticks: { color: '#cbd5e1', font: { size: 10 } }, grid: { color: '#334155', borderDash: [4, 4] } },
+                        y1: { position: 'right', beginAtZero: true,
+                              title: { display: true, text: 'Annual Exposure', color: '#7dd3fc', font: { size: 10, weight: 'bold' } },
+                              ticks: { color: '#cbd5e1', font: { size: 10 }, callback: v => '$' + (v / 1000).toFixed(0) + 'k' },
+                              grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        ['s-minacct', 's-trips', 's-cpm'].forEach(id => el(id).addEventListener('input', update));
+
+        let wasNarrow = isNarrow(), t = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(t);
+            t = setTimeout(() => { const n = isNarrow(); if (n !== wasNarrow) { wasNarrow = n; update(); } }, 150);
+        });
+
+        if (typeof Chart === 'undefined') {
+            const box = document.querySelector('.chart-box');
+            if (box) box.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:0.85rem;text-align:center;padding:20px;">Chart library unavailable on this network. The town list below is unaffected.</div>';
+        }
+
+        document.querySelectorAll('.jargon-tooltip').forEach(n => {
+            n.setAttribute('tabindex', '0'); n.setAttribute('role', 'note');
+            n.setAttribute('aria-label', n.textContent.trim() + ': ' + n.getAttribute('data-tip'));
+        });
+
+        update();
+    </script>
+</body>
+</html>

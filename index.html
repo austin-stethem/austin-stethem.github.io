@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Austin Sonny Stethem | Strategic Pricing &amp; Master Data Analyst</title>
+    <meta name="description" content="Portfolio of production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.">
+    <meta name="author" content="Austin Sonny Stethem">
+    <meta name="theme-color" content="#1a2433">
+
+    <!-- Open Graph / Twitter Tags for Link Previews (Teams/Slack/iMessage/LinkedIn) -->
+    <meta property="og:title" content="Austin Sonny Stethem | Systems Architecture &amp; Analytics">
+    <meta property="og:description" content="Production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Austin Sonny Stethem">
+    <meta property="og:url" content="https://austin-stethem.github.io/">
+    <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom SVG Favicon (Browser Tab Icon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><polygon points='50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5' fill='none' stroke='%231a2433' stroke-width='8' stroke-linejoin='round'/><polyline points='27,65 47,43 59,55 71,37' fill='none' stroke='%23b32525' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/><circle cx='27' cy='65' r='5' fill='%231a2433'/><circle cx='47' cy='43' r='5' fill='%231a2433'/><circle cx='59' cy='55' r='5' fill='%231a2433'/><circle cx='71' cy='37' r='7' fill='%23b32525'/></svg>">
+
+    <link rel="stylesheet" href="portfolio.css?v=3">
+
+    <style>
+        :root {
+            --navy: #1a2433;
+            --ink: #0f172a;
+            --crimson: #b32525;
+            --crimson-dark: #8e1c1c;
+            --body: #334155;
+            --muted: #64748b;
+            --line: #cbd5e1;
+            --surface: #f8fafc;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif;
+            line-height: 1.6;
+            color: var(--body);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 90px;
+            background: var(--surface);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3 { font-family: 'Georgia', 'Times New Roman', serif; font-weight: normal; }
+
+        a:focus-visible { outline: 2px solid var(--crimson); outline-offset: 3px; border-radius: 4px; }
+
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-header h1 { color: var(--ink); margin: 0 0 5px 0; font-size: clamp(2rem, 6vw, 2.8rem); letter-spacing: -0.5px; line-height: 1.15; }
+        .page-header p.subtitle { margin: 0; color: var(--crimson); font-size: clamp(1rem, 3vw, 1.2rem); font-weight: 500; }
+        .page-header h2 { font-size: clamp(1.35rem, 4vw, 1.75rem); color: var(--ink); }
+
+        .contact-nav { margin-top: 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        .contact-nav a {
+            color: #475569; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 7px;
+            padding: 8px 16px; background: #fff; border: 1px solid var(--line); border-radius: 25px; transition: all 0.2s ease; font-size: 0.9rem; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .contact-nav a:hover { border-color: var(--crimson); background: #fff5f5; color: var(--crimson); transform: translateY(-2px); box-shadow: 0 4px 6px rgba(179,37,37,0.1); }
+
+        .portfolio-desc { max-width: 750px; margin: 30px auto 0; color: var(--muted); font-size: 1.05rem; }
+
+        /* --- TECH TREE GRID ARCHITECTURE --- */
+        .tech-tree {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        /* Uniform grid rather than a flex stack with connectors between cards. The
+           gap is the only thing setting vertical rhythm now, so spacing is identical
+           everywhere by construction instead of being tuned per-gap. */
+        /* Cards sit on a uniform grid; the connector is drawn inside the gap as a
+           pseudo-element rather than as its own grid child. A separate element would claim
+           a full 320px row and destroy the even spacing. */
+        .tree-column { display: grid; grid-auto-rows: minmax(320px, auto); gap: 46px; align-content: start; }
+
+        .tree-column .card:not(:last-child)::after {
+            content: ''; position: absolute; left: 50%; top: 100%;
+            transform: translateX(-50%);
+            width: 2px; height: 30px; background: var(--line);
+        }
+        .tree-column .card:not(:last-child)::before {
+            content: ''; position: absolute; left: 50%; top: calc(100% + 30px);
+            transform: translateX(-50%);
+            border-width: 7px 5px 0 5px; border-style: solid;
+            border-color: var(--line) transparent transparent transparent;
+        }
+        
+        .tree-header { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--line); width: 100%; }
+        .tree-header h2 { margin: 0; font-size: 1.6rem; color: var(--ink); font-family: 'Inter', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .tree-header p { margin: 5px 0 0 0; color: var(--muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+
+        /* Base Card Styling */
+        .card {
+            width: 100%;
+            position: relative;
+            background: #f4f4f5;
+            border: 1px solid #d4d4d8;
+            padding: 30px 25px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+            opacity: 0;
+            animation: rise 0.5s ease forwards;
+        }
+        
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:hover, .card:focus-within { border-color: var(--crimson); transform: translateY(-4px); box-shadow: 0 12px 20px rgba(0,0,0,0.06); }
+
+        .featured-card { background: var(--navy); color: var(--surface); border: 1px solid transparent; }
+        .featured-card:hover, .featured-card:focus-within { border-color: transparent; box-shadow: 0 15px 25px rgba(26, 36, 51, 0.2); }
+        .featured-card h3 { color: #ffffff; }
+        .featured-card .desc { color: var(--line); }
+        .featured-card .tech { color: #f87171; }
+
+        /* One lead card per track, all navy. Previously each track had its own accent
+           (navy / amber / slate), which read as three unrelated sections rather than
+           three views of one body of work. */
+
+        /* Locked Blueprint Cards */
+        .locked-card { background: transparent; border: 1px dashed #cbd5e1; box-shadow: none; opacity: 0.85; }
+
+        /* Deployed internally but not yet written up. Solid border, muted CTA -- visually
+           distinct from both a live case study and a blueprint, because "running in
+           production without a public write-up" is a third state and conflating it with
+           either of the others misrepresents the work. */
+        .deployed-btn { background: #f1f5f9; border-color: #94a3b8; color: #475569; cursor: default; font-size: 0.8rem; }
+        .deployed-btn:hover { background: #f1f5f9; border-color: #94a3b8; color: #475569; transform: none; }
+        .locked-card:hover { transform: translateY(-2px); box-shadow: none; border-color: #94a3b8; opacity: 1; }
+        .locked-card .tech { color: #94a3b8; }
+        .locked-card h3 { color: #64748b; }
+        .locked-card .desc { color: #94a3b8; }
+        .locked-btn { background: transparent; border: 1px solid #e2e8f0; color: #94a3b8; cursor: default; box-shadow: none; }
+        .locked-card:hover .locked-btn { border-color: #cbd5e1; color: #64748b; }
+
+        .card h3 { margin-top: 0; font-size: 1.3rem; margin-bottom: 10px; }
+        .tech { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: var(--crimson); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+        .desc { font-size: 0.9rem; margin-bottom: 20px; color: #475569; line-height: 1.6; }
+
+        .btn {
+            display: inline-block; align-self: center; margin-top: auto; background: #ffffff; color: var(--ink); border: 1px solid var(--line);
+            padding: 10px 20px; font-family: 'Inter', sans-serif; font-weight: 600; text-decoration: none; font-size: 0.9rem; border-radius: 6px; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .btn:hover { background: #f1f5f9; border-color: #94a3b8; color: var(--crimson); text-decoration: none; }
+
+        .featured-card .btn { background: var(--crimson); border-color: var(--crimson); color: #ffffff; }
+        .featured-card .btn:hover { background: var(--crimson-dark); border-color: var(--crimson-dark); color: #ffffff; transform: translateY(-2px); }
+
+        .ai-disclaimer { margin-top: 60px; padding: 25px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.85rem; color: var(--muted); text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+        .ai-disclaimer strong { color: var(--body); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; display: block; margin-bottom: 8px; }
+
+        @media (max-width: 900px) {
+            .tech-tree { grid-template-columns: 1fr; gap: 50px; }
+            body { padding: 28px 16px 70px; }
+            .tree-header { margin-bottom: 15px; }
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; max-width: none; }
+            .card, .featured-card, .locked-card { break-inside: avoid; box-shadow: none; background: #fff; color: #000; opacity: 1; animation: none; border: 1px solid #ccc; }
+            .featured-card h3, .featured-card .desc, .featured-card .tech, .locked-card h3 { color: #000; }
+            .btn { display: none; }
+            .tree-column .card::before, .tree-column .card::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <a class="skip-link" href="#projects">Skip to projects</a>
+
+    <header class="page-header">
+
+        <!-- CUSTOM BRAND LOGO -->
+        <svg width="70" height="70" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+             role="img" aria-labelledby="logoTitle"
+             style="margin: 0 auto 15px auto; display: block; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));">
+            <title id="logoTitle">Austin Stethem monogram: a hexagon enclosing an upward data trend line</title>
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#1a2433" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="27,65 47,43 59,55 71,37" fill="none" stroke="#b32525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="27" cy="65" r="5" fill="#1a2433"/>
+            <circle cx="47" cy="43" r="5" fill="#1a2433"/>
+            <circle cx="59" cy="55" r="5" fill="#1a2433"/>
+            <circle cx="71" cy="37" r="7" fill="#b32525"/>
+        </svg>
+
+        <h1>Austin Sonny Stethem</h1>
+        <p class="subtitle">Strategic Pricing &amp; Master Data Analyst</p>
+
+        <nav class="contact-nav" aria-label="Contact and documents">
+            <a href="tel:+17122995267"><span aria-hidden="true">📞</span> 712-299-5267</a>
+            <a href="mailto:austinstethem1976@gmail.com"><span aria-hidden="true">✉️</span> austinstethem1976@gmail.com</a>
+            <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">💼</span> LinkedIn</a>
+            <a href="Stethem_Austin_Resume.pdf" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">📄</span> View Resume (PDF)</a>
+        </nav>
+
+        <hr style="width: 50%; border: 0; border-top: 1px solid #cbd5e1; margin: 30px auto;">
+
+        <h2>Enterprise Data &amp; Pricing Architecture</h2>
+        <p class="portfolio-desc">Showcasing production-grade pricing engines, predictive data science models, and operational logic built to scale enterprise EBITDA.</p>
+    </header>
+
+    <main class="tech-tree" id="projects">
+
+        <!-- COLUMN 1: DEFENSE -->
+        <section class="tree-column">
+            <div class="tree-header">
+                <h2>Defense</h2>
+                <p>Margin &amp; Risk Architecture</p>
+            </div>
+            
+            <article class="card featured-card" style="animation-delay: 0.05s;">
+                <p class="tech">Python, Jupyter, SQL, Leaflet.js</p>
+                <h3>Predictive VIO Market Capture</h3>
+                <p class="desc">Geospatial intelligence mapping physical assets against competitors to identify exposure via K-Means Topological Risk Modeling.</p>
+                <a href="predictive-vio-market-capture.html" class="btn" aria-label="Review the Predictive VIO Market Capture case study">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.1s;">
+                <p class="tech">Python (Pandas), SQL, KVI P-Tiers</p>
+                <h3>Algorithmic Margin Defense</h3>
+                <p class="desc">A deterministic cross-subsidization engine cascading cost deficits to defend baseline EBITDA against supply chain inflation.</p>
+                <a href="algorithmic-margin-defense.html" class="btn" aria-label="Review Margin Defense">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.15s;">
+                <p class="tech">Python (NumPy), Monte Carlo</p>
+                <h3>Stochastic Optimization</h3>
+                <p class="desc">A 5,000-path random walk injecting statistical noise into demand curves to probabilistically map the cone of profit risk.</p>
+                <a href="stochastic-margin-optimization.html" class="btn" aria-label="Review Stochastic Optimization">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.2s;">
+                <p class="tech">Python (SciPy), Chart.js</p>
+                <h3>A/B Testing &amp; Validation</h3>
+                <p class="desc">A randomized Two-Proportion Z-Test to empirically prove dynamic pricing algorithms do not erode B2B conversion rates.</p>
+                <a href="ab-testing-framework.html" class="btn" aria-label="Review A/B Testing">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.25s;">
+                <p class="tech">Cash Flow Modeling, Chart.js</p>
+                <h3>FIFO Inventory Revaluation</h3>
+                <p class="desc">Cash flow modeling demonstrating how preemptive pricing against deep inventory buffers generates massive EBITDA windfalls.</p>
+                <a href="fifo-inventory-revaluation.html" class="btn" aria-label="Review FIFO Inventory Revaluation">Review Case Study</a>
+            </article>
+        </section>
+
+        <!-- COLUMN 2: ATTACK -->
+        <section class="tree-column">
+            <div class="tree-header">
+                <h2>Attack</h2>
+                <p>Market &amp; Revenue Capture</p>
+            </div>
+
+            <article class="card featured-card" style="animation-delay: 0.1s;">
+                <p class="tech">Python (GeoPy), API Pipelines</p>
+                <h3>Market Capture Engine</h3>
+                <p class="desc">3,768 competitor rooftops across ten brand families, harvested to forecast which stores close when two chains merge &mdash; turning proximity into a ranked call list.</p>
+                <a href="market-capture-engine.html" class="btn" aria-label="Review the Market Capture Engine case study">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.15s;">
+                <p class="tech">Spatial Coverage, Capital Payback Modelling</p>
+                <h3>Greenfield VIO Expansion</h3>
+                <p class="desc">Subtracting drive-time coverage from vehicle density to find uncovered corridors, then testing each against the cost of the building it would take to serve it.</p>
+                <a href="greenfield-vio-expansion.html" class="btn" aria-label="Review the Greenfield VIO Expansion case study">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.2s;">
+                <p class="tech">Trend Classification, Recency Decay</p>
+                <h3>Lost Account Win-Back</h3>
+                <p class="desc">Nobody files a report when a customer leaves, but leaving has a signature in a revenue series. Churn labels derived rather than collected, ranked by recoverable gross profit.</p>
+                <a href="win-back-engine.html" class="btn" aria-label="Review the Lost Account Win-Back case study">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.25s;">
+                <p class="tech">Association Rule Mining, Support &amp; Lift</p>
+                <h3>Wallet Share &amp; Affinity</h3>
+                <p class="desc">Accounts buying one half of a natural pair and none of the other. Filtered on lift rather than confidence, because popularity is not affinity.</p>
+                <a href="wallet-share-affinity.html" class="btn" aria-label="Review the Wallet Share and Affinity case study">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.3s;">
+                <p class="tech">Entitlement Auditing, Churn-Weighted Recovery</p>
+                <h3>Contract Tier Clawbacks</h3>
+                <p class="desc">Volume tiers granted on a forecast and never revisited. Quantifying the leakage, and using competitive exposure to decide which accounts are safe to reprice.</p>
+                <a href="contract-tier-clawbacks.html" class="btn" aria-label="Review the Contract Tier Clawbacks case study">Review Case Study</a>
+            </article>
+        </section>
+
+        <!-- COLUMN 3: FOUNDATIONS -->
+        <section class="tree-column">
+            <div class="tree-header">
+                <h2>Foundations</h2>
+                <p>Data Governance &amp; Ops</p>
+            </div>
+
+            <article class="card featured-card" style="animation-delay: 0.15s;">
+                <p class="tech">Disaster Recovery, IoT / APIs</p>
+                <h3>ERP Crisis Reconciliation</h3>
+                <p class="desc">A flood destroyed the warehouse. Severing the phantom fulfillment loop across an 80-branch network, and designing an automated kill-switch.</p>
+                <a href="erp-reconciliation-engine.html" class="btn" aria-label="Review the ERP Crisis Reconciliation case study">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.2s;">
+                <p class="tech">Entity Resolution, Join Integrity, Alias Governance</p>
+                <h3>Master Data Reconciliation</h3>
+                <p class="desc">An exact-match join silently removed 12.5% of an 80-branch network from the model. A taxonomy of name mismatches, and the normalisation pipeline that recovers them without merging the wrong records.</p>
+                <a href="legacy-silo-resolution.html" class="btn" aria-label="Review the Master Data Reconciliation case study">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.25s;">
+                <p class="tech">SQL Extraction, Margin Definition, Legacy Schema</p>
+                <h3>The Extract Layer</h3>
+                <p class="desc">Gross profit is a definition, not a fact. Four exclusions in a WHERE clause move reported margin by six points &mdash; and every predictive model downstream inherits that decision without knowing it was made.</p>
+                <a href="extract-layer.html" class="btn" aria-label="Review The Extract Layer case study">Review Case Study</a>
+            </article>
+
+
+            <article class="card" style="animation-delay: 0.25s;">
+                <p class="tech">Vector Mapping, Route Overlap, Bounded Error</p>
+                <h3>Logistics Spider-Mapping</h3>
+                <p class="desc">32,000 delivery points plotted branch-to-customer to expose route overlap &mdash; built on a geocoding input that cannot be fixed at source, so the error is bounded and published rather than hidden.</p>
+                <a href="logistics-spider-mapping.html" class="btn" aria-label="Review the Logistics Spider-Mapping case study">Review Case Study</a>
+            </article>
+
+            <article class="card" style="animation-delay: 0.3s;">
+                <p class="tech">Workload Distribution, Radius Discipline</p>
+                <h3>Territory Balancer</h3>
+                <p class="desc">10,280 rep-assigned accounts mapped against their hub. Only one representative in four carries a book near the median &mdash; and about a thousand towns have several reps calling on the same customers.</p>
+                <a href="territory-balancer.html" class="btn" aria-label="Review the Territory Balancer case study">Review Case Study</a>
+            </article>
+        </section>
+
+    </main>
+
+    <section class="ai-disclaimer">
+        <strong>Architectural Note &amp; Development Workflow</strong>
+        The interactive tools on this site were built by directing an LLM rather than by hand-coding them. My contribution was the specification and the review loop: defining what each engine had to calculate, supplying the pricing and inventory logic it encodes, and iterating on the output until its behavior matched the strategy. Generating a Monte Carlo simulation is inexpensive now. Knowing what it ought to produce, and recognizing when it doesn't, is not &mdash; and that is where my work sits.
+    </section>
+
+    <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
+
+</body>
+</html>
