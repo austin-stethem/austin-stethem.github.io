@@ -1,0 +1,637 @@
+/* ============================================================================
+   Nocturne Cyan
+   New hybrid: the dark shell you liked with the cyan signal from Blueprint.
+
+   Neutrals are genuinely neutral — hue appears only in the signal and the data
+   series. Drop-in replacement for portfolio.css.
+   ============================================================================ */
+:root {
+    --on-signal: #14171a;   /* text on a signal-coloured fill */
+    --signal: #48b8d8;
+    --signal-dark: #2f92ae;
+
+    --ink: #eef1f4;
+    --on-ink: #0e1216;
+    --ink-surface: #eef1f4;
+    --body-text: #c3cbd3;
+    --muted: #8b959e;
+    --line: #262c33;
+    --hairline: #1c2228;
+    --bg-color: #0e1216;
+
+
+    --surface: #151a20;
+    --surface-alt: #1b2128;
+    --surface-sunken: #12171c;
+    --row-line: #1f262d;
+
+    --panel-bg: #090c10;
+    --panel-surface: #141a21;
+    --panel-border: #262e37;
+    --panel-text: #c3cbd3;
+    --panel-muted: #8b959e;
+    --panel-bright: #eef1f4;
+    --panel-dim: #6a747d;
+
+    --data-positive: #3ecf8e;
+    --data-negative: #f0705c;
+    --data-warning: #e8b04b;
+    --data-info: #e8b04b;
+    --data-series: #5b9bd5;
+    --signal-bright: #f2c14e;
+
+    --notice-bg: #231a10;
+    --notice-border: #5a4423;
+    --notice-text: #e6d3b8;
+    --frame: #07090b;
+    --panel-signal: #f2c14e;
+}
+
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* --- Accessibility primitives -------------------------------------------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--ink-surface);
+    color: var(--on-ink);
+    padding: 10px 16px;
+    border-radius: 0 0 6px 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    z-index: 1000000;
+}
+.skip-link:focus { left: 0; }
+
+/* --- Document chrome ------------------------------------------------------ */
+.back-link {
+    color: var(--signal);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 0;
+}
+.back-link:hover { text-decoration: underline; }
+
+.doc-header {
+    width: 100%;
+    border-bottom: 2px solid var(--ink-surface);
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* Doubled class: a page-level `.portfolio-content p` rule is (0,1,1) and outranks a
+   single class, which left the tagline justified instead of centred on two pages. */
+.doc-tagline.doc-tagline {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: var(--signal);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0 0 6px 0;
+    text-align: center;
+    width: 100%;
+}
+.doc-title {
+    font-family: 'Archivo Narrow', 'Archivo', sans-serif;
+    font-variant-numeric: lining-nums;
+    font-size: clamp(19pt, 5.5vw, 26pt);
+    color: var(--ink-surface);
+    margin: 0 0 10px 0;
+    line-height: 1.2;
+    text-align: center;
+    font-weight: normal;
+}
+
+/* --- Metadata table ------------------------------------------------------- */
+.meta-table {
+    width: 100%;
+    /* Without this, a long tech-stack string widens its column and squeezes the
+       other two out of their declared 33%. */
+    table-layout: fixed;
+    margin: 0 auto 30px auto;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+.meta-cell {
+    vertical-align: top;
+    /* Fixed layout will not grow to fit, so long unbroken tokens must wrap */
+    overflow-wrap: break-word;
+    padding: 15px;
+    font-size: 9.5pt;
+    text-align: center;
+    border-right: 1px solid var(--hairline);
+    width: 33%;
+}
+.meta-cell:last-child { border-right: none; }
+.meta-label {
+    display: block;
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+.meta-value { color: var(--body-text); font-weight: 500; }
+
+/* --- Callouts ------------------------------------------------------------- */
+.nda-note {
+    background: var(--surface-alt);
+    padding: 15px;
+    margin: 20px 0;
+    font-size: 8.5pt;
+    font-style: italic;
+    color: var(--body-text);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    border-radius: 0 6px 6px 0;
+    border: 1px solid var(--hairline);
+    border-left: 4px solid var(--signal);
+}
+
+.scenario-box {
+    background: var(--surface-sunken);
+    border-left: 4px solid var(--signal);
+    padding: 18px 25px;
+    margin-top: -5px;
+    margin-bottom: 30px;
+    border-radius: 0 6px 6px 0;
+    font-size: 10pt;
+    color: var(--body-text);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.scenario-box > strong:first-child {
+    color: var(--signal);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 8.5pt;
+    display: block;
+    margin-bottom: 6px;
+}
+
+/* --- Jargon tooltips ------------------------------------------------------
+   :focus is included alongside :hover so these are reachable by keyboard and
+   by tap. The pages add tabindex="0" to each one at runtime.               */
+.jargon-tooltip {
+    position: relative;
+    border-bottom: 1px dashed var(--signal);
+    cursor: help;
+    color: var(--ink-surface);
+    white-space: nowrap;
+    transition: border-color 0.2s ease;
+}
+.jargon-tooltip strong { font-weight: 700; color: var(--ink-surface); }
+.jargon-tooltip::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--panel-surface);
+    color: var(--panel-text);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 8.5pt;
+    font-weight: normal;
+    white-space: normal;
+    width: max-content;
+    max-width: 260px;
+    text-align: center;
+    line-height: 1.4;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+    pointer-events: none;
+}
+.jargon-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--panel-surface) transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    z-index: 1000;
+    pointer-events: none;
+}
+.jargon-tooltip:hover::after, .jargon-tooltip:hover::before,
+.jargon-tooltip:focus::after, .jargon-tooltip:focus::before {
+    opacity: 1;
+    visibility: visible;
+    bottom: 135%;
+}
+
+/* --- End-of-page navigation ----------------------------------------------- */
+/* A dark closing panel in both modes, so it sits on the panel scale. It previously
+   used a token that aliased --ink — a FOREGROUND colour, which inverts — so the
+   panel turned light in dark mode while its text stayed light. */
+.next-step-box {
+    background: var(--panel-bg);
+    color: var(--panel-text);
+    padding: 35px 25px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-top: 4px solid var(--signal);
+}
+.next-step-box h3 {
+    color: var(--panel-bright);
+    margin-top: 0;
+    font-family: 'Archivo Narrow', 'Archivo', sans-serif;
+    font-variant-numeric: lining-nums;
+    font-size: clamp(15pt, 4.5vw, 18pt);
+    margin-bottom: 12px;
+    border-bottom: none;
+    padding-bottom: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: normal;
+}
+/* The doubled class is deliberate. `.next-step-box p` ties on specificity with a
+   page-level `.portfolio-content p`, and portfolio.css loads first — so the page's
+   dark body colour would win on source order and paint dark text onto the navy
+   panel. Doubling the class outranks it without resorting to !important. */
+.next-step-box.next-step-box p {
+    color: var(--panel-bright);
+    font-size: 10pt;
+    max-width: 650px;
+    margin: 0 auto 25px auto;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.project-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-top: 30px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.nav-btn {
+    flex: 1;
+    min-width: 250px;
+    background: var(--panel-surface);
+    border: 1px solid var(--panel-border);
+    color: var(--panel-text);
+    padding: 15px 20px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.nav-btn.next {
+    text-align: right;
+    background: var(--signal);
+    border-color: var(--signal);
+    align-items: flex-end;
+}
+.nav-btn.prev:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(-4px);
+    border-color: rgba(255,255,255,0.3);
+}
+.nav-btn.next:hover {
+    background: var(--signal-dark);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(224, 145, 63, 0.30);
+}
+.nav-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--panel-muted);
+    margin-bottom: 4px;
+}
+.nav-btn.next .nav-label { color: var(--on-signal); }
+.nav-title { font-size: 11pt; font-weight: bold; }
+
+/* --- Range sliders --------------------------------------------------------
+   Baseline for pointer devices. Sliders only appear inside the dark dashboard
+   sidebars, so the track and thumb are tuned for that context. The
+   @media (pointer: coarse) block further down scales the thumb for touch;
+   the -10px thumb offset there assumes this 6px track height.              */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+    margin-top: 5px;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 18px;
+    width: 18px;
+    margin-top: -6px;            /* centres an 18px thumb on a 6px track */
+    border-radius: 50%;
+    background: var(--signal);
+    box-shadow: 0 0 10px rgba(224, 145, 63, 0.40);
+    transition: transform 0.12s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+input[type="range"]::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border: none;
+    border-radius: 50%;
+    background: var(--signal);
+}
+input[type="range"]:focus { outline: none; }
+input[type="range"]:focus-visible { outline: 2px solid var(--signal); outline-offset: 6px; }
+input[type="range"]:disabled { cursor: not-allowed; opacity: 0.55; }
+
+/* --- Watermark ------------------------------------------------------------ */
+.watermark {
+    position: fixed;
+    bottom: 12px;
+    right: 15px;
+    font-size: 0.65rem;
+    color: var(--panel-muted);
+    opacity: 0.6;
+    font-family: 'Archivo', 'Inter', system-ui, sans-serif;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    user-select: none;
+    z-index: 9999;
+}
+
+/* --- Mobile --------------------------------------------------------------- */
+@media (max-width: 800px) {
+    .meta-table tr { display: flex; flex-direction: column; }
+    .meta-cell { width: 100%; border-right: none; border-bottom: 1px solid var(--hairline); }
+    /* Stacked, the final cell's bottom border sits on the table's outer border */
+    .meta-cell:last-child { border-bottom: none; }
+
+    .project-navigation { flex-direction: column; }
+    .nav-btn {
+        width: 100%;
+        min-width: 0;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    /* A clipped tooltip bubble is unusable on a phone; show it as a bottom sheet */
+    .jargon-tooltip { white-space: normal; }
+    .jargon-tooltip::before { display: none; }
+    .jargon-tooltip::after,
+    .jargon-tooltip:hover::after,
+    .jargon-tooltip:focus::after {
+        position: fixed;
+        bottom: 16px;
+        top: auto;
+        left: 16px;
+        right: 16px;
+        transform: none;
+        width: auto;
+        max-width: none;
+        font-size: 10pt;
+        padding: 14px 16px;
+    }
+
+    .watermark {
+        position: static;
+        display: block;
+        text-align: center;
+        padding-top: 26px;
+        opacity: 0.75;
+    }
+}
+
+/* Larger grab targets on touch devices. WCAG asks for ~44px; a bare text link
+   or a 28px button is a miss-tap waiting to happen on a phone. */
+@media (pointer: coarse) {
+    input[type="range"] { margin-top: 10px; padding: 6px 0; }
+    input[type="range"]::-webkit-slider-thumb { height: 26px; width: 26px; margin-top: -10px; }
+    input[type="range"]::-moz-range-thumb { height: 26px; width: 26px; }
+
+    .back-link { padding: 10px 4px; margin-bottom: 14px; }
+    .nav-btn { padding: 18px 20px; }
+    .jargon-tooltip { padding: 3px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media print {
+    /* .project-navigation is nested inside .next-step-box on every case study, so
+       hiding the parent already covers it. Listed anyway so the rule still holds if
+       the nav is ever used standalone. */
+    .watermark,
+    .skip-link,
+    .next-step-box,
+    .project-navigation { display: none !important; }
+    body { background: #fff; }
+}
+
+/* ── large displays ───────────────────────────────────────────────────────────
+   The container was capped at 950px, which fills about a third of a 32-inch
+   monitor. It now grows in two steps, but prose does NOT grow with it: past
+   roughly 75 characters a line the eye loses its place on the return sweep. So
+   paragraphs and lists keep their measure and centre inside the wider column,
+   while tables, dashboards and charts take everything available. */
+@media (min-width: 1340px) {
+    body.doc { max-width: 1150px; }
+    body.doc p, body.doc ul, body.doc ol, body.doc blockquote { max-width: 92ch; margin-left: auto; margin-right: auto; }
+    body.doc .scenario-box, body.doc .nda-note, body.doc .impact-box { max-width: 86ch; margin-left: auto; margin-right: auto; }
+    /* full-bleed by design: anything that carries data rather than prose */
+    .data-table, .hit-table, .meta-table, .ladder-table, .log-table, .match-table,
+    .inventory-table, .protocol-table, .sim-container, .dashboard-container,
+    .next-step-box, pre.code-block { max-width: none; }
+}
+@media (min-width: 1620px) {
+    body.doc { max-width: 1280px; font-size: 11pt; }
+    body.doc p, body.doc ul, body.doc ol, body.doc blockquote { max-width: 100ch; }
+}
+/* Last step. Beyond this the dashboards are wide enough that a control row and the
+   chart it drives stop reading as a pair. */
+@media (min-width: 1900px) {
+    body.doc { max-width: 1400px; font-size: 11.5pt; }
+    body.doc p, body.doc ul, body.doc ol, body.doc blockquote { max-width: 108ch; }
+}
+
+
+
+/* Vertical rhythm at width. Once the lines are longer there are fewer of them, and
+   the gaps tuned for a 950px column read as too airy at 1400px. */
+@media (min-width: 1340px) {
+    body.doc p { margin-bottom: 12px; }
+    body.doc h2 { margin-top: 34px; margin-bottom: 12px; }
+    body.doc h3 { margin-top: 22px; margin-bottom: 8px; }
+    body.doc li { margin-bottom: 5px; }
+    body.doc .scenario-box, body.doc .impact-box, body.doc .nda-note { margin-bottom: 22px; }
+}
+
+/* ── sticky page bar ──────────────────────────────────────────────────────────
+   Back-link and theme toggle follow the reader down the page. These are the two
+   controls someone reaches for mid-document, and hunting for the top to use them
+   is the kind of friction that gets a page closed. Full-bleed via the negative
+   inline margins, because body carries the page's own side padding. */
+.page-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--line);
+    margin: -40px calc(-1 * var(--doc-pad, 20px)) 20px;
+    padding: 10px var(--doc-pad, 20px);
+    backdrop-filter: saturate(140%) blur(6px);
+}
+@supports not (backdrop-filter: blur(1px)) {
+    .page-bar { background: var(--bg-color); }
+}
+/* The in-page anchor targets have to clear it, or a jump lands under the bar. */
+h2[id], h3[id], section[id], div[id] { scroll-margin-top: 64px; }
+@media print {
+    .page-bar { position: static; border-bottom: none; margin: 0 0 20px; backdrop-filter: none; }
+}
+
+/* ── heading alignment ────────────────────────────────────────────────────────
+   Section headings centre; body copy does not. Matches the home page, where
+   centring only some of the headers read as an accident rather than a choice.
+
+   Prose stays left because centred multi-line text gives every line a different
+   starting edge, so the eye has to hunt for each new line instead of returning to
+   a fixed point. Headings are one or two lines and have no such problem.
+
+   Panel and sidebar headings are excluded: inside a dashboard they label a control
+   group and sit against its left edge, so centring would detach them from what
+   they name. */
+h2, h3 { text-align: center; }
+.dashboard-container h3,
+.sim-container h3,
+.control-group h3,
+.sidebar h3,
+aside h3,
+.panel h3 { text-align: left; }
+
+/* ── data tables ──────────────────────────────────────────────────────────────
+   Was duplicated in eight page <style> blocks and simply missing from two, so
+   .data-table rendered unstyled on market-capture and predictive-vio. Defined
+   once here; the per-page copies are removed.
+
+   Below the breakpoint each row becomes a block and every cell prints its own
+   label from data-label, which is why the markup carries those attributes. */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 30px;
+    font-size: 9pt;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    table-layout: fixed;
+}
+.data-table th {
+    background: var(--ink-surface);
+    color: var(--on-ink);
+    text-align: left;
+    padding: 10px 9px;
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 800;
+    vertical-align: bottom;
+}
+.data-table td {
+    padding: 10px 9px;
+    border-bottom: 1px solid var(--row-line);
+    color: var(--body-text);
+    overflow-wrap: break-word;
+    vertical-align: top;
+}
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+.data-table td:first-child {
+    font-weight: 700;
+    color: var(--ink-surface);
+}
+.data-table .mono {
+    font-family: 'IBM Plex Mono', 'Fira Code', monospace;
+    font-size: 8.5pt;
+}
+.data-table thead {
+    display: none;
+}
+.data-table tr {
+    display: block;
+    border-bottom: 1px solid var(--hairline);
+    padding: 8px 0;
+}
+.data-table td[data-label]::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: block;
+}
+.data-table td:first-child[data-label]::before {
+    content: none;
+}
+
+@media (max-width: 800px) {
+    .data-table { table-layout: auto; }
+    .data-table thead { display: none; }
+    .data-table tr { display: block; border-bottom: 1px solid var(--hairline); padding: 8px 0; }
+    .data-table td { display: block; border: none; padding: 5px 0; }
+    .data-table td:first-child { font-size: 10pt; padding-bottom: 7px; border-bottom: 1px solid var(--row-line); margin-bottom: 4px; }
+    .data-table td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: var(--muted); font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.4px; display: block; }
+    .data-table td:first-child[data-label]::before { content: none; }
+}
+

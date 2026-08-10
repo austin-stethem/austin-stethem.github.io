@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Austin Sonny Stethem &mdash; Pricing, Master Data &amp; Delivery</title>
+<meta name="description" content="I sit between the people who need something built and the people who build it. Fifteen case studies in pricing, commercial analytics and data governance.">
+<meta name="author" content="Austin Sonny Stethem">
+<meta name="theme-color" content="#131a21">
+
+<meta property="og:title" content="Austin Sonny Stethem — Pricing, Master Data &amp; Delivery">
+<meta property="og:description" content="A ladder with eight tiers should produce eight prices. I measured one part over twelve months and found more than four hundred. Fifteen case studies across three workstreams.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Austin Sonny Stethem">
+<meta property="og:url" content="https://austin-stethem.github.io/">
+<meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Colour comes from the shared token sheet, so swapping palettes re-themes the
+     home page along with the fifteen case studies. -->
+<style id="boot">
+/* Paint-critical tokens, inlined so the first frame is already the right colour.
+   Without this the page renders white for a frame while portfolio.css loads, and
+   on a dark theme that is a visible flash with the section rules showing through. */
+:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+</style>
+    <link rel="stylesheet" href="portfolio.css?v=8">
+
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+body{margin:0;background:var(--bg-color);color:var(--body-text);
+  font-family:'Archivo',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;max-width:none;padding:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:18px;top:12px;z-index:99;background:var(--panel-bg);color:var(--panel-bright);padding:10px 16px;border-radius:3px;text-decoration:none}
+.shell{max-width:1240px;margin:0 auto;padding:0 26px}
+/* On a large monitor the 1240px shell fills about half the screen. The rail and the
+   content column both grow; the prose inside them is already capped in ch, so only
+   the board, the ledger and the dispersion chart actually get wider. */
+/* One step, and it stops early on purpose. Every text block here has its own
+   measure - timeline entries at 66ch, note cards at 52ch, board lanes around 300px -
+   so the natural width of the content is about 960px plus the rail. Past roughly
+   1450px the container stops filling and starts opening a hole INSIDE the page,
+   with centred section headers floating over empty space beside left-aligned text.
+   Margin outside the page reads as deliberate; a void inside it does not. */
+@media(min-width:1340px){
+  .shell{max-width:1420px}
+  .layout{grid-template-columns:300px 1fr;gap:46px}
+}
+@media(min-width:1900px){
+  body{font-size:17px}
+  .shell{max-width:1500px}
+  .layout{grid-template-columns:320px 1fr;gap:50px}
+}
+
+/* Sticky-header offset for in-page jumps: without it an anchor scrolls to y=0 and
+   the masthead sits on top of the heading. --mast-h is measured by script on load
+   and on resize; the literal fallback covers first paint and the no-JS case. */
+:root{--mast-h:56px}
+#top,.sec[id]{scroll-margin-top:calc(var(--mast-h,56px) + 26px)}
+
+.mast{border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:40}
+.mast .shell{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:13px;padding-bottom:13px;flex-wrap:wrap}
+.mark{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.mark b{font-family:'Archivo Narrow';font-weight:700;font-size:1rem;letter-spacing:.01em;text-transform:uppercase;color:var(--ink)}
+.mast nav{display:flex;gap:18px;font-size:.82rem;font-weight:600}
+.mast nav a{text-decoration:none;color:var(--muted);padding-bottom:2px;border-bottom:2px solid transparent}
+.mast nav a:hover{color:var(--ink);border-bottom-color:var(--signal)}
+
+.layout{display:grid;grid-template-columns:274px 1fr;gap:38px;padding-top:34px;padding-bottom:20px;align-items:start}
+
+/* Dark chrome in both modes: --panel-* stays dark when the page inverts, whereas
+   --ink is the foreground colour and flips to light. */
+.rail{position:sticky;top:74px;background:var(--surface);color:var(--body-text);
+  border-radius:6px;padding:26px 22px;display:flex;flex-direction:column;gap:16px;align-items:center;border:1px solid var(--line)}
+/* Identity block centred; the data blocks below stay left-aligned and full width
+   so the label/value rows still line up. */
+.rail .idblock,.rail .pitch{text-align:center}
+.facts,.railprog,.rail .links{width:100%;align-self:stretch}
+/* The initials are a fallback layer, not a sibling of the photo. As flex items the
+   two shared the box, which pushed the photo off-centre and left the placeholder
+   visible beside it. The image is now absolutely positioned over the top, so it
+   covers the initials entirely and only appears if onerror has not removed it. */
+.por{position:relative;width:112px;height:112px;margin:0 auto;border-radius:50%;overflow:hidden;
+  border:2px solid var(--panel-border);background:var(--panel-surface);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.por img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.por .initials{font-family:'Archivo Narrow';font-weight:700;font-size:2rem;color:var(--panel-muted);letter-spacing:.02em}
+.rail h1{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:1.52rem;line-height:.98;letter-spacing:-.01em;color:var(--ink);margin:0}
+.rail .role{font:600 .66rem/1.55 'IBM Plex Mono';letter-spacing:.09em;text-transform:uppercase;
+  color:var(--signal);margin-top:7px;text-wrap:balance}
+/* A pull quote rather than a caption: the opening mark is oversized and pulled into
+   the left margin so the text block itself still aligns with the rail's centre. */
+.rail .pitch{margin:0}
+.rail .pitch p{font-size:.88rem;line-height:1.55;margin:0 0 9px;color:var(--body-text);
+  font-style:italic}
+/* Paired quotes, written out separately. A grouped selector here got mangled by an
+   earlier edit and left ::before with no colour or size while ::after kept both, so
+   the two marks did not match. line-height:0 keeps them from growing the line box,
+   which is what made the original absolutely-positioned mark clip into the text. */
+.rail .pitch p::before{content:'\201C';color:var(--signal);font-style:normal;
+  font-weight:700;font-size:1.3em;line-height:0;position:relative;top:.13em;margin-right:.05em}
+.rail .pitch p::after{content:'\201D';color:var(--signal);font-style:normal;
+  font-weight:700;font-size:1.3em;line-height:0;position:relative;top:.13em;margin-left:.02em}
+.rail .pitch cite{display:block;font:600 .66rem/1.4 'IBM Plex Mono';letter-spacing:.09em;
+  text-transform:uppercase;font-style:normal;color:var(--muted)}
+.rail .pitch cite::before{content:'\2014\00a0'}
+.facts{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.fact{display:flex;justify-content:space-between;gap:10px;font-size:.78rem}
+/* Amber labels. Uses the gold, not the signal: at .78rem on this dark rail the
+   signal only reaches 3.3:1 in light mode, and small text needs 4.5. Uppercased and
+   tracked so they read as field labels against the mono values, matching the
+   SHIPPED label below them. */
+.fact span{color:var(--signal);text-transform:uppercase;letter-spacing:.07em;
+  font-size:.68rem;font-weight:600}
+.fact b{font-family:'IBM Plex Mono';font-weight:600;color:var(--ink);white-space:nowrap}
+.railprog{border-top:1px solid var(--line);padding-top:14px}
+.railprog .l{display:flex;justify-content:space-between;font:600 .64rem/1 'IBM Plex Mono';letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.railprog .t{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.railprog .t i{display:block;height:100%;width:100%;background:var(--data-positive)}
+.rail .links{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:7px;font-size:.82rem}
+.rail .links a{color:var(--body-text);text-decoration:none;border-bottom:1px solid var(--line);width:fit-content;padding-bottom:1px}
+.rail .links a:hover{color:var(--ink);border-bottom-color:var(--signal)}
+
+.eyebrow{font:600 .67rem/1 'IBM Plex Mono';letter-spacing:.21em;text-transform:uppercase;color:var(--signal);margin-bottom:16px;text-align:center}
+/* Centred across the full content column. text-wrap:balance is wanted here —
+   centred text wants two lines of similar length, which is the opposite of what
+   it was doing wrong when the block was left-aligned. */
+.stand{font-size:clamp(1.95rem,5.6vw,3.6rem);line-height:1.02;font-weight:700;
+  max-width:none;margin:0 0 20px;color:var(--ink);font-family:'Archivo Narrow';
+  text-transform:uppercase;letter-spacing:-.02em;text-align:center;text-wrap:balance}
+.sub{font-size:1.06rem;max-width:64ch;margin:0 auto 32px;text-align:center}
+/* The finding itself, marked with a signal-coloured rule rather than a plain
+   underline so it reads as emphasis rather than as a link. */
+.finding{text-decoration:underline;text-decoration-color:var(--signal);
+  text-decoration-thickness:1.5px;text-underline-offset:5px;white-space:nowrap}
+/* Released below this width: the phrase is ~48 characters and would overflow a
+   phone measure if it were still forbidden from breaking. */
+@media(max-width:600px){.finding{white-space:normal}}
+.sub em{font-style:italic}
+
+h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:clamp(1.35rem,2.8vw,1.8rem);line-height:1.05;letter-spacing:-.008em;margin:0 0 8px;color:var(--ink)}
+.sec{padding:40px 0;border-top:1px solid var(--line)}
+.sec:first-of-type{border-top:none;padding-top:0}
+/* Amber eyebrows. Two tokens, because two grounds: the signal clears 4.97 on the
+   page but only 3.32 on the dark record panel, and the gold is the other way round.
+   At .66rem both need 4.5, so each ground gets the one that passes on it. */
+.sec-lab{font:600 .66rem/1 'IBM Plex Mono';letter-spacing:.19em;text-transform:uppercase;
+  color:var(--signal);margin-bottom:10px}
+.record .sec-lab{color:var(--signal)}
+.lede{font-size:1rem;max-width:66ch;margin:0 0 18px}
+
+/* EVERY section header block is centred — eyebrow, heading, lede. Centring two of
+   five was the actual mistake: it read as an accident rather than a choice.
+
+   What stays left, and why: multi-line prose (the seat card, the build notes, the
+   timeline entries) loses its return point when centred, so each new line starts
+   somewhere different and the eye has to hunt. And anything that is a data row —
+   the ledger lines, the chart axis, the lane headers — is a label-and-value pair
+   whose whole job is that the values line up in a column. */
+.sec > .sec-lab { text-align: center; }   /* h2 is centred by the shared sheet */
+.sec > .lede { text-align: center; margin-left: auto; margin-right: auto; }
+.record > .sec-lab { text-align: center; }
+
+.eviden{border-top:2px solid var(--ink);padding-top:18px;margin-bottom:6px}
+.ev-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;
+  margin-bottom:34px}   /* clearance for the peak label, which sits above the plot box */
+.ev-title{font:600 .67rem/1 'IBM Plex Mono';letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.ev-sub{font:400 .74rem/1 'IBM Plex Mono';color:var(--muted)}
+.plot{position:relative}
+.ticks{display:flex;align-items:flex-end;gap:1px;height:86px}
+.tick{flex:1;background:var(--ink);min-height:2px;border-radius:1px 1px 0 0;transform-origin:bottom;animation:rise .5s cubic-bezier(.2,.8,.3,1) both}
+@keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.scale{display:flex;justify-content:space-between;font:500 .72rem/1 'IBM Plex Mono';color:var(--muted);border-top:1px solid var(--line);margin-top:9px;padding-top:8px}
+/* Sits under a full-bleed chart, so it centres on the graphic rather than
+   hanging off its left edge. */
+/* The gold reads fine as a chart fill but only reaches 2.9:1 against light paper,
+   which fails for text this size. The bar carries the highlight; the label is set
+   in the neutral muted tone and relies on proximity to connect to it. */
+.peak-tag{position:absolute;transform:translateX(-50%);white-space:nowrap;
+  font:600 .62rem/1.3 'IBM Plex Mono';letter-spacing:.03em;color:var(--muted);
+  text-align:center}
+.peak-tag::after{content:'';display:block;width:1px;height:7px;margin:3px auto 0;
+  background:var(--signal)}
+.ev-note{font-size:.94rem;margin:16px auto 0;max-width:74ch;text-align:center}
+
+
+/* The creed. Set as a quote because it is a claim about the person rather than a
+   description of the section: larger than the lede it replaces, amber marks matched
+   to the rail quote, and capped so it breaks into three readable lines. */
+.creed{margin:0 auto 26px;max-width:56ch;text-align:center}
+.creed p{margin:0;font-size:1.12rem;line-height:1.5;font-style:italic;color:var(--ink)}
+.creed p em{font-style:normal;font-weight:600}
+.creed p::before{content:'\201C';color:var(--signal);font-style:normal;font-weight:700;
+  font-size:1.25em;line-height:0;position:relative;top:.13em;margin-right:.05em}
+.creed p::after{content:'\201D';color:var(--signal);font-style:normal;font-weight:700;
+  font-size:1.25em;line-height:0;position:relative;top:.13em;margin-left:.02em}
+.seat{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--signal);border-radius:4px;padding:24px 26px}
+/* Prose block, so it takes a prose measure and centres under its heading rather
+   than spanning a column sized for the board grid below it. */
+@media(min-width:1340px){
+  .seat{max-width:760px;margin-left:auto;margin-right:auto}
+  .roadmap>p{max-width:70ch;margin-left:auto;margin-right:auto;text-align:center}
+}
+/* One size, one colour, all four. Two of these were .quiet at .9rem in --muted,
+   which made the cross-functional paragraph and the games paragraph read as
+   footnotes to the two above them. They are not asides; they are the second half
+   of the argument. */
+.seat p{margin:0 0 13px;font-size:.98rem;color:var(--body-text)}
+.seat p:last-child{margin-bottom:0}
+.seat .quiet{color:var(--muted);font-size:.9rem}
+
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.lane{background:var(--surface-sunken);border:1px solid var(--line);border-radius:6px;padding:14px}
+.lane-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:2px}
+.lane-h b{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:1.06rem;color:var(--ink)}
+.lane-h .n{font:700 .68rem/1 'IBM Plex Mono';color:var(--data-positive)}
+.lane .fn{font-size:.72rem;color:var(--muted);margin:0 0 12px}
+.card{display:block;position:relative;background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--data-positive);border-radius:4px;padding:10px 30px 10px 12px;
+  margin-bottom:8px;text-decoration:none;cursor:pointer;
+  transition:transform .12s,box-shadow .12s,border-color .12s}
+.card:last-child{margin-bottom:0}
+/* Chevron: the affordance that says "this opens something". */
+.card::after{content:'\203A';position:absolute;right:11px;top:50%;transform:translateY(-50%);
+  font-size:1.15rem;line-height:1;color:var(--muted);transition:transform .16s,color .16s}
+.card:hover,.card:focus-visible{transform:translateX(2px);box-shadow:0 3px 12px rgba(19,26,33,.11);
+  border-color:var(--signal)}
+.card:hover::after,.card:focus-visible::after{color:var(--signal);transform:translate(3px,-50%)}
+.card b{display:block;font-size:.86rem;font-weight:600;color:var(--ink);margin-bottom:2px;
+  text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;
+  text-decoration-thickness:1px;transition:text-decoration-color .12s,color .12s}
+.card:hover b,.card:focus-visible b{color:var(--signal);text-decoration-color:var(--signal)}
+.card b .ck{color:var(--data-positive);margin-right:4px;text-decoration:none;display:inline-block}
+.card span{font-size:.73rem;color:var(--muted);line-height:1.45;display:block}
+
+.roadmap{margin-top:16px;background:var(--surface-alt);
+  border:1px dashed var(--line);border-left:3px solid var(--signal);
+  border-radius:6px;padding:16px 18px}
+.roadmap .rh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px}
+.roadmap .rh b{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:1rem;color:var(--ink)}
+.roadmap .rh .n{font:700 .66rem/1 'IBM Plex Mono';color:var(--muted)}
+.roadmap>p{font-size:.8rem;color:var(--muted);margin:0 0 12px;max-width:74ch}
+.rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ritem{background:var(--surface);border:1px solid var(--line);border-radius:4px;
+  padding:10px 11px;transition:border-color .14s,box-shadow .14s,transform .14s}
+.ritem:hover{border-color:var(--signal);
+  box-shadow:0 0 0 1px var(--signal),0 3px 12px rgba(19,26,33,.10);
+  transform:translateY(-2px)}
+.ritem:hover b{color:var(--signal)}
+@media(prefers-reduced-motion:reduce){.ritem{transition:none}.ritem:hover{transform:none}}
+.ritem b{display:block;font-size:.8rem;font-weight:600;color:var(--ink);margin-bottom:2px}
+.ritem span{font-size:.71rem;color:var(--muted);line-height:1.45}
+
+.record{background:var(--surface);border:1px solid var(--line);color:var(--body-text);border-radius:6px;padding:28px 30px 24px}
+.record .sec-lab{color:var(--muted)}
+.record h2{color:var(--ink)}
+.rline{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line)}
+.rline .d{font-size:.94rem;line-height:1.45}
+/* Underlined so the sub-line reads as content rather than a caption. Uses the gold,
+   not the signal: on this dark panel the signal only reaches 3.3:1 in light mode,
+   which is marginal for a 1px rule, and the gold clears 4.9:1 in both. */
+.rline .d em{font-style:normal;display:block;color:var(--ink);font-size:.81rem;
+  margin-top:4px;text-decoration:underline;text-decoration-color:var(--signal);
+  text-decoration-thickness:1px;text-underline-offset:4px}
+.rline .f{font:600 1.14rem/1 'IBM Plex Mono';font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+/* The closing line of the ledger, stacked and centred so the figure reads as a
+   result rather than another row. */
+.rline.total{display:block;border-bottom:none;border-top:2px solid var(--line);
+  margin-top:14px;padding-top:24px;text-align:center}
+.t-head{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;
+  font-size:clamp(1rem,2.1vw,1.24rem);line-height:1.16;letter-spacing:.01em;
+  color:var(--signal);max-width:34ch;margin:0 auto 12px;text-wrap:balance}
+.t-fig{font:600 2.6rem/1 'IBM Plex Mono';font-variant-numeric:tabular-nums;
+  color:var(--data-positive);margin-bottom:12px}
+.t-note{font-size:.9rem;line-height:1.55;color:var(--ink);max-width:52ch;
+  margin:0 auto;text-decoration:underline;text-decoration-color:var(--signal);
+  text-decoration-thickness:1px;text-underline-offset:4px}
+.rline.total .d{font-weight:700}
+.rline.total .f{color:var(--data-positive);font-size:1.36rem}
+/* Matched to .record-note below it: same size, colour, leading and centring. It was
+   left-aligned muted fine print sitting between a centred result and a centred
+   statement, which read as a stray element rather than a deliberate aside. */
+.record .caveat{font-size:.97rem;line-height:1.68;color:var(--body-text);
+  margin:26px auto 0;max-width:62ch;text-align:center}
+
+/* Lifted out of the fine print: same panel, but centred and labelled so it reads as
+   a closing statement rather than a footnote to the table. The label uses the data
+   gold rather than --signal, which only reaches 3.3:1 on this dark panel in light
+   mode; the gold clears 4.9:1 in both. */
+.record-note{margin:32px auto 0;max-width:62ch;text-align:center;
+  border-top:1px solid var(--line);padding-top:28px}
+.rn-lab{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.15rem,2.4vw,1.5rem);line-height:1.1;letter-spacing:.005em;
+  color:var(--signal);margin-bottom:16px}
+.record-note p{font-size:.97rem;line-height:1.68;color:var(--body-text);margin:0 0 14px}
+.record-note p:last-child{margin-bottom:0}
+.record-note em{font-style:italic;color:var(--ink);font-weight:600}
+.rn-point{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;
+  font-size:1.34rem!important;line-height:1.16!important;letter-spacing:-.01em;
+  color:var(--signal)!important;margin:22px auto!important;max-width:22ch;
+  text-wrap:balance}
+
+.line{position:relative;padding-left:30px;margin-top:6px}
+.line::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.ev{position:relative;margin-bottom:20px}
+.ev:last-child{margin-bottom:0}
+.ev::before{content:'';position:absolute;left:-27px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--bg-color);border:3px solid var(--signal)}
+.ev.q::before{border-color:var(--muted)}
+.ev .yr{font:700 .64rem/1 'IBM Plex Mono';letter-spacing:.13em;text-transform:uppercase;color:var(--signal)}
+.ev.q .yr{color:var(--muted)}
+/* Left, overriding the shared h3 centre. Each entry hangs off a vertical rule with
+   its paragraph, so the heading and the body have to share an axis; centring the
+   heading detaches it from the line it is attached to. */
+.ev h3{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:1.1rem;
+  margin:4px 0 3px;color:var(--ink);text-align:left}
+.ev p{margin:0;font-size:.88rem;max-width:66ch}
+/* The timeline column is wider than a 66ch paragraph, so without this the entries
+   hug the left while their centred section header floats over the space to the
+   right. Centring the whole rail keeps the two aligned. */
+/* The whole sequence sits on one left edge: eyebrow, heading, lede and every entry
+   share it, so the header reads as belonging to the list under it. Centring the
+   header over left-aligned entries was the thing that looked detached. */
+#story > .sec-lab, #story > h2{text-align:left}
+#story > .lede{text-align:left;margin-left:0;margin-right:0}
+@media(min-width:1340px){
+  #story .line{max-width:840px;margin-left:0;margin-right:auto}
+}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:19px 21px}
+/* Headers centred; body copy deliberately NOT. These notes run three to six lines,
+   and centred prose gives every line a different left edge — the eye loses the
+   return point on each new line, which costs more than the symmetry gains. Short
+   labels have no such problem. */
+.note h3{font:700 .67rem/1 'IBM Plex Mono';letter-spacing:.13em;text-transform:uppercase;
+  color:var(--signal);margin:0 0 12px;text-align:center}
+/* Centred to match the heading, and capped. Centring only stays readable while the
+   line is short: at the default shell a card is ~55 characters, but on the large
+   breakpoints it grows past 85, and centred text that wide loses the reader on the
+   return sweep. The cap holds the measure and lets the card grow around it. */
+.note p{margin:0 auto;font-size:.89rem;line-height:1.62;text-align:center;max-width:52ch}
+/* No underline on emphasis inside these cards. The site-wide rule works in flowing
+   prose, but in a short centred block the rule reads as a bar drawn through the
+   middle of the text, and the bold alone is already enough at this size. */
+.note p strong{text-decoration:none;color:var(--ink)}
+
+footer{background:var(--panel-bg);color:var(--panel-text);padding:38px 0 32px;margin-top:34px}
+/* flex-end, not flex-start: the identity block is two lines and the link column is
+   four, so anchoring to the top left the name floating with a gap beneath it. Now
+   both columns sit on the same baseline and the location line lands level with
+   Résumé (PDF). */
+footer .shell{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-end}
+footer .who b{display:block;font-family:'Archivo Narrow';font-weight:700;font-size:1.2rem;text-transform:uppercase;color:var(--panel-bright)}
+footer .who span{font-size:.88rem;color:var(--panel-muted)}
+footer .links{display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+footer a{color:var(--panel-text);text-decoration:none;border-bottom:1px solid var(--panel-border);padding-bottom:1px}
+footer a:hover{color:var(--panel-bright);border-bottom-color:var(--signal)}
+footer .fine{width:100%;border-top:1px solid var(--panel-border);margin-top:24px;padding-top:16px;font-size:.78rem;color:var(--panel-dim)}
+
+@media(max-width:1080px){
+  .layout{grid-template-columns:1fr;gap:26px}
+  /* Horizontal at this width, so the identity block goes back to left-aligned and
+     the data blocks give up the full-width rule they carry in the vertical rail. */
+  .rail{position:static;flex-direction:row;flex-wrap:wrap;align-items:center;gap:18px}
+  .rail .idblock{flex:1;min-width:200px;text-align:left}
+  .rail .pitch{text-align:left}
+  .por{margin:0}
+  .facts,.railprog,.rail .links{flex:1;min-width:180px;width:auto;border-top:none;padding-top:0}
+  .rgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  .shell{padding:0 18px}
+  .lanes{grid-template-columns:1fr}
+  .notes{grid-template-columns:1fr}
+  .rgrid{grid-template-columns:1fr}
+  .rail{flex-direction:column;align-items:flex-start}
+  .ticks{height:64px}
+  .stand{font-size:clamp(1.55rem,7.6vw,2.1rem)}
+  .record{padding:22px 18px 20px}
+}
+</style>
+<script>
+/* Applied before paint: an explicit stored choice beats the system preference,
+   and the absence of both leaves prefers-color-scheme to decide in CSS. */
+(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')
+document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+
+</head>
+<body>
+<!-- build: 2026-08-09b -->
+<a class="skip" href="#board">Skip to the work</a>
+
+<header class="mast">
+  <div class="shell">
+    <a class="mark" href="#top" aria-label="Austin Sonny Stethem, home">
+      <svg width="28" height="28" viewBox="0 0 100 100" role="img" aria-hidden="true">
+        <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/>
+        <polyline points="24,64 42,44 61,58 76,36" fill="none" stroke="var(--signal)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <b>A.&nbsp;S. Stethem</b>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#seat">The seat</a>
+      <a href="#board">The board</a>
+      <a href="#record">The record</a>
+      <a href="#story">How it unfolded</a>
+      <a href="#build">Method</a>
+      <span class="theme-switch">
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+        <label class="sw"><input type="checkbox" class="themeToggle" aria-label="Dark mode"><span class="track"></span></label>
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+      </span>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="shell layout">
+
+  <aside class="rail">
+    <div class="por">
+      <img src="headshot.jpg" alt="Austin Sonny Stethem" onerror="this.remove()">
+      <span class="initials" aria-hidden="true">AS</span>
+    </div>
+    <div class="idblock">
+      <h1>Austin Sonny<br>Stethem</h1>
+      <div class="role">Pricing · Master Data<br>Project Management · Delivery</div>
+    </div>
+    <blockquote class="pitch">
+      <p>I sit between the people who need something built and the people who build it.</p>
+      <cite>Austin Sonny Stethem</cite>
+    </blockquote>
+    <div class="facts">
+      <div class="fact"><span>Network</span><b>80&nbsp;branches</b></div>
+      <div class="fact"><span>Footprint</span><b>8&nbsp;states</b></div>
+      <div class="fact"><span>Accounts</span><b>~27,000</b></div>
+      <div class="fact"><span>Root pricing access</span><b>1&nbsp;of 3</b></div>
+      <div class="fact"><span>Tenure</span><b>5&nbsp;years, 1 employer</b></div>
+    </div>
+    <div class="railprog">
+      <div class="l"><span>Shipped</span><span>15 / 15</span></div>
+      <div class="t"><i></i></div>
+    </div>
+    <div class="links">
+      <a href="mailto:austinstethem1976@gmail.com">austinstethem1976@gmail.com</a>
+      <a href="tel:+17122995267">712-299-5267</a>
+      <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="Stethem_Austin_Resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)</a>
+    </div>
+  </aside>
+
+  <div class="content">
+
+    <div class="sec">
+      <div class="eyebrow">The finding this portfolio is built on</div>
+      <p class="stand">A ladder with eight tiers should produce eight prices.</p>
+      <p class="sub">I pulled the rolling twelve-month history for one high-volume part and found <strong class="finding">more than four hundred distinct transacted prices</strong>. Nobody had measured the dispersion, because no report existed that would show it; so I wrote one, in an afternoon.</p>
+
+      <div class="eviden">
+        <div class="ev-head">
+          <div class="ev-title">One part number · rolling twelve months</div>
+          <div class="ev-sub">400+ distinct prices · eight-tier ladder</div>
+        </div>
+        <div class="plot">
+          <div class="peak-tag" id="peaktag">most-used price point</div>
+          <div class="ticks" id="ticks" role="img" aria-label="Distribution of more than four hundred distinct transacted prices for a single part, indexed so that the lowest price equals 100. The highest sits at 204, and prices cluster at several points across the range rather than at the eight the tier ladder defines."></div>
+        </div>
+        <div class="scale"><span>100 &middot; lowest transacted</span><span>152</span><span>204 &middot; highest</span></div>
+        <p class="ev-note">Indexed to the lowest transacted price. The customer at the top paid <strong>104% more</strong> than the customer at the bottom for an identical item. None of it was decided: the ladder defines eight prices and the system produced hundreds.</p>
+      </div>
+    </div>
+
+    <div class="sec" id="seat">
+      <div class="sec-lab">What I am for</div>
+      <h2>The middle seat</h2>
+      <blockquote class="creed">
+        <p>Enough finance to ask for the right thing, enough engineering to hear <em>why it cannot be done that way</em>, and enough data discipline to know which answer will hold.</p>
+      </blockquote>
+      <div class="seat">
+        <p>The work I want is the tangled kind. Someone hands over a system that has grown for twenty years without anyone maintaining the logic underneath it, and the job is to work out what it actually does before deciding what it should do.</p>
+        <p>I build the logic, then the prototype, then run the board that gets it delivered. Specifying what a thing must calculate, validating that it does, and driving it to done is one job to me, not three.</p>
+        <p>Across the current network I work with accounting, sales, marketing, IT, logistics and product. The pricing and master data layer touches all six, and nothing below shipped without satisfying more than one of them.</p>
+        <p>Away from work it is grand strategy and factory-building games, which is the same instinct at lower stakes: find the constraint, rebuild whatever is throttling everything downstream, and refuse to accept that the efficient version has to be the ugly one.</p>
+      </div>
+    </div>
+
+    <div class="sec" id="board">
+      <div class="sec-lab">Three workstreams · fifteen delivered</div>
+      <h2>The board</h2>
+      <p class="lede"><strong>Every card below opens a case study.</strong> Each lane is a chain, not a folder: the studies run in order, each picking up where the last left off, and every one carries a guided walkthrough and live inputs you can move.</p>
+
+      <div class="lanes">
+        <div class="lane">
+          <div class="lane-h"><b>Defense</b><span class="n">5 / 5</span></div>
+          <p class="fn">Pricing strategy &amp; margin analytics</p>
+          <a class="card" href="predictive-vio-market-capture.html"><b><span class="ck">✓</span>Predictive VIO Capture</b><span>K-Means tiering, derived confidence, hub-store shape test</span></a>
+          <a class="card" href="algorithmic-margin-defense.html"><b><span class="ck">✓</span>Algorithmic Margin Defense</b><span>Cross-subsidization across an eight-tier ladder</span></a>
+          <a class="card" href="stochastic-margin-optimization.html"><b><span class="ck">✓</span>Stochastic Optimization</b><span>Monte Carlo with common random numbers</span></a>
+          <a class="card" href="ab-testing-framework.html"><b><span class="ck">✓</span>A/B Testing &amp; Validation</b><span>Two-proportion Z-test with power analysis</span></a>
+          <a class="card" href="fifo-inventory-revaluation.html"><b><span class="ck">✓</span>FIFO Revaluation</b><span>Windfall measured against avoided cost</span></a>
+        </div>
+
+        <div class="lane">
+          <div class="lane-h"><b>Attack</b><span class="n">5 / 5</span></div>
+          <p class="fn">Commercial analytics &amp; market intelligence</p>
+          <a class="card" href="market-capture-engine.html"><b><span class="ck">✓</span>Market Capture Engine</b><span>3,768 rooftops serving four functions off one map</span></a>
+          <a class="card" href="greenfield-vio-expansion.html"><b><span class="ck">✓</span>Greenfield Expansion</b><span>Whitespace tested against the cost of the building</span></a>
+          <a class="card" href="win-back-engine.html"><b><span class="ck">✓</span>Lost Account Win-Back</b><span>Churn labels derived, not collected</span></a>
+          <a class="card" href="wallet-share-affinity.html"><b><span class="ck">✓</span>Wallet Share &amp; Affinity</b><span>Association rules on lift, over an account drill-down</span></a>
+          <a class="card" href="contract-tier-clawbacks.html"><b><span class="ck">✓</span>Contract Tier Clawbacks</b><span>Entitlement audit weighted by competitive exposure</span></a>
+        </div>
+
+        <div class="lane">
+          <div class="lane-h"><b>Foundations</b><span class="n">5 / 5</span></div>
+          <p class="fn">Master data, systems &amp; governance</p>
+          <a class="card" href="erp-reconciliation-engine.html"><b><span class="ck">✓</span>ERP Crisis Reconciliation</b><span>“The inventory is on the shelf.” It was under four feet of river.</span></a>
+          <a class="card" href="legacy-silo-resolution.html"><b><span class="ck">✓</span>Master Data Reconciliation</b><span>“These are two different customers.” Same entity, two spellings.</span></a>
+          <a class="card" href="logistics-spider-mapping.html"><b><span class="ck">✓</span>Logistics Spider-Mapping</b><span>“This is where the customer is.” That is a post office box.</span></a>
+          <a class="card" href="territory-balancer.html"><b><span class="ck">✓</span>Territory Balancer</b><span>“This account belongs to one rep.” Several are calling on it.</span></a>
+          <a class="card" href="extract-layer.html"><b><span class="ck">✓</span>The Extract Layer</b><span>“This is what the item cost.” Cost is a convention, not a fact.</span></a>
+        </div>
+      </div>
+
+      <div class="roadmap">
+        <div class="rh"><b>Roadmap</b><span class="n">designed · not built</span></div>
+        <p>Tracked because the work not yet done is the harder half to be honest about. Each of these is specified; none is finished.</p>
+        <div class="rgrid">
+          <div class="ritem"><b>Revenue-at-Risk Scoring</b><span>Contest index per account. Twelve of fifteen inputs already exist.</span></div>
+          <div class="ritem"><b>Landed-Cost Allocation</b><span>Weight against value against cube: the choice changes which items look profitable.</span></div>
+          <div class="ritem"><b>Quote Win/Loss Capture</b><span>The expensive one: a process change, not a script.</span></div>
+          <div class="ritem"><b>Competitor Delta Tracking</b><span>Monthly snapshot differencing. Impossible to backfill, so worth starting early.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" id="record">
+      <div class="record">
+        <div class="sec-lab">Position and findings</div>
+        <h2>The record</h2>
+        <div class="rline"><div class="d">Distinct transacted prices, one high-volume part, twelve months<em>Against an eight-tier ladder designed to produce eight prices</em></div><div class="f">400+</div></div>
+        <div class="rline"><div class="d">Spread between the lowest and highest price for an identical item<em>Indexed: 100 at the low, 204 at the high</em></div><div class="f">104%</div></div>
+        <div class="rline"><div class="d">Competitor locations geocoded to rooftop precision<em>Ten brand families, delivered to the Company President</em></div><div class="f">3,768</div></div>
+        <div class="rline"><div class="d">Customer delivery points mapped against branch geography<em>Roughly 27,000 accounts across eight states</em></div><div class="f">~32,000</div></div>
+        <div class="rline"><div class="d">Personnel with root-level access to enterprise pricing<em>Across an 80-branch network</em></div><div class="f">3</div></div>
+        <div class="rline total">
+          <div class="t-head">Annual growth ranking within a national alliance, flood year</div>
+          <div class="t-fig">1st</div>
+          <div class="t-note">The only net-positive result among peer distributors. I played a direct role in securing it.</div>
+        </div>
+        <p class="caveat">That last line is the only realised financial outcome on this site, and it is here because it was scored outside the company, against peers who faced the same market and the same vendor pressure, but not the same river. I do not sit in a function that sees realised profit and loss. Where a number would be invented instead of measured, there is none.</p>
+        <div class="record-note">
+          <div class="rn-lab">What that year involved</div>
+          <p>The city went under. The network was down for a matter of days. Holding margin through that, and through the cost movement of the years either side of it, is the reason any of the work above exists; and the reason it is framed as <em>defence</em> rather than optimisation.</p>
+          <p class="rn-point">Eighty branches sell what the pricing layer lets them sell.</p>
+          <p>A tier structure that quietly gives away margin is not an abstraction to the people working those counters. It is their commission, then their hours, and eventually their store.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" id="story">
+      <div class="sec-lab">Sequence</div>
+      <h2>How it unfolded</h2>
+      <p class="lede">None of this was planned as a portfolio. Each piece exists because the one before it uncovered something that had to be dealt with.</p>
+      <div class="line">
+        <div class="ev"><div class="yr">Arrival</div><h3>Twenty years of accumulated pricing logic</h3><p>This was the first job out of college, and it began in the supply-chain aftermath of the pandemic, with vendor costs moving faster than anyone could reprice against. What I was handed was root-level pricing access, 500+ manufacturer lines, and a tier structure two decades in the making: every decision sensible when it was made, none of it ever reviewed as a whole.</p></div>
+        <div class="ev"><div class="yr">The years since</div><h3>Cost shock as the normal condition</h3><p>Successive tariff rounds, and then their unwind. The unwind is the part people miss: <strong>a&nbsp;lifted tariff does not restore a cost</strong>. Supply has to catch up, freight has to renormalise, surcharges come off on their own schedule &mdash; so the shock keeps arriving for months or years after the policy that caused it has reversed. Every model in the Defense track exists because of that lag.</p></div>
+        <div class="ev"><div class="yr">The flood</div><h3>The warehouse goes under, the database does not know</h3><p>Inventory records kept promising stock that was underwater. Reconciling physical reality against the ERP kept the network transacting through it.</p></div>
+        <div class="ev"><div class="yr">Consequence</div><h3>The data could not answer basic questions</h3><p>Entities with two names, customers geocoded to post office boxes, accounts with several owners. Five failure modes, each producing a plausible number a competent analyst would build on.</p></div>
+        <div class="ev"><div class="yr">The measurement</div><h3>Hundreds of prices for one part</h3><p>With the foundation trustworthy, dispersion became measurable for the first time. One part, twelve months, and a spread covering everything from near break-even to full retail.</p></div>
+        <div class="ev"><div class="yr">Response</div><h3>Fifteen models, three tracks</h3><p>Five to defend margin when costs move. Five to find revenue when they do not. And five on the layer underneath both, because a model is only as honest as the extract feeding it.</p></div>
+        <div class="ev q"><div class="yr">Next</div><h3>What is designed and not yet built</h3><p>The four items on the roadmap above. The window for fixing pricing architecture is widest before scale arrives and narrows as a company succeeds.</p></div>
+      </div>
+    </div>
+
+    <div class="sec" id="build">
+      <div class="sec-lab">How it was built</div>
+      <h2>Method, plainly</h2>
+      <p class="lede">This site is itself a delivered project: three workstreams, fifteen scoped deliverables, several hundred revisions, each specified, reviewed and closed. If you want evidence that I can run work to done, it is the thing you are reading.</p>
+      <div class="notes">
+        <div class="note">
+          <h3>Where the work actually is</h3>
+          <p>Not in the code. It is knowing which tables hold the truth, how they join, and which rows are corrupt. <strong>The&nbsp;SQL is mine.</strong> The application layer around it I specified, directed and validated instead of hand-writing, and I run the environment and the deploys.</p>
+        </div>
+        <div class="note">
+          <h3>What is claimed, and what is not</h3>
+          <p>Several of these models are in scale testing, not running the business. Where I could not measure an outcome I said so instead of estimating one. <strong>A&nbsp;model that is correct and unreadable has failed</strong>, and so has a readable one that is wrong.</p>
+        </div>
+        <div class="note">
+          <h3>The data, and what is withheld</h3>
+          <p>Every figure in the dashboards is synthetic; the structures and failure modes are real. Findings in prose are stated as ratios or rounded magnitudes. <strong>No&nbsp;price, cost, margin, customer name or vendor term appears on this site.</strong></p>
+        </div>
+        <div class="note">
+          <h3>Who these were for</h3>
+          <p>Every model went to somebody who had to act on it: a pricing manager approving a floor, a sales director weighing a rebalance. That limits what a tool may claim. <strong>One&nbsp;that overstates what it knows gets dismissed once</strong>, and takes the finding with it.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="who">
+      <b>Austin Sonny Stethem</b>
+      <span>Pricing &amp; Master Data · Hartley, Iowa · open to national relocation</span>
+    </div>
+    <div class="links">
+      <a href="mailto:austinstethem1976@gmail.com">austinstethem1976@gmail.com</a>
+      <a href="tel:+17122995267">712-299-5267</a>
+      <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="Stethem_Austin_Resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)</a>
+    </div>
+    <div class="fine">© 2026 Austin Sonny Stethem. Everything inside the dashboards is synthetic. The findings described in prose are real observations, stated as ratios or rounded magnitudes: no prices, costs, margins, customer names, account identifiers or vendor terms appear anywhere on this site.</div>
+  </div>
+</footer>
+
+<script>
+/* The transacted prices bucketed into 120 columns across the observed range.
+   Drawn rather than described: the clustering is the tier structure showing
+   through, and the scatter between clusters is the part nobody had counted. */
+const DISPERSION=[1,4,2,1,4,2,1,3,2,6,3,3,3,9,5,4,8,4,6,6,2,4,5,0,5,4,4,8,5,4,1,14,3,7,0,4,4,2,5,3,1,4,2,3,2,4,5,6,6,3,2,5,4,5,4,5,5,3,4,4,4,6,5,5,1,1,6,3,1,4,5,5,6,6,2,2,3,6,3,8,2,4,4,2,4,1,4,5,3,2,3,3,2,3,2,2,3,1,2,4,1,3,2,2,1,3,2,1,2,1,1,2,1,0,1,2,1,0,1,1];
+/* Indexed so the lowest transacted price is 100. The shape is the finding;
+   the underlying dollar values are the employer's and are not published. */
+const LO=100, HI=204;
+const max=Math.max(...DISPERSION);
+const peak=DISPERSION.indexOf(max);
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* The tallest bucket is picked out in --signal-bright, the data-highlight gold.
+   Deliberately not --signal: that colour means "interactive" everywhere else on
+   the page, and a chart bar is not a control. */
+document.getElementById('ticks').innerHTML = DISPERSION.map((v,i)=>{
+  const hi = (i===peak);
+  return `<div class="tick" style="height:${Math.max(3,v/max*100)}%;`+
+    `background:${hi?'var(--signal)':'var(--ink)'};`+
+    `opacity:${hi?1:(0.34+(v/max)*0.56).toFixed(2)};`+
+    `animation-delay:${reduce?0:(i*4)}ms"></div>`;
+}).join('');
+
+/* Park the label over the peak, just clear of the tallest bar. */
+(function(){
+  const tag=document.getElementById('peaktag');
+  if(!tag) return;
+  tag.style.left = (peak/(DISPERSION.length-1)*100).toFixed(2)+'%';
+  tag.style.bottom = 'calc(100% + 2px)';
+})();
+
+/* ── theme toggle ──────────────────────────────────────────────────────────── */
+/* Keep the anchor offset honest as the header wraps or a webfont settles. */
+(function(){
+  var mast=document.querySelector('.mast');
+  if(!mast) return;
+  function measure(){ document.documentElement.style.setProperty('--mast-h', mast.offsetHeight+'px'); }
+  measure();
+  window.addEventListener('resize', measure);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+})();
+
+(function(){
+  var boxes=document.querySelectorAll('.themeToggle');
+  if(!boxes.length) return;
+  var root=document.documentElement, mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function stored(){ try{ return localStorage.getItem('theme'); }catch(e){ return null; } }
+  function set(v){ boxes.forEach(function(b){ b.checked=v; }); }
+  set(stored()? stored()==='dark' : mq.matches);
+  boxes.forEach(function(b){
+    b.addEventListener('change',function(){
+      var mode=b.checked?'dark':'light';
+      root.setAttribute('data-theme',mode); set(b.checked);
+      try{ localStorage.setItem('theme',mode); }catch(e){}
+    });
+  });
+  /* follow the operating system while no explicit choice has been made */
+  mq.addEventListener('change',function(){ if(!stored()) set(mq.matches); });
+})();
+
+
+</script>
+</body>
+</html>
