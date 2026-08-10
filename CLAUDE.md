@@ -25,15 +25,39 @@ touching it:
   page's section headings. `index.html` sets font, size, weight and colour on `h2`
   but deliberately not alignment. Scoping that rule to `body.doc` would left-align
   four landing-page headings.
+- **Load-bearing.** `.theme-switch`, with its `.sw` `.track` `.sun` `.moon` children.
+  The markup sits on all sixteen pages; the styling exists only here. Those child
+  names are generic and live in a global namespace, so a `.track` added to
+  `index.html` for anything else collides on contact.
 - **A leak.** The prose emphasis underline (`p > strong` and friends) reaches
   landing-page copy, and `index.html` already carries two patches against it.
+- **A near-miss.** `h2[id], h3[id], section[id], div[id] { scroll-margin-top: 64px }`
+  also matches the landing page's `div.sec[id]`. That page's own rule wins by a single
+  point of specificity and supplies the real offset, measured from the masthead at
+  runtime. Weaken it and in-page jumps land underneath the sticky header.
 - **Dormant.** `aside h3` matches nothing today but `index.html` has
-  `<aside class="rail">`.
+  `<aside class="rail">`. Likewise every `input[type="range"]` rule, and
+  `a/button/input:focus-visible`, which already outranks the landing page's own bare
+  `:focus-visible`.
 
 Before scoping or removing any unscoped selector in `portfolio.css`, grep
 `index.html` for elements it would match and check whether the landing page is
 relying on it. `body.doc` scoping is correct for new case-study rules; it is not a
 blanket instruction for existing ones.
+
+### Cascade order
+
+Every page loads three stylesheets: the inline `<style id="boot">`, then
+`portfolio.css`, then the page's own `<style>` block. The page block is last, so it
+wins every specificity tie against the shared sheet. That is why `portfolio.css`
+doubles two class names — `.doc-tagline.doc-tagline` and
+`.next-step-box.next-step-box p` — instead of reaching for `!important`. Keep the
+technique; both doubled rules are there because the single-class version lost.
+
+The two systems also disagree about where mobile starts. The landing page breaks at
+1080px and 760px, `portfolio.css` at 800px, so 760–800px is a band where one system's
+mobile rules are live and the other's are not. The wide steps agree at 1340 and 1900;
+1620 is case-study only.
 
 ---
 
@@ -129,7 +153,9 @@ brace lands where you think it does.
 Before considering a change done:
 
 - both themes
-- narrow and wide viewports (breakpoints at 1340, 1620, 1900 px)
+- narrow and wide viewports — case studies break at 800, 1340, 1620 and 1900 px, the
+  landing page at 760, 1080, 1340 and 1900
+- if `portfolio.css` was touched at all, open `index.html` as well
 - the guided walkthrough on the page still runs to its last step
 - tags balanced, braces balanced, heading levels not skipped
 - all eleven palettes still carry identical token sets
@@ -140,5 +166,7 @@ Before considering a change done:
 
 GitHub Pages from `main`, root. The stylesheet link carries a `?v=` query string;
 bump it when `portfolio.css` changes or returning visitors keep the cached copy
-against new markup. After a push, re-run LinkedIn's Post Inspector so the preview
-card re-scrapes.
+against new markup. That string is written out in all sixteen pages and they have to
+move together — a page left behind serves stale CSS against fresh markup, which is the
+one failure that looks like a layout bug rather than a cache. After a push, re-run
+LinkedIn's Post Inspector so the preview card re-scrapes.

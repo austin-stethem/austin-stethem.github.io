@@ -58,6 +58,31 @@ html{background:var(--bg-color)}
    pull and supplies its own inset instead. */
 .page-bar{--doc-pad:0px;margin:0 0 20px;padding:10px 22px}
 
+/* ── overrides for Tailwind Preflight ─────────────────────────────────────────
+   This is the only page that loads the Tailwind Play CDN. That script appends its
+   generated sheet — Preflight included — as the last child of <head>, so it lands
+   after portfolio.css AND after this block and wins every tie on source order.
+   Everything below is qualified by a class so specificity decides instead.
+
+   Preflight stays enabled. The dashboard is built on Tailwind utilities, and the
+   border-width classes on the checkboxes and legend swatches (`border`, `border-2`)
+   only draw because Preflight's `*{border:0 solid}` supplies the border-style;
+   turning it off blanks every one of them. Override what it breaks, keep the rest. */
+
+/* Preflight's `body{margin:0}` cancelled the auto side margins on the body rule
+   below. Invisible until portfolio.css caps `body.doc` at 1150px from 1340px up —
+   past that the whole page sat flush against the left edge with the gutter all on
+   the right. */
+body.doc { margin-left: auto; margin-right: auto; }
+
+/* Preflight also strips list-style and padding from ul/ol. Scoped to the prose so
+   the dashboard's utility-classed lists are untouched; values match the other
+   fourteen case studies, which get them from the browser default. */
+.portfolio-content ul, .portfolio-content ol { margin: 0 0 20px; padding-left: 25px; color: var(--body-text); }
+.portfolio-content ul { list-style: disc; }
+.portfolio-content ol { list-style: decimal; }
+.portfolio-content li { margin-bottom: 8px; }
+
 
         body {
             font-family: 'Archivo', sans-serif;
