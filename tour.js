@@ -47,8 +47,8 @@
     // No target, or narrow screens where the ring's mask is dropped: the veil
     // carries the dimming itself.
     '.tour-veil.solid{background:rgba(8,11,15,.62)}',
-    '.tour-ring{position:absolute;z-index:901;border:2px solid var(--signal,#e0913f);border-radius:6px;',
-      'box-shadow:0 0 0 4px rgba(224,145,63,.22),0 0 0 9999px rgba(8,11,15,.62);',
+    '.tour-ring{position:absolute;z-index:901;border:2px solid var(--panel-signal,#f2c14e);border-radius:6px;',
+      'box-shadow:0 0 0 4px rgba(242,193,78,.22),0 0 0 9999px rgba(8,11,15,.62);',
       'transition:top .35s cubic-bezier(.3,.8,.3,1),left .35s cubic-bezier(.3,.8,.3,1),',
       'width .35s,height .35s;pointer-events:none}',
     '.tour-box{position:fixed;z-index:902;max-width:352px;background:var(--panel-surface,#1f2327);',
@@ -66,8 +66,8 @@
     '.tour-box button{font:600 .78rem/1 inherit;padding:8px 13px;border-radius:4px;cursor:pointer;',
       'border:1px solid var(--panel-border,#343a3f);background:transparent;color:var(--panel-text,#d2d7db)}',
     '.tour-box button:hover:not(:disabled){border-color:var(--panel-muted,#949ba1)}',
-    '.tour-box button.go{background:var(--signal,#e0913f);color:var(--on-signal,#14171a);',
-      'border-color:var(--signal,#e0913f)}',
+    '.tour-box button.go{background:var(--panel-signal,#f2c14e);color:#14171a;',
+      'border-color:var(--panel-signal,#f2c14e)}',
     '.tour-box button:disabled{opacity:.45;cursor:default}',
     // Sits in the footer row, not absolutely positioned over the copy — at 352px
     // wide a top-right button overlapped the first line of every step by ~33px.
@@ -75,7 +75,7 @@
       'color:var(--panel-muted,#949ba1);background:none}',
     '.tour-box .quit:hover{color:var(--panel-text,#d2d7db);border:none}',
     '@media(max-width:820px){.tour-box{left:12px!important;right:12px!important;max-width:none;',
-      'top:auto!important;bottom:14px}.tour-ring{box-shadow:0 0 0 4px rgba(224,145,63,.22)}',
+      'top:auto!important;bottom:14px}.tour-ring{box-shadow:0 0 0 4px rgba(242,193,78,.22)}',
       '.tour-veil{background:rgba(8,11,15,.62)}}',
     '@media(prefers-reduced-motion:reduce){.tour-veil,.tour-ring,.tour-box{transition:none}}',
     '@media print{.tour-veil,.tour-ring,.tour-box{display:none!important}}'

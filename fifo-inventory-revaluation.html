@@ -40,7 +40,7 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=8">
+    <link rel="stylesheet" href="portfolio.css?v=9">
 
     <style>
 
@@ -77,10 +77,10 @@ html{background:var(--bg-color)}
         /* Matches .dash-header on the other dashboards: centred, bold two-tone title
            with an uppercase eyebrow beneath it. */
         .sidebar-header { margin-bottom: 25px; border-bottom: 1px solid var(--panel-border); padding-bottom: 15px; text-align: center; }
-        .sidebar-header .sim-title { color: var(--surface-alt); font-size: 1.6rem; margin: 0; font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
-        .sidebar-header .sim-title span { color: var(--signal); }
+        .sidebar-header .sim-title { color: var(--panel-bright); font-size: 1.6rem; margin: 0; font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
+        .sidebar-header .sim-title span { color: var(--panel-signal); }
         /* text-align must be explicit — a bare `p` rule on this page beats inheritance. */
-        .sidebar-header p { color: var(--muted); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
+        .sidebar-header p { color: var(--panel-muted); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
 
         .control-group { margin-bottom: 25px; }
         .control-group label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 600; color: var(--panel-text); margin-bottom: 8px; line-height: 1.3;}
@@ -93,7 +93,7 @@ html{background:var(--bg-color)}
            the touch scaling in portfolio.css still lines up. */
         input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 10px rgba(224, 145, 63, 0.40); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 10px rgba(236, 164, 87, 0.40); transition: transform 0.12s ease; }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
         input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: var(--signal); }
@@ -113,7 +113,7 @@ html{background:var(--bg-color)}
 
         /* No margin-top:auto — see the note on the other dashboards. It stranded this
            card at the bottom of the column with a large gap above it. */
-        .logic-box strong { color: var(--data-info); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+        .logic-box strong { color: var(--panel-signal); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
         .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--panel-border); border-left: 3px solid var(--signal); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: var(--panel-text); line-height: 1.5;}
 
         /* KPIs */
@@ -197,7 +197,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block;">
             <title id="logoTitle">Austin Stethem monogram</title>
             <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linejoin="round"/>
-            <polyline points="24,64 42,44 61,58 76,36" fill="none" stroke="var(--signal-bright)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="24,64 42,44 61,58 76,36" fill="none" stroke="var(--signal)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="24" cy="64" r="5" fill="var(--ink)"/><circle cx="42" cy="44" r="5" fill="var(--ink)"/><circle cx="61" cy="58" r="5" fill="var(--ink)"/><circle cx="76" cy="36" r="5" fill="var(--ink)"/></svg>
         <p class="doc-tagline">Defense &middot; Step 5 of 5</p>
         <h1 class="doc-title">FIFO Inventory Revaluation & EBITDA Windfall</h1>
@@ -278,7 +278,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <div class="kpi-grid">
                 <div class="kpi-card" style="border-top-color: #3b82f6;">
                     <div class="kpi-title">Windfall Duration</div>
-                    <div class="kpi-value" id="out-duration" style="color: var(--data-series);">--</div>
+                    <div class="kpi-value" id="out-duration" style="color: var(--data-info);">--</div>
                     <div class="kpi-sub">Time to bleed legacy stock</div>
                 </div>
                 <div class="kpi-card" style="border-top-color: var(--data-negative);">

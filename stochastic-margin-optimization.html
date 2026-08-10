@@ -40,7 +40,7 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=8">
+    <link rel="stylesheet" href="portfolio.css?v=9">
 
     <style>
         /* Brand tokens live in portfolio.css; only the dashboard palette is local. */
@@ -98,7 +98,7 @@ html{background:var(--bg-color)}
            the touch scaling in portfolio.css still lines up. */
         input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; margin-top: 5px; }
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 3px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 10px rgba(224, 145, 63, 0.40); transition: transform 0.12s ease; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; margin-top: -6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 10px rgba(236, 164, 87, 0.40); transition: transform 0.12s ease; }
         input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         input[type="range"]::-moz-range-track { width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; }
         input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; border: none; border-radius: 50%; background: var(--signal); }
@@ -109,15 +109,15 @@ html{background:var(--bg-color)}
             background: var(--signal); color: var(--on-signal); border: none; padding: 16px 20px; width: 100%;
             font-family: 'Archivo', sans-serif; font-size: 0.95rem; font-weight: 800; text-transform: uppercase;
             cursor: pointer; margin-top: 10px; margin-bottom: 10px; letter-spacing: 1.5px;
-            transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(224, 145, 63, 0.30);
+            transition: all 0.2s ease; border-radius: 6px; box-shadow: 0 4px 12px rgba(236, 164, 87, 0.30);
         }
-        .btn-run:hover { background: var(--signal-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(224, 145, 63, 0.40); }
+        .btn-run:hover { background: var(--signal-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(236, 164, 87, 0.40); }
         .btn-run:disabled { background: var(--muted); box-shadow: none; transform: translateY(0); cursor: not-allowed; }
 
         /* No margin-top:auto. In a flex column that pins the card to the bottom of the
            sidebar and absorbs all remaining height as a gap, leaving it stranded well
            below the controls it explains. */
-        .logic-box strong { color: var(--data-info); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
+        .logic-box strong { color: var(--panel-signal); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.5px; }
         .logic-box { background: rgba(0,0,0,0.2); border: 1px solid var(--panel-border); border-left: 3px solid var(--signal); padding: 15px; border-radius: 4px; font-size: 0.8rem; color: var(--panel-muted); line-height: 1.5;}
 
         /* KPIs */
@@ -136,11 +136,11 @@ html{background:var(--bg-color)}
         .chart-wrapper { position: relative; height: 380px; width: 100%; }
 
         /* Portfolio Documentation Styles */
-        .code-annotation { background: var(--hairline); border-left: 4px solid var(--data-series); padding: 12px 18px; font-size: 9.5pt; color: var(--body-text); border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Archivo', sans-serif;}
-        .code-annotation strong { color: var(--ink); font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+        .code-annotation { background: var(--hairline); border-left: 4px solid var(--data-series); padding: 12px 18px; font-size: 9.5pt; color: var(--panel-text); border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Archivo', sans-serif;}
+        .code-annotation strong { color: var(--panel-bright); font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
 
         pre.code-block { background-color: var(--panel-bg); color: var(--panel-text); padding: 20px; border-radius: 0 0 6px 6px; overflow-x: auto; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 9pt; border-left: 4px solid var(--data-series); line-height: 1.5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); margin-top: 0; margin-bottom: 30px; }
-        .code-comment { color: var(--muted); font-style: italic; }
+        .code-comment { color: var(--panel-muted); font-style: italic; }
         .code-keyword { color: #c678dd; font-weight: bold; }
         .code-function { color: #61afef; }
         .code-string { color: #98c379; }
@@ -223,7 +223,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block;">
             <title id="logoTitle">Austin Stethem monogram</title>
             <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linejoin="round"/>
-            <polyline points="24,64 42,44 61,58 76,36" fill="none" stroke="var(--signal-bright)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="24,64 42,44 61,58 76,36" fill="none" stroke="var(--signal)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="24" cy="64" r="5" fill="var(--ink)"/><circle cx="42" cy="44" r="5" fill="var(--ink)"/><circle cx="61" cy="58" r="5" fill="var(--ink)"/><circle cx="76" cy="36" r="5" fill="var(--ink)"/></svg>
         <p class="doc-tagline">Defense &middot; Step 3 of 5</p>
         <h1 class="doc-title">Stochastic Margin Optimization</h1>

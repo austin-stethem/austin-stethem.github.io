@@ -34,7 +34,7 @@
 :root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=8">
+    <link rel="stylesheet" href="portfolio.css?v=9">
 
 <style>
 *,*::before,*::after{box-sizing:border-box}
@@ -660,7 +660,7 @@ const max=Math.max(...DISPERSION);
 const peak=DISPERSION.indexOf(max);
 const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* The tallest bucket is picked out in --signal-bright, the data-highlight gold.
+/* The tallest bucket is picked out in the amber accent.
    Deliberately not --signal: that colour means "interactive" everywhere else on
    the page, and a chart bar is not a control. */
 document.getElementById('ticks').innerHTML = DISPERSION.map((v,i)=>{

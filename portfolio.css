@@ -137,7 +137,11 @@
 @media (min-width: 1340px) {
     body.doc { max-width: 1150px; }
     body.doc p, body.doc ul, body.doc ol, body.doc blockquote { max-width: 92ch; margin-left: auto; margin-right: auto; }
-    body.doc .scenario-box, body.doc .nda-note, body.doc .impact-box { max-width: 86ch; margin-left: auto; margin-right: auto; }
+    body.doc .scenario-box, body.doc .impact-box { max-width: 86ch; margin-left: auto; margin-right: auto; }
+    /* The note is a notice, not prose. Full column width so it lands in two
+       lines instead of five, which is the difference between being read and
+       being skipped. */
+    body.doc .nda-note { max-width: none; }
     /* full-bleed by design: anything that carries data rather than prose */
     .data-table, .hit-table, .meta-table, .ladder-table, .log-table, .match-table,
     .inventory-table, .protocol-table, .sim-container, .dashboard-container,

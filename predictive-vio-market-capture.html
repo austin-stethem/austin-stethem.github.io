@@ -51,7 +51,7 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=8">
+    <link rel="stylesheet" href="portfolio.css?v=9">
 
     <style>
 /* This page is full-bleed (body padding 0), so the sticky bar needs no negative
@@ -230,9 +230,9 @@ body.doc { margin-left: auto; margin-right: auto; }
               /* Amber, matched to the signal. Was the old brand red, hardcoded here
                  because keyframe blocks cannot read a var() through box-shadow
                  interpolation in older engines — so the rgba is spelled out. */
-              0%   { box-shadow: 0 0 0 0    rgba(224, 145, 63, 0.45); }
-              70%  { box-shadow: 0 0 0 10px rgba(224, 145, 63, 0); }
-              100% { box-shadow: 0 0 0 0    rgba(224, 145, 63, 0); }
+              0%   { box-shadow: 0 0 0 0    rgba(236, 164, 87, 0.45); }
+              70%  { box-shadow: 0 0 0 10px rgba(236, 164, 87, 0); }
+              100% { box-shadow: 0 0 0 0    rgba(236, 164, 87, 0); }
           }
 
         /* Wizard Elements (Locked to Fixed Viewport for immunity to scrolling) */
@@ -366,7 +366,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle" style="margin: 0 auto 15px auto; display: block;">
                 <title id="logoTitle">Austin Stethem monogram</title>
                 <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linejoin="round"/>
-            <polyline points="24,64 42,44 61,58 76,36" fill="none" stroke="var(--signal-bright)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="24,64 42,44 61,58 76,36" fill="none" stroke="var(--signal)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="24" cy="64" r="5" fill="var(--ink)"/><circle cx="42" cy="44" r="5" fill="var(--ink)"/><circle cx="61" cy="58" r="5" fill="var(--ink)"/><circle cx="76" cy="36" r="5" fill="var(--ink)"/></svg>
             <p class="doc-tagline">Defense &middot; Step 1 of 5</p>
             <h1 class="doc-title">Predictive VIO Market Capture &amp; K-Means Threat Modeling</h1>
