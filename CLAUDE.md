@@ -14,10 +14,26 @@ BSA, Product Owner, Pricing and FP&A roles. One landing page plus fifteen case
 studies in three tracks of five: Defense, Attack, Foundations.
 
 `index.html` carries its own complete layout in an inline `<style>` block. The
-fifteen case studies share `portfolio.css`. **These are two separate layout systems.**
-An unscoped element selector added to `portfolio.css` will also hit `index.html` and
-fight rules there. That has caused visible breakage; scope case-study rules to
-`body.doc`.
+fifteen case studies share `portfolio.css`. **These are two separate layout systems**,
+and `index.html` loads `portfolio.css` too.
+
+So an unscoped element selector in `portfolio.css` reaches the landing page. Some of
+that is a leak and some of it is load-bearing, and you have to tell which before
+touching it:
+
+- **Load-bearing.** `h2, h3 { text-align: center }` is what centres the landing
+  page's section headings. `index.html` sets font, size, weight and colour on `h2`
+  but deliberately not alignment. Scoping that rule to `body.doc` would left-align
+  four landing-page headings.
+- **A leak.** The prose emphasis underline (`p > strong` and friends) reaches
+  landing-page copy, and `index.html` already carries two patches against it.
+- **Dormant.** `aside h3` matches nothing today but `index.html` has
+  `<aside class="rail">`.
+
+Before scoping or removing any unscoped selector in `portfolio.css`, grep
+`index.html` for elements it would match and check whether the landing page is
+relying on it. `body.doc` scoping is correct for new case-study rules; it is not a
+blanket instruction for existing ones.
 
 ---
 
@@ -103,6 +119,12 @@ positives that masked them.
 
 So: after any bulk edit, **read a sample of the rendered output by eye.** That has
 caught more than the checkers have.
+
+One failure mode worth naming: a block of mobile rules once sat outside its
+`@media` query and fired at every width, hiding table headers and stacking rows on
+desktop across ten pages. It survived a long time because every individual rule was
+correct and nothing was unbalanced. When you touch a media query, check the closing
+brace lands where you think it does.
 
 Before considering a change done:
 

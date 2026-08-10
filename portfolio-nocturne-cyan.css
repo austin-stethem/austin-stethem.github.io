@@ -604,26 +604,6 @@ aside h3,
     font-family: 'IBM Plex Mono', 'Fira Code', monospace;
     font-size: 8.5pt;
 }
-.data-table thead {
-    display: none;
-}
-.data-table tr {
-    display: block;
-    border-bottom: 1px solid var(--hairline);
-    padding: 8px 0;
-}
-.data-table td[data-label]::before {
-    content: attr(data-label) ": ";
-    font-weight: 700;
-    color: var(--muted);
-    font-size: 7.5pt;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    display: block;
-}
-.data-table td:first-child[data-label]::before {
-    content: none;
-}
 
 @media (max-width: 800px) {
     .data-table { table-layout: auto; }
