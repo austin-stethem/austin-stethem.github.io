@@ -226,16 +226,31 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
 .seat .quiet{color:var(--muted);font-size:.9rem}
 
 .lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.lane{background:var(--surface-sunken);border:1px solid var(--line);border-radius:6px;padding:14px}
-.lane-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:2px}
+/* Column flex rather than block flow, because the cards inside are flex:1. An
+   auto-height column flex container sizes to the largest item's contribution
+   multiplied across every item, so the five cards resolve to one height instead of
+   each keeping its own. .lanes then stretches the three lanes to a common height,
+   which makes that one height the same in all three and lines the rows up across
+   them.
+
+   Not a min-height on the card. Body font-size steps up at the 1900px breakpoint, so
+   a pixel floor tuned at one width is either slack or a clip at the other. */
+.lane{background:var(--surface-sunken);border:1px solid var(--line);border-radius:6px;padding:14px;
+  display:flex;flex-direction:column;gap:8px}
+/* The 8px gap now supplies the separation these two used to carry as margins, so both
+   drop by that much and the header block sits where it did. The gap floor is 8px, so
+   the lane name clears its footnote by that rather than the old 2px. */
+.lane-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:0}
 .lane-h b{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:1.06rem;color:var(--ink)}
 .lane-h .n{font:700 .68rem/1 'IBM Plex Mono';color:var(--data-positive)}
-.lane .fn{font-size:.72rem;color:var(--muted);margin:0 0 12px}
-.card{display:block;position:relative;background:var(--surface);border:1px solid var(--line);
+.lane .fn{font-size:.72rem;color:var(--muted);margin:0 0 4px}
+/* justify-content centres the title and description in whatever height the card is
+   handed, so a one-line entry sits on the same axis as a two-line one beside it. */
+.card{display:flex;flex-direction:column;justify-content:center;flex:1;
+  position:relative;background:var(--surface);border:1px solid var(--line);
   border-left:3px solid var(--data-positive);border-radius:4px;padding:10px 30px 10px 12px;
-  margin-bottom:8px;text-decoration:none;cursor:pointer;
+  margin-bottom:0;text-decoration:none;cursor:pointer;
   transition:transform .12s,box-shadow .12s,border-color .12s}
-.card:last-child{margin-bottom:0}
 /* Chevron: the affordance that says "this opens something". */
 .card::after{content:'\203A';position:absolute;right:11px;top:50%;transform:translateY(-50%);
   font-size:1.15rem;line-height:1;color:var(--muted);transition:transform .16s,color .16s}
