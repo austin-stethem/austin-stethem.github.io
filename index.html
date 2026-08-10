@@ -351,11 +351,14 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
 /* The whole sequence sits on one left edge: eyebrow, heading, lede and every entry
    share it, so the header reads as belonging to the list under it. Centring the
    header over left-aligned entries was the thing that looked detached. */
-#story > .sec-lab, #story > h2{text-align:left}
-#story > .lede{text-align:left;margin-left:0;margin-right:0}
-@media(min-width:1340px){
-  #story .line{max-width:840px;margin-left:0;margin-right:auto}
-}
+/* The sequence reads as one left-aligned column, centred in the content area.
+   Left-aligned because centred body text leaves a ragged left edge and the eye has
+   to hunt for each new line's start. Centred as a block because a column pinned to
+   the left of a wide content area drags the reader away from the axis every other
+   section sits on. So: ragged right, flush left, and the whole thing in the middle. */
+#story > .sec-lab, #story > h2{text-align:left;max-width:840px;margin-left:auto;margin-right:auto}
+#story > .lede{text-align:left;max-width:840px;margin-left:auto;margin-right:auto}
+#story .line{max-width:840px;margin-left:auto;margin-right:auto}
 
 .notes{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .note{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:19px 21px}

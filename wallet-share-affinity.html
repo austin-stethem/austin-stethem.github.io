@@ -80,10 +80,10 @@ html{background:var(--bg-color)}
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
         .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
-        .k-blue { border-top-color: var(--data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
-        .k-green { border-top-color: var(--data-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
-        .k-amber { border-top-color: var(--data-warning) !important; } .k-amber .kpi-value { color: var(--data-warning); }
-        .k-slate { border-top-color: var(--panel-muted) !important; } .k-slate .kpi-value { color: var(--panel-text); }
+        .k-blue { border-top-color: var(--panel-data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
+        .k-green { border-top-color: var(--panel-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
+        .k-amber { border-top-color: var(--panel-warning) !important; } .k-amber .kpi-value { color: var(--data-warning); }
+        .k-slate { border-top-color: #f0705c !important; } .k-slate .kpi-value { color: var(--panel-text); }
 
         .chart-section { background: var(--panel-surface); border: 1px solid var(--panel-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
         .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
@@ -96,14 +96,19 @@ html{background:var(--bg-color)}
         .hit-table tr:last-child td { border-bottom: none; }
         .hit-table td:first-child { font-weight: 700; color: var(--panel-text); }
         .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
-        .t-strong { background: rgba(16,185,129,0.15); color: var(--data-positive); border: 1px solid rgba(16,185,129,0.3); }
-        .t-mod { background: rgba(245,158,11,0.15); color: var(--data-warning); border: 1px solid rgba(245,158,11,0.3); }
+        .t-strong { background: rgba(16,185,129,0.15); color: var(--panel-positive); border: 1px solid rgba(16,185,129,0.3); }
+        .t-mod { background: rgba(245,158,11,0.15); color: var(--panel-warning); border: 1px solid rgba(245,158,11,0.3); }
 
         /* --- ACCOUNT DNA DRILL-DOWN --- */
         .dna-panel { background: var(--panel-bg); border: 1px solid var(--panel-surface); border-radius: 12px; padding: 26px; margin: 30px 0 36px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
         .dna-head { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; margin-bottom: 22px; padding-bottom: 16px; border-bottom: 1px solid var(--panel-border); }
         .dna-head label { font-size: 0.78rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.9px; }
         .dna-head select { background: var(--panel-bg); color: var(--panel-text); border: 1px solid var(--panel-border); padding: 9px 12px; border-radius: 4px; font-family: 'Archivo', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; min-width: 240px; }
+        /* Options are painted by the OS unless told otherwise. Without this the list
+           opens with default colours against a dark select, which on some platforms
+           is dark text on a dark ground. */
+        select option { background: var(--panel-surface); color: var(--panel-text); }
+
         .dna-head select:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
 
         .dna-levels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -114,17 +119,17 @@ html{background:var(--bg-color)}
         .dna-row { display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 4px; font-size: 0.75rem; color: var(--panel-text); }
         .dna-row .lbl { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.7rem; }
         .dna-row .val { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; color: var(--panel-text); white-space: nowrap; font-size: 0.7rem; }
-        .dna-bar { height: 4px; border-radius: 2px; background: var(--data-info); flex-shrink: 0; }
+        .dna-bar { height: 4px; border-radius: 2px; background: var(--panel-data-info); flex-shrink: 0; }
         .dna-row.clickable { cursor: pointer; border: 1px solid transparent; }
-        .dna-row.clickable:hover { background: rgba(125,211,252,0.08); border-color: rgba(125,211,252,0.3); }
-        .dna-row.active { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.45); }
-        .dna-row.active .val { color: var(--data-positive); }
+        .dna-row.clickable:hover { background: rgba(255,255,255,0.05); border-color: var(--panel-muted); }
+        .dna-row.active { background: rgba(236,164,87,0.14); border-color: rgba(236,164,87,0.50); }
+        .dna-row.active .val { color: var(--panel-signal); }
         .dna-empty { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; padding: 8px; }
 
         @media (max-width: 800px) { .dna-levels { grid-template-columns: 1fr; } .dna-head select { min-width: 0; width: 100%; } }
         @media print { .dna-panel { display: none !important; } }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
         .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px; }
         .impact-box p:last-child { margin-bottom: 0; }
 
@@ -347,7 +352,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         </tr>
                     </thead>
                     <tbody id="gap-body">
-                        <tr><td colspan="5" data-label="" style="text-align:center;color:var(--muted);font-style:italic;">Awaiting rule mining...</td></tr>
+                        <tr><td colspan="5" data-label="" style="text-align:center;color:var(--panel-muted);font-style:italic;">Awaiting rule mining...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -533,7 +538,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
         function renderTable(gaps) {
             if (!gaps.length) {
-                el('gap-body').innerHTML = '<tr><td colspan="5" data-label="" style="text-align:center;color:var(--muted);font-style:italic;">No gaps at these thresholds.</td></tr>';
+                el('gap-body').innerHTML = '<tr><td colspan="5" data-label="" style="text-align:center;color:var(--panel-muted);font-style:italic;">No gaps at these thresholds.</td></tr>';
                 return;
             }
             const top = gaps.slice().sort((a, b) => b.value - a.value).slice(0, 8);
@@ -543,7 +548,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     <td data-label="Already Buys">${g.trigger}</td>
                     <td data-label="Missing">${g.missing}</td>
                     <td data-label="Lift"><span class="tag ${g.lift >= 1.8 ? 't-strong' : 't-mod'}">${g.lift.toFixed(2)}</span></td>
-                    <td data-label="Est. Annual GP" style="color:var(--data-positive);font-weight:700;">${money(g.value)}</td>
+                    <td data-label="Est. Annual GP" style="color:var(--panel-positive);font-weight:700;">${money(g.value)}</td>
                 </tr>`).join('');
         }
 
@@ -560,7 +565,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 data: {
                     datasets: [
                         { label: 'Retained', data: pass.map(pt), backgroundColor: 'rgba(16,185,129,0.8)', borderColor: '#10b981', pointRadius: 8, pointHoverRadius: 10 },
-                        { label: 'Below lift floor', data: fail.map(pt), backgroundColor: 'rgba(148,163,184,0.6)', borderColor: tokenColor('--panel-muted'), pointRadius: 7, pointHoverRadius: 9 }
+                        { label: 'Below lift floor', data: fail.map(pt), backgroundColor: 'rgba(240,112,92,0.55)', borderColor: '#f0705c', pointRadius: 7, pointHoverRadius: 9 }
                     ]
                 },
                 options: {
@@ -574,10 +579,10 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     },
                     scales: {
                         x: { title: { display: true, text: 'Lift  (1.00 = independent)', color: tokenColor('--panel-muted'), font: { size: 11, weight: 'bold' } },
-                             ticks: { color: tokenColor('--panel-text'), font: { size: 10 } }, grid: { color: tokenColor('--body-text'), borderDash: [4, 4] }, beginAtZero: true },
+                             ticks: { color: tokenColor('--panel-text'), font: { size: 10 } }, grid: { color: '#4a5158', borderDash: [4, 4] }, beginAtZero: true },
                         y: { title: { display: true, text: 'Confidence (%)', color: tokenColor('--panel-muted'), font: { size: 11, weight: 'bold' } },
                              ticks: { color: tokenColor('--panel-text'), font: { size: 10 }, callback: v => v + '%' },
-                             grid: { color: tokenColor('--body-text'), borderDash: [4, 4] }, beginAtZero: true, max: 100 }
+                             grid: { color: '#4a5158', borderDash: [4, 4] }, beginAtZero: true, max: 100 }
                     }
                 }
             });
@@ -670,7 +675,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 `<span class="dna-bar" style="width:${Math.max(4, v / 100 * 54)}px; background:${v >= 60 ? '#ef4444' : '#10b981'}"></span>` +
                 `<span class="val">${v.toFixed(1)}%</span></div>`).join('') +
                 (top[1] >= 60
-                    ? `<div class="dna-empty" style="color:var(--data-negative);margin-top:8px;">Concentrated — one part carries ${top[1].toFixed(0)}% of this range.</div>`
+                    ? `<div class="dna-empty" style="color:var(--panel-negative);margin-top:8px;">Concentrated — one part carries ${top[1].toFixed(0)}% of this range.</div>`
                     : '');
 
             el('dna-ranges').querySelectorAll('.dna-row.clickable').forEach(node => {

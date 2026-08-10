@@ -79,10 +79,10 @@ html{background:var(--bg-color)}
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
         .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
-        .k-green { border-top-color: var(--data-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
-        .k-red { border-top-color: var(--data-negative) !important; } .k-red .kpi-value { color: var(--data-negative); }
-        .k-amber { border-top-color: var(--data-warning) !important; } .k-amber .kpi-value { color: var(--data-warning); }
-        .k-blue { border-top-color: var(--data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
+        .k-green { border-top-color: var(--panel-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
+        .k-red { border-top-color: var(--panel-negative) !important; } .k-red .kpi-value { color: var(--data-negative); }
+        .k-amber { border-top-color: var(--panel-warning) !important; } .k-amber .kpi-value { color: var(--data-warning); }
+        .k-blue { border-top-color: var(--panel-data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
 
         .chart-section { background: var(--panel-surface); border: 1px solid var(--panel-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
         .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
@@ -95,11 +95,11 @@ html{background:var(--bg-color)}
         .hit-table tr:last-child td { border-bottom: none; }
         .hit-table td:first-child { font-weight: 700; color: var(--panel-text); }
         .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
-        .t-over { background: rgba(239,68,68,0.15); color: var(--data-negative); border: 1px solid rgba(239,68,68,0.3); }
-        .t-under { background: rgba(125,211,252,0.15); color: var(--data-info); border: 1px solid rgba(125,211,252,0.3); }
-        .t-far { background: rgba(245,158,11,0.15); color: var(--data-warning); border: 1px solid rgba(245,158,11,0.3); }
+        .t-over { background: rgba(239,68,68,0.15); color: var(--panel-negative); border: 1px solid rgba(239,68,68,0.3); }
+        .t-under { background: rgba(125,211,252,0.15); color: var(--panel-data-info); border: 1px solid rgba(125,211,252,0.3); }
+        .t-far { background: rgba(245,158,11,0.15); color: var(--panel-warning); border: 1px solid rgba(245,158,11,0.3); }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
         .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px; }
         .impact-box p:last-child { margin-bottom: 0; }
 
@@ -320,7 +320,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         </tr>
                     </thead>
                     <tbody id="rep-body">
-                        <tr><td colspan="5" data-label="" style="text-align:center;color:var(--muted);font-style:italic;">Awaiting model run...</td></tr>
+                        <tr><td colspan="5" data-label="" style="text-align:center;color:var(--panel-muted);font-style:italic;">Awaiting model run...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -477,7 +477,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 far: r.medDist > radius
             })).filter(r => r.gap !== 0);
             if (!scored.length) {
-                el('rep-body').innerHTML = '<tr><td colspan="5" data-label="" style="text-align:center;color:var(--muted);font-style:italic;">Every book sits inside the band at these settings.</td></tr>';
+                el('rep-body').innerHTML = '<tr><td colspan="5" data-label="" style="text-align:center;color:var(--panel-muted);font-style:italic;">Every book sits inside the band at these settings.</td></tr>';
                 return;
             }
             const top = scored.sort((a, b) => Math.abs(b.gap) - Math.abs(a.gap)).slice(0, 8);
@@ -531,7 +531,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         y: { beginAtZero: true,
                              title: { display: true, text: 'Accounts in Book', color: tokenColor('--panel-muted'), font: { size: 11, weight: 'bold' } },
                              ticks: { color: tokenColor('--panel-text'), font: { size: 10 } },
-                             grid: { color: tokenColor('--body-text'), borderDash: [4, 4] } }
+                             grid: { color: '#4a5158', borderDash: [4, 4] } }
                     }
                 }
             });

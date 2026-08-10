@@ -34,7 +34,18 @@
 :root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
 html{background:var(--bg-color)}
-</style>
+
+        /* Replaces a permanently disabled checkbox. The stage still runs; it simply is
+           not something the reader can turn off, and a dead control invites a click
+           that does nothing. */
+        .stage-fixed { display: flex; align-items: baseline; justify-content: space-between;
+            gap: 10px; padding: 7px 0 7px 26px; }
+        .stage-fixed > span { color: var(--panel-muted); font-size: 0.82rem; }
+        .stage-fixed .rule { display: block; font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.68rem; color: var(--panel-dim); margin-top: 2px; }
+        .stage-fixed em { font-style: normal; font-size: 0.62rem; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--panel-signal); white-space: nowrap; }
+    </style>
     <link rel="stylesheet" href="portfolio.css?v=9">
 
     <style>
@@ -72,7 +83,7 @@ html{background:var(--bg-color)}
         .stage-list li { margin-bottom: 10px; }
         .stage-toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 0.82rem; color: var(--panel-text); cursor: pointer; line-height: 1.4; padding: 8px 10px; border-radius: 4px; border: 1px solid transparent; transition: background 0.15s; }
         .stage-toggle:hover { background: rgba(255,255,255,0.04); }
-        .stage-toggle input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--data-info); cursor: pointer; flex-shrink: 0; }
+        .stage-toggle input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--panel-signal); cursor: pointer; flex-shrink: 0; }
         .stage-toggle input:disabled { cursor: not-allowed; }
         .stage-toggle .rule { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.7rem; color: var(--panel-dim); display: block; margin-top: 2px; }
         .stage-toggle.locked { opacity: 0.7; }
@@ -87,10 +98,10 @@ html{background:var(--bg-color)}
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
         .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
-        .k-res { border-top-color: var(--data-positive) !important; } .k-res .kpi-value { color: var(--data-positive); }
-        .k-amb { border-top-color: var(--data-warning) !important; } .k-amb .kpi-value { color: var(--data-warning); }
-        .k-unr { border-top-color: var(--data-negative) !important; } .k-unr .kpi-value { color: var(--data-negative); }
-        .k-rev { border-top-color: var(--data-info) !important; } .k-rev .kpi-value { color: var(--data-info); }
+        .k-res { border-top-color: var(--panel-positive) !important; } .k-res .kpi-value { color: var(--data-positive); }
+        .k-amb { border-top-color: var(--panel-warning) !important; } .k-amb .kpi-value { color: var(--data-warning); }
+        .k-unr { border-top-color: var(--panel-negative) !important; } .k-unr .kpi-value { color: var(--data-negative); }
+        .k-rev { border-top-color: var(--panel-data-info) !important; } .k-rev .kpi-value { color: var(--data-info); }
 
         .chart-section { background: var(--panel-surface); border: 1px solid var(--panel-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
         .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
@@ -103,17 +114,17 @@ html{background:var(--bg-color)}
         .match-table tr:last-child td { border-bottom: none; }
         .match-table td:first-child { font-weight: 700; color: var(--panel-text); font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.72rem; }
         .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; line-height: 1.4; }
-        .t-res { background: rgba(16,185,129,0.15); color: var(--data-positive); border: 1px solid rgba(16,185,129,0.3); }
-        .t-amb { background: rgba(245,158,11,0.15); color: var(--data-warning); border: 1px solid rgba(245,158,11,0.3); }
-        .t-unr { background: rgba(239,68,68,0.15); color: var(--data-negative); border: 1px solid rgba(239,68,68,0.3); }
+        .t-res { background: rgba(16,185,129,0.15); color: var(--panel-positive); border: 1px solid rgba(16,185,129,0.3); }
+        .t-amb { background: rgba(245,158,11,0.15); color: var(--panel-warning); border: 1px solid rgba(245,158,11,0.3); }
+        .t-unr { background: rgba(239,68,68,0.15); color: var(--panel-negative); border: 1px solid rgba(239,68,68,0.3); }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 4px; margin: 25px 0 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 4px; margin: 25px 0 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px; }
         .impact-box p:last-child { margin-bottom: 0; }
 
-        .alert-box { background: var(--notice-bg); border: 1px solid var(--notice-border); border-left: 4px solid var(--signal); padding: 18px 22px; border-radius: 4px; margin: 25px 0 30px; font-size: 9.5pt; }
-        .alert-box strong { display: block; color: var(--notice-text); text-transform: uppercase; letter-spacing: 0.5px; font-size: 8pt; margin-bottom: 6px; }
-        .alert-box p { margin-bottom: 0; color: var(--notice-text); }
+        .alert-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 18px 22px; border-radius: 4px; margin: 25px 0 30px; font-size: 9.5pt; }
+        .alert-box strong { display: block; color: var(--signal); text-transform: uppercase; letter-spacing: 0.5px; font-size: 8pt; margin-bottom: 6px; }
+        .alert-box p { margin-bottom: 0; color: var(--body-text); }
 
         @media (max-width: 800px) {
             body { padding-left: 16px; padding-right: 16px; }
@@ -295,13 +306,11 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
             <ul class="stage-list">
                 <li>
-                    <label class="stage-toggle locked" for="stage1">
-                        <input type="checkbox" id="stage1" checked disabled aria-label="Exact string match, always enabled">
-                        <span>Exact string match
-                            <span class="rule">master == extract</span>
-                        </span>
-                    </label>
-                </li>
+                        <div class="stage-fixed">
+                            <span>Exact string match <span class="rule">master == extract</span></span>
+                            <em>always on</em>
+                        </div>
+                    </li>
                 <li>
                     <label class="stage-toggle" for="stage2">
                         <input type="checkbox" id="stage2" aria-label="Normalise case and punctuation">
@@ -398,7 +407,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         </tr>
                     </thead>
                     <tbody id="ledger-body">
-                        <tr><td colspan="5" data-label="" style="text-align:center;color:var(--muted);font-style:italic;">Awaiting pipeline run...</td></tr>
+                        <tr><td colspan="5" data-label="" style="text-align:center;color:var(--panel-muted);font-style:italic;">Awaiting pipeline run...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -510,7 +519,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
         const RULES = [
             { id: 'stage1', label: 'Exact match',        colour: tokenColor('--muted') },
-            { id: 'stage2', label: 'Case & punctuation', colour: '#0369a1' },
+            { id: 'stage2', label: 'Case & punctuation', colour: '#a78bfa' },
             { id: 'stage3', label: 'Division prefix',    colour: '#7dd3fc' },
             { id: 'stage4', label: 'Facility suffix',    colour: '#10b981' },
             { id: 'stage5', label: 'Token set',          colour: '#f59e0b' }
@@ -620,7 +629,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 else if (r.status === 'ambiguous') target = r.candidates.map(c => c.name + ' (' + c.region + ')').join(' / ');
                 else target = '<span style="color:var(--muted);">no candidate</span>';
                 return `<tr>
-                    <td data-label="Location Master">${r.master.name}<br><span style="font-weight:400;color:var(--muted);font-size:0.68rem;">region ${r.master.region}</span></td>
+                    <td data-label="Location Master">${r.master.name}<br><span style="font-weight:400;color:var(--panel-muted);font-size:0.68rem;">region ${r.master.region}</span></td>
                     <td data-label="Matched To">${target}</td>
                     <td data-label="Resolved By">${ruleName}</td>
                     <td data-label="Revenue">${money(r.master.rev)}</td>
@@ -668,7 +677,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                             beginAtZero: true,
                             title: { display: true, text: 'Revenue (USD)', color: tokenColor('--panel-muted'), font: { size: 11, weight: 'bold' } },
                             ticks: { color: tokenColor('--panel-text'), font: { size: 10 }, callback: v => '$' + (v / 1e6).toFixed(1) + 'M' },
-                            grid: { color: tokenColor('--body-text'), borderDash: [4, 4] }
+                            grid: { color: '#4a5158', borderDash: [4, 4] }
                         },
                         y: { grid: { display: false }, ticks: { color: tokenColor('--panel-text'), font: { size: isNarrow() ? 9 : 10 } } }
                     }

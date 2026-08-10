@@ -67,7 +67,7 @@ html{background:var(--bg-color)}
         .portfolio-content h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: 18pt; font-weight: normal; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: var(--body-text); }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; color: var(--ink-surface); font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: var(--body-text); font-size: 10pt; line-height: 1.6; }
 
@@ -156,9 +156,9 @@ html{background:var(--bg-color)}
 
         /* Status Indicator */
         .status-badge { display: inline-block; padding: 10px 20px; border-radius: 6px; font-weight: 900; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase; border: 2px solid transparent;}
-        .status-safe { background: rgba(16, 185, 129, 0.15); color: var(--data-positive); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-        .status-danger { background: rgba(239, 68, 68, 0.15); color: var(--data-negative); border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);}
-        .status-uplift { background: rgba(59, 130, 246, 0.15); color: var(--data-series); border-color: rgba(59, 130, 246, 0.4); }
+        .status-safe { background: rgba(16, 185, 129, 0.15); color: var(--panel-positive); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .status-danger { background: rgba(239, 68, 68, 0.15); color: var(--panel-negative); border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);}
+        .status-uplift { background: rgba(59, 130, 246, 0.15); color: var(--panel-series); border-color: rgba(59, 130, 246, 0.4); }
 
 
         .dashboard-container        .dashboard-container .jargon-tooltip:hover { border-bottom-color: var(--surface); }
@@ -332,20 +332,20 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </div>
 
             <!-- Dynamic KPIs -->
-            <div class="kpi-card" style="border-top-color: var(--muted);">
+            <div class="kpi-card" style="border-top-color: var(--panel-muted);">
                 <div class="kpi-card-header" style="color: var(--panel-text);">Z-Score (Test Statistic)</div>
                 <div class="kpi-value" id="out-zscore" style="color: var(--panel-bright);">0.00</div>
                 <div class="kpi-desc">How far the new results are from our old baseline.</div>
             </div>
 
-            <div class="kpi-card" style="border-top-color: var(--muted);">
+            <div class="kpi-card" style="border-top-color: var(--panel-muted);">
                 <div class="kpi-card-header" style="color: var(--panel-text);">P-Value</div>
                 <div class="kpi-value" id="out-pvalue" style="color: var(--panel-bright);">0.000</div>
                 <div class="kpi-desc">The mathematical probability that this drop in sales is just random noise.</div>
             </div>
 
-            <div class="kpi-card" style="border-top-color: #f59e0b;">
-                <div class="kpi-card-header" style="color: var(--data-warning);">Minimum Detectable Effect</div>
+            <div class="kpi-card" style="border-top-color: var(--panel-warning);">
+                <div class="kpi-card-header" style="color: var(--panel-warning);">Minimum Detectable Effect</div>
                 <div class="kpi-value" id="out-mde" style="color: var(--panel-bright);">--</div>
                 <div class="kpi-desc" id="out-mde-sub">Smallest true shift this sample could reliably detect.</div>
             </div>
@@ -577,7 +577,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     scales: {
                         x: {
                             title: { display: true, text: 'Conversion Rate (%)', color: tokenColor('--panel-muted'), font: { weight: 'bold' } },
-                            grid: { color: tokenColor('--body-text'), borderDash: [4, 4] },
+                            grid: { color: '#4a5158', borderDash: [4, 4] },
                             ticks: { color: tokenColor('--panel-text'), maxTicksLimit: window.matchMedia('(max-width: 800px)').matches ? 6 : 10 }
                         },
                         y: {

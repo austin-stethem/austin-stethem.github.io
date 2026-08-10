@@ -38,7 +38,12 @@
 :root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
 html{background:var(--bg-color)}
-</style>
+
+        /* Was missing entirely on this page, so both impact boxes rendered unstyled. */
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 4px; margin: 25px 0 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px; }
+        .impact-box p:last-child { margin-bottom: 0; }
+    </style>
     <link rel="stylesheet" href="portfolio.css?v=9">
 
     <style>
@@ -149,14 +154,14 @@ html{background:var(--bg-color)}
         .log-table td:first-child { line-height: 1.3; }
         .log-table tr:last-child td { border-bottom: none; }
 
-        .badge-lock { background: rgba(239, 68, 68, 0.15); color: var(--data-negative); border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
-        .badge-safe { background: rgba(16, 185, 129, 0.15); color: var(--data-positive); border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
-        .badge-elastic { background: rgba(59, 130, 246, 0.15); color: var(--data-series); border: 1px solid rgba(59, 130, 246, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
-        .badge-warn { background: rgba(245, 158, 11, 0.15); color: var(--data-warning); border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-lock { background: rgba(239, 68, 68, 0.15); color: var(--panel-negative); border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-safe { background: rgba(16, 185, 129, 0.15); color: var(--panel-positive); border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-elastic { background: rgba(59, 130, 246, 0.15); color: var(--panel-series); border: 1px solid rgba(59, 130, 246, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
+        .badge-warn { background: rgba(245, 158, 11, 0.15); color: var(--panel-warning); border: 1px solid rgba(245, 158, 11, 0.3); padding: 4px 7px; border-radius: 4px; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.3px; line-height: 1.35; display: inline-block;}
 
-        .status-safe { border-top-color: var(--data-positive) !important; }
-        .status-warn { border-top-color: var(--data-warning) !important; }
-        .status-critical { border-top-color: var(--data-negative) !important; }
+        .status-safe { border-top-color: var(--panel-positive) !important; }
+        .status-warn { border-top-color: var(--panel-warning) !important; }
+        .status-critical { border-top-color: var(--panel-negative) !important; }
 
         /* --- P-tier ladder ------------------------------------------------- */
         .ladder-table { width: 100%; border-collapse: collapse; margin: 20px 0 10px; font-size: 9.5pt; background: var(--surface); border: 1px solid var(--hairline); border-radius: 4px; table-layout: fixed; }
@@ -165,8 +170,8 @@ html{background:var(--bg-color)}
         .ladder-table tr:last-child td { border-bottom: none; }
         .ladder-table .tier { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; color: var(--ink-surface); }
         .ladder-table .num { font-family: 'IBM Plex Mono', 'Fira Code', monospace; text-align: right; }
-        .ladder-table tr.cost-row td { background: var(--surface-sunken); font-style: italic; color: var(--muted); }
-        .ladder-table tr.volume-row td { background: var(--notice-bg); }
+        .ladder-table tr.cost-row td { background: var(--surface-sunken); color: var(--muted); }
+        .ladder-table tr.volume-row td { background: rgba(236, 164, 87, 0.10); }
         .ladder-table tr.volume-row .tier { color: var(--signal); }
         .ladder-caption { font-size: 8.5pt; color: var(--muted); font-style: italic; margin: 0 0 28px 0; text-align: left; }
 
@@ -530,7 +535,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         </tr>
                     </thead>
                     <tbody id="matrix-body">
-                        <tr><td colspan="6" data-label="" style="text-align: center; color: var(--muted); font-style: italic;">Awaiting execution prompt...</td></tr>
+                        <tr><td colspan="6" data-label="" style="text-align: center; color: var(--panel-muted); font-style: italic;">Awaiting execution prompt...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -884,9 +889,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         {
                             label: 'Target Baseline Margin',
                             data: baseData,
-                            backgroundColor: 'rgba(100, 116, 139, 0.4)',
+                            backgroundColor: 'rgba(139, 149, 158, 0.38)',
                             borderWidth: 1,
-                            borderColor: tokenColor('--muted'),
+                            borderColor: tokenColor('--panel-muted'),
                             borderRadius: 3
                         },
                         {
@@ -938,7 +943,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                                 font: { size: 10 },
                                 color: tokenColor('--panel-text')
                             },
-                            grid: { color: tokenColor('--body-text'), borderDash: [5, 5] }
+                            grid: { color: '#4a5158', borderDash: [5, 5] }
                         },
                         x: {
                             grid: { display: false },

@@ -31,7 +31,7 @@
     --panel-text: #c3cbd3;
     --panel-muted: #8b959e;
     --panel-bright: #eef1f4;
-    --panel-dim: #6a747d;
+    --panel-dim: #8b949c;
 
     --data-positive: #3ecf8e;
     --data-negative: #f0705c;
@@ -39,12 +39,13 @@
     --data-info: #e8b04b;
     --data-series: #5b9bd5;
     --signal-bright: #f2c14e;
-
-    --notice-bg: #231a10;
-    --notice-border: #5a4423;
-    --notice-text: #e6d3b8;
     --frame: #07090b;
     --panel-signal: #f2c14e;
+    --panel-positive: #3ecf8e;
+    --panel-negative: #f0705c;
+    --panel-warning: #e8b04b;
+    --panel-series: #5b9bd5;
+    --panel-data-info: #7dd3fc;
 }
 
 
@@ -143,11 +144,14 @@ input:focus-visible,
     width: 33%;
 }
 .meta-cell:last-child { border-right: none; }
+/* Amber, matching every other small uppercase label on the site: the section
+   eyebrows, the rail fact labels, the instruction headings. The value below stays
+   on --body-text so the header block does not outshout the prose it introduces. */
 .meta-label {
     display: block;
     font-size: 7.5pt;
     font-weight: 700;
-    color: var(--muted);
+    color: var(--signal);
     text-transform: uppercase;
     margin-bottom: 6px;
     letter-spacing: 0.5px;
@@ -491,6 +495,18 @@ input[type="range"]:disabled { cursor: not-allowed; opacity: 0.55; }
     .data-table, .hit-table, .meta-table, .ladder-table, .log-table, .match-table,
     .inventory-table, .protocol-table, .sim-container, .dashboard-container,
     .next-step-box, pre.code-block { max-width: none; }
+    /* Paragraphs inside a bordered callout fill their box. The prose cap above is for
+       body copy running against the page; a box is already a constrained measure, and
+       capping again indents the paragraph while its header stays flush left. */
+    body.doc .alert-box p, body.doc .alert-box ul,
+    body.doc .impact-box p, body.doc .impact-box ul,
+    body.doc .scenario-box p, body.doc .scenario-box ul,
+    body.doc .logic-box p, body.doc .nda-note p,
+    body.doc .logic-instruction-box p, body.doc .logic-instruction-box ul,
+    body.doc .next-step-box p, body.doc blockquote p {
+        max-width: none; margin-left: 0; margin-right: 0;
+    }
+
 }
 @media (min-width: 1620px) {
     body.doc { max-width: 1280px; font-size: 11pt; }
@@ -514,6 +530,29 @@ input[type="range"]:disabled { cursor: not-allowed; opacity: 0.55; }
     body.doc li { margin-bottom: 5px; }
     body.doc .scenario-box, body.doc .impact-box, body.doc .nda-note { margin-bottom: 22px; }
 }
+
+/* ── guided walkthrough launcher ──────────────────────────────────────────────
+   Was defined per page, and three pages had no rule at all — their launcher
+   rendered as a bare browser button. Here so every page gets it from one place. */
+.tour-launch {
+    margin: 6px 0 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.tour-btn {
+    font: 600 0.86rem/1 'Archivo', sans-serif;
+    background: var(--signal);
+    color: var(--on-signal);
+    border: 1px solid var(--signal);
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.tour-btn:hover { background: var(--signal-dark); border-color: var(--signal-dark); }
+.tour-hint { font-size: 0.82rem; color: var(--muted); font-style: italic; }
+@media print { .tour-launch { display: none; } }
 
 /* ── sticky page bar ──────────────────────────────────────────────────────────
    Back-link and theme toggle follow the reader down the page. These are the two
@@ -561,6 +600,14 @@ h2, h3 { text-align: center; }
 .sidebar h3,
 aside h3,
 .panel h3 { text-align: left; }
+/* The exception to the exception. A .dash-header or .sidebar-header centres its own
+   block, and the caption under the heading is a <p> that inherits that centring. The
+   rule above targets the h3 directly, and a direct value beats an inherited one — so
+   without this the heading sat left while its own caption stayed centred. */
+.dash-header h3,
+.sidebar-header h3,
+.dash-header .sim-title,
+.sidebar-header .sim-title { text-align: center; }
 
 /* ── data tables ──────────────────────────────────────────────────────────────
    Was duplicated in eight page <style> blocks and simply missing from two, so

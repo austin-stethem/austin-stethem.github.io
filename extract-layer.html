@@ -60,7 +60,7 @@ html{background:var(--bg-color)}
         .filter-list li { margin-bottom: 10px; }
         .filter-toggle { display: flex; align-items: flex-start; gap: 10px; font-size: 0.82rem; color: var(--panel-text); cursor: pointer; line-height: 1.4; padding: 8px 10px; border-radius: 4px; transition: background 0.15s; }
         .filter-toggle:hover { background: rgba(255,255,255,0.04); }
-        .filter-toggle input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--data-info); cursor: pointer; flex-shrink: 0; }
+        .filter-toggle input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--panel-signal); cursor: pointer; flex-shrink: 0; }
         .filter-toggle .rule { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.68rem; color: var(--panel-dim); display: block; margin-top: 2px; }
 
         .control-group { margin-bottom: 20px; }
@@ -87,10 +87,10 @@ html{background:var(--bg-color)}
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
         .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
-        .k-slate { border-top-color: var(--panel-muted) !important; } .k-slate .kpi-value { color: var(--panel-text); }
-        .k-blue { border-top-color: var(--data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
-        .k-green { border-top-color: var(--data-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
-        .k-red { border-top-color: var(--data-negative) !important; } .k-red .kpi-value { color: var(--data-negative); }
+        .k-slate { border-top-color: var(--panel-signal) !important; } .k-slate .kpi-value { color: var(--panel-text); }
+        .k-blue { border-top-color: var(--panel-data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
+        .k-green { border-top-color: var(--panel-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
+        .k-red { border-top-color: var(--panel-negative) !important; } .k-red .kpi-value { color: var(--data-negative); }
 
         .chart-section { background: var(--panel-surface); border: 1px solid var(--panel-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
         .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
@@ -103,16 +103,16 @@ html{background:var(--bg-color)}
         .hit-table tr:last-child td { border-bottom: none; }
         .hit-table td:first-child { font-weight: 700; color: var(--panel-text); }
         .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
-        .t-in { background: rgba(16,185,129,0.15); color: var(--data-positive); border: 1px solid rgba(16,185,129,0.3); }
+        .t-in { background: rgba(16,185,129,0.15); color: var(--panel-positive); border: 1px solid rgba(16,185,129,0.3); }
         .t-out { background: rgba(148,163,184,0.15); color: var(--panel-muted); border: 1px solid rgba(148,163,184,0.3); }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
         .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px; }
         .impact-box p:last-child { margin-bottom: 0; }
 
-        .alert-box { background: var(--notice-bg); border: 1px solid var(--notice-border); border-left: 4px solid var(--signal); padding: 18px 22px; border-radius: 4px; margin: 25px 0 30px; font-size: 9.5pt; }
-        .alert-box strong { display: block; color: var(--notice-text); text-transform: uppercase; letter-spacing: 0.5px; font-size: 8pt; margin-bottom: 6px; }
-        .alert-box p { margin-bottom: 0; color: var(--notice-text); }
+        .alert-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 18px 22px; border-radius: 4px; margin: 25px 0 30px; font-size: 9.5pt; }
+        .alert-box strong { display: block; color: var(--signal); text-transform: uppercase; letter-spacing: 0.5px; font-size: 8pt; margin-bottom: 6px; }
+        .alert-box p { margin-bottom: 0; color: var(--body-text); }
 
         @media (max-width: 800px) {
             body { padding-left: 16px; padding-right: 16px; }
@@ -265,14 +265,14 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <th scope="col" style="width:30%;">Line</th>
                 <th scope="col" style="width:23%;">Revenue</th>
                 <th scope="col" style="width:23%;">Cost</th>
-                <th scope="col" style="width:24%;">&nbsp;</th>
+                <th scope="col" style="width:24%;">Cost status</th>
             </tr>
         </thead>
         <tbody>
-            <tr><td data-label="Line">Line 1</td><td data-label="Revenue" class="mono">100.00</td><td data-label="Cost" class="mono">65.00</td><td data-label="Note">costed</td></tr>
-            <tr><td data-label="Line">Line 2</td><td data-label="Revenue" class="mono">80.00</td><td data-label="Cost" class="mono">52.00</td><td data-label="Note">costed</td></tr>
-            <tr><td data-label="Line">Line 3</td><td data-label="Revenue" class="mono">120.00</td><td data-label="Cost" class="mono"> &mdash; </td><td data-label="Note">no cost on file</td></tr>
-            <tr><td data-label="Line">Line 4</td><td data-label="Revenue" class="mono">60.00</td><td data-label="Cost" class="mono">39.00</td><td data-label="Note">costed</td></tr>
+            <tr><td data-label="Line">Line 1</td><td data-label="Revenue" class="mono">100.00</td><td data-label="Cost" class="mono">65.00</td><td data-label="Cost status">costed</td></tr>
+            <tr><td data-label="Line">Line 2</td><td data-label="Revenue" class="mono">80.00</td><td data-label="Cost" class="mono">52.00</td><td data-label="Cost status">costed</td></tr>
+            <tr><td data-label="Line">Line 3</td><td data-label="Revenue" class="mono">120.00</td><td data-label="Cost" class="mono"> &mdash; </td><td data-label="Cost status">no cost on file</td></tr>
+            <tr><td data-label="Line">Line 4</td><td data-label="Revenue" class="mono">60.00</td><td data-label="Cost" class="mono">39.00</td><td data-label="Cost status">costed</td></tr>
         </tbody>
     </table>
 
@@ -451,7 +451,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         </tr>
                     </thead>
                     <tbody id="pop-body">
-                        <tr><td colspan="5" data-label="" style="text-align:center;color:var(--muted);font-style:italic;">Awaiting extract...</td></tr>
+                        <tr><td colspan="5" data-label="" style="text-align:center;color:var(--panel-muted);font-style:italic;">Awaiting extract...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -621,8 +621,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     scales: {
                         y: { title: { display: true, text: 'Reported Margin (%)', color: tokenColor('--panel-muted'), font: { size: 11, weight: 'bold' } },
                              ticks: { color: tokenColor('--panel-text'), font: { size: 10 }, callback: v => v + '%' },
-                             grid: { color: tokenColor('--body-text'), borderDash: [4, 4] },
-                             min: 30, max: 46 },
+                             grid: { color: '#4a5158', borderDash: [4, 4] },
+                             min: 30, max: 46, ticks: { stepSize: 4 } },
                         x: { grid: { display: false }, ticks: { color: tokenColor('--panel-text'), font: { size: isNarrow() ? 9 : 10 } } }
                     }
                 }

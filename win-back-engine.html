@@ -79,10 +79,10 @@ html{background:var(--bg-color)}
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
         .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
-        .k-red { border-top-color: var(--data-negative) !important; } .k-red .kpi-value { color: var(--data-negative); }
-        .k-amber { border-top-color: var(--data-warning) !important; } .k-amber .kpi-value { color: var(--data-warning); }
-        .k-green { border-top-color: var(--data-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
-        .k-blue { border-top-color: var(--data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
+        .k-red { border-top-color: var(--panel-negative) !important; } .k-red .kpi-value { color: var(--data-negative); }
+        .k-amber { border-top-color: var(--panel-warning) !important; } .k-amber .kpi-value { color: var(--data-warning); }
+        .k-green { border-top-color: var(--panel-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
+        .k-blue { border-top-color: var(--panel-data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
 
         .chart-section { background: var(--panel-surface); border: 1px solid var(--panel-border); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 25px; }
         .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
@@ -95,11 +95,11 @@ html{background:var(--bg-color)}
         .hit-table tr:last-child td { border-bottom: none; }
         .hit-table td:first-child { font-weight: 700; color: var(--panel-text); }
         .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
-        .t-hard { background: rgba(239,68,68,0.15); color: var(--data-negative); border: 1px solid rgba(239,68,68,0.3); }
-        .t-soft { background: rgba(245,158,11,0.15); color: var(--data-warning); border: 1px solid rgba(245,158,11,0.3); }
-        .t-risk { background: rgba(125,211,252,0.15); color: var(--data-info); border: 1px solid rgba(125,211,252,0.3); }
+        .t-hard { background: rgba(239,68,68,0.15); color: var(--panel-negative); border: 1px solid rgba(239,68,68,0.3); }
+        .t-soft { background: rgba(245,158,11,0.15); color: var(--panel-warning); border: 1px solid rgba(245,158,11,0.3); }
+        .t-risk { background: rgba(125,211,252,0.15); color: var(--panel-data-info); border: 1px solid rgba(125,211,252,0.3); }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 4px; margin: 25px 0 40px; }
         .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px; }
         .impact-box p:last-child { margin-bottom: 0; }
 
@@ -314,7 +314,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         </tr>
                     </thead>
                     <tbody id="winback-body">
-                        <tr><td colspan="6" data-label="" style="text-align:center;color:var(--muted);font-style:italic;">Awaiting classification...</td></tr>
+                        <tr><td colspan="6" data-label="" style="text-align:center;color:var(--panel-muted);font-style:italic;">Awaiting classification...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -400,10 +400,16 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
             // At-risk cannot be a deeper decline than soft churn, or the labels invert.
             if (risk >= soft) {
-                el('v-risk').style.color = '#f59e0b';
+                // Invalid: at-risk is a deeper decline than soft churn, so the two
+                // labels have inverted. Colour it as the fault it is.
+                // The sidebar is dark in both themes, so this takes a fixed value rather
+                // than an inverting token whose light variant would be muddy here.
+                el('v-risk').style.color = '#f0705c';
                 el('v-risk').title = 'At-risk threshold has met or passed the soft-churn threshold';
             } else {
-                el('v-risk').style.color = '#f87171';
+                // Valid. Clearing the inline colour lets .val-readout's amber apply,
+                // so it matches the two readouts beside it and follows the theme.
+                el('v-risk').style.color = '';
                 el('v-risk').title = '';
             }
 
@@ -440,7 +446,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         function renderTable(rows) {
             const top = rows.slice().sort((a, b) => b.expected - a.expected).slice(0, 8);
             if (!top.length) {
-                el('winback-body').innerHTML = '<tr><td colspan="6" data-label="" style="text-align:center;color:var(--muted);font-style:italic;">No accounts classified as lost at these thresholds.</td></tr>';
+                el('winback-body').innerHTML = '<tr><td colspan="6" data-label="" style="text-align:center;color:var(--panel-muted);font-style:italic;">No accounts classified as lost at these thresholds.</td></tr>';
                 return;
             }
             const tags = { hard: ['t-hard', 'Hard churn'], soft: ['t-soft', 'Soft churn'], risk: ['t-risk', 'At risk'] };
@@ -451,7 +457,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     <td data-label="Quiet">${r.quiet} mo</td>
                     <td data-label="GP at Stake">${money(r.gpAtStake)}</td>
                     <td data-label="Odds">${(r.odds * 100).toFixed(0)}%</td>
-                    <td data-label="Expected" style="color:var(--data-positive);font-weight:700;">${money(r.expected)}</td>
+                    <td data-label="Expected" style="color:var(--panel-positive);font-weight:700;">${money(r.expected)}</td>
                 </tr>`).join('');
         }
 
@@ -483,10 +489,10 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     },
                     scales: {
                         x: { title: { display: true, text: 'Months Since Last Order', color: tokenColor('--panel-muted'), font: { size: 11, weight: 'bold' } },
-                             ticks: { color: tokenColor('--panel-text'), font: { size: 10 } }, grid: { color: tokenColor('--body-text'), borderDash: [4, 4] }, beginAtZero: true },
+                             ticks: { color: tokenColor('--panel-text'), font: { size: 10 } }, grid: { color: '#4a5158', borderDash: [4, 4] }, beginAtZero: true },
                         y: { title: { display: true, text: 'Expected Recoverable GP', color: tokenColor('--panel-muted'), font: { size: 11, weight: 'bold' } },
                              ticks: { color: tokenColor('--panel-text'), font: { size: 10 }, callback: v => '$' + (v / 1000).toFixed(0) + 'k' },
-                             grid: { color: tokenColor('--body-text'), borderDash: [4, 4] }, beginAtZero: true }
+                             grid: { color: '#4a5158', borderDash: [4, 4] }, beginAtZero: true }
                     }
                 }
             });

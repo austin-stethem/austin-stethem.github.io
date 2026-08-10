@@ -90,6 +90,11 @@ html{background:var(--bg-color)}
         .val-readout { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: bold; font-size: 0.95rem; color: var(--panel-signal); white-space: nowrap; }
         .control-note { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; margin-top: 6px; line-height: 1.45; }
         select { width: 100%; padding: 10px; background: var(--panel-bg); color: var(--panel-text); border: 1px solid var(--panel-border); border-radius: 4px; font-family: 'Archivo', sans-serif; font-size: 0.85rem; cursor: pointer; }
+        /* Options are painted by the OS unless told otherwise. Without this the list
+           opens with default colours against a dark select, which on some platforms
+           is dark text on a dark ground. */
+        select option { background: var(--panel-surface); color: var(--panel-text); }
+
 
         /* Local slider baseline — duplicates portfolio.css so a missing shared sheet
            does not drop the panel back to the native OS slider. */
@@ -126,13 +131,13 @@ html{background:var(--bg-color)}
         .hit-table td { padding: 10px 6px; border-bottom: 1px solid var(--panel-border); color: var(--panel-text); vertical-align: middle; overflow-wrap: break-word; }
         .hit-table tr:last-child td { border-bottom: none; }
         .hit-table .rank { font-family: 'IBM Plex Mono', 'Fira Code', monospace; color: var(--panel-dim); font-weight: 700; }
-        .hit-table .gp { font-family: 'IBM Plex Mono', 'Fira Code', monospace; color: var(--data-positive); font-weight: 700; }
+        .hit-table .gp { font-family: 'IBM Plex Mono', 'Fira Code', monospace; color: var(--panel-positive); font-weight: 700; }
         .badge-cls { display: inline-block; padding: 3px 7px; border-radius: 4px; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.3px; }
         .cls-urban { background: rgba(59,130,246,0.15); color: var(--data-info); border: 1px solid rgba(59,130,246,0.3); }
         .cls-suburban { background: rgba(16,185,129,0.15); color: var(--data-positive); border: 1px solid rgba(16,185,129,0.3); }
         .cls-rural { background: rgba(245,158,11,0.15); color: var(--data-warning); border: 1px solid rgba(245,158,11,0.3); }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 4px; margin: 25px 0 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 4px; margin: 25px 0 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px; }
         .impact-box p:last-child { margin-bottom: 0; }
 
@@ -140,9 +145,9 @@ html{background:var(--bg-color)}
         .inventory-table th { background: var(--ink-surface); color: var(--on-ink); text-align: left; padding: 10px; font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 800; }
         .inventory-table td { padding: 10px; border-bottom: 1px solid var(--row-line); color: var(--body-text); overflow-wrap: break-word; }
         .inventory-table tr:last-child td { border-bottom: none; }
-        .inventory-table .have { color: var(--data-positive); font-weight: 700; }
+        .inventory-table .have { color: var(--panel-positive); font-weight: 700; }
         .inventory-table .derive { color: var(--signal); font-weight: 700; }
-        .inventory-table .newdata { color: var(--data-negative); font-weight: 700; }
+        .inventory-table .newdata { color: var(--panel-negative); font-weight: 700; }
 
         @media (max-width: 800px) {
             body { padding-left: 16px; padding-right: 16px; }
@@ -323,9 +328,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </li>
     </ul>
 
-    <div class="logic-instruction-box" style="background: var(--surface-sunken); border: 1px solid #bae6fd; border-left: 4px solid var(--signal); padding: 18px; border-radius: 4px; margin-bottom: 30px;">
+    <div class="logic-instruction-box" style="background: var(--surface-sunken); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 18px; border-radius: 4px; margin-bottom: 30px;">
         <strong style="display:block; color: var(--signal); text-transform: uppercase; font-size: 8.5pt; letter-spacing: 0.5px; margin-bottom: 6px;">The&nbsp;principle underneath all of them</strong>
-        <p style="margin:0; color:var(--panel-text);">A record that fails should cost you a line in a log file, not a row in the dataset. Silent deletion is the failure mode that makes a scraped dataset dangerous, because the output still looks complete. Every stage here reports what it removed and where it went.</p>
+        <p style="margin:0; color:var(--body-text);">A record that fails should cost you a line in a log file, not a row in the dataset. Silent deletion is the failure mode that makes a scraped dataset dangerous, because the output still looks complete. Every stage here reports what it removed and where it went.</p>
     </div>
 
     <p>The dataset this runs on did not exist, and no vendor was going to sell it to us at a price anyone would approve. I built it, and I made the argument in those terms, not fund a data initiative, but <em>I can build this from data we already own, and what I need from you is a monthly snapshot and a decision about who acts on it.</em></p>
@@ -381,12 +386,12 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-card-header">Closure Candidates</div>
-                    <div class="kpi-value" id="kpi-closures" style="color:var(--data-warning);">--</div>
+                    <div class="kpi-value" id="kpi-closures" style="color:var(--panel-warning);">--</div>
                     <div class="kpi-sub" id="kpi-closures-sub">Mutual-nearest pairs</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-card-header">Gross Profit Orphaned</div>
-                    <div class="kpi-value" id="kpi-orphaned" style="color:var(--data-negative);">--</div>
+                    <div class="kpi-value" id="kpi-orphaned" style="color:var(--panel-negative);">--</div>
                     <div class="kpi-sub">Annual GP served by closing stores</div>
                 </div>
                 <div class="kpi-card kpi-capture">
@@ -416,7 +421,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         </tr>
                     </thead>
                     <tbody id="hitlist-body">
-                        <tr><td colspan="5" data-label="" style="text-align:center; color:var(--muted); font-style:italic;">Awaiting model run...</td></tr>
+                        <tr><td colspan="5" data-label="" style="text-align:center; color:var(--panel-muted); font-style:italic;">Awaiting model run...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -723,7 +728,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         function renderHitlist(rows) {
             const body = document.getElementById('hitlist-body');
             if (!rows.length) {
-                body.innerHTML = '<tr><td colspan="5" data-label="" style="text-align:center; color:var(--muted); font-style:italic;">No closure candidates at this sensitivity.</td></tr>';
+                body.innerHTML = '<tr><td colspan="5" data-label="" style="text-align:center; color:var(--panel-muted); font-style:italic;">No closure candidates at this sensitivity.</td></tr>';
                 return;
             }
             rows.sort((a, b) => b.gp - a.gp);
@@ -784,7 +789,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                             position: 'left', beginAtZero: true,
                             title: { display: true, text: 'Capturable Gross Profit', color: tokenColor('--panel-muted'), font: { size: 10, weight: 'bold' } },
                             ticks: { callback: v => compact(v), color: tokenColor('--panel-text'), font: { size: 10 } },
-                            grid: { color: tokenColor('--body-text'), borderDash: [4, 4] }
+                            grid: { color: '#4a5158', borderDash: [4, 4] }
                         },
                         y1: {
                             position: 'right', beginAtZero: true,

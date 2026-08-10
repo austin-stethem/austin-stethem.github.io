@@ -146,7 +146,7 @@ html{background:var(--bg-color)}
         .code-string { color: #98c379; }
         .code-number { color: #d19a66; }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; color: var(--ink-surface); font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: var(--body-text); font-size: 10pt; line-height: 1.6; }
         .impact-box ul { font-size: 10pt; }
@@ -314,24 +314,24 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
         <div class="dash-main">
             <div class="kpi-grid">
-                <div class="kpi-card" id="card-p5" style="border-top-color: #ef4444;">
-                    <div class="kpi-card-header" style="color: var(--data-negative);">12-Mo P5 Risk</div>
-                    <div class="kpi-value" id="out-p5" style="color: var(--data-negative);">$--</div>
+                <div class="kpi-card" id="card-p5" style="border-top-color: var(--panel-negative);">
+                    <div class="kpi-card-header" style="color: var(--panel-negative);">12-Mo P5 Risk</div>
+                    <div class="kpi-value" id="out-p5" style="color: var(--panel-negative);">$--</div>
                     <div class="kpi-sub">5th Percentile Profit Floor</div>
                 </div>
-                <div class="kpi-card" style="border-top-color: #3b82f6;">
-                    <div class="kpi-card-header" style="color: var(--data-series);">12-Mo Median E[P]</div>
-                    <div class="kpi-value" id="out-median" style="color: var(--data-series);">$--</div>
+                <div class="kpi-card" style="border-top-color: var(--panel-series);">
+                    <div class="kpi-card-header" style="color: var(--panel-series);">12-Mo Median E[P]</div>
+                    <div class="kpi-value" id="out-median" style="color: var(--panel-series);">$--</div>
                     <div class="kpi-sub">Median Probable Yield</div>
                 </div>
-                <div class="kpi-card" id="card-p95" style="border-top-color: #10b981;">
-                    <div class="kpi-card-header" style="color: var(--data-positive);">12-Mo P95 Upside</div>
-                    <div class="kpi-value" id="out-p95" style="color: var(--data-positive);">$--</div>
+                <div class="kpi-card" id="card-p95" style="border-top-color: var(--panel-positive);">
+                    <div class="kpi-card-header" style="color: var(--panel-positive);">12-Mo P95 Upside</div>
+                    <div class="kpi-value" id="out-p95" style="color: var(--panel-positive);">$--</div>
                     <div class="kpi-sub">95th Percentile Windfall</div>
                 </div>
-                <div class="kpi-card" id="card-optimal" style="border-top-color: #f59e0b;">
-                    <div class="kpi-card-header" style="color: var(--data-warning);">Profit-Maximising Price</div>
-                    <div class="kpi-value" id="out-optimal" style="color: var(--data-warning);">$--</div>
+                <div class="kpi-card" id="card-optimal" style="border-top-color: var(--panel-warning);">
+                    <div class="kpi-card-header" style="color: var(--panel-warning);">Profit-Maximising Price</div>
+                    <div class="kpi-value" id="out-optimal" style="color: var(--panel-warning);">$--</div>
                     <div class="kpi-sub" id="out-optimal-sub">Swept across the full price range</div>
                 </div>
             </div>
@@ -739,7 +739,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     scales: {
                         y: {
                             title: { display: true, text: 'Cumulative Profit ($)', font: { size: 11, weight: 'bold' }, color: tokenColor('--panel-muted') },
-                            grid: { color: tokenColor('--body-text'), borderDash: [4, 4] },
+                            grid: { color: '#4a5158', borderDash: [4, 4] },
                             ticks: {
                                 callback: v => '$' + (v / 1000).toFixed(0) + 'k',
                                 font: { size: 10 }, color: tokenColor('--panel-text')
@@ -806,7 +806,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     scales: {
                         y: {
                             title: { display: true, text: 'Median E[P] ($)', font: { size: 11, weight: 'bold' }, color: tokenColor('--panel-muted') },
-                            grid: { color: tokenColor('--body-text'), borderDash: [4, 4] },
+                            grid: { color: '#4a5158', borderDash: [4, 4] },
                             ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k', font: { size: 10 }, color: tokenColor('--panel-text') }
                         },
                         x: {

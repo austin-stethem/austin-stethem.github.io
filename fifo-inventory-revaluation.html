@@ -129,7 +129,7 @@ html{background:var(--bg-color)}
         .chart-header { text-align: center; font-size: 0.8rem; font-weight: 800; color: var(--panel-text); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;}
         .chart-box { position: relative; height: 320px; width: 100%; }
 
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--ink-surface); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 6px; margin-top: 20px; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .impact-box h3 { margin-top: 0; color: var(--ink-surface); font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: var(--body-text); font-size: 10pt; line-height: 1.6; }
 
@@ -253,19 +253,19 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </div>
 
             <div class="control-group">
-                <label for="slider-velocity"><span>Monthly Velocity (Run Rate):</span> <span class="val-readout" style="color: var(--data-info);" id="val-velocity">1,500 Units</span></label>
+                <label for="slider-velocity"><span>Monthly Velocity (Run Rate):</span> <span class="val-readout" style="color: var(--panel-data-info);" id="val-velocity">1,500 Units</span></label>
                 <input type="range" id="slider-velocity" aria-label="Monthly sales velocity in units" min="500" max="5000" step="100" value="1500">
                 <div style="font-size: 8pt; color: var(--panel-muted); margin-top: 4px;">Baseline target margin: 35.0%</div>
             </div>
 
             <div class="control-group">
-                <label for="slider-increase"><span>Weighted Cost Spike (%):</span> <span class="val-readout" style="color: var(--data-negative);" id="val-increase">+12.0%</span></label>
+                <label for="slider-increase"><span>Weighted Cost Spike (%):</span> <span class="val-readout" style="color: var(--panel-negative);" id="val-increase">+12.0%</span></label>
                 <input type="range" id="slider-increase" aria-label="Weighted vendor cost spike percentage" min="2" max="25" step="0.5" value="12.0">
                 <div style="font-size: 8pt; color: var(--panel-muted); margin-top: 4px;">Blended average across KVI/Elastic tiers.</div>
             </div>
 
             <div class="control-group">
-                <label for="slider-qoh"><span>Current QOH Buffer (Days):</span> <span class="val-readout" style="color: var(--data-positive);" id="val-qoh">60 Days</span></label>
+                <label for="slider-qoh"><span>Current QOH Buffer (Days):</span> <span class="val-readout" style="color: var(--panel-positive);" id="val-qoh">60 Days</span></label>
                 <input type="range" id="slider-qoh" aria-label="Current quantity on hand buffer in days" min="0" max="150" step="15" value="60">
             </div>
 
@@ -276,19 +276,19 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
         <div class="sim-main">
             <div class="kpi-grid">
-                <div class="kpi-card" style="border-top-color: #3b82f6;">
+                <div class="kpi-card" style="border-top-color: var(--panel-series);">
                     <div class="kpi-title">Windfall Duration</div>
-                    <div class="kpi-value" id="out-duration" style="color: var(--data-info);">--</div>
+                    <div class="kpi-value" id="out-duration" style="color: var(--panel-data-info);">--</div>
                     <div class="kpi-sub">Time to bleed legacy stock</div>
                 </div>
-                <div class="kpi-card" style="border-top-color: var(--data-negative);">
+                <div class="kpi-card" style="border-top-color: var(--panel-negative);">
                     <div class="kpi-title">Peak FIFO Margin</div>
-                    <div class="kpi-value" id="out-peak" style="color: var(--data-negative);">--</div>
+                    <div class="kpi-value" id="out-peak" style="color: var(--panel-negative);">--</div>
                     <div class="kpi-sub">Margin realized on old stock</div>
                 </div>
-                <div class="kpi-card" style="border-top-color: var(--data-positive);">
+                <div class="kpi-card" style="border-top-color: var(--panel-positive);">
                     <div class="kpi-title">Total EBITDA Windfall</div>
-                    <div class="kpi-value" id="out-windfall" style="color: var(--data-positive);">$--</div>
+                    <div class="kpi-value" id="out-windfall" style="color: var(--panel-positive);">$--</div>
                     <div class="kpi-sub" id="out-windfall-sub">Pure P&amp;L Profit Generation</div>
                 </div>
             </div>
@@ -428,8 +428,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         {
                             label: 'Baseline Standard Profit ($)',
                             data: baselineProfitData,
-                            backgroundColor: 'rgba(100, 116, 139, 0.4)',
-                            borderColor: tokenColor('--muted'),
+                            backgroundColor: 'rgba(139, 149, 158, 0.38)',
+                            borderColor: tokenColor('--panel-muted'),
                             borderWidth: 1,
                             borderRadius: { topLeft: 0, topRight: 0, bottomLeft: 4, bottomRight: 4 }
                         },
@@ -474,7 +474,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                             beginAtZero: true,
                             title: { display: true, text: 'Total Profit Dollars ($)', font: { size: 11, weight: 'bold' }, color: tokenColor('--panel-muted') },
                             ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k', font: { size: 11 }, color: tokenColor('--panel-text') },
-                            grid: { color: tokenColor('--body-text'), borderDash: [4, 4] }
+                            grid: { color: '#4a5158', borderDash: [4, 4] }
                         },
                         x: {
                             stacked: true,
