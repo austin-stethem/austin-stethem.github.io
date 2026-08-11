@@ -18,41 +18,43 @@
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
 
         body { font-family: 'Archivo', 'Inter', system-ui, sans-serif; color: var(--body-text); font-size: 10.5pt; line-height: 1.6; max-width: 950px; margin: 0 auto; --doc-pad: 20px; padding: 40px var(--doc-pad) 90px; background-color: var(--bg-color, var(--bg-color)); -webkit-font-smoothing: antialiased; }
-        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: 600; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
         h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--ink-surface); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         p { text-align: justify; margin-bottom: 15px; color: var(--body-text); }
         ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text); padding-left: 25px; }
         li { margin-bottom: 8px; }
         code { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.88em; background: var(--surface-sunken); padding: 1px 5px; border-radius: 3px; color: var(--ink-surface); }
 
-
         .dashboard-container { width: 100%; margin: 40px auto; background: var(--panel-bg); color: var(--panel-text); border-radius: 12px; display: flex; flex-wrap: wrap; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--panel-surface); overflow: hidden; }
         .dash-sidebar { width: 340px; flex-shrink: 0; background: var(--panel-surface); padding: 30px; border-right: 1px solid var(--panel-border); display: flex; flex-direction: column; }
         .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--panel-bg); display: flex; flex-direction: column; }
         .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--panel-border); padding-bottom: 15px; text-align: center; }
-        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
         .dash-header .dash-title span { color: var(--panel-signal); }
         .dash-header p { color: var(--panel-muted); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
 
@@ -78,7 +80,7 @@ html{background:var(--bg-color)}
         .kpi-card { background: var(--panel-surface); border: 1px solid var(--panel-border); border-top: 3px solid var(--panel-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
         .kpi-card:hover { transform: translateY(-3px); }
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
         .k-blue { border-top-color: var(--panel-data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
         .k-green { border-top-color: var(--panel-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
@@ -95,7 +97,7 @@ html{background:var(--bg-color)}
         .hit-table td { padding: 10px 6px; border-bottom: 1px solid var(--panel-border); color: var(--panel-text); vertical-align: middle; }
         .hit-table tr:last-child td { border-bottom: none; }
         .hit-table td:first-child { font-weight: 700; color: var(--panel-text); }
-        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
+        .tag { font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
         .t-strong { background: rgba(16,185,129,0.15); color: var(--panel-positive); border: 1px solid rgba(16,185,129,0.3); }
         .t-mod { background: rgba(245,158,11,0.15); color: var(--panel-warning); border: 1px solid rgba(245,158,11,0.3); }
 
@@ -162,14 +164,34 @@ html{background:var(--bg-color)}
             .project-navigation { display: none !important; }
         }
 
-        .tour-launch { margin: 6px 0 22px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tour-launch { margin: 6px 0 22px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
         .tour-btn { font: 600 0.86rem/1 'Archivo', sans-serif; background: var(--signal);
             color: var(--on-signal); border: 1px solid var(--signal);
             padding: 10px 16px; border-radius: 4px; cursor: pointer; }
         .tour-btn:hover { background: var(--signal-dark); border-color: var(--signal-dark); }
         .tour-hint { font-size: 0.82rem; color: var(--muted); font-style: italic; }
         @media print { .tour-launch { display: none; } }
-    </style>
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
+</style>
 <script>
 /* Chart.js needs literal colours, so read the token when the chart is built. */
 function tokenColor(name){
@@ -183,7 +205,7 @@ function tokenColor(name){
 document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
-    <script defer src="tour.js"></script>
+    <script defer src="tour.js?v=2"></script>
 </head>
 <body class="doc">
 
@@ -208,7 +230,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -268,7 +290,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
     </table>
 
-    <p>The practical consequence: a rule can have high confidence and be worthless. If nearly every account buys filters, then &ldquo;buys oil &rarr; buys filters&rdquo; will show strong confidence while carrying <span class="jargon-tooltip" data-tip="Lift at or below 1.0 means the two products occur together no more often than chance would predict — the pairing carries no information."><strong>lift below 1.0</strong></span>, meaning oil buyers are actually <em>less</em> likely to buy filters than the average account. Acting on confidence alone sends representatives to sell things customers were going to buy anyway.</p>
+    <p>The practical consequence: a rule can have high confidence and be worthless. If nearly every account buys filters, then &ldquo;buys oil &rarr; buys filters&rdquo; will show strong confidence while carrying <span class="jargon-tooltip" data-tip="Lift at or below 1.0 means the two products occur together no more often than chance would predict — the pairing carries no information." tabindex="0"><strong>lift below 1.0</strong></span>, meaning oil buyers are actually <em>less</em> likely to buy filters than the average account. Acting on confidence alone sends representatives to sell things customers were going to buy anyway.</p>
 
     <h2 id="dashboard">3. From Rules to a Call List</h2>
 
@@ -361,13 +383,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>4. Underneath the Rules: What an Account Actually Buys</h2>
 
-    <p>Association rules describe the population. They do not tell a representative standing in a specific shop what that shop's business actually looks like, and a cross-sell conversation needs both.</p>
+    <p><span class="jargon-tooltip" data-tip="A method for finding which products get bought together more often than chance would explain." tabindex="0">Association rules</span> describe the population. They do not tell a representative standing in a specific shop what that shop's business actually looks like, and a cross-sell conversation needs both.</p>
 
     <p>Beneath the rule layer sits a per-account profile built from transaction history: a profit-ranked drill-down through three levels of the product hierarchy. It exists because the obvious version of this report, sorted by revenue, is misleading in a way that costs money.</p>
 
     <div class="scenario-box">
         <strong>Profit-ranked at every level, never revenue-ranked</strong>
-        Revenue rankings surface whatever is expensive and moves in volume, which in a parts business means the categories where competition is fiercest and margin is thinnest. An account's largest revenue line is frequently one of its least profitable. Sorting on gross profit instead changes which conversations a representative has; and it changes them at all three levels, because a range that ranks fourth on revenue can rank first on profit.
+        Revenue rankings surface whatever is expensive and moves in volume, which in a parts business means the categories where competition is fiercest and <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> is thinnest. An account's largest revenue line is frequently one of its least profitable. Sorting on gross profit instead changes which conversations a representative has; and it changes them at all three levels, because a range that ranks fourth on revenue can rank first on profit.
     </div>
 
     <p><em>Select an account below, then click a range to open its parts. Every figure is ranked by contribution, not by sales value.</em></p>
@@ -419,7 +441,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <div class="next-step-box">
         <h3>Attack &middot; Step 5</h3>
         <p>Selling more to an existing account still costs a conversation. The last step in the track costs nothing at all. It recovers margin already being given away on accounts that have already been won.</p>
-        <nav class="project-navigation" aria-label="Case study navigation">
+            </div>
+
+            <nav class="project-navigation" aria-label="Case study navigation">
             <a href="win-back-engine.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Step 3</span>
                 <span class="nav-title">Lost Account Win-Back</span>
@@ -429,9 +453,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <span class="nav-title">Contract Tier Clawbacks</span>
             </a>
         </nav>
-    </div>
 
-    <div class="nda-note">
+            <div class="nda-note">
         <strong>Data Governance Note:</strong> Account names match the roster used in Steps 3 and 5. Product categories, basket counts and revenue figures are synthetic. The rule metrics are computed exactly as they would be in production.
     </div>
 

@@ -18,41 +18,43 @@
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
 
         body { font-family: 'Archivo', 'Inter', system-ui, sans-serif; color: var(--body-text); font-size: 10.5pt; line-height: 1.6; max-width: 950px; margin: 0 auto; --doc-pad: 20px; padding: 40px var(--doc-pad) 90px; background-color: var(--bg-color, var(--bg-color)); -webkit-font-smoothing: antialiased; }
-        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: 600; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
         h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--ink-surface); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         p { text-align: justify; margin-bottom: 15px; color: var(--body-text); }
         ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text); padding-left: 25px; }
         li { margin-bottom: 8px; }
         code { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.88em; background: var(--surface-sunken); padding: 1px 5px; border-radius: 3px; color: var(--ink-surface); }
 
-
         .dashboard-container { width: 100%; margin: 40px auto; background: var(--panel-bg); color: var(--panel-text); border-radius: 12px; display: flex; flex-wrap: wrap; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--panel-surface); overflow: hidden; }
         .dash-sidebar { width: 340px; flex-shrink: 0; background: var(--panel-surface); padding: 30px; border-right: 1px solid var(--panel-border); display: flex; flex-direction: column; }
         .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--panel-bg); display: flex; flex-direction: column; }
         .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--panel-border); padding-bottom: 15px; text-align: center; }
-        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
         .dash-header .dash-title span { color: var(--panel-signal); }
         .dash-header p { color: var(--panel-muted); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
 
@@ -85,7 +87,7 @@ html{background:var(--bg-color)}
         .kpi-card { background: var(--panel-surface); border: 1px solid var(--panel-border); border-top: 3px solid var(--panel-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
         .kpi-card:hover { transform: translateY(-3px); }
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
         .k-slate { border-top-color: var(--panel-signal) !important; } .k-slate .kpi-value { color: var(--panel-text); }
         .k-blue { border-top-color: var(--panel-data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
@@ -102,7 +104,7 @@ html{background:var(--bg-color)}
         .hit-table td { padding: 10px 6px; border-bottom: 1px solid var(--panel-border); color: var(--panel-text); vertical-align: middle; }
         .hit-table tr:last-child td { border-bottom: none; }
         .hit-table td:first-child { font-weight: 700; color: var(--panel-text); }
-        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
+        .tag { font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
         .t-in { background: rgba(16,185,129,0.15); color: var(--panel-positive); border: 1px solid rgba(16,185,129,0.3); }
         .t-out { background: rgba(148,163,184,0.15); color: var(--panel-muted); border: 1px solid rgba(148,163,184,0.3); }
 
@@ -143,14 +145,34 @@ html{background:var(--bg-color)}
             .project-navigation { display: none !important; }
         }
 
-        .tour-launch { margin: 6px 0 22px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tour-launch { margin: 6px 0 22px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
         .tour-btn { font: 600 0.86rem/1 'Archivo', sans-serif; background: var(--signal);
             color: var(--on-signal); border: 1px solid var(--signal);
             padding: 10px 16px; border-radius: 4px; cursor: pointer; }
         .tour-btn:hover { background: var(--signal-dark); border-color: var(--signal-dark); }
         .tour-hint { font-size: 0.82rem; color: var(--muted); font-style: italic; }
         @media print { .tour-launch { display: none; } }
-    </style>
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
+</style>
 <script>
 /* Chart.js needs literal colours, so read the token when the chart is built. */
 function tokenColor(name){
@@ -164,7 +186,7 @@ function tokenColor(name){
 document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
-    <script defer src="tour.js"></script>
+    <script defer src="tour.js?v=2"></script>
 </head>
 <body class="doc">
 
@@ -189,7 +211,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -210,7 +232,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         The four steps before this one deal with data that is wrong in visible ways &mdash; inventory that no longer exists, an entity with two names, a customer in the wrong place, an account with three owners. This step deals with data that is wrong because of a decision somebody made once, correctly, and never wrote down.
     </div>
 
-    <p>Every dashboard in this portfolio, and every model behind them, begins with a transaction extract. The elasticity tiers, the decay curves, the merger closure forecast, the clawback audit &mdash; all of them consume the output of a query, and none of them can tell whether that query was right.</p>
+    <p>Every dashboard in this portfolio, and every model behind them, begins with a transaction extract. The <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span> tiers, the decay curves, the merger closure forecast, the <span class="jargon-tooltip" data-tip="Moving an account back to the tier its volume justifies, recovering margin that had quietly drifted away." tabindex="0">clawback</span> audit &mdash; all of them consume the output of a query, and none of them can tell whether that query was right.</p>
 
     <p>That query is where margin gets defined. Not measured, defined. It decides what counts as revenue, what counts as cost, which rows belong in the population, and over what window. Change any of those and every downstream number changes with it, silently, because nothing downstream knows the definition moved.</p>
 
@@ -218,7 +240,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>This is my layer. Every exclusion below is a call I made and can defend line by line, which rows count as revenue, which negatives are customer credits against internal transfers against corruption, what cost means when the same part carries three of them. None of it is visible in the output, and all of it changes the answer. When a number leaves this layer wrong, nothing downstream catches it: the dashboards render, the charts look right, and the decision gets made on it anyway.</p>
 
-    <p>Margin is computed at extract time as revenue less <strong>store-intake cost</strong>: the tier the branch itself acquires at, not the warehouse's landed cost beneath it or the list price above it. That choice is deliberate and it is the reason the margin figures in this portfolio reconcile to the price ladder instead of floating free of it.</p>
+    <p>Margin is computed at extract time as revenue less <strong>store-intake cost</strong>: the <span class="jargon-tooltip" data-tip="One rung of the price ladder — a customer class with its own standing discount." tabindex="0">tier</span> the <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> itself acquires at, not the warehouse's <span class="jargon-tooltip" data-tip="Vendor price plus freight, duty and handling — what the unit actually cost to get onto the shelf, not what the invoice said." tabindex="0">landed cost</span> beneath it or the <span class="jargon-tooltip" data-tip="The top of the ladder: what a walk-in customer pays with no discount applied." tabindex="0">list price</span> above it. That choice is deliberate and it is the reason the margin figures in this portfolio reconcile to the <span class="jargon-tooltip" data-tip="The stack of prices for one item, one per customer type, each derived from the one below it. Eight tiers here, from warehouse cost up to retail list." tabindex="0">price ladder</span> instead of floating free of it.</p>
 
     <p>Choosing a different basis produces a different, equally defensible, entirely incompatible number:</p>
 
@@ -233,7 +255,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
             <tr>
                 <td data-label="Basis">Warehouse landed cost</td>
-                <td data-label="Measures">Enterprise margin, distribution centre through to customer</td>
+                <td data-label="Measures">Enterprise margin, <span class="jargon-tooltip" data-tip="The central warehouse that buys in bulk from vendors and resupplies the branches." tabindex="0">distribution centre</span> through to customer</td>
                 <td data-label="Why">Correct for consolidated reporting, useless for a branch conversation. It credits the branch with margin earned upstream and hides whether the branch's own pricing is working.</td>
             </tr>
             <tr>
@@ -242,9 +264,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <td data-label="Why">The basis used here. It is the cost the branch actually faces, so a margin floor expressed against it is a floor a branch manager can act on.</td>
             </tr>
             <tr>
-                <td data-label="Basis">Replacement cost</td>
+                <td data-label="Basis"><span class="jargon-tooltip" data-tip="Pricing based on what it will cost to buy the next unit from the vendor. Generates immediate windfall on old stock." tabindex="0">Replacement cost</span></td>
                 <td data-label="Measures">Margin on what the item costs to restock today</td>
-                <td data-label="Why">The right basis during a cost shock and the wrong one for routine reporting. Mixing the two is exactly the error the inventory revaluation work exists to correct.</td>
+                <td data-label="Why">The right basis during a cost shock and the wrong one for routine reporting. Mixing the two is exactly the error the inventory <span class="jargon-tooltip" data-tip="Restating what the inventory on hand is worth after costs move." tabindex="0">revaluation</span> work exists to correct.</td>
             </tr>
         </tbody>
     </table>
@@ -255,7 +277,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>Choosing a basis is the easy part. The harder problem is that the chosen cost is not recorded on every transaction, and the arithmetic does not notice.</p>
 
-    <p>In a legacy pricing structure, not every part carries a price at every tier. Some have no jobber tier, some no dealer tier, some no special rate &mdash; any combination can be absent, because the ladder accreted over decades instead of being designed. Add pass-through lines, where product moves from a warehouse to a branch with no markup applied, and accounts running negotiated cost-price rules that set their basis outside the standard ladder entirely, and a meaningful share of transaction lines simply have no value in the cost column.</p>
+    <p>In a legacy pricing structure, not every part carries a price at every tier. Some have no <span class="jargon-tooltip" data-tip="A high-volume trade customer — typically a fleet or a large repair operation — who earns the deepest standing discount." tabindex="0">jobber</span> tier, some no dealer tier, some no special rate &mdash; any combination can be absent, because the ladder accreted over decades instead of being designed. Add pass-through lines, where product moves from a warehouse to a branch with no markup applied, and accounts running negotiated cost-price rules that set their basis outside the standard ladder entirely, and a meaningful share of transaction lines simply have no value in the cost column.</p>
 
     <p>Now consider how margin is calculated over a group of those lines:</p>
 
@@ -280,7 +302,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="alert-box">
         <strong>Why&nbsp;this one is worse than the exclusions</strong>
-        <p>A wrong population produces a number that is wrong by a constant. This produces a number whose error scales with the share of uncosted revenue in each group &mdash; so two locations selling different product mixes report different margins for reasons that have nothing to do with pricing. It looks like performance variation. It is a data gap wearing performance variation's clothes.</p>
+        <p>A wrong population produces a number that is wrong by a constant. This produces a number whose error scales with the share of <span class="jargon-tooltip" data-tip="A revenue line with no cost recorded against it. Any margin calculated from it is arithmetic performed on a missing number." tabindex="0">uncosted</span> revenue in each group &mdash; so two locations selling different product mixes report different margins for reasons that have nothing to do with pricing. It looks like performance variation. It is a data gap wearing performance variation's clothes.</p>
     </div>
 
     <p>The consequence reaches further than reporting. Any ranking of products or accounts by profitability places uncosted lines at the top, because a missing cost computes as no cost. An assortment recommendation built on that ranking will systematically favour precisely the items whose cost nobody recorded.</p>
@@ -292,7 +314,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <ul>
         <li><strong>Total revenue</strong> &mdash; every line, unchanged. This is what the business actually sold.</li>
         <li><strong>Costed revenue</strong>, revenue on lines that carry a cost. The correct denominator for a margin.</li>
-        <li><strong>Gross profit</strong> &mdash; costed revenue less cost, so both sides span the same rows.</li>
+        <li><strong><span class="jargon-tooltip" data-tip="Revenue minus what the goods cost, before any overhead. The dollars a sale actually contributes." tabindex="0">Gross profit</span></strong> &mdash; costed revenue less cost, so both sides span the same rows.</li>
         <li><strong>Uncosted revenue</strong>: the remainder, reported as its own column, not silently absorbed.</li>
     </ul>
 
@@ -468,7 +490,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>A system that has run for decades accumulates fields whose names stopped matching their contents long before anyone currently employed arrived. A column named for a payment-sequencing attribute holds the state code. The address fields are split so that the second one carries the city, not a second address line. A field whose name suggests a sort order is, in practice, a geographic key.</p>
 
-    <p>None of this is documented, and none of it is discoverable by reading the schema. It is discoverable by pulling a hundred rows, looking at them, and noticing that the column labelled one thing contains two-letter state abbreviations. Every extract in this portfolio depends on somebody having done that, and on the aliases in the query being right &mdash; because an alias that is wrong produces a column that looks correct and contains the wrong thing.</p>
+    <p>None of this is documented, and none of it is discoverable by reading the <span class="jargon-tooltip" data-tip="The structure of a database: what tables exist, what columns they hold, and how they relate." tabindex="0">schema</span>. It is discoverable by pulling a hundred rows, looking at them, and noticing that the column labelled one thing contains two-letter state abbreviations. Every extract in this portfolio depends on somebody having done that, and on the aliases in the query being right &mdash; because an alias that is wrong produces a column that looks correct and contains the wrong thing.</p>
 
     <p>This is the least transferable skill in the whole portfolio and the hardest to fake. It is also the reason a competent analyst dropped into a legacy environment is unproductive for months: the queries are easy and knowing what the fields actually hold is not.</p>
 
@@ -480,7 +502,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>6. From Query to Service</h2>
 
-    <p>The extract is the first stage of a chain that ends in a browser. Geocoding, distance banding and clustering run over the extract output in Python. A small service layer then assembles five independent sources: the location census, the branch directory, the gravity matrix, the topology tiers and the account-level profiles, into a single payload the front end consumes.</p>
+    <p>The extract is the first stage of a chain that ends in a browser. <span class="jargon-tooltip" data-tip="Turning a written address into map coordinates, so distance can be measured rather than assumed." tabindex="0">Geocoding</span>, distance banding and <span class="jargon-tooltip" data-tip="Grouping records that resemble each other, so a rule can be written per group instead of per record." tabindex="0">clustering</span> run over the extract output in Python. A small service layer then assembles five independent sources: the location census, the branch directory, the gravity matrix, the topology tiers and the account-level profiles, into a single payload the front end consumes.</p>
 
     <p>That assembly is deliberately fault-tolerant. Each source is loaded independently and a missing one degrades its own section instead of taking down the response. A dashboard that renders with an empty analytics panel is diagnosable; one that returns a server error at nine in the morning is a fire.</p>
 
@@ -493,7 +515,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <div class="next-step-box">
         <h3>End of the Foundations Track</h3>
         <p>Five failure modes: inventory that no longer exists, an entity with two names, a customer in the wrong place, an account with three owners, and a cost that is a convention. Each one silently corrupts everything built on top of it.</p>
-        <nav class="project-navigation" aria-label="Case study navigation">
+            </div>
+
+            <nav class="project-navigation" aria-label="Case study navigation">
             <a href="territory-balancer.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Step 4</span>
                 <span class="nav-title">Territory Balancer</span>
@@ -503,10 +527,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <span class="nav-title">Portfolio Hub</span>
             </a>
         </nav>
-    </div>
 
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> Column names, view names and figures below are illustrative substitutes. The exclusion categories, the margin basis and the schema behaviour described are the production ones; the literal schema is not published.
+            <div class="nda-note">
+        <strong>Data Governance Note:</strong> Column names, view names and figures on this page are illustrative substitutes. The exclusion categories, the margin basis and the schema behaviour described are the production ones; the literal schema is not published.
     </div>
 
     <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>

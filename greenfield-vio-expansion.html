@@ -18,24 +18,27 @@
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
 
@@ -47,19 +50,18 @@ html{background:var(--bg-color)}
             -webkit-font-smoothing: antialiased;
         }
 
-        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: 600; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
         h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--ink-surface); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         p { text-align: justify; margin-bottom: 15px; color: var(--body-text); }
         ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text); padding-left: 25px; }
         li { margin-bottom: 8px; }
-
 
         .dashboard-container { width: 100%; margin: 40px auto; background: var(--panel-bg); color: var(--panel-text); border-radius: 12px; display: flex; flex-wrap: wrap; box-shadow: 0 20px 40px rgba(0,0,0,0.3); border: 1px solid var(--panel-surface); overflow: hidden; }
         .dash-sidebar { width: 340px; flex-shrink: 0; background: var(--panel-surface); padding: 30px; border-right: 1px solid var(--panel-border); display: flex; flex-direction: column; }
         .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--panel-bg); display: flex; flex-direction: column; }
 
         .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--panel-border); padding-bottom: 15px; text-align: center; }
-        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
         .dash-header .dash-title span { color: var(--panel-signal); }
         .dash-header p { color: var(--panel-muted); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
 
@@ -85,7 +87,7 @@ html{background:var(--bg-color)}
         .kpi-card { background: var(--panel-surface); border: 1px solid var(--panel-border); border-top: 3px solid var(--panel-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
         .kpi-card:hover { transform: translateY(-3px); }
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
         .k-blue { border-top-color: var(--panel-data-info) !important; } .k-blue .kpi-value { color: var(--data-info); }
         .k-green { border-top-color: var(--panel-positive) !important; } .k-green .kpi-value { color: var(--data-positive); }
@@ -102,7 +104,7 @@ html{background:var(--bg-color)}
         .hit-table td { padding: 10px 6px; border-bottom: 1px solid var(--panel-border); color: var(--panel-text); vertical-align: middle; }
         .hit-table tr:last-child td { border-bottom: none; }
         .hit-table td:first-child { font-weight: 700; color: var(--panel-text); }
-        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
+        .tag { font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; }
         .t-go { background: rgba(16,185,129,0.15); color: var(--panel-positive); border: 1px solid rgba(16,185,129,0.3); }
         .t-marginal { background: rgba(245,158,11,0.15); color: var(--panel-warning); border: 1px solid rgba(245,158,11,0.3); }
         .t-no { background: rgba(239,68,68,0.15); color: var(--panel-negative); border: 1px solid rgba(239,68,68,0.3); }
@@ -140,14 +142,34 @@ html{background:var(--bg-color)}
             .project-navigation { display: none !important; }
         }
 
-        .tour-launch { margin: 6px 0 22px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tour-launch { margin: 6px 0 22px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
         .tour-btn { font: 600 0.86rem/1 'Archivo', sans-serif; background: var(--signal);
             color: var(--on-signal); border: 1px solid var(--signal);
             padding: 10px 16px; border-radius: 4px; cursor: pointer; }
         .tour-btn:hover { background: var(--signal-dark); border-color: var(--signal-dark); }
         .tour-hint { font-size: 0.82rem; color: var(--muted); font-style: italic; }
         @media print { .tour-launch { display: none; } }
-    </style>
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
+</style>
 <script>
 /* Chart.js needs literal colours, so read the token when the chart is built. */
 function tokenColor(name){
@@ -161,7 +183,7 @@ function tokenColor(name){
 document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
-    <script defer src="tour.js"></script>
+    <script defer src="tour.js?v=2"></script>
 </head>
 <body class="doc">
 
@@ -186,7 +208,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -207,19 +229,19 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         Step 1 built the competitive footprint and used it defensively &mdash; who is near our accounts, and what happens when they consolidate. The same asset inverted answers a different question: where is there demand that <em>nobody</em> is serving.
     </div>
 
-    <p>Whitespace analysis has an obvious first move. Take vehicle population by geography, subtract the areas already inside somebody's service coverage, and what remains is demand without a supplier. That produces a map with holes in it, and the holes look like opportunities.</p>
+    <p><span class="jargon-tooltip" data-tip="Demand in a geography that nobody is currently serving, or that we are not serving." tabindex="0">Whitespace</span> analysis has an obvious first move. Take vehicle population by geography, subtract the areas already inside somebody's service coverage, and what remains is demand without a supplier. That produces a map with holes in it, and the holes look like opportunities.</p>
 
     <p>The problem is that a map with holes in it is not a business case. Every uncovered corridor is uncovered for a reason, and the most common reason is that it does not contain enough addressable spend to support a building. A whitespace map that cannot distinguish a corridor worth $2M a year from one worth $300,000 will send you to both, and the second one will lose money for a decade.</p>
 
-    <p>So the analysis has to run in two stages: find the gaps, then <span class="jargon-tooltip" data-tip="The annual gross profit a location must generate before it covers its own operating cost, ahead of any return on the capital spent building it."><strong>test each gap against the cost of standing a branch in it</strong></span>. The second stage is the one that produces a decision.</p>
+    <p>So the analysis has to run in two stages: find the gaps, then <span class="jargon-tooltip" data-tip="The annual gross profit a location must generate before it covers its own operating cost, ahead of any return on the capital spent building it." tabindex="0"><strong>test each gap against the cost of standing a branch in it</strong></span>. The second stage is the one that produces a decision.</p>
 
     <h2>2. Subtracting Coverage From Demand</h2>
 
-    <p>Both sides of that subtraction had to be built, and the choice that mattered was <strong>how&nbsp;precisely a branch has to be located</strong> before the map is allowed to inform a capital decision. I set the standard at rooftop, not city centroid, and then verified it rather than assuming it.</p>
+    <p>Both sides of that subtraction had to be built, and the choice that mattered was <strong>how&nbsp;precisely a <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> has to be located</strong> before the map is allowed to inform a capital decision. I set the standard at <span class="jargon-tooltip" data-tip="A single physical building, located precisely, as opposed to a town or a postcode standing in for one." tabindex="0">rooftop</span>, not city centroid, and then verified it rather than assuming it.</p>
 
     <p>That is not a technicality. A geocoder that cannot find an address does not fail loudly. It returns the middle of the town along with a confidence score nobody reads. On a map at this scale a branch placed two miles off still looks correct, and the corridor next to it reads as uncovered when it is not. The output of this model is a recommendation to spend money on a building; a silent two-mile error is the difference between a defensible proposal and one that gets found out in the first site visit.</p>
 
-    <p>Coverage is not a radius. A branch does not serve a circle; it serves the area a delivery vehicle can reach and return from inside a working window, which is a drive-time contour, and drive time converts to distance very differently in a metro than on open highway. The same scaling used in the trade-area model applies here: an urban location covers a tighter footprint in miles than a rural one covering the same time band.</p>
+    <p>Coverage is not a radius. A branch does not serve a circle; it serves the area a delivery vehicle can reach and return from inside a working window, which is a drive-time contour, and <span class="jargon-tooltip" data-tip="How long it actually takes to reach a customer by road, as opposed to the straight-line distance." tabindex="0">drive time</span> converts to distance very differently in a metro than on open highway. The same scaling used in the trade-area model applies here: an urban location covers a tighter footprint in miles than a rural one covering the same time band.</p>
 
     <p>Coverage subtraction therefore runs against contours rather than circles, and it counts competitor coverage as well as our own. A corridor already served by two national chains is not whitespace; it is a fight. Genuine whitespace is demand outside <em>everyone's</em> reach.</p>
 
@@ -353,7 +375,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <div class="next-step-box">
         <h3>Attack &middot; Step 3</h3>
         <p>Building into new territory is the most expensive way to add revenue. The next three steps work inward, toward customers who already know us, starting with the ones we have already lost.</p>
-        <nav class="project-navigation" aria-label="Case study navigation">
+            </div>
+
+            <nav class="project-navigation" aria-label="Case study navigation">
             <a href="market-capture-engine.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Step 1</span>
                 <span class="nav-title">Market Capture Engine</span>
@@ -363,9 +387,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <span class="nav-title">Lost Account Win-Back</span>
             </a>
         </nav>
-    </div>
 
-    <div class="nda-note">
+            <div class="nda-note">
         <strong>Data Governance Note:</strong> Corridor names, vehicle counts and cost figures are synthetic. The coverage-subtraction method, the drive-time scaling and the payback structure are the production ones.
     </div>
 

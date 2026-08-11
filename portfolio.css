@@ -41,8 +41,6 @@
     --data-warning: #b7791f;
     --data-info: #7dd3fc;
     --data-series: #3b82f6;
-    --signal-bright: #8d5f10;
-    --frame: #e5e7ea;
     --panel-signal: #f2c14e;
     --panel-positive: #3ecf8e;
     --panel-negative: #f0705c;
@@ -81,8 +79,6 @@
     --data-warning: #e8b04b;
     --data-info: #7dd3fc;
     --data-series: #5b9bd5;
-    --signal-bright: #f2c14e;
-    --frame: #07090b;
     --panel-signal: #f2c14e;
     --panel-positive: #3ecf8e;
     --panel-negative: #f0705c;
@@ -122,8 +118,6 @@
         --data-warning: #e8b04b;
         --data-info: #7dd3fc;
         --data-series: #5b9bd5;
-        --signal-bright: #f2c14e;
-        --frame: #07090b;
         --panel-signal: #f2c14e;
         --panel-positive: #3ecf8e;
         --panel-negative: #f0705c;
@@ -143,7 +137,11 @@
 @media (min-width: 1340px) {
     body.doc { max-width: 1150px; }
     body.doc p, body.doc ul, body.doc ol, body.doc blockquote { max-width: 92ch; margin-left: auto; margin-right: auto; }
-    body.doc .scenario-box, body.doc .impact-box { max-width: 86ch; margin-left: auto; margin-right: auto; }
+    body.doc .impact-box { max-width: 86ch; margin-left: auto; margin-right: auto; }
+    /* The scenario box is a preamble, not an argument: it says where this study
+       sits in the five-part chain and then gets out of the way. A wider measure
+       turns a six-line block into four and lets it read as a banner. */
+    body.doc .scenario-box { max-width: 110ch; margin-left: auto; margin-right: auto; }
     /* The note is a notice, not prose. Full column width so it lands in two
        lines instead of five, which is the difference between being read and
        being skipped. */
@@ -160,7 +158,10 @@
     body.doc .scenario-box p, body.doc .scenario-box ul,
     body.doc .logic-box p, body.doc .nda-note p,
     body.doc .logic-instruction-box p, body.doc .logic-instruction-box ul,
-    body.doc .next-step-box p, body.doc blockquote p {
+    body.doc .next-step-box p, body.doc blockquote p,
+    body.doc .dashboard-container p, body.doc .dashboard-container ul,
+    body.doc .sim-container p, body.doc .sim-container ul,
+    body.doc .chart-wrap p, body.doc figure p {
         max-width: none; margin-left: 0; margin-right: 0;
     }
 
@@ -194,10 +195,28 @@
 .tour-launch {
     margin: 6px 0 22px;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
 }
+
+/* The launcher is a <p>, so `body.doc p { max-width: ...; margin: auto }` at 0,1,1
+   was overriding .tour-launch at 0,1,0 - it was being laid out as a prose paragraph
+   and inheriting the prose measure rather than sitting as its own component above
+   the tool. Matching that specificity settles it. */
+body.doc p.tour-launch,
+p.tour-launch {
+    max-width: none;
+    margin: 6px auto 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
 .tour-btn {
     font: 600 0.86rem/1 'Archivo', sans-serif;
     background: var(--signal);
@@ -236,7 +255,22 @@
 /* The in-page anchor targets have to clear it, or a jump lands under the bar. */
 h2[id], h3[id], section[id], div[id] { scroll-margin-top: 64px; }
 @media print {
-    .page-bar { position: static; border-bottom: none; margin: 0 0 20px; backdrop-filter: none; }
+    /* The bar holds a back link and a theme toggle. Neither does anything on paper,
+       and the document already opens with its own title and meta table. */
+    .page-bar { display: none; }
+    /* A fixed element prints unpredictably: once, or on every sheet, depending on the
+       engine. Dropped into the flow so the copyright lands at the end of the document
+       where it belongs, in ink that will not drink toner. */
+    .watermark {
+        position: static;
+        display: block;
+        text-align: center;
+        opacity: 1;
+        margin-top: 28px;
+        padding-top: 12px;
+        border-top: 1px solid #ccc;
+        color: #555;
+    }
 }
 
 /* ── heading alignment ────────────────────────────────────────────────────────
@@ -261,6 +295,10 @@ aside h3,
    block, and the caption under the heading is a <p> that inherits that centring. The
    rule above targets the h3 directly, and a direct value beats an inherited one — so
    without this the heading sat left while its own caption stayed centred. */
+.dashboard-container .dash-header h3,
+.dashboard-container .sidebar-header h3,
+.sim-container .sidebar-header h3,
+.sim-container .dash-header h3,
 .dash-header h3,
 .sidebar-header h3,
 .dash-header .sim-title,
@@ -411,7 +449,7 @@ input:focus-visible,
 /* Header row: back-link on the left, theme switch on the right. The row carries
    the margin the back-link used to own, so page spacing is unchanged. */
 .page-bar .back-link { margin-bottom: 0; }
-@media print { .page-bar .theme-switch { display: none; } }
+
 
 .doc-header {
     width: 100%;
@@ -487,11 +525,12 @@ input:focus-visible,
 /* --- Callouts ------------------------------------------------------------- */
 .nda-note {
     background: var(--surface-alt);
-    padding: 15px;
+    padding: 15px 22px;
     margin: 20px 0;
     font-size: 8.5pt;
     font-style: italic;
     color: var(--body-text);
+    text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.04);
     border-radius: 0 6px 6px 0;
     border: 1px solid var(--hairline);
@@ -535,6 +574,17 @@ input:focus-visible,
 }
 .jargon-tooltip strong { font-weight: 700; color: var(--ink-surface); }
 .jargon-tooltip::after {
+    /* A floating popup should not inherit the typography of whatever it happens to
+       be anchored to. Without these it picks up uppercase from a heading, italics
+       from a note, or letter-spacing from a label — so the same tooltip rendered
+       differently depending on where it sat. Mono because these are technical
+       definitions and it reads as an annotation rather than more body copy. */
+    font-family: 'IBM Plex Mono', 'Fira Code', monospace;
+    text-transform: none;
+    font-style: normal;
+    letter-spacing: normal;
+    font-variant: normal;
+
     content: attr(data-tip);
     position: absolute;
     bottom: 125%;
@@ -548,7 +598,7 @@ input:focus-visible,
     font-weight: normal;
     white-space: normal;
     width: max-content;
-    max-width: 260px;
+    max-width: 300px;
     text-align: center;
     line-height: 1.4;
     opacity: 0;
@@ -579,6 +629,20 @@ input:focus-visible,
     visibility: visible;
     bottom: 135%;
 }
+
+/* Jargon tooltips on a dark panel. .jargon-tooltip sets --ink-surface, which is
+   near-black in light mode - 41 of them sit inside the permanently dark panels, where
+   that is unreadable. This needs real specificity rather than :where(), because the
+   rule being corrected is itself 0,1,0. Two classes puts it at 0,2,0.
+   The dashed underline moves to the panel amber for the same reason. */
+:is(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) .jargon-tooltip {
+    color: var(--panel-text);
+    border-bottom-color: var(--panel-signal);
+}
+:is(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) .jargon-tooltip strong { color: var(--panel-bright); }
+:is(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) .jargon-tooltip:hover,
+:is(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) .jargon-tooltip:focus { color: var(--panel-bright); }
+
 
 /* --- End-of-page navigation ----------------------------------------------- */
 /* A dark closing panel in both modes, so it sits on the panel scale. It previously
@@ -651,6 +715,12 @@ input:focus-visible,
     border-color: var(--signal);
     align-items: flex-end;
 }
+/* Nothing nested inside the amber button gets to set its own colour. A jargon
+   tooltip in a nav title once did, painting near-white text onto light amber -
+   the token was right and a child overrode it. */
+.nav-btn.next, .nav-btn.next * { color: var(--on-signal); }
+.nav-btn.next .jargon-tooltip { border-bottom-color: var(--on-signal); }
+
 .nav-btn.prev:hover {
     background: rgba(255,255,255,0.1);
     transform: translateX(-4px);
@@ -721,17 +791,25 @@ input[type="range"]:disabled { cursor: not-allowed; opacity: 0.55; }
 
 /* --- Watermark ------------------------------------------------------------ */
 .watermark {
+    /* Fixed to the bottom-right corner. A persistent, unobtrusive mark rather than a
+       document footer: it stays visible while somebody reads a dashboard, which is
+       the point of a watermark. pointer-events none so it never intercepts a click. */
     position: fixed;
     bottom: 12px;
     right: 15px;
     font-size: 0.65rem;
-    color: var(--panel-muted);
-    opacity: 0.6;
+    color: var(--muted);
+    opacity: 0.7;
     font-family: 'Archivo', 'Inter', system-ui, sans-serif;
     letter-spacing: 0.5px;
     pointer-events: none;
     user-select: none;
     z-index: 9999;
+}
+@media (max-width: 800px) {
+    /* On a phone a fixed corner mark sits on top of the content, so it drops back
+       into the flow at the end of the document. */
+    .watermark { position: static; display: block; text-align: center; padding-top: 26px; opacity: 0.75; }
 }
 
 /* --- Mobile --------------------------------------------------------------- */
@@ -765,14 +843,6 @@ input[type="range"]:disabled { cursor: not-allowed; opacity: 0.55; }
         max-width: none;
         font-size: 10pt;
         padding: 14px 16px;
-    }
-
-    .watermark {
-        position: static;
-        display: block;
-        text-align: center;
-        padding-top: 26px;
-        opacity: 0.75;
     }
 }
 

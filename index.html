@@ -6,7 +6,7 @@
 <title>Austin Sonny Stethem &mdash; Pricing, Master Data &amp; Delivery</title>
 <meta name="description" content="I sit between the people who need something built and the people who build it. Fifteen case studies in pricing, commercial analytics and data governance.">
 <meta name="author" content="Austin Sonny Stethem">
-<meta name="theme-color" content="#131a21">
+<meta name="theme-color" content="#14171a">
 
 <meta property="og:title" content="Austin Sonny Stethem — Pricing, Master Data &amp; Delivery">
 <meta property="og:description" content="A ladder with eight tiers should produce eight prices. I measured one part over twelve months and found more than four hundred. Fifteen case studies across three workstreams.">
@@ -18,23 +18,27 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- Colour comes from the shared token sheet, so swapping palettes re-themes the
      home page along with the fifteen case studies. -->
 <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
+html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
 <style>
 *,*::before,*::after{box-sizing:border-box}
@@ -181,7 +185,7 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
 .ev-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;
   margin-bottom:34px}   /* clearance for the peak label, which sits above the plot box */
 .ev-title{font:600 .67rem/1 'IBM Plex Mono';letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
-.ev-sub{font:400 .74rem/1 'IBM Plex Mono';color:var(--muted)}
+.ev-sub{font:600 .67rem/1 'IBM Plex Mono';letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
 .plot{position:relative}
 .ticks{display:flex;align-items:flex-end;gap:1px;height:86px}
 .tick{flex:1;background:var(--ink);min-height:2px;border-radius:1px 1px 0 0;transform-origin:bottom;animation:rise .5s cubic-bezier(.2,.8,.3,1) both}
@@ -193,7 +197,7 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
    which fails for text this size. The bar carries the highlight; the label is set
    in the neutral muted tone and relies on proximity to connect to it. */
 .peak-tag{position:absolute;transform:translateX(-50%);white-space:nowrap;
-  font:600 .62rem/1.3 'IBM Plex Mono';letter-spacing:.03em;color:var(--muted);
+  font:600 .62rem/1.3 'IBM Plex Mono';letter-spacing:.03em;color:var(--signal);
   text-align:center}
 .peak-tag::after{content:'';display:block;width:1px;height:7px;margin:3px auto 0;
   background:var(--signal)}
@@ -223,7 +227,6 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
    of the argument. */
 .seat p{margin:0 0 13px;font-size:.98rem;color:var(--body-text)}
 .seat p:last-child{margin-bottom:0}
-.seat .quiet{color:var(--muted);font-size:.9rem}
 
 .lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 /* Column flex rather than block flow, because the cards inside are flex:1. An
@@ -242,7 +245,7 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
    the lane name clears its footnote by that rather than the old 2px. */
 .lane-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:0}
 .lane-h b{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:1.06rem;color:var(--ink)}
-.lane-h .n{font:700 .68rem/1 'IBM Plex Mono';color:var(--data-positive)}
+.lane-h .n{font:600 .68rem/1 'IBM Plex Mono';color:var(--data-positive)}
 .lane .fn{font-size:.72rem;color:var(--muted);margin:0 0 4px}
 /* justify-content centres the title and description in whatever height the card is
    handed, so a one-line entry sits on the same axis as a two-line one beside it. */
@@ -265,22 +268,33 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
 .card span{font-size:.73rem;color:var(--muted);line-height:1.45;display:block}
 
 .roadmap{margin-top:16px;background:var(--surface-alt);
-  border:1px dashed var(--line);border-left:3px solid var(--signal);
+  border:1px dashed var(--signal);
   border-radius:6px;padding:16px 18px}
-.roadmap .rh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px}
+/* Dark mode softens the dash. The token is the same but its rendering is not: a
+   light amber on near-black carries 8.97 where the dark amber on white carries
+   4.97, so the identical 1px dash shouts in one mode and states in the other.
+   --signal-dark brings dark mode to 5.30, matching what light mode already does. */
+:root[data-theme="dark"] .roadmap{border-color:var(--signal-dark)}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .roadmap{border-color:var(--signal-dark)}
+}
+.roadmap /* Stacked, not side by side: "designed · not built" is a qualifier on the heading
+   rather than a second item beside it, and on one line the interpunct competed with
+   the gap for the same job. */
+.rh{display:flex;flex-direction:column;align-items:center;gap:3px;margin-bottom:6px}
 .roadmap .rh b{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:1rem;color:var(--ink)}
-.roadmap .rh .n{font:700 .66rem/1 'IBM Plex Mono';color:var(--muted)}
-.roadmap>p{font-size:.8rem;color:var(--muted);margin:0 0 12px;max-width:74ch}
-.rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.roadmap .rh .n{font:600 .66rem/1 'IBM Plex Mono';letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.roadmap>p{font-size:.8rem;color:var(--muted);margin:0 auto 12px;max-width:74ch;text-align:center}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
 .ritem{background:var(--surface);border:1px solid var(--line);border-radius:4px;
-  padding:10px 11px;transition:border-color .14s,box-shadow .14s,transform .14s}
+  padding:11px 14px;transition:border-color .14s,box-shadow .14s,transform .14s;text-align:center}
 .ritem:hover{border-color:var(--signal);
   box-shadow:0 0 0 1px var(--signal),0 3px 12px rgba(19,26,33,.10);
   transform:translateY(-2px)}
 .ritem:hover b{color:var(--signal)}
 @media(prefers-reduced-motion:reduce){.ritem{transition:none}.ritem:hover{transform:none}}
 .ritem b{display:block;font-size:.8rem;font-weight:600;color:var(--ink);margin-bottom:2px}
-.ritem span{font-size:.71rem;color:var(--muted);line-height:1.45}
+.ritem span{display:block;font-size:.71rem;color:var(--muted);line-height:1.45;max-width:30ch;margin:0 auto}
 
 .record{background:var(--surface);border:1px solid var(--line);color:var(--body-text);border-radius:6px;padding:28px 30px 24px}
 .record .sec-lab{color:var(--muted)}
@@ -337,7 +351,7 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
 .ev:last-child{margin-bottom:0}
 .ev::before{content:'';position:absolute;left:-27px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--bg-color);border:3px solid var(--signal)}
 .ev.q::before{border-color:var(--muted)}
-.ev .yr{font:700 .64rem/1 'IBM Plex Mono';letter-spacing:.13em;text-transform:uppercase;color:var(--signal)}
+.ev .yr{font:600 .64rem/1 'IBM Plex Mono';letter-spacing:.13em;text-transform:uppercase;color:var(--signal)}
 .ev.q .yr{color:var(--muted)}
 /* Left, overriding the shared h3 centre. Each entry hangs off a vertical rule with
    its paragraph, so the heading and the body have to share an axis; centring the
@@ -356,9 +370,17 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
    to hunt for each new line's start. Centred as a block because a column pinned to
    the left of a wide content area drags the reader away from the axis every other
    section sits on. So: ragged right, flush left, and the whole thing in the middle. */
-#story > .sec-lab, #story > h2{text-align:left;max-width:840px;margin-left:auto;margin-right:auto}
-#story > .lede{text-align:left;max-width:840px;margin-left:auto;margin-right:auto}
-#story .line{max-width:840px;margin-left:auto;margin-right:auto}
+/* The section header centres like every other section on the page. It can, now that
+   the lede fits one line: three short lines centre without leaving a ragged left
+   edge. The entries below stay flush left, because a list of paragraphs cannot. */
+/* Headers stay centred, like every other section. The fix for the offset is not
+   moving them - it is narrowing the band below so the entries' content mass lands
+   under the header instead of 110px to its left. */
+#story > .sec-lab, #story > h2, #story > .lede{
+  text-align:center;max-width:840px;margin-left:auto;margin-right:auto;
+  padding-left:30px;padding-right:30px;box-sizing:border-box}
+#story .line{max-width:620px;margin-left:auto;margin-right:auto;
+  padding-right:0;box-sizing:border-box}
 
 .notes{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .note{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:19px 21px}
@@ -366,7 +388,7 @@ h2{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-si
    and centred prose gives every line a different left edge — the eye loses the
    return point on each new line, which costs more than the symmetry gains. Short
    labels have no such problem. */
-.note h3{font:700 .67rem/1 'IBM Plex Mono';letter-spacing:.13em;text-transform:uppercase;
+.note h3{font:600 .67rem/1 'IBM Plex Mono';letter-spacing:.13em;text-transform:uppercase;
   color:var(--signal);margin:0 0 12px;text-align:center}
 /* Centred to match the heading, and capped. Centring only stays readable while the
    line is short: at the default shell a card is ~55 characters, but on the large
@@ -383,13 +405,35 @@ footer{background:var(--panel-bg);color:var(--panel-text);padding:38px 0 32px;ma
    four, so anchoring to the top left the name floating with a gap beneath it. Now
    both columns sit on the same baseline and the location line lands level with
    Résumé (PDF). */
-footer .shell{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-end}
-footer .who b{display:block;font-family:'Archivo Narrow';font-weight:700;font-size:1.2rem;text-transform:uppercase;color:var(--panel-bright)}
-footer .who span{font-size:.88rem;color:var(--panel-muted)}
-footer .links{display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+/* Grid, not flex. As a flex row the fine print carried width:100% AND max-width:88ch,
+   and on a wide viewport 88ch is the smaller of the two — so it never wrapped to its
+   own line and sat as a third column beside the name and the links. Grid lets it span
+   the row explicitly instead of relying on a width that loses to its own cap. */
+/* Three columns: name left, the disclosure statement centre, contact stacked right.
+   The statement is the widest block so it takes the flexible column; the other two
+   size to their content. */
+footer .shell{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:start;gap:0 44px}
+footer .who b{display:block;font-family:'Archivo Narrow';font-weight:700;font-size:1.2rem;text-transform:uppercase;color:var(--panel-bright);margin-bottom:5px}
+footer .who span{display:block;font-size:.88rem;line-height:1.5;color:var(--panel-muted)}
+footer .links{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:.88rem;padding-top:3px}
 footer a{color:var(--panel-text);text-decoration:none;border-bottom:1px solid var(--panel-border);padding-bottom:1px}
 footer a:hover{color:var(--panel-bright);border-bottom-color:var(--signal)}
-footer .fine{width:100%;border-top:1px solid var(--panel-border);margin-top:24px;padding-top:16px;font-size:.78rem;color:var(--panel-dim)}
+/* Centred text, and centred vertically: the side columns run four lines and this
+   runs two or three, so align-self:center sits it between them rather than letting
+   it hang from the top while the columns extend past it. */
+footer .fine{margin:0;font-size:.78rem;line-height:1.55;color:var(--panel-dim);
+  text-align:center;align-self:center}
+@media(max-width:1080px){
+  /* Three columns need real width. Below this the statement goes full-width under
+     the two identity blocks rather than being squeezed into a narrow middle. */
+  footer .shell{grid-template-columns:1fr auto;gap:0 32px}
+  footer .fine{grid-column:1 / -1;margin-top:20px;border-top:1px solid var(--panel-border);padding-top:14px;align-self:auto}
+}
+@media(max-width:760px){
+  footer .shell{grid-template-columns:1fr;gap:16px}
+  footer .links{align-items:flex-start}
+  footer .fine{margin-top:4px;border-top:none;padding-top:0}
+}
 
 @media(max-width:1080px){
   .layout{grid-template-columns:1fr;gap:26px}
@@ -564,6 +608,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
           <div class="ritem"><b>Landed-Cost Allocation</b><span>Weight against value against cube: the choice changes which items look profitable.</span></div>
           <div class="ritem"><b>Quote Win/Loss Capture</b><span>The expensive one: a process change, not a script.</span></div>
           <div class="ritem"><b>Competitor Delta Tracking</b><span>Monthly snapshot differencing. Impossible to backfill, so worth starting early.</span></div>
+          <div class="ritem"><b>Incentive Attainment Gauges</b><span>Spiff and quota progress per rep and network-wide. The pricing layer decides what they can sell at; nothing currently shows whether the incentive pulled the behaviour it paid for.</span></div>
         </div>
       </div>
     </div>
@@ -585,7 +630,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <p class="caveat">That last line is the only realised financial outcome on this site, and it is here because it was scored outside the company, against peers who faced the same market and the same vendor pressure, but not the same river. I do not sit in a function that sees realised profit and loss. Where a number would be invented instead of measured, there is none.</p>
         <div class="record-note">
           <div class="rn-lab">What that year involved</div>
-          <p>The city went under. The network was down for a matter of days. Holding margin through that, and through the cost movement of the years either side of it, is the reason any of the work above exists; and the reason it is framed as <em>defence</em> rather than optimisation.</p>
+          <p>The city went under. The distribution centre that supplied every branch flooded, and was eighteen days from serving them again. Holding margin through that, and through the cost movement of the years either side of it, is the reason any of the work above exists; and the reason it is framed as <em>defence</em> rather than optimisation.</p>
           <p class="rn-point">Eighty branches sell what the pricing layer lets them sell.</p>
           <p>A tier structure that quietly gives away margin is not an abstraction to the people working those counters. It is their commission, then their hours, and eventually their store.</p>
         </div>
@@ -595,7 +640,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <div class="sec" id="story">
       <div class="sec-lab">Sequence</div>
       <h2>How it unfolded</h2>
-      <p class="lede">None of this was planned as a portfolio. Each piece exists because the one before it uncovered something that had to be dealt with.</p>
+      <p class="lede">None of this was planned as a portfolio. Each piece answered what the last one exposed.</p>
       <div class="line">
         <div class="ev"><div class="yr">Arrival</div><h3>Twenty years of accumulated pricing logic</h3><p>This was the first job out of college, and it began in the supply-chain aftermath of the pandemic, with vendor costs moving faster than anyone could reprice against. What I was handed was root-level pricing access, 500+ manufacturer lines, and a tier structure two decades in the making: every decision sensible when it was made, none of it ever reviewed as a whole.</p></div>
         <div class="ev"><div class="yr">The years since</div><h3>Cost shock as the normal condition</h3><p>Successive tariff rounds, and then their unwind. The unwind is the part people miss: <strong>a&nbsp;lifted tariff does not restore a cost</strong>. Supply has to catch up, freight has to renormalise, surcharges come off on their own schedule &mdash; so the shock keeps arriving for months or years after the policy that caused it has reversed. Every model in the Defense track exists because of that lag.</p></div>
@@ -603,7 +648,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <div class="ev"><div class="yr">Consequence</div><h3>The data could not answer basic questions</h3><p>Entities with two names, customers geocoded to post office boxes, accounts with several owners. Five failure modes, each producing a plausible number a competent analyst would build on.</p></div>
         <div class="ev"><div class="yr">The measurement</div><h3>Hundreds of prices for one part</h3><p>With the foundation trustworthy, dispersion became measurable for the first time. One part, twelve months, and a spread covering everything from near break-even to full retail.</p></div>
         <div class="ev"><div class="yr">Response</div><h3>Fifteen models, three tracks</h3><p>Five to defend margin when costs move. Five to find revenue when they do not. And five on the layer underneath both, because a model is only as honest as the extract feeding it.</p></div>
-        <div class="ev q"><div class="yr">Next</div><h3>What is designed and not yet built</h3><p>The four items on the roadmap above. The window for fixing pricing architecture is widest before scale arrives and narrows as a company succeeds.</p></div>
+        <div class="ev q"><div class="yr">Next</div><h3>What is designed and not yet built</h3><p>The five items on the roadmap above. The window for fixing pricing architecture is widest before scale arrives and narrows as a company succeeds.</p></div>
       </div>
     </div>
 
@@ -636,20 +681,22 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </main>
 
 <footer>
-  <div class="shell">
-    <div class="who">
-      <b>Austin Sonny Stethem</b>
-      <span>Pricing &amp; Master Data · Hartley, Iowa · open to national relocation</span>
-    </div>
-    <div class="links">
+            <div class="shell">
+                <div class="who">
+                    <b>Austin Sonny Stethem</b>
+                    <span>Pricing &amp; Master Data</span>
+                    <span>Hartley, Iowa</span>
+                    <span>Open to national relocation</span>
+                </div>
+                <div class="fine">© 2026 Austin Sonny Stethem. Everything inside the dashboards is synthetic. The findings described in prose are real observations, stated as ratios or rounded magnitudes: no prices, costs, margins, customer names, account identifiers or vendor terms appear anywhere on this site.</div>
+                <div class="links">
       <a href="mailto:austinstethem1976@gmail.com">austinstethem1976@gmail.com</a>
       <a href="tel:+17122995267">712-299-5267</a>
       <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       <a href="Stethem_Austin_Resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)</a>
     </div>
-    <div class="fine">© 2026 Austin Sonny Stethem. Everything inside the dashboards is synthetic. The findings described in prose are real observations, stated as ratios or rounded magnitudes: no prices, costs, margins, customer names, account identifiers or vendor terms appear anywhere on this site.</div>
-  </div>
-</footer>
+            </div>
+        </footer>
 
 <script>
 /* The transacted prices bucketed into 120 columns across the observed range.

@@ -56,8 +56,13 @@
       'padding:17px 19px 15px;box-shadow:0 18px 44px rgba(0,0,0,.5);opacity:0;',
       'transition:opacity .28s,transform .28s;transform:translateY(6px);font-size:.88rem;line-height:1.58}',
     '.tour-box.on{opacity:1;transform:none}',
-    '.tour-box p{margin:0 0 14px}',
-    '.tour-box b{color:var(--panel-bright,#fafafb)}',
+    // Colour stated explicitly, not inherited. Twelve case-study pages carry a bare
+    // `p { color: var(--body-text) }` in their own style block, which targets this
+    // paragraph directly and beats anything inherited from .tour-box. In light mode
+    // that painted #3a3f45 onto a dark bubble at 1.49:1. text-align too, for the same
+    // reason: those pages justify every p, which reads badly at 352px.
+    '.tour-box p{margin:0 0 14px;color:var(--panel-text,#d2d7db);text-align:left}',
+    '.tour-box b,.tour-box strong{color:var(--panel-bright,#fafafb)}',
     '.tour-box .row{display:flex;align-items:center;justify-content:space-between;',
       'gap:10px;flex-wrap:wrap}',
     '.tour-box .count{font:600 .68rem/1 ui-monospace,monospace;letter-spacing:.1em;',

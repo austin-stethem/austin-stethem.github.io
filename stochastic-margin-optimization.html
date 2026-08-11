@@ -22,25 +22,28 @@
     <title>Stochastic Margin Optimization | Austin Sonny Stethem</title>
 
     <!-- Favicon: external SVG, adapts to the OS colour scheme -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <!-- Chart.js Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
         /* Brand tokens live in portfolio.css; only the dashboard palette is local. */
@@ -80,7 +83,7 @@ html{background:var(--bg-color)}
         .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--panel-bg); display: flex; flex-direction: column; box-sizing: border-box;}
 
         .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--panel-border); padding-bottom: 15px; text-align: center;}
-        .dash-header h3 { color: var(--panel-bright); font-size: 1.6rem; margin: 0; font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
+        .dash-header h3 { color: var(--panel-bright); font-size: 1.6rem; margin: 0; font-family: 'Archivo', sans-serif; font-weight: 800; letter-spacing: -0.5px;}
         .dash-header h3 span { color: var(--panel-signal); }
         /* text-align must be explicit — a bare `p` rule on this page beats inheritance. */
         .dash-header p { color: var(--panel-muted); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center;}
@@ -127,7 +130,7 @@ html{background:var(--bg-color)}
         .kpi-card { background: var(--panel-surface); border: 1px solid var(--panel-border); padding: 15px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
         .kpi-card-header { font-size: 0.75rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .kpi-value { font-size: 1.8rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px;}
+        .kpi-value { font-size: 1.8rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; line-height: 1.1; margin-bottom: 4px;}
         .kpi-sub { font-size: 0.75rem; color: var(--panel-dim); font-style: italic; }
 
         /* Chart Area */
@@ -136,7 +139,7 @@ html{background:var(--bg-color)}
         .chart-wrapper { position: relative; height: 380px; width: 100%; }
 
         /* Portfolio Documentation Styles */
-        .code-annotation { background: var(--hairline); border-left: 4px solid var(--data-series); padding: 12px 18px; font-size: 9.5pt; color: var(--panel-text); border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Archivo', sans-serif;}
+        .code-annotation { background: var(--panel-surface); border-left: 4px solid var(--data-series); padding: 12px 18px; font-size: 9.5pt; color: var(--panel-text); border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Archivo', sans-serif;}
         .code-annotation strong { color: var(--panel-bright); font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
 
         pre.code-block { background-color: var(--panel-bg); color: var(--panel-text); padding: 20px; border-radius: 0 0 6px 6px; overflow-x: auto; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 9pt; border-left: 4px solid var(--data-series); line-height: 1.5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); margin-top: 0; margin-bottom: 30px; }
@@ -193,6 +196,26 @@ html{background:var(--bg-color)}
             border: 1px solid var(--panel-border); font-family: inherit; font-size: 0.85rem;
         }
         @media (pointer: coarse) { select { padding: 14px 12px; } }
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
 </style>
 <script>
 /* Chart.js needs literal colours, so read the token when the chart is built. */
@@ -207,7 +230,7 @@ function tokenColor(name){
 document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
-    <script defer src="tour.js"></script>
+    <script defer src="tour.js?v=2"></script>
 </head>
 <body class="doc">
 
@@ -248,29 +271,28 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     </tbody>
     </table>
 
-    <h2>1. Situation: The Flaw of Averages</h2>
-
     <div class="scenario-box">
         <strong>The&nbsp;Enterprise Scenario (Step 3 of 5)</strong>
         Our deterministic algorithm (Step 2) has successfully mapped the cross-subsidized price floors needed to defend against the 15% cost spike. However, the supply chain is chaotic. Before executing these rigid price floors in the live ERP, I simulated the risk they carry. How much volume will we lose to competitors under extreme market volatility? I set the statistical risk boundaries before anything reached the ERP.
     </div>
 
-    <p>A single historical average is the usual basis for a target margin, and it is a poor one. Freight does not behave like an average. When you price a SKU based on the "average" freight cost and "average" demand, you fall victim to the Flaw of Averages: a strategy that works 50% of the time, and blows up the other 50%. If global freight costs spike 30% for a single quarter, a static markup strategy can instantly wipe out a category's annual <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of operational profit.">EBITDA</span>.</p>
+    <h2>1. Situation: The Flaw of Averages</h2>
+    <p>A single historical average is the usual basis for a target <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span>, and it is a poor one. Freight does not behave like an average. When you price a SKU based on the "average" freight cost and "average" demand, you fall victim to the Flaw of Averages: a strategy that works 50% of the time, and blows up the other 50%. If global freight costs spike 30% for a single quarter, a static markup strategy can instantly wipe out a category's annual <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0">EBITDA</span>.</p>
 
     <h2>2. Initiative: Shifting to Probabilistic Risk Modeling</h2>
 
     <p>The deterministic engine returned a single price, and a single price carries no way to ask how much confidence it deserves &mdash; the question is not answerable in that form, so it does not get asked. I raised it and then built the form that answers it, because a floor which is correct on average and ruinous in a bad quarter is not one anybody should be asked to approve without knowing which it is.</p>
     <p><strong>The&nbsp;Problem:</strong> To extract maximum margin without exposing the enterprise to catastrophic losses during supply chain shocks, I needed to transition the pricing model from <em>Deterministic</em> (guessing a single fixed number) to <em>Stochastic</em> (mapping the probability of thousands of potential futures).</p>
-    <p><strong>The&nbsp;Objective:</strong> Build a true <span class="jargon-tooltip" data-tip="A computational algorithm that relies on repeated random sampling to obtain numerical results.">Monte Carlo</span> "Random Walk" simulator. Rather than solving for a single margin percentage, the engine must simulate thousands of daily and monthly compounding realities to visualize the expanding "cone of risk" over a 12-month projection.</p>
+    <p><strong>The&nbsp;Objective:</strong> Build a true <span class="jargon-tooltip" data-tip="A computational algorithm that relies on repeated random sampling to obtain numerical results." tabindex="0">Monte Carlo</span> "Random Walk" simulator. Rather than solving for a single margin percentage, the engine must simulate thousands of daily and monthly compounding realities to visualize the expanding "cone of risk" over a 12-month projection.</p>
 
     <h2>3. Action: The Monte Carlo Random Walk Engine</h2>
-    <p>Instead of feeding the engine flat variables, the algorithm generates a geometric <span class="jargon-tooltip" data-tip="A mathematical formalization of a path that consists of a succession of random steps.">random walk</span>. Over a 12-month timeline, it injects stochastic noise at every step. In each of the 5,000 simulated realities, cost fluctuates based on logistics volatility curves, and market demand fluctuates based on our defined price elasticity.</p>
+    <p>Instead of feeding the engine flat variables, the algorithm generates a geometric <span class="jargon-tooltip" data-tip="A mathematical formalization of a path that consists of a succession of random steps." tabindex="0">random walk</span>. Over a 12-month timeline, it injects stochastic noise at every step. In each of the 5,000 simulated realities, cost fluctuates based on logistics volatility curves, and market demand fluctuates based on our defined price elasticity.</p>
     <p><strong>From risk to optimisation:</strong> simulating one price tells you the risk of that price, not whether it is the right one. So the engine sweeps the entire viable band under identical market assumptions and reports the point that maximises median twelve-month E[P]. That optimum is rarely the highest price on the slider. Past a threshold, elasticity destroys demand faster than the extra margin accrues, and the curve rolls over.</p>
 
-    <p><strong>Two&nbsp;details make that sweep trustworthy, and both were corrections.</strong> First, near its peak an expected-profit curve is almost flat, at standard elasticity, pricing a dollar away from the optimum costs roughly $92 of annual profit, while the sampling error on a 400-path median is about $820. Comparing independently simulated price points therefore selects the maximum out of noise nine times larger than the signal, and the recommendation wanders by several dollars on every run. The engine now applies <span class="jargon-tooltip" data-tip="A variance-reduction technique: the same set of random shocks is replayed at every price point, so the noise is common to all of them and cancels out of the comparisons between them."><strong>common random numbers</strong></span>, one matrix of shocks, replayed at every price, which cuts the run-to-run spread in the reported optimum from about $5 to about $1.</p>
+    <p><strong>Two&nbsp;details make that sweep trustworthy, and both were corrections.</strong> First, near its peak an expected-profit curve is almost flat, at standard elasticity, pricing a dollar away from the optimum costs roughly $92 of annual profit, while the sampling error on a 400-path median is about $820. Comparing independently simulated price points therefore selects the maximum out of noise nine times larger than the signal, and the recommendation wanders by several dollars on every run. The engine now applies <span class="jargon-tooltip" data-tip="A variance-reduction technique: the same set of random shocks is replayed at every price point, so the noise is common to all of them and cancels out of the comparisons between them." tabindex="0"><strong>common random numbers</strong></span>, one matrix of shocks, replayed at every price, which cuts the run-to-run spread in the reported optimum from about $5 to about $1.</p>
 
     <p>Second, the generator is seeded from the inputs rather than from the clock. Identical assumptions now reproduce an identical recommendation, and only a change to a control changes the draws. A pricing figure that moves when you press the button a second time is not something anyone should be asked to sign off on.</p>
-    <p>By rendering these paths on a classic "Spaghetti Chart," we visualize the true density of our risk. The algorithm mathematically isolates the <span class="jargon-tooltip" data-tip="The risk boundary where 95% of all simulated outcomes perform better. This defines our absolute worst-case scenario."><strong>P5&nbsp;(5th Percentile) Worst-Case Trajectory</strong></span> to establish an absolute algorithmic price floor. It also maps the <span class="jargon-tooltip" data-tip="The optimistic boundary where only 5% of simulated outcomes perform better, representing the maximum realistic windfall."><strong>P95&nbsp;Upside Ceiling</strong></span> to forecast potential windfalls, ensuring we never price ourselves into a loss while aggressively capturing the <span class="jargon-tooltip" data-tip="The anticipated value for an investment at some point in the future, calculated by multiplying each possible outcome by its probability."><strong>Median Expected Profit (E[P])</strong></span>.</p>
+    <p>By rendering these paths on a classic "Spaghetti Chart," we visualize the true density of our risk. The algorithm mathematically isolates the <span class="jargon-tooltip" data-tip="The risk boundary where 95% of all simulated outcomes perform better. This defines our absolute worst-case scenario." tabindex="0"><strong>P5&nbsp;(5th Percentile) Worst-Case Trajectory</strong></span> to establish an absolute algorithmic price floor. It also maps the <span class="jargon-tooltip" data-tip="The optimistic boundary where only 5% of simulated outcomes perform better, representing the maximum realistic windfall." tabindex="0"><strong>P95&nbsp;Upside Ceiling</strong></span> to forecast potential windfalls, ensuring we never price ourselves into a loss while aggressively capturing the <span class="jargon-tooltip" data-tip="The anticipated value for an investment at some point in the future, calculated by multiplying each possible outcome by its probability." tabindex="0"><strong>Median Expected Profit (E[P])</strong></span>.</p>
 
     <p class="tour-launch"><button type="button" data-tour-start class="tour-btn">&#9654; Guided walkthrough</button> <span class="tour-hint">Four steps. Moves the controls for you.</span></p>
 
@@ -341,6 +363,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <div class="chart-wrapper">
                     <canvas id="histogramChart" role="img" aria-label="Spaghetti chart of 100 simulated cumulative profit trajectories with P5, median and P95 boundaries"></canvas>
                 </div>
+                <!-- Probability of clearing the baseline. Computed from the same
+                     iterations the chart above draws, so the two cannot disagree. -->
             </div>
 
             <div class="chart-section" style="margin-top: 25px;">
@@ -353,9 +377,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     </div>
 
     <h2>4. Action: SQL Pipeline & Data Science Stack</h2>
-    <p>The mathematical backbone is built on an end-to-end data stack. First, I use <strong><span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases.">SQL</span></strong> to extract the transaction history from the <strong><span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations.">ERP</span></strong>. This data is pulled into <strong><span class="jargon-tooltip" data-tip="An interactive development environment that allows data scientists to write Python code, view live data, and create visualizations in one place.">Jupyter</span></strong>, where I use <strong><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel.">Pandas</span></strong> to clean and sanitize anomalies. A massive one-time competitor inventory buyout, a year-end vendor rebate, or an abnormal bulk contract purchase will completely destroy a predictive model if treated as "normal" demand. By filtering against specific GL/Reason codes, I quarantine this operational noise, flagging these edge cases for manual human review, to strictly isolate our true recurring run-rate. Finally, I use <strong><span class="jargon-tooltip" data-tip="A Python library specialized for complex mathematical operations and processing massive data arrays at extremely high speeds.">NumPy</span></strong> for <span class="jargon-tooltip" data-tip="A computational technique that processes entire datasets simultaneously rather than row-by-row, making calculations exponentially faster.">array vectorization</span> of the simulation itself.</p>
+    <p>The whole thing runs on three layers. First, I use <strong><span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases." tabindex="0">SQL</span></strong> to extract the transaction history from the <strong><span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0">ERP</span></strong>. This data is pulled into <strong><span class="jargon-tooltip" data-tip="An interactive development environment that allows data scientists to write Python code, view live data, and create visualizations in one place." tabindex="0">Jupyter</span></strong>, where I use <strong><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel." tabindex="0">Pandas</span></strong> to clean and sanitize anomalies. A massive one-time competitor inventory buyout, a year-end vendor rebate, or an abnormal bulk contract purchase will completely destroy a predictive model if treated as "normal" demand. By filtering against specific GL/Reason codes, I quarantine this operational noise, flagging these edge cases for manual human review, to strictly isolate our true recurring run-rate. Finally, I use <strong><span class="jargon-tooltip" data-tip="A Python library specialized for complex mathematical operations and processing massive data arrays at extremely high speeds." tabindex="0">NumPy</span></strong> for <span class="jargon-tooltip" data-tip="A computational technique that processes entire datasets simultaneously rather than row-by-row, making calculations exponentially faster." tabindex="0">array vectorization</span> of the simulation itself.</p>
 
-    <p><strong>Vectorized Enterprise Scale:</strong> Because the engine relies on array vectorisation rather than standard programming loops, it possesses massive operational scale. We can run 50,000+ randomized iterations across tens of thousands of SKUs in a matter of seconds. To further optimize compute overhead, I specified algorithmic "bumper rails" into the engine, logical boundary constraints that act like bowling lane bumpers, guiding the simulation through a targeted funnel and terminating mathematically impossible trajectories early so the server never wastes time calculating useless permutations.</p>
+    <p><strong>Vectorized Enterprise Scale:</strong> Because the engine relies on array vectorisation rather than standard programming loops, it possesses massive operational scale. We can run 50,000+ randomized iterations across tens of thousands of SKUs in a matter of seconds. I also specified boundary constraints &mdash; bumper rails &mdash; so the simulation abandons a path once it becomes arithmetically impossible rather than running it to the end. Most of the compute saving comes from not finishing work that cannot matter.</p>
 
     <div class="code-annotation">
         <strong>Phase 1: ERP Data Extraction & Hygiene</strong>
@@ -422,10 +446,10 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="impact-box">
         <h3>Strategic ROI & Continuous Improvement</h3>
-        <p>By abandoning single-point averages and using this probabilistic framework, the pricing organization successfully protected long-term EBITDA. The final architectural step integrates these Monte Carlo outputs into a <strong><span class="jargon-tooltip" data-tip="An AI framework that learns from past mistakes. We feed actual results back into the model so it corrects its own future predictions.">Supervised Machine Learning Feedback Loop</span></strong>.</p>
+        <p>Pricing on a single average asks what the outcome will probably be. Pricing on a distribution asks how bad it could get and whether we can live with that, which is the question somebody signing off actually has. The final architectural step integrates these Monte Carlo outputs into a <strong><span class="jargon-tooltip" data-tip="An AI framework that learns from past mistakes. We feed actual results back into the model so it corrects its own future predictions." tabindex="0">Supervised Machine Learning Feedback Loop</span></strong>.</p>
         <ul>
-            <li><strong><span class="jargon-tooltip" data-tip="Automatically adjusting price sensitivity variables based on real-time market reactions, rather than relying on static historical assumptions.">Dynamic Elasticity Tuning</span>:</strong> Every 30 days, actual Point-of-Sale (POS) data is fed back into the engine. The model calculates the delta between its <em>Predicted P50 Expected Profit</em> and the <em>Realized Profit</em>, automatically micro-adjusting its own internal elasticity weights.</li>
-            <li><strong><span class="jargon-tooltip" data-tip="Protections built into the algorithm to prevent it from being tricked by temporary anomalies, ensuring it only learns from long-term market shifts.">Concept Drift Defense</span>:</strong> The engine uses anomaly detection to sanitize "poisoned" data (like temporary supply shocks), ensuring the training set reflects true long-term market trends rather than transient noise.</li>
+            <li><strong><span class="jargon-tooltip" data-tip="Automatically adjusting price sensitivity variables based on real-time market reactions, rather than relying on static historical assumptions." tabindex="0">Dynamic Elasticity Tuning</span>:</strong> Every 30 days, actual Point-of-Sale (<span class="jargon-tooltip" data-tip="Point of Sale. The record of what was actually sold, at what price, to whom — as opposed to what the price list said it should have been." tabindex="0">POS</span>) data is fed back into the engine. The model calculates the delta between its <em>Predicted P50 Expected Profit</em> and the <em>Realized Profit</em>, automatically micro-adjusting its own internal elasticity weights.</li>
+            <li><strong><span class="jargon-tooltip" data-tip="Protections built into the algorithm to prevent it from being tricked by temporary anomalies, ensuring it only learns from long-term market shifts." tabindex="0">Concept Drift Defense</span>:</strong> The engine uses anomaly detection to sanitize "poisoned" data (like temporary supply shocks), ensuring the training set reflects true long-term market trends rather than transient noise.</li>
         </ul>
         <p style="margin-bottom: 0; font-weight: bold; color: var(--signal);">The Result: A self-correcting pricing engine that grows mathematically sharper with every fiscal quarter.</p>
     </div>
@@ -433,7 +457,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <div class="next-step-box">
         <h3>Ecosystem Step 4: Performance Tracking</h3>
         <p>With our probabilistic risk boundaries validated and the pricing executed safely in the ERP, the model needs a continuous feedback loop rather than a one-off run. We shift from deployment to active surveillance, running statistical A/B tests to monitor conversion rates continuously.</p>
-        <nav class="project-navigation" aria-label="Case study navigation">
+            </div>
+
+            <nav class="project-navigation" aria-label="Case study navigation">
             <a href="algorithmic-margin-defense.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Previous Phase</span>
                 <span class="nav-title">Step 2: Strategy Execution</span>
@@ -443,10 +469,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <span class="nav-title">Step 4: Statistical Validation</span>
             </a>
         </nav>
-    </div>
 
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, specific SKU attributes, and true margin arrays have been replaced with randomized abstractions. This tool is a custom-built simulation designed to accurately demonstrate the <span class="jargon-tooltip" data-tip="A mathematical technique used to estimate the possible outcomes of an uncertain event.">stochastic optimization</span> structure and Box-Muller generation the production model uses.
+            <div class="nda-note">
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, specific SKU attributes, and true margin arrays have been replaced with randomized abstractions. This tool is a custom-built simulation designed to accurately demonstrate the stochastic optimization structure and Box-Muller generation the production model uses.
     </div>
 
     <!-- Watermark for Portfolio Protection -->
@@ -575,6 +600,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 p50Path.push(cross[Math.floor(ITERATIONS * 0.50)]);
                 p95Path.push(cross[Math.floor(ITERATIONS * 0.95)]);
             }
+
 
             const money = v => `$${Math.round(v).toLocaleString()}`;
             document.getElementById('out-p5').innerText = money(p5Path[MONTHS]);

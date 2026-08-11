@@ -1,7 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <!-- Simplified for tab size: hexagon frame plus the gold trace, no nodes.
        The media query lives inside the SVG because that is the only hook a
-       favicon has — the page stylesheet cannot reach it. -->
+       favicon has - the page stylesheet cannot reach it.
+
+       The trace is scaled to 0.826 and recentred on (50,50). Previously it sat one
+       unit right of centre and, once the round caps and the frame's inward stroke
+       were accounted for, its top-right end overlapped the frame by 1.5 while the
+       bottom-left end had 0.5 of clearance - a visible gap at one end and none at
+       the other. Both ends now clear the frame's inner edge by 3.5. -->
   <style>
     * { fill: none; stroke-linejoin: round; stroke-linecap: round; }
     .f { stroke: #1f242a; stroke-width: 12; }
@@ -12,5 +18,5 @@
     }
   </style>
   <polygon class="f" points="50,9 86,30 86,70 50,91 14,70 14,30"/>
-  <polyline class="t" points="28,62 44,45 60,57 74,38"/>
+  <polyline class="t" points="31,60 44,46 57,56 69,40"/>
 </svg>

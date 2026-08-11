@@ -22,7 +22,7 @@
     <title>A/B Testing &amp; Statistical Validation | Austin Sonny Stethem</title>
 
     <!-- Favicon: external SVG, adapts to the OS colour scheme -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -30,19 +30,22 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
 /* This page is full-bleed (body padding 0), so the sticky bar needs no negative
@@ -85,11 +88,24 @@ html{background:var(--bg-color)}
              which read as a different design language. Centring also promotes the badge
              — the live verdict — to a hero element instead of a corner ornament. */
         .dash-header { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; margin-bottom: 25px; border-bottom: 1px solid var(--panel-border); padding-bottom: 20px;}
-        .dash-title h3 { font-size: 2.2rem; font-weight: 900; margin: 0; letter-spacing: -1px; font-family: 'Archivo', sans-serif;}
-        .dash-title span { color: var(--panel-muted); }
+        .dash-title h3 { color: var(--panel-bright);
+            font-size: 2.2rem; font-weight: 800; margin: 0; letter-spacing: -1px; font-family: 'Archivo', sans-serif;}
+        .dash-title span { color: var(--panel-signal); }
         .dash-subtitle { font-size: 0.9rem; color: var(--panel-muted); margin-top: 5px; max-width: 600px; margin-left: auto; margin-right: auto;}
-
-        .logic-instruction-box { background: rgba(242, 193, 78, 0.10); border: 1px solid rgba(242, 193, 78, 0.32); border-left: 4px solid var(--panel-signal); padding: 15px 20px; border-radius: 4px; font-size: 0.9rem; color: var(--panel-text); margin-bottom: 25px; line-height: 1.5; }
+        .logic-instruction-box {
+            /* Was a gold tint over the dark panel, which reads as murky olive. Matched
+               to .logic-box, the same kind of block everywhere else on the site: a
+               recessed ground and an amber bar to mark it. */
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid var(--panel-border);
+            border-left: 4px solid var(--panel-signal);
+            padding: 15px 20px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--panel-text);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
 
         .logic-instruction-box > strong:first-child { color: var(--panel-signal); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.8rem; display: block; margin-bottom: 5px;}
 
@@ -104,7 +120,7 @@ html{background:var(--bg-color)}
         .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
         .kpi-card { background: var(--panel-surface); border: 1px solid var(--panel-border); border-radius: 8px; padding: 20px; text-align: center; transition: all 0.3s;}
         .kpi-card-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-        .kpi-value { font-size: 2rem; font-weight: 900; font-family: 'IBM Plex Mono', 'Fira Code', monospace; }
+        .kpi-value { font-size: 2rem; font-weight: 700; font-family: 'IBM Plex Mono', 'Fira Code', monospace; }
         .kpi-desc { font-size: 0.75rem; color: var(--panel-muted); margin-top: 8px; line-height: 1.4; }
 
         /* Interactive Sliders */
@@ -132,21 +148,21 @@ html{background:var(--bg-color)}
            appearance:none, which disables it. The thumb pseudo-elements are the hook. */
         #slider-cr::-webkit-slider-thumb {
             background: var(--panel-signal);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
+            box-shadow: 0 0 10px rgba(242, 193, 78, 0.45);
         }
         #slider-cr::-moz-range-thumb { background: var(--panel-signal); }
 
         #slider-n::-webkit-slider-thumb {
-            background: var(--muted);
-            box-shadow: 0 0 8px rgba(100, 116, 139, 0.45);
+            background: var(--panel-signal);
+            box-shadow: 0 0 8px rgba(242, 193, 78, 0.45);
         }
-        #slider-n::-moz-range-thumb { background: var(--muted); }
+        #slider-n::-moz-range-thumb { background: var(--panel-signal); }
 
         /* The control arm is fixed at 10%, so its slider is disabled and decorative.
            It is the only disabled range on the page. */
         input[type="range"]:disabled::-webkit-slider-thumb {
             background: var(--panel-muted);
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 8px rgba(242, 193, 78, 0.28);
         }
         input[type="range"]:disabled::-moz-range-thumb { background: var(--panel-muted); }
         /* portfolio.css dims disabled inputs to 0.55; lift it enough for the blue to read */
@@ -155,11 +171,10 @@ html{background:var(--bg-color)}
         /* Bottom Three Columns */
 
         /* Status Indicator */
-        .status-badge { display: inline-block; padding: 10px 20px; border-radius: 6px; font-weight: 900; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase; border: 2px solid transparent;}
-        .status-safe { background: rgba(16, 185, 129, 0.15); color: var(--panel-positive); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-        .status-danger { background: rgba(239, 68, 68, 0.15); color: var(--panel-negative); border-color: rgba(239, 68, 68, 0.4); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);}
-        .status-uplift { background: rgba(59, 130, 246, 0.15); color: var(--panel-series); border-color: rgba(59, 130, 246, 0.4); }
-
+        .status-badge { display: inline-block; padding: 10px 20px; border-radius: 6px; font-weight: 800; font-size: 0.95rem; letter-spacing: 1px; text-transform: uppercase; border: 2px solid transparent;}
+        .status-safe { background: color-mix(in srgb, var(--panel-positive) 15%, transparent); color: var(--panel-positive); border-color: color-mix(in srgb, var(--panel-positive) 40%, transparent); box-shadow: 0 0 15px color-mix(in srgb, var(--panel-positive) 20%, transparent); }
+        .status-danger { background: color-mix(in srgb, var(--panel-negative) 15%, transparent); color: var(--panel-negative); border-color: color-mix(in srgb, var(--panel-negative) 40%, transparent); box-shadow: 0 0 15px color-mix(in srgb, var(--panel-negative) 20%, transparent);}
+        .status-uplift { background: color-mix(in srgb, var(--panel-series) 15%, transparent); color: var(--panel-series); border-color: color-mix(in srgb, var(--panel-series) 40%, transparent); }
 
         .dashboard-container        .dashboard-container .jargon-tooltip:hover { border-bottom-color: var(--surface); }
 
@@ -199,6 +214,26 @@ html{background:var(--bg-color)}
             .chart-header { flex-direction: column; align-items: flex-start; gap: 6px; }
             .chart-wrapper { height: 300px; }
         }
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
 </style>
 <script>
 /* Chart.js needs literal colours, so read the token when the chart is built. */
@@ -213,7 +248,7 @@ function tokenColor(name){
 document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
-    <script defer src="tour.js"></script>
+    <script defer src="tour.js?v=2"></script>
 </head>
 <body class="doc">
 
@@ -242,7 +277,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr>
                 <td class="meta-cell">
                     <span class="meta-label">Principal Engineer</span>
-                    <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & MDM Analyst</span>
+                    <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & Master Data Analyst</span>
                 </td>
                 <td class="meta-cell">
                     <span class="meta-label">Core Competencies</span>
@@ -256,17 +291,16 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
         </table>
 
+    <div class="scenario-box">
+            <strong>The&nbsp;Enterprise Scenario (Step 4 of 5)</strong>
+            Our deterministic algorithm (Step 2) successfully identified the price floors needed to defend our margins, and our <span class="jargon-tooltip" data-tip="A computational algorithm that relies on repeated random sampling to obtain numerical results." tabindex="0">Monte Carlo</span> models (Step 3) confirmed our risk boundaries. However, mathematical theory must be validated by actual market behavior. Before we fully commit, I ran a controlled A/B test on the live B2B portal to find out whether the higher prices are costing us quote-to-order conversion.
+        </div>
+
         <h2>1. The Problem: Testing Market Resistance</h2>
 
     <p>A price change and the volume that follows it are separated by weeks of ordinary variance, which is why nobody could say afterwards whether a change had worked: the signal was there and no method existed to pull it out of the noise. I built the method and put it in front of the people approving the increase beforehand, not after: a test designed once the result is in is not a test.</p>
-
-        <div class="scenario-box">
-            <strong>The&nbsp;Enterprise Scenario (Step 4 of 5)</strong>
-            Our deterministic algorithm (Step 2) successfully identified the price floors needed to defend our margins, and our Monte Carlo models (Step 3) confirmed our risk boundaries. However, mathematical theory must be validated by actual market behavior. Before we fully commit, I ran a controlled A/B test on the live B2B portal to find out whether the higher prices are costing us quote-to-order conversion.
-        </div>
-
-        <p>Before deploying the <em>Algorithmic Margin Defense</em> engine across the entire network, executive leadership needed empirical proof that dynamic pricing wouldn't erode B2B conversion rates. A mathematical model that protects margins is entirely useless if it causes customers to abandon their shopping carts in protest.</p>
-        <p>To validate the algorithm safely, I architected a randomized A/B test on our B2B E-Commerce portal. <strong>Group A (Control)</strong> received our legacy static pricing. <strong>Group B (Treatment)</strong> received the new dynamic, algorithmic pricing. To separate a real change in conversion from ordinary daily variance, I applied a <span class="jargon-tooltip" data-tip="A statistical method comparing two conversion rates to judge whether the difference is real or ordinary variance."><strong>Two-Proportion Z-Test</strong></span> to the results.</p>
+        <p>Before deploying the <em>Algorithmic <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">Margin</span> Defense</em> engine across the entire network, executive leadership needed empirical proof that dynamic pricing wouldn't erode B2B conversion rates. A mathematical model that protects margins is entirely useless if it causes customers to abandon their shopping carts in protest.</p>
+        <p>To validate the algorithm safely, I architected a randomized A/B test on our B2B E-Commerce portal. <strong>Group A (Control)</strong> received our legacy static pricing. <strong>Group B (Treatment)</strong> received the new dynamic, algorithmic pricing. To separate a real change in conversion from ordinary daily variance, I applied a <span class="jargon-tooltip" data-tip="A statistical method comparing two conversion rates to judge whether the difference is real or ordinary variance." tabindex="0"><strong>Two-Proportion Z-Test</strong></span> to the results.</p>
     </div>
 
     <!-- INFOGRAPHIC DASHBOARD -->
@@ -301,18 +335,17 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <div class="chart-wrapper">
                 <canvas id="bellChart" role="img" aria-label="Overlaid sampling distributions for the control and variant conversion rates, with the 95 percent significance boundary marked"></canvas>
             </div>
-            <p style="margin: 14px 0 0 0; font-size: 0.75rem; line-height: 1.5; color: var(--muted); text-align: left; font-style: italic;">Reading note: the two curves are the sampling distributions of each arm's conversion rate. The dashed boundary is drawn on the pooled standard error of the <em>difference</em>, which is &radic;2 wider; so it sits further out than 1.96&sigma; of either curve on its own. Significance is the Z-score and p-value above, not whether a curve visually clears the line.</p>
+            <p style="margin: 14px 0 0 0; font-size: 0.75rem; line-height: 1.5; color: var(--panel-muted); text-align: left; font-style: italic;">Reading note: the two curves are the sampling distributions of each arm's conversion rate. The dashed boundary is drawn on the pooled standard error of the <em>difference</em>, which is &radic;2 wider; so it sits further out than 1.96&sigma; of either curve on its own. Significance is the Z-score and p-value above, not whether a curve visually clears the line.</p>
             <p id="inference-caveat" role="status" aria-live="polite" style="margin: 14px 0 0 0; font-size: 0.8rem; line-height: 1.55; color: var(--panel-muted); text-align: left; border-left: 3px solid var(--panel-border); padding-left: 14px;"></p>
         </div>
 
         <!-- Interactive Controls & KPIs -->
         <div class="kpi-grid">
             <!-- Simulator Controls -->
-            <div class="kpi-card" style="border-top-color: var(--panel-muted);">
-                <div class="kpi-card-header" style="color: var(--panel-muted);">Control: Old Prices</div>
+            <div class="kpi-card" style="border-top-color: var(--panel-signal);">
+                <div class="kpi-card-header" style="color: var(--panel-signal);">Control: Old Prices</div>
                 <div class="control-group">
-                    <label>Baseline Conversion <span>10.0%</span></label>
-                    <input type="range" disabled value="10" aria-hidden="true" tabindex="-1" min="5" max="20">
+                    <label>Baseline Conversion <span>10.0%</span> <em class="locked-note">fixed</em></label>
                 </div>
                 <div class="control-group">
                     <label for="slider-n">Traffic Sample (N) <span id="n-val-display">5,000</span></label>
@@ -332,14 +365,14 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </div>
 
             <!-- Dynamic KPIs -->
-            <div class="kpi-card" style="border-top-color: var(--panel-muted);">
-                <div class="kpi-card-header" style="color: var(--panel-text);">Z-Score (Test Statistic)</div>
+            <div class="kpi-card" style="border-top-color: var(--panel-signal);">
+                <div class="kpi-card-header" style="color: var(--panel-signal);">Z-Score (Test Statistic)</div>
                 <div class="kpi-value" id="out-zscore" style="color: var(--panel-bright);">0.00</div>
                 <div class="kpi-desc">How far the new results are from our old baseline.</div>
             </div>
 
-            <div class="kpi-card" style="border-top-color: var(--panel-muted);">
-                <div class="kpi-card-header" style="color: var(--panel-text);">P-Value</div>
+            <div class="kpi-card" style="border-top-color: var(--panel-signal);">
+                <div class="kpi-card-header" style="color: var(--panel-signal);">P-Value</div>
                 <div class="kpi-value" id="out-pvalue" style="color: var(--panel-bright);">0.000</div>
                 <div class="kpi-desc">The mathematical probability that this drop in sales is just random noise.</div>
             </div>
@@ -361,7 +394,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <div class="impact-box">
             <h3>The Power of "Inconclusive" Tests</h3>
             <p>If you look at the simulator's default state, you will notice a massive business advantage hidden inside the math. We raised prices and conversion fell from 10.0% to 9.5%. Sales wanted the increase reverted, which was a fair reading of what they could see, they carry the volume number, and half a point is real money at their end of it.</p>
-            <p><strong>But&nbsp;the A/B test showed the drop was statistically inconclusive.</strong> Because the green curve still overlapped the blue baseline curve, the drop in volume could not be attributed to the price increase. It was within the normal bounds of daily random variance. That is what settled it, and it settled it without anyone having to win on seniority. Sales got something better than being overruled: a test that would have shown a real drop if there had been one. We held the higher prices firm. We generated substantial <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability."><strong>EBITDA</strong></span> without triggering a measurable exodus of customer volume.</p>
+            <p><strong>But&nbsp;the A/B test showed the drop was statistically inconclusive.</strong> Because the green curve still overlapped the blue baseline curve, the drop in volume could not be attributed to the price increase. It was within the normal bounds of daily random variance. That is what settled it, and it settled it without anyone having to win on seniority. Sales got something better than being overruled: a test that would have shown a real drop if there had been one. We held the higher prices firm. We generated substantial <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0"><strong>EBITDA</strong></span> without triggering a measurable exodus of customer volume.</p>
             <p style="margin-bottom: 0;"><strong>The&nbsp;discipline that makes this defensible:</strong> a non-significant result is not proof of no effect, so the decision was paired with a power calculation. We sized the test to detect the smallest volume loss that would have made the price increase EBITDA-negative. Passing that bar is what justified holding; the p-value alone would not have.</p>
         </div>
 
@@ -371,6 +404,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <div class="next-step-box">
             <h3>Ecosystem Step 5: FIFO Inventory Revaluation</h3>
             <p>With our algorithmic pricing changes statistically validated in the market, the last part of the cycle has the shortest window. Because we decoupled our retail logic from our physical receiving docks, we are now raising prices <em>today</em> on inventory we bought <em>yesterday</em> at the old, cheaper cost. The next model measures the resulting cash windfall.</p>
+            </div>
+
             <nav class="project-navigation" aria-label="Case study navigation">
                 <a href="stochastic-margin-optimization.html" class="nav-btn prev">
                     <span class="nav-label">&larr; Previous Phase</span>
@@ -381,9 +416,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     <span class="nav-title">Step 5: FIFO Revaluation</span>
                 </a>
             </nav>
-        </div>
 
-        <div class="nda-note">
+            <div class="nda-note">
             <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live B2B conversion metrics, exact pricing adjustments, and true order volumes have been replaced with randomized abstractions. The statistical methodology, Two-Proportion Z-Test architecture, and hypothesis validation frameworks accurately reflect the mathematical rigor used in the production environment.
         </div>
 
@@ -525,10 +559,17 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     c.textAlign = 'center';
                     c.textBaseline = 'middle';
 
+                    // Sit each label directly above its own curve's peak rather than at a fixed
+                    // y, and clamp into the top padding so a tall curve cannot run into it.
+                    const labelY = (mean, series) => {
+                        const peak = Math.max.apply(null, series.map(pt => pt.y));
+                        const px = yAxis.getPixelForValue(peak);
+                        return Math.max(yAxis.top + 10, px - 14);
+                    };
                     c.fillStyle = '#3b82f6';
-                    c.fillText('Old Prices', getXPixel(meanA), yAxis.top + 22);
+                    c.fillText('Old Prices', getXPixel(meanA), labelY(meanA, chart.data.datasets[1].data));
                     c.fillStyle = '#10b981';
-                    c.fillText('New Prices', getXPixel(meanB), yAxis.top + 44);
+                    c.fillText('New Prices', getXPixel(meanB), labelY(meanB, chart.data.datasets[2].data));
                     c.restore();
                 }
             };
@@ -550,14 +591,14 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                             label: 'Old Prices (Baseline Variance)',
                             data: dataA,
                             borderColor: '#3b82f6', borderWidth: 3,
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.13)',   // matches borderColor #3b82f6
                             fill: true, pointRadius: 0, tension: 0.4
                         },
                         {
                             label: 'New Prices (Variant Variance)',
                             data: dataB,
                             borderColor: '#10b981', borderWidth: 3,
-                            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.16)',   // matches borderColor #10b981
                             fill: true, pointRadius: 0, tension: 0.4
                         }
                     ]

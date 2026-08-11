@@ -20,7 +20,7 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- Favicon: external SVG, adapts to the OS colour scheme -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <!-- Chart.js Core + Data Labels Plugin (plugin must load after Chart.js) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -28,23 +28,21 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
-
-        /* Was missing entirely on this page, so both impact boxes rendered unstyled. */
-        .impact-box { background: var(--surface-alt); border: 1px solid var(--line); border-left: 4px solid var(--signal); padding: 25px; border-radius: 4px; margin: 25px 0 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .impact-box h3 { margin-top: 0; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px; }
-        .impact-box p:last-child { margin-bottom: 0; }
-    </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+</style>
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
         /* Brand tokens live in portfolio.css; only the dashboard palette is local. */
@@ -63,7 +61,7 @@ html{background:var(--bg-color)}
             -webkit-font-smoothing: antialiased;
         }
 
-        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: 600; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
         h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--ink-surface); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
         p { text-align: justify; margin-bottom: 15px; color: var(--body-text); }
         ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text); padding-left: 25px;}
@@ -86,7 +84,7 @@ html{background:var(--bg-color)}
         .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--panel-bg); display: flex; flex-direction: column; }
 
         .dash-header { margin-bottom: 30px; border-bottom: 1px solid var(--panel-border); padding-bottom: 15px; text-align: center;}
-        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; margin: 0; font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.5px;}
+        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; margin: 0; font-family: 'Archivo', sans-serif; font-weight: 800; letter-spacing: -0.5px;}
         .dash-header .dash-title span { color: var(--panel-signal); }
         /* text-align must be explicit. The page has a bare `p { text-align: justify }`
            rule, and any matching rule beats inherited centring from .dash-header. */
@@ -100,7 +98,6 @@ html{background:var(--bg-color)}
         .control-group { margin-bottom: 25px; }
         .control-group label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: var(--panel-text); margin-bottom: 8px; cursor: pointer; }
         .val-readout { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: bold; font-size: 1rem; color: var(--panel-signal);}
-
 
         /* Local slider baseline. Duplicates portfolio.css deliberately: without it, a
            missing shared sheet drops the page back to the native OS slider, which looks
@@ -124,7 +121,7 @@ html{background:var(--bg-color)}
         .btn-run:hover { background: var(--signal-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(236, 164, 87, 0.40); }
         .btn-run:disabled { background: var(--muted); box-shadow: none; transform: translateY(0); cursor: not-allowed; }
 
-        .rule-box { background: rgba(0,0,0,0.2); border: 1px solid var(--panel-border); padding: 15px; border-radius: 6px; font-size: 0.8rem; color: var(--muted); margin-bottom: 25px; }
+        .rule-box { background: rgba(0,0,0,0.2); border: 1px solid var(--panel-border); padding: 15px; border-radius: 6px; font-size: 0.8rem; color: var(--panel-muted); margin-bottom: 25px; }
         .rule-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px; gap: 10px; }
         .rule-row:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
         .context-box { background: rgba(0, 0, 0, 0.2); border: 1px solid var(--panel-border); border-left: 3px solid var(--line); padding: 15px; border-radius: 4px; font-size: 0.85rem; color: var(--panel-text); line-height: 1.5; transition: border-left-color 0.3s; min-height: 128px;}
@@ -134,7 +131,7 @@ html{background:var(--bg-color)}
         .kpi-card { background: var(--panel-surface); border: 1px solid var(--panel-border); border-top: 3px solid var(--panel-border); padding: 15px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
         .kpi-card-header { font-size: 0.75rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .kpi-value { font-size: 1.8rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px;}
+        .kpi-value { font-size: 1.8rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; line-height: 1.1; margin-bottom: 4px;}
         .kpi-sub { font-size: 0.75rem; color: var(--panel-dim); font-style: italic; min-height: 32px; }
 
         /* Chart Area */
@@ -175,7 +172,7 @@ html{background:var(--bg-color)}
         .ladder-table tr.volume-row .tier { color: var(--signal); }
         .ladder-caption { font-size: 8.5pt; color: var(--muted); font-style: italic; margin: 0 0 28px 0; text-align: left; }
 
-        .code-annotation { background: var(--hairline); border-left: 4px solid var(--data-series); padding: 12px 18px; font-size: 9.5pt; color: var(--panel-text); border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Archivo', sans-serif;}
+        .code-annotation { background: var(--panel-surface); border-left: 4px solid var(--data-series); padding: 12px 18px; font-size: 9.5pt; color: var(--panel-text); border-radius: 6px 6px 0 0; margin-bottom: 0; font-family: 'Archivo', sans-serif;}
         .code-annotation > strong:first-child { color: var(--panel-bright); font-size: 9pt; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
 
         pre.code-block { background-color: var(--panel-bg); color: var(--panel-text); padding: 20px; border-radius: 0 0 6px 6px; overflow-x: auto; font-family: 'Fira Code', 'Courier New', Courier, monospace; font-size: 9pt; border-left: 4px solid var(--data-series); line-height: 1.5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); margin-top: 0; margin-bottom: 30px; }
@@ -275,14 +272,34 @@ html{background:var(--bg-color)}
             .project-navigation { display: none !important; }
         }
 
-        .tour-launch { margin: 6px 0 22px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tour-launch { margin: 6px 0 22px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
         .tour-btn { font: 600 0.86rem/1 'Archivo', sans-serif; background: var(--signal);
             color: var(--on-signal); border: 1px solid var(--signal);
             padding: 10px 16px; border-radius: 4px; cursor: pointer; }
         .tour-btn:hover { background: var(--signal-dark); border-color: var(--signal-dark); }
         .tour-hint { font-size: 0.82rem; color: var(--muted); font-style: italic; }
         @media print { .tour-launch { display: none; } }
-    </style>
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
+</style>
 <script>
 /* Chart.js needs literal colours, so read the token when the chart is built. */
 function tokenColor(name){
@@ -296,7 +313,7 @@ function tokenColor(name){
 document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
-    <script defer src="tour.js"></script>
+    <script defer src="tour.js?v=2"></script>
 </head>
 <body class="doc">
 
@@ -323,7 +340,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -337,53 +354,51 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
     </table>
 
+    <div class="scenario-box">
+        <strong>The&nbsp;Enterprise Scenario (Step 2 of 5)</strong>
+        With our vulnerable territories securely mapped (Step 1), a 15% vendor cost increase is landing. Standard ERP systems apply blanket markups that blindly destroy volume on sensitive items. I built a deterministic algorithm to cross-subsidize our <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust." tabindex="0"><strong>Key&nbsp;Value Items (KVIs)</strong></span> and safely defend our blended <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> before we stress-test those thresholds against market noise.
+    </div>
+
     <h2>1. Initiative: Proactive Margin Defense</h2>
 
     <div class="impact-box" style="margin-top:20px;">
         <h3>One Part Number, 400+ Prices</h3>
-        <p>The price ladder described further down this page has eight tiers. It is supposed to produce eight prices for any given part &mdash; one per customer class, each derived from the one beneath it.</p>
-        <p>I pulled the rolling twelve-month transaction history for a single high-volume item, the sort of part that moves in every branch every week. Across the network it had sold at <strong>400+ distinct prices</strong>, ranging from <strong>the&nbsp;lowest transacted price to the highest</strong>.</p>
-        <p>Not 400+ transactions. 400+ different <em>prices</em> for one part number, fifty-two times the number the tier structure was designed to produce, and a new distinct price roughly every twenty-one hours for a year. The customer at the top of that range paid <strong>104% more</strong> than the customer at the bottom for an identical item.</p>
+        <p>The <span class="jargon-tooltip" data-tip="The stack of prices for one item, one per customer type, each derived from the one below it. Eight tiers here, from warehouse cost up to retail list." tabindex="0">price ladder</span> described further down this page has eight tiers. It is supposed to produce eight prices for any given part &mdash; one per customer class, each derived from the one beneath it.</p>
+        <p>I pulled the rolling twelve-month transaction history for a single high-volume item, the sort of part that moves in every <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> every week. Across the network it had sold at <strong>400+ distinct prices</strong>, ranging from <strong>the&nbsp;lowest transacted price to the highest</strong>.</p>
+        <p>Not 400+ transactions. 400+ different <em>prices</em> for one part number, fifty-two times the number the <span class="jargon-tooltip" data-tip="One rung of the price ladder — a customer class with its own standing discount." tabindex="0">tier</span> structure was designed to produce, and a new distinct price roughly every twenty-one hours for a year. The customer at the top of that range paid <strong>104% more</strong> than the customer at the bottom for an identical item.</p>
         <p>The obvious next move is to set that range against the cost, and it is worth being careful about how. Store intake on this part <em>today</em> is break-even, which would put the bottom of the observed range twelve dollars underneath break-even and imply units sold at a loss.</p>
 
         <div class="scenario-box">
             <strong>Why&nbsp;that comparison is not yet valid</strong>
-            Today's cost against a year of prices is the wrong test. If the vendor stepped cost up during the period, which is precisely the event the rest of this page models, then a low price early in the year may have been perfectly sound against the cost in force at the time. Measuring a trailing series against a point-in-time basis produces a deficit that is partly real and partly an artefact of when you took the snapshot. It is the same error as valuing an inventory windfall against last quarter's price rather than replacement cost, and it is easy to make because the number it produces is dramatic.
+            Today's cost against a year of prices is the wrong test. If the vendor stepped cost up during the period, which is precisely the event the rest of this page models, then a low price early in the year may have been perfectly sound against the cost in force at the time. Measuring a trailing series against a point-in-time basis produces a deficit that is partly real and partly an artefact of when you took the snapshot. It is the same error as valuing an inventory windfall against last quarter's price rather than <span class="jargon-tooltip" data-tip="Pricing based on what it will cost to buy the next unit from the vendor. Generates immediate windfall on old stock." tabindex="0">replacement cost</span>, and it is easy to make because the number it produces is dramatic.
             The defensible version joins every transaction to the cost effective on its own date and computes margin at the moment of sale. That is a harder query and the only one that settles whether anything sold below water.
         </div>
 
-        <p>What survives without a cost basis at all is the dispersion itself, and it is enough. A ladder with eight rungs produced 400+ prices. The highest of them reached under 70% of list, so the top of the structure is theoretical &mdash; nobody pays it. The transacted band occupies roughly half the distance between store cost and list, scattered across four hundred points inside that half. Whatever the cost was on any given day, a spread of that width on one part number is not a pricing strategy being executed with local flexibility. It is the absence of one.</p>
-        <p>None of this was decided. It is a tier structure that accreted over decades, per-customer special terms layered on top of it, and discretion to override at the counter, compounding transaction by transaction until a commodity part carried 400+ prices. Nobody had measured the dispersion, because no report existed that would show it. Every model on this page exists because of that number.</p>
+        <p>What survives without a cost basis at all is the <span class="jargon-tooltip" data-tip="The spread of prices actually charged for one item. A ladder designed to produce eight prices producing hundreds is dispersion." tabindex="0">dispersion</span> itself, and it is enough. A ladder with eight rungs produced 400+ prices. The highest of them reached under 70% of list, so the top of the structure is theoretical &mdash; nobody pays it. The transacted band occupies roughly half the distance between store cost and list, scattered across four hundred points inside that half. Whatever the cost was on any given day, a spread of that width on one part number is not a pricing strategy being executed with local flexibility. It is the absence of one.</p>
+        <p>None of this was decided. It is a tier structure that accreted over decades, per-customer special terms layered on top of it, and discretion to <span class="jargon-tooltip" data-tip="A price set by hand at the counter, outside the rules the system would have applied." tabindex="0">override</span> at the counter, compounding transaction by transaction until a commodity part carried 400+ prices. Nobody had measured the dispersion, because no report existed that would show it. Every model on this page exists because of that number.</p>
     </div>
-
-
-    <div class="scenario-box">
-        <strong>The&nbsp;Enterprise Scenario (Step 2 of 5)</strong>
-        With our vulnerable territories securely mapped (Step 1), a 15% vendor cost increase is landing. Standard ERP systems apply blanket markups that blindly destroy volume on sensitive items. I built a deterministic algorithm to cross-subsidize our <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust."><strong>Key&nbsp;Value Items (KVIs)</strong></span> and safely defend our blended margin before we stress-test those thresholds against market noise.
-    </div>
-
-    <p><strong>The&nbsp;Situation:</strong> In legacy distribution models, price updates are largely reactive. When a vendor issues a sudden price increase or global freight costs spike, standard <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> systems often trigger a blanket markup across the entire parts catalog. This creates massive business risk: it instantly bleeds volume on highly competitive, <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes. A price margin increase will likely destroy sales volume."><strong>elastic items</strong></span> while simultaneously leaving margin on the table for blind, <span class="jargon-tooltip" data-tip="Products (often rare or captive) where demand remains stable even if prices are raised."><strong>inelastic parts</strong></span>.</p>
-    <p>The dispersion was measurable and invisible at the same time: every transaction was correct on its own terms, and no report aggregated them in a way that would show the spread. I wrote the report that surfaced it, then built the model that answers it. I designed this deterministic <span class="jargon-tooltip" data-tip="Intentionally taking lower margins on highly visible items while aggressively raising prices on blind/rare items to protect overall profitability."><strong>cross-subsidization</strong></span> engine and took it to executive leadership: a way to absorb a vendor cost increase and recalculate targets across a catalogue of hundreds of thousands of parts &mdash; without sacrificing volume on our most sensitive items.</p>
+    <p><strong>The&nbsp;Situation:</strong> In legacy distribution models, price updates are largely reactive. When a vendor issues a sudden price increase or global freight costs spike, standard <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> systems often trigger a blanket markup across the entire parts catalog. This creates massive business risk: it instantly bleeds volume on highly competitive, <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes. A price margin increase will likely destroy sales volume." tabindex="0"><strong>elastic items</strong></span> while simultaneously leaving margin on the table for blind, <span class="jargon-tooltip" data-tip="Products (often rare or captive) where demand remains stable even if prices are raised." tabindex="0"><strong>inelastic parts</strong></span>.</p>
+    <p>The dispersion was measurable and invisible at the same time: every transaction was correct on its own terms, and no report aggregated them in a way that would show the spread. I wrote the report that surfaced it, then built the model that answers it. I designed this deterministic <span class="jargon-tooltip" data-tip="Intentionally taking lower margins on highly visible items while aggressively raising prices on blind/rare items to protect overall profitability." tabindex="0"><strong>cross-subsidization</strong></span> engine and took it to executive leadership: a way to absorb a vendor cost increase and recalculate targets across a catalogue of hundreds of thousands of parts &mdash; without sacrificing volume on our most sensitive items.</p>
 
     <h2>2. Action: Elasticity Stratification &amp; Cross-Subsidization</h2>
-    <p>Instead of evaluating SKUs in a vacuum, the system calculates the <span class="jargon-tooltip" data-tip="The total aggregate profit margin across the entire product catalog, balancing high and low-margin items."><strong>Blended Portfolio Margin</strong></span> by processing raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> data through a <span class="jargon-tooltip" data-tip="A cascading pricing logic that applies different markup rules based on how sensitive a product category is to price changes."><strong>multi-echelon Elasticity Waterfall</strong></span>. I structured the logic into three distinct groups:</p>
+    <p>Instead of evaluating SKUs in a vacuum, the system calculates the <span class="jargon-tooltip" data-tip="The total aggregate profit margin across the entire product catalog, balancing high and low-margin items." tabindex="0"><strong>Blended Portfolio Margin</strong></span> by processing raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> data through a <span class="jargon-tooltip" data-tip="A cascading pricing logic that applies different markup rules based on how sensitive a product category is to price changes." tabindex="0"><strong>multi-echelon Elasticity Waterfall</strong></span>. I structured the logic into three distinct groups:</p>
     <ul>
         <li><strong>Group A (10% Volume - High-Velocity KVIs):</strong> Ultra-sensitive Known Value Items. Because these items drive standard transactional volume, they are mathematically locked to a maximum 3% variance to defend market perception.</li>
         <li><strong>Group B (40% Volume - Mid-Tier Core):</strong> Standard competitive parts. Allowed up to a 20% variance before the system hard-locks the price to prevent volume erosion.</li>
-        <li><strong>Group C (50% Volume - Highly Elastic Tail):</strong> Blind or captive items, often weighted toward Heavy Jobber accounts. Permitted up to 70% variance, this group acts as a shock absorber. It generates margin surplus to explicitly subsidize the defense of Group A.</li>
+        <li><strong>Group C (50% Volume - Highly Elastic Tail):</strong> Blind or captive items, often weighted toward Heavy <span class="jargon-tooltip" data-tip="A high-volume trade customer — typically a fleet or a large repair operation — who earns the deepest standing discount." tabindex="0">Jobber</span> accounts. Permitted up to 70% variance, this group acts as a shock absorber. It generates margin surplus to explicitly subsidize the defense of Group A.</li>
     </ul>
 
     <h3>Markup Is Not Margin</h3>
     <p>One subtlety sinks most naive pricing models. A permitted <em>price markup</em> does not convert into an equal number of <em>margin points</em>. Raise price 70% on an item already at 48% margin and the margin reaches 69.4%: a gain of 21.4 points, not 70. So the engine converts every permitted markup into its true margin contribution before deciding what deficit a tier can absorb. Skip that step and the model reports Group C as able to swallow any shock. The cascade into B and A never fires.</p>
 
     <h3>The FIFO Inventory Shield</h3>
-    <p>This model uses physical <span class="jargon-tooltip" data-tip="Quantity On Hand: The physical inventory currently sitting in the warehouse."><strong>Quantity on Hand (QOH)</strong></span> as a <span class="jargon-tooltip" data-tip="First-In, First-Out: Selling older, lower-cost inventory at newly elevated retail prices to generate an immediate profit buffer."><strong>FIFO (First-In, First-Out) windfall shield</strong></span>. Before calculating necessary price increases, the algorithm measures how many days of inventory we hold at the old, cheaper cost. It then calculates the exact markups required on Group C and B to mathematically pay for the remaining cost deficit, ensuring enterprise <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability."><strong>EBITDA</strong></span> targets are protected without touching the <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust."><strong>KVIs</strong></span>.</p>
+    <p>This model uses physical <span class="jargon-tooltip" data-tip="Quantity On Hand: The physical inventory currently sitting in the warehouse." tabindex="0"><strong>Quantity on Hand (QOH)</strong></span> as a <span class="jargon-tooltip" data-tip="First-In, First-Out: Selling older, lower-cost inventory at newly elevated retail prices to generate an immediate profit buffer." tabindex="0"><strong>FIFO (First-In, First-Out) windfall shield</strong></span>. Before calculating necessary price increases, the algorithm measures how many days of inventory we hold at the old, cheaper cost. It then calculates the exact markups required on Group C and B to mathematically pay for the remaining cost deficit, ensuring enterprise <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0"><strong>EBITDA</strong></span> targets are protected without touching the <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust." tabindex="0"><strong>KVIs</strong></span>.</p>
 
     <h2>3. The Price Ladder: What Actually Moves</h2>
 
     <p>The decision underneath the whole ladder is <strong>which&nbsp;items a customer will notice</strong>, and it is a judgment call rather than a calculation. Get it wrong in one direction and you raise a brake pad a shop prices against the store down the road, which costs you the account rather than the margin. Get it wrong in the other and you leave the increase on an item nobody shops, which funds nothing. The stratification below is that judgment written down so it can be argued with, which is the only reason a pricing manager should accept it.</p>
 
-    <p>The elasticity groups above describe <em>products</em>. Cutting the other way is the customer ladder, and in a legacy distribution ERP that ladder is a compounding chain of divisors rather than a set of independent prices. Each tier is derived from the one beneath it, so a single cost movement at intake has to travel the whole chain before it reaches the prices that carry the volume.</p>
+    <p>The <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span> groups above describe <em>products</em>. Cutting the other way is the customer ladder, and in a legacy distribution ERP that ladder is a compounding chain of divisors rather than a set of independent prices. Each tier is derived from the one beneath it, so a single cost movement at intake has to travel the whole chain before it reaches the prices that carry the volume.</p>
 
     <p>The structure below is the real one. The divisors are illustrative proxies: the actual margins are proprietary &mdash; but the sequence, the audiences, and the gaps are exactly as the system is built.</p>
 
@@ -403,7 +418,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr><td class="tier">P9</td><td>Employee purchase</td><td>&divide; 0.90</td><td class="num">$123.46</td><td class="num">19.0%</td></tr>
             <tr><td class="tier">P8</td><td>Special rate, category-specific (paint, chemicals)</td><td>&divide; 0.94</td><td class="num">$131.34</td><td class="num">23.9%</td></tr>
             <tr class="volume-row"><td class="tier">P4</td><td>Jobber &mdash; fleets and top accounts, deepest loyalty discount</td><td>&divide; 0.88</td><td class="num">$149.25</td><td class="num">33.0%</td></tr>
-            <tr class="volume-row"><td class="tier">P3</td><td>Dealer / installer &mdash; buys from us <em>and</em> from our jobbers</td><td>&divide; 0.94</td><td class="num">$158.77</td><td class="num">37.0%</td></tr>
+            <tr class="volume-row"><td class="tier">P3</td><td>Dealer / <span class="jargon-tooltip" data-tip="A repair shop that buys parts to fit them, rather than to resell them." tabindex="0">installer</span> &mdash; buys from us <em>and</em> from our jobbers</td><td>&divide; 0.94</td><td class="num">$158.77</td><td class="num">37.0%</td></tr>
             <tr><td class="tier">P2</td><td>Good customers, small shops, frequent walk-ins</td><td>&divide; 0.88</td><td class="num">$180.42</td><td class="num">44.6%</td></tr>
             <tr><td class="tier">P1</td><td>Retail list</td><td>&divide; 0.80</td><td class="num">$225.53</td><td class="num">55.7%</td></tr>
         </tbody>
@@ -411,7 +426,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <p class="ladder-caption">P7, P6 and P5 are unused. Nobody designs a scheme with holes in it; they accrete. The two highlighted tiers carry the overwhelming majority of transaction volume, which is the only reason any of this matters financially.</p>
 
     <h3>Consequence 1: The Dollar Amplification</h3>
-    <p>Because every tier is derived from the one below it, the cumulative multiple from intake to list is roughly <strong>2.26&times;</strong>. A ten dollar movement in landed cost does not require a ten dollar movement in list price &mdash; it requires <strong>$22.55</strong>. Percentage-wise the increase passes through unchanged at every tier, which is precisely why the dollar figure surprises people who have only ever seen the percentage.</p>
+    <p>Because every tier is derived from the one below it, the cumulative multiple from intake to list is roughly <strong>2.26&times;</strong>. A ten dollar movement in <span class="jargon-tooltip" data-tip="Vendor price plus freight, duty and handling — what the unit actually cost to get onto the shelf, not what the invoice said." tabindex="0">landed cost</span> does not require a ten dollar movement in <span class="jargon-tooltip" data-tip="The top of the ladder: what a walk-in customer pays with no discount applied." tabindex="0">list price</span> &mdash; it requires <strong>$22.55</strong>. Percentage-wise the increase passes through unchanged at every tier, which is precisely why the dollar figure surprises people who have only ever seen the percentage.</p>
 
     <h3>Consequence 2: Sticky Pricing Bleeds Fastest Where the Volume Is</h3>
     <p>Leave the ladder untouched through a 10% cost increase and every tier loses margin, but not evenly. The tiers with the thinnest starting margin lose the most points:</p>
@@ -543,10 +558,10 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     </div>
 
     <h2>5. Result: Python Implementation &amp; Data Engineering</h2>
-    <p>The mathematical backbone of this strategy is executed in <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture."><strong>Python</strong></span> using <code><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel."><strong>pandas</strong></span></code>. Before the deterministic math runs, the engine must sanitize raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> extracts, handling missing vendor costs, mapping messy historical data, and enforcing data hygiene to ensure the subsidization logic doesn't crash on null values.</p>
+    <p>The mathematical backbone of this strategy is executed in <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture." tabindex="0"><strong>Python</strong></span> using <code><span class="jargon-tooltip" data-tip="A powerful Python library used for data manipulation and analysis, effectively acting like a hyper-advanced, programmatic version of Excel." tabindex="0"><strong>pandas</strong></span></code>. Before the deterministic math runs, the engine must sanitize raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> extracts, handling missing vendor costs, mapping messy historical data, and enforcing data hygiene to ensure the subsidization logic doesn't crash on null values.</p>
 
     <div class="code-annotation">
-        <strong>Phase 1: <span class="jargon-tooltip" data-tip="The process of cleaning and formatting raw data to prevent errors, such as handling missing values before running mathematical algorithms."><strong>Data Sanitization</strong></span> &amp; Mapping</strong>
+        <strong>Phase 1: <strong>Data Sanitization</strong> &amp; Mapping</strong>
         We cannot run optimization math on dirty data. This function catches missing vendor costs to prevent division-by-zero errors, and automatically maps our raw ERP data into our new Elasticity Groups.
     </div>
     <pre class="code-block" tabindex="0"><code><span class="code-comment"># Algorithmic Margin Defense &amp; Cross-Subsidization Engine</span>
@@ -574,7 +589,6 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <span class="code-string">"""A price markup does NOT lift margin point-for-point.
     At 48% margin, a 70% markup yields 69.4% -- a 21.4pt gain, not 70."""</span>
     <span class="code-keyword">return</span> <span class="code-number">1.0</span> - (<span class="code-number">1.0</span> - margin) / (<span class="code-number">1.0</span> + markup)
-
 
 <span class="code-keyword">def</span> <span class="code-function">execute_margin_defense</span>(portfolio_df, deficit_pts, days_qoh):
     <span class="code-string">"""
@@ -632,7 +646,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <div class="next-step-box">
         <h3>Ecosystem Step 3: Risk Modeling</h3>
         <p>We have our algorithmic guardrails built, but before we push these deterministic rules to the live ERP, we need to mathematically simulate the risk of these new price floors. The next model tests that strategy against chaotic market conditions.</p>
-        <nav class="project-navigation" aria-label="Case study navigation">
+            </div>
+
+            <nav class="project-navigation" aria-label="Case study navigation">
             <a href="predictive-vio-market-capture.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Previous Phase</span>
                 <span class="nav-title">Step 1: Market Intelligence</span>
@@ -642,10 +658,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <span class="nav-title">Step 3: Risk Modeling</span>
             </a>
         </nav>
-    </div>
 
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary margin targets, and exact landed-cost arrays have been replaced with randomized proxies. The figures below are synthetic. The architecture is not: the elasticity stratification and the cross-subsidization cascade behave exactly as the production model does.
+            <div class="nda-note">
+        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary margin targets, and exact landed-cost arrays have been replaced with randomized proxies. The figures above are synthetic. The architecture is not: the elasticity stratification and the cross-subsidization cascade behave exactly as the production model does.
     </div>
 
     <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>

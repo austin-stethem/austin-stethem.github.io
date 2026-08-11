@@ -18,35 +18,27 @@
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
-
-        /* Replaces a permanently disabled checkbox. The stage still runs; it simply is
-           not something the reader can turn off, and a dead control invites a click
-           that does nothing. */
-        .stage-fixed { display: flex; align-items: baseline; justify-content: space-between;
-            gap: 10px; padding: 7px 0 7px 26px; }
-        .stage-fixed > span { color: var(--panel-muted); font-size: 0.82rem; }
-        .stage-fixed .rule { display: block; font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.68rem; color: var(--panel-dim); margin-top: 2px; }
-        .stage-fixed em { font-style: normal; font-size: 0.62rem; text-transform: uppercase;
-            letter-spacing: 0.08em; color: var(--panel-signal); white-space: nowrap; }
-    </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+</style>
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
 
@@ -58,13 +50,12 @@ html{background:var(--bg-color)}
             -webkit-font-smoothing: antialiased;
         }
 
-        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: 600; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
         h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--ink-surface); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         p { text-align: justify; margin-bottom: 15px; color: var(--body-text); }
         ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text); padding-left: 25px; }
         li { margin-bottom: 8px; }
         code { font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.88em; background: var(--surface-sunken); padding: 1px 5px; border-radius: 3px; color: var(--ink-surface); }
-
 
         .dashboard-container {
             width: 100%; margin: 40px auto; background: var(--panel-bg); color: var(--panel-text);
@@ -75,7 +66,7 @@ html{background:var(--bg-color)}
         .dash-main { flex: 1; min-width: 300px; padding: 30px; background: var(--panel-bg); display: flex; flex-direction: column; }
 
         .dash-header { margin-bottom: 25px; border-bottom: 1px solid var(--panel-border); padding-bottom: 15px; text-align: center; }
-        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
+        .dash-header .dash-title { color: var(--panel-bright); font-size: 1.6rem; font-family: 'Archivo', sans-serif; font-weight: 800; letter-spacing: -0.5px; }
         .dash-header .dash-title span { color: var(--panel-signal); }
         .dash-header p { color: var(--panel-muted); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
 
@@ -96,7 +87,7 @@ html{background:var(--bg-color)}
         .kpi-card { background: var(--panel-surface); border: 1px solid var(--panel-border); border-top: 3px solid var(--panel-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
         .kpi-card:hover { transform: translateY(-3px); }
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
         .k-res { border-top-color: var(--panel-positive) !important; } .k-res .kpi-value { color: var(--data-positive); }
         .k-amb { border-top-color: var(--panel-warning) !important; } .k-amb .kpi-value { color: var(--data-warning); }
@@ -113,7 +104,7 @@ html{background:var(--bg-color)}
         .match-table td { padding: 10px 6px; border-bottom: 1px solid var(--panel-border); color: var(--panel-text); vertical-align: middle; }
         .match-table tr:last-child td { border-bottom: none; }
         .match-table td:first-child { font-weight: 700; color: var(--panel-text); font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-size: 0.72rem; }
-        .tag { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; line-height: 1.4; }
+        .tag { font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; padding: 2px 6px; border-radius: 3px; display: inline-block; line-height: 1.4; }
         .t-res { background: rgba(16,185,129,0.15); color: var(--panel-positive); border: 1px solid rgba(16,185,129,0.3); }
         .t-amb { background: rgba(245,158,11,0.15); color: var(--panel-warning); border: 1px solid rgba(245,158,11,0.3); }
         .t-unr { background: rgba(239,68,68,0.15); color: var(--panel-negative); border: 1px solid rgba(239,68,68,0.3); }
@@ -134,7 +125,6 @@ html{background:var(--bg-color)}
             .dash-main { padding: 18px; min-width: 0; }
             .kpi-grid { grid-template-columns: 1fr; gap: 10px; }
             .chart-box { height: 260px; }
-
 
             .match-section { padding: 16px 12px; }
             .match-table, .match-table tbody, .match-table tr, .match-table td { display: block; width: 100%; }
@@ -157,14 +147,34 @@ html{background:var(--bg-color)}
             .project-navigation { display: none !important; }
         }
 
-        .tour-launch { margin: 6px 0 22px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tour-launch { margin: 6px 0 22px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
         .tour-btn { font: 600 0.86rem/1 'Archivo', sans-serif; background: var(--signal);
             color: var(--on-signal); border: 1px solid var(--signal);
             padding: 10px 16px; border-radius: 4px; cursor: pointer; }
         .tour-btn:hover { background: var(--signal-dark); border-color: var(--signal-dark); }
         .tour-hint { font-size: 0.82rem; color: var(--muted); font-style: italic; }
         @media print { .tour-launch { display: none; } }
-    </style>
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
+</style>
 <script>
 /* Chart.js needs literal colours, so read the token when the chart is built. */
 function tokenColor(name){
@@ -178,7 +188,7 @@ function tokenColor(name){
 document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
-    <script defer src="tour.js"></script>
+    <script defer src="tour.js?v=2"></script>
 </head>
 <body class="doc">
 
@@ -204,7 +214,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -222,16 +232,16 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="scenario-box">
         <strong>Where this sits</strong>
-        Every model elsewhere in this portfolio: the elasticity tiers, the trade-area decay, the merger overlap, begins with a join between a transaction extract and a location master. This is the page about that join, and about what happens when it quietly fails.
+        Every model elsewhere in this portfolio: the <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span> tiers, the trade-area decay, the merger overlap, begins with a join between a transaction extract and a location master. This is the page about that join, and about what happens when it quietly fails.
     </div>
 
-    <p>A distribution network that has grown by acquisition, and that carried a mainframe-era system for decades, does not have one name for anything. The location directory calls a site by its division prefix and its facility role. The transaction extract calls it whatever a branch manager typed into a terminal in 1998. Both are correct inside their own system, and neither knows the other exists.</p>
+    <p>A distribution network that has grown by acquisition, and that carried a mainframe-era system for decades, does not have one name for anything. The location directory calls a site by its division prefix and its facility role. The transaction extract calls it whatever a <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> manager typed into a terminal in 1998. Both are correct inside their own system, and neither knows the other exists.</p>
 
-    <p>Joining them with an exact string match produced a file that looked complete. It was not. <strong>Ten&nbsp;of eighty branches &mdash; twelve and a half percent of the network &mdash; silently failed to match and were dropped from the analysis entirely.</strong> No exception was raised. No row count looked wrong, because the row count was never compared against anything. The tier model that followed was trained on a network with a hole in it.</p>
+    <p>Joining them with an exact string match produced a file that looked complete. It was not. <strong>Ten&nbsp;of eighty branches &mdash; twelve and a half percent of the network &mdash; silently failed to match and were dropped from the analysis entirely.</strong> No exception was raised. No row count looked wrong, because the row count was never compared against anything. The <span class="jargon-tooltip" data-tip="One rung of the price ladder — a customer class with its own standing discount." tabindex="0">tier</span> model that followed was trained on a network with a hole in it.</p>
 
     <div class="alert-box">
         <strong>The&nbsp;reason this class of bug is dangerous</strong>
-        <p>A join that fails loudly costs an hour. A join that fails silently produces a smaller, cleaner-looking dataset and every downstream number is confidently wrong. An inner join is a filter wearing the costume of a lookup, and nothing in the output tells you it removed anything.</p>
+        <p>A join that fails loudly costs an hour. A join that fails silently produces a smaller, cleaner-looking dataset and every downstream number is confidently wrong. An <span class="jargon-tooltip" data-tip="A way of combining two tables that silently drops any row without a match on both sides. It looks like a lookup and behaves like a filter." tabindex="0">inner join</span> is a filter wearing the costume of a lookup, and nothing in the output tells you it removed anything.</p>
     </div>
 
     <h2>2. The Taxonomy of a Name Mismatch</h2>
@@ -258,7 +268,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <td data-label="Pattern">Facility suffix</td>
                 <td data-label="Master" class="mono">Northgate DC</td>
                 <td data-label="Extract" class="mono">Northgate</td>
-                <td data-label="Why">A role marker distinguishing a distribution centre from a retail branch, present in one system only. Fixed by a controlled suffix list.</td>
+                <td data-label="Why">A role marker distinguishing a <span class="jargon-tooltip" data-tip="The central warehouse that buys in bulk from vendors and resupplies the branches." tabindex="0">distribution centre</span> from a retail branch, present in one system only. Fixed by a controlled suffix list.</td>
             </tr>
             <tr>
                 <td data-label="Pattern">Token transposition</td>
@@ -432,7 +442,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h3>Merges that cannot destroy what they touch</h3>
 
-    <p>When recovered records fold back into the master, a blank incoming value never overwrites a populated one. That is the commonest way a repair script does damage. A naive update writes nulls over good data and reports success. Deduplication follows the same rule: rows sort so populated records come first, and keeping the first occurrence keeps the useful one instead of an arbitrary one.</p>
+    <p>When recovered records fold back into the master, a blank incoming value never overwrites a populated one. That is the commonest way a repair script does damage. A naive update writes nulls over good data and reports success. <span class="jargon-tooltip" data-tip="Collapsing several records that turn out to describe one thing into a single record." tabindex="0">Deduplication</span> follows the same rule: rows sort so populated records come first, and keeping the first occurrence keeps the useful one instead of an arbitrary one.</p>
 
     <h3>Disambiguation instead of deletion</h3>
 
@@ -448,18 +458,20 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>Two separate master records &mdash; two operating divisions, physically co-located in the same town, both normalise to the same single name in the transaction extract. Every rule in the pipeline resolves them to the identical counterpart. The pipeline has not failed; it has correctly identified that <strong>the&nbsp;transaction stream does not distinguish between two businesses that the directory does.</strong></p>
 
-    <p>No threshold setting resolves that. No library resolves it. Answering it requires knowing that one division sells parts over a counter and the other serves industrial accounts, that they share a lot, and which of them a given class of invoice belongs to. The correct engineering response is to stop, flag the record as ambiguous, and route it to somebody who knows the business &mdash; which is precisely why the dashboard reports an ambiguous count as a first-class outcome instead of folding it into a match rate.</p>
+    <p>No threshold setting resolves that. No library resolves it. Answering it requires knowing that one division sells parts over a counter and the other serves industrial accounts, that they share a lot, and which of them a given class of invoice belongs to. The correct engineering response is to stop, flag the record as ambiguous, and <span class="jargon-tooltip" data-tip="A delivery run from a branch to the accounts it serves." tabindex="0">route</span> it to somebody who knows the business &mdash; which is precisely why the dashboard reports an ambiguous count as a first-class outcome instead of folding it into a match rate.</p>
 
     <div class="impact-box">
         <h3>What This Case Study Is Actually About</h3>
         <p>Not fuzzy matching. The algorithms are the easy part and they are all in libraries. The work is knowing that an inner join is a filter in disguise, that a transposed pair of words defeats edit distance while looking obvious to a human, that a co-op's trading name is a fact about the industry, not about strings, and that the honest output of a resolution pipeline includes a column for the records it could not resolve.</p>
-        <p>Every predictive model in this portfolio rests on this layer being right. A margin cascade computed across a network missing twelve percent of its branches produces confident, presentable, wrong numbers &mdash; and nothing in the output would tell you.</p>
+        <p>Every predictive model in this portfolio rests on this layer being right. A <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> cascade computed across a network missing twelve percent of its branches produces confident, presentable, wrong numbers &mdash; and nothing in the output would tell you.</p>
     </div>
 
     <div class="next-step-box">
         <h3>Where This Feeds</h3>
         <p>With identity reconciled, the transaction data can be attached to physical geography, which is the input the trade-area model and the competitive footprint both depend on.</p>
-        <nav class="project-navigation" aria-label="Case study navigation">
+            </div>
+
+            <nav class="project-navigation" aria-label="Case study navigation">
             <a href="erp-reconciliation-engine.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Step 1</span>
                 <span class="nav-title">ERP Crisis Reconciliation</span>
@@ -469,10 +481,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <span class="nav-title">Logistics Spider-Mapping</span>
             </a>
         </nav>
-    </div>
 
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> Branch names, division prefixes and revenue figures below are anonymised substitutes. Each one preserves the exact string-mismatch pattern found in production: the transposition, the dropped prefix, the single hyphen; because the patterns are the subject. The failure taxonomy, the resolution order, and the consequence are real.
+            <div class="nda-note">
+        <strong>Data Governance Note:</strong> Branch names, division prefixes and revenue figures on this page are anonymised substitutes. Each one preserves the exact string-mismatch pattern found in production: the transposition, the dropped prefix, the single hyphen; because the patterns are the subject. The failure taxonomy, the resolution order, and the consequence are real.
     </div>
 
     <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>

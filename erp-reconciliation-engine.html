@@ -18,24 +18,27 @@
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
         /* Brand tokens come from portfolio.css; only the dashboard palette is local. */
@@ -48,7 +51,7 @@ html{background:var(--bg-color)}
             -webkit-font-smoothing: antialiased;
         }
 
-        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
+        h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: 600; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
         h3 { font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; color: var(--ink-surface); margin-top: 25px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         p { text-align: justify; margin-bottom: 15px; color: var(--body-text); }
         ul { margin-top: 0; margin-bottom: 20px; color: var(--body-text); padding-left: 25px; }
@@ -64,7 +67,7 @@ html{background:var(--bg-color)}
         .sim-main { flex: 1; min-width: 300px; padding: 30px; background: var(--panel-bg); display: flex; flex-direction: column; }
 
         .sidebar-header { margin-bottom: 25px; border-bottom: 1px solid var(--panel-border); padding-bottom: 15px; text-align: center; }
-        .sidebar-header .sim-title { color: var(--panel-bright); font-size: 1.6rem; font-family: 'Archivo', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
+        .sidebar-header .sim-title { color: var(--panel-bright); font-size: 1.6rem; font-family: 'Archivo', sans-serif; font-weight: 800; letter-spacing: -0.5px; }
         .sidebar-header .sim-title span { color: var(--panel-signal); }
         .sidebar-header p { color: var(--panel-muted); font-size: 0.75rem; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; }
 
@@ -94,7 +97,7 @@ html{background:var(--bg-color)}
         .kpi-card { background: var(--panel-surface); border: 1px solid var(--panel-border); border-top: 3px solid var(--panel-border); padding: 15px; text-align: center; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s; }
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
         .kpi-card-header { font-size: 0.7rem; font-weight: 800; color: var(--panel-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 900; line-height: 1.1; margin-bottom: 4px; }
+        .kpi-value { font-size: 1.7rem; font-family: 'IBM Plex Mono', 'Fira Code', monospace; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
         .kpi-sub { font-size: 0.72rem; color: var(--panel-dim); font-style: italic; min-height: 30px; }
         .status-safe { border-top-color: var(--panel-positive) !important; }
         .status-warn { border-top-color: var(--panel-warning) !important; }
@@ -150,20 +153,40 @@ html{background:var(--bg-color)}
             .project-navigation { display: none !important; }
         }
 
-        .tour-launch { margin: 6px 0 22px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .tour-launch { margin: 6px 0 22px; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
         .tour-btn { font: 600 0.86rem/1 'Archivo', sans-serif; background: var(--signal);
             color: var(--on-signal); border: 1px solid var(--signal);
             padding: 10px 16px; border-radius: 4px; cursor: pointer; }
         .tour-btn:hover { background: var(--signal-dark); border-color: var(--signal-dark); }
         .tour-hint { font-size: 0.82rem; color: var(--muted); font-style: italic; }
         @media print { .tour-launch { display: none; } }
-    </style>
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
+</style>
 <script>
 /* Chart.js needs a literal colour, so read the token when the chart is built
    rather than baking a hex. Guarded because this runs before paint in some paths. */
 function tokenColor(name){
-  try { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#9a5b00'; }
-  catch(e) { return '#9a5b00'; }
+  try { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#62696f'; }
+  catch(e) { return '#62696f'; }
 }
 
 /* Applied before paint: an explicit stored choice beats the system preference,
@@ -172,7 +195,7 @@ function tokenColor(name){
 document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
-    <script defer src="tour.js"></script>
+    <script defer src="tour.js?v=2"></script>
 </head>
 <body class="doc">
 
@@ -198,7 +221,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tr>
             <td class="meta-cell">
                 <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -216,22 +239,30 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="scenario-box">
         <strong>Why&nbsp;this sits outside the pricing arc</strong>
-        The five-step scenario elsewhere in this portfolio is a pricing narrative: a cost shock, modeled and defended. This is the other half of the job. Every model in that arc assumes the ERP is telling the truth about what is on the shelf. In June 2024 it wasn't, and no amount of elasticity modeling would have helped.
+        The five-step scenario elsewhere in this portfolio is a pricing narrative: a cost shock, modeled and defended. This is the other half of the job. Every model in that arc assumes the ERP is telling the truth about what is on the shelf. In June 2024 it wasn't, and no amount of <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span> modeling would have helped.
     </div>
 
-    <p>In June 2024, a catastrophic municipal failure resulted in a zero-warning, middle-of-the-night crest of the Little Sioux River at 22.2 feet. The Spencer headquarters and primary regional warehousing facilities were submerged in river mud before emergency sirens were activated. With the physical building already a total loss, the immediate strategic objective shifted entirely from physical preservation to digital quarantine.</p>
+    <p>The Little Sioux River crested at 22.2 feet in the middle of the night, with no usable warning. The Spencer headquarters and primary regional warehousing were submerged before the sirens sounded. Four of the five buildings were flooded. The fifth could not be reached by car for two weeks. FEMA representatives who toured the distribution centre likened the damage to Hurricane Katrina and Hurricane Hugo.</p>
 
-    <p>When physical infrastructure collapses, cloud redundancies are only as effective as the ground-level team's ability to access them. Working out of improvised, decentralised command posts, I worked from off-site server backups to hold the enterprise pricing facade. National pricing matrices and critical tariff adjustments were continuously deployed to the network. To the outside B2B customer base and our 80 branches, corporate operations held.</p>
+    <p>The flood was local. Spencer and the counties around it went under; the rest of the network did not, and neither did its customers or our vendors. Tuesday was still Tuesday everywhere else &mdash; orders placed, quotes needed, vendor costs moving on their own schedule. The only thing underwater was the building all of it was priced from.</p>
+
+    <p>What followed was done by hand. There was no electricity and no sewer, so the work happened by headlamp: destroyed product shovelled out of the aisles, floors slick enough that people walked as though on ice, pressure washers and scrubbers following behind the crews hauling inventory to the curb. Offices were emptied and gutted, and people carried what was left of their own out to their cars. No crew was brought in for it. The people who worked there did it, and a great many of them were doing it with their own houses underwater.</p>
+
+    <p>I was one of them. What we owned was boxed in a relative's basement when the wall cracked end to end and the room filled; most of it did not come back. The pricing matrices went out anyway, on the days they were due, because eighty branches were quoting against them and the flood had not changed that.</p>
+
+    <p>The distribution point was serving the network again eighteen days after the crest.</p>
+
+    <p>That hand count is where the reconciliation started. The system's inventory position was not corrected from a report, because no report knew what had happened &mdash; it was corrected against what people could physically find and put a number to. I worked from off-site backups and whatever desk was dry, deploying pricing matrices and tariff adjustments out to the network while the building they normally ran from was being shovelled out. To the customer base and the eighty branches, the company kept answering.</p>
 
     <h2>2. The Failure Mode: Phantom Fulfillment</h2>
 
-    <p>During those weeks I held the pricing layer. Not as an assignment, there was no process for a warehouse being underwater, and root access to the pricing matrices sat with three people, one of whom could work remotely. I decided what got trusted and what got quarantined, and I made those calls in the hour not in a meeting, because a branch waiting on a quote does not have an afternoon.</p>
+    <p>During those weeks I held the pricing layer. Not as an assignment, there was no process for a warehouse being underwater, and root access to the pricing matrices sat with three people, one of whom could work remotely. I decided what got trusted and what got quarantined, and I made those calls in the hour not in a meeting, because a <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> waiting on a quote does not have an afternoon.</p>
 
-    <p>The most critical threat during the flood was a database disconnect. The <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central system governing inventory, pricing, and fulfillment across the network."><strong>ERP</strong></span> inherently assumed the primary warehouse inventory was intact. Left uncorrected, branches would order destroyed SKUs, resulting in catastrophic unfulfilled <span class="jargon-tooltip" data-tip="An order the system accepts against inventory that no longer physically exists. It consumes a promise date, a customer expectation, and a reroute cost before anyone discovers the stock is gone."><strong>phantom orders</strong></span>.</p>
+    <p>The most critical threat during the flood was a database disconnect. The <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> inherently assumed the primary warehouse inventory was intact. Left uncorrected, branches would order destroyed SKUs, resulting in catastrophic unfulfilled <span class="jargon-tooltip" data-tip="An order the system accepts against inventory that no longer physically exists. It consumes a promise date, a customer expectation, and a reroute cost before anyone discovers the stock is gone." tabindex="0"><strong>phantom orders</strong></span>.</p>
 
     <p>This is the part worth dwelling on, because it is counterintuitive. The flood did not break the ERP. The ERP kept working perfectly, confidently allocating stock that was under four feet of river mud. A system that fails loudly gets fixed in an hour. A system that keeps promising things it can no longer deliver compounds quietly, order by order, until the damage is spread across every branch and every customer promise in the network.</p>
 
-    <p>Because automated scanning infrastructure was destroyed, reconciling the digital database required raw, manual execution. I participated in and managed wall-to-wall manual cycle counts of the pitch-black warehouse, using headlamps to identify and catalog mud-covered inventory. By forcing the physical reality into the digital ERP under extreme duress, we severed the fulfillment loop and secured the verifiable data needed to maximize cost-absorption and vendor credits.</p>
+    <p>The scanning equipment was gone, so there was no way to do this except by hand. I ran and worked the wall-to-wall counts myself, cataloguing mud-covered stock by headlamp. Getting that physical count into the system is what stopped the phantom orders, and it is what the vendor credit claims were later built on &mdash; a credit you cannot evidence is a credit you do not get.</p>
 
     <h2 id="dashboard">3. Modeling the Cost of Delay</h2>
     <p><em>The single variable that mattered was reconciliation velocity, how many hours the ERP was allowed to keep selling inventory that no longer existed. Move the sliders to see how that hour count converts into failed fulfillment. The 48-hour mark is what actually happened, achieved by hand. Zero hours is what an automated kill-switch would deliver.</em></p>
@@ -305,7 +336,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>While the manual reconciliation saved the network from immediate cascade failure, operational heroics are not a scalable enterprise strategy. It worked because a small number of people were willing to count mud-covered inventory by headlamp for two days. That is not a control; it is a coincidence of staffing. The definitive architectural solution to a zero-warning physical disaster is an automated kill-switch.</p>
 
-    <p>By linking the ERP's warehouse availability status directly to localized IoT water sensors or USGS river gauge APIs, the system can trip a "Quarantine Status" the moment flood thresholds are breached. This severs the phantom fulfillment loop and reroutes network traffic to secondary hubs while the physical reality is still unfolding &mdash; entirely removing reliance on human intervention or municipal warnings.</p>
+    <p>By linking the ERP's warehouse availability status directly to localized IoT water sensors or USGS river gauge APIs, the system can trip a "Quarantine Status" the moment flood thresholds are breached. That would cut off the phantom orders and push fulfilment to other hubs while the water is still rising, without waiting for somebody to notice or for a warning that may not come.</p>
 
     <table class="protocol-table">
         <thead>
@@ -349,14 +380,16 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="impact-box">
         <h3>What This Case Study Is Actually About</h3>
-        <p>Not the flood. The flood is the forcing function. The transferable lesson is that a master data system's worst failure mode is not going down &mdash; it is staying up while being wrong, because nothing alerts on confident inaccuracy.</p>
-        <p>Every predictive model elsewhere in this portfolio: the elasticity tiers, the Monte Carlo risk cone, the cross-subsidization cascade, rests on the assumption that the underlying data reflects physical reality. This is the discipline that keeps that assumption true, and the reason I treat data governance as a prerequisite to modeling rather than a chore that precedes it.</p>
+        <p>Not the flood. The flood is the forcing function. The transferable lesson is that a <span class="jargon-tooltip" data-tip="The shared reference records a business runs on: who the customers are, what the items are, where the branches are. If these disagree between systems, every report built on them is wrong." tabindex="0">master data</span> system's worst failure mode is not going down &mdash; it is staying up while being wrong, because nothing alerts on confident inaccuracy.</p>
+        <p>Every predictive model elsewhere in this portfolio: the elasticity tiers, the <span class="jargon-tooltip" data-tip="A computational algorithm that relies on repeated random sampling to obtain numerical results." tabindex="0">Monte Carlo</span> risk cone, the <span class="jargon-tooltip" data-tip="Intentionally taking lower margins on highly visible items while aggressively raising prices on blind/rare items to protect overall profitability." tabindex="0">cross-subsidization</span> cascade, rests on the assumption that the underlying data reflects physical reality. This is the discipline that keeps that assumption true, and the reason I treat data governance as a prerequisite to modeling rather than a chore that precedes it.</p>
     </div>
 
     <div class="next-step-box">
         <h3>The Pricing Arc</h3>
         <p>With the data foundation intact, the five-step scenario picks up the other half of the work: mapping competitive exposure, defending blended margin against a cost shock, and validating the result in market.</p>
-        <nav class="project-navigation" aria-label="Case study navigation">
+            </div>
+
+            <nav class="project-navigation" aria-label="Case study navigation">
             <a href="index.html" class="nav-btn prev">
                 <span class="nav-label">&larr; Return Home</span>
                 <span class="nav-title">Portfolio Hub</span>
@@ -366,10 +399,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <span class="nav-title">Master Data Reconciliation</span>
             </a>
         </nav>
-    </div>
 
-    <div class="nda-note">
-        <strong>Data Governance Note:</strong> Localized inventory values and branch fulfillment volumes have been replaced with randomized enterprise proxies, and the cost-per-failure figure is illustrative. The event, the sequence of decisions, and the failure mode are real. The model below exists to make one relationship legible: the mathematical cost of every hour that physical reality and the ERP disagree.
+            <div class="nda-note">
+        <strong>Data Governance Note:</strong> Localized inventory values and branch fulfillment volumes have been replaced with randomized enterprise proxies, and the cost-per-failure figure is illustrative. The event, the sequence of decisions, and the failure mode are real. The model above exists to make one relationship legible: the mathematical cost of every hour that physical reality and the ERP disagree.
     </div>
 
     <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>

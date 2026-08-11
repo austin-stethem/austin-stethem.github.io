@@ -20,10 +20,10 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- Favicon: external SVG, adapts to the OS colour scheme -->
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
 
     <!-- Tailwind CSS for rapid UI styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="utilities.css?v=1">
 
     <!-- Leaflet CSS and JS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
@@ -40,18 +40,21 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style id="boot">
-/* Paint-critical tokens, inlined so the first frame is already the right colour.
-   Without this the page renders white for a frame while portfolio.css loads, and
-   on a dark theme that is a visible flash with the section rules showing through. */
-:root{--bg-color:#f4f5f6;--frame:#e5e7ea;--body-text:#3a3f45;--surface:#ffffff;--panel-bg:#14171a;--panel-text:#d2d7db;--line:#d5d8db;--ink:#16181b;--signal:#9a5b00;}
-:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--surface:#151a20;--panel-bg:#090c10;--panel-text:#c3cbd3;--line:#262c33;--ink:#eef1f4;--signal:#eca457;--frame:#07090b;}}
+/* Every token, not just the paint-critical few. The earlier short list left 25
+   tokens undeclared here, so any rule in a page style block referencing one of them
+   resolved to nothing before the stylesheet arrived - a background falling through
+   to the page colour while its text colour resolved fine, which reads as light text
+   on white. Declaring the whole set costs about 1KB inline and removes the failure
+   mode rather than the instances. */
+:root{--bg-color:#f4f5f6;--body-text:#3a3f45;--data-info:#7dd3fc;--data-negative:#c8342a;--data-positive:#1f7a52;--data-series:#3b82f6;--data-warning:#b7791f;--hairline:#e8eaec;--ink:#16181b;--ink-surface:#16181b;--line:#bcc3ca;--muted:#62696f;--on-ink:#fbfbfc;--on-signal:#ffffff;--panel-bg:#14171a;--panel-border:#343a3f;--panel-bright:#fafafb;--panel-data-info:#7dd3fc;--panel-dim:#969da3;--panel-muted:#b0b7bd;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#1f2327;--panel-text:#d2d7db;--panel-warning:#e8b04b;--row-line:#f1f2f3;--signal:#9a5b00;--signal-dark:#754500;--surface:#ffffff;--surface-alt:#fafafb;--surface-sunken:#eff0f2;}
+:root[data-theme="dark"]{--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg-color:#0e1216;--body-text:#c3cbd3;--data-info:#7dd3fc;--data-negative:#f0705c;--data-positive:#3ecf8e;--data-series:#5b9bd5;--data-warning:#e8b04b;--hairline:#1c2228;--ink:#eef1f4;--ink-surface:#eef1f4;--line:#262c33;--muted:#8b959e;--on-ink:#0e1216;--on-signal:#14171a;--panel-bg:#090c10;--panel-border:#262e37;--panel-bright:#eef1f4;--panel-data-info:#7dd3fc;--panel-dim:#8b949c;--panel-muted:#8b959e;--panel-negative:#f0705c;--panel-positive:#3ecf8e;--panel-series:#5b9bd5;--panel-signal:#f2c14e;--panel-surface:#141a21;--panel-text:#c3cbd3;--panel-warning:#e8b04b;--row-line:#1f262d;--signal:#eca457;--signal-dark:#c2762a;--surface:#151a20;--surface-alt:#1b2128;--surface-sunken:#12171c;}}
 html{background:var(--bg-color)}
 </style>
-    <link rel="stylesheet" href="portfolio.css?v=9">
+    <link rel="stylesheet" href="portfolio.css?v=11">
 
     <style>
 /* This page is full-bleed (body padding 0), so the sticky bar needs no negative
@@ -83,7 +86,6 @@ body.doc { margin-left: auto; margin-right: auto; }
 .portfolio-content ol { list-style: decimal; }
 .portfolio-content li { margin-bottom: 8px; }
 
-
         body {
             font-family: 'Archivo', sans-serif;
             margin: 0 auto; padding: 0; background-color: var(--bg-color, var(--bg-color)); overflow-x: hidden; color: var(--body-text);
@@ -97,7 +99,7 @@ body.doc { margin-left: auto; margin-right: auto; }
         .impact-box h3 { margin-top: 0; color: var(--ink-surface); font-family: 'Archivo', sans-serif; font-size: 11pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 15px;}
         .impact-box p { color: var(--body-text); font-size: 10pt; line-height: 1.6; }
 
-        .portfolio-content h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: normal; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
+        .portfolio-content h2 { font-family: 'Archivo Narrow', 'Archivo', sans-serif; font-variant-numeric: lining-nums; font-size: clamp(15pt, 4.5vw, 18pt); font-weight: 600; color: var(--ink-surface); margin-top: 45px; margin-bottom: 15px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; }
         .portfolio-content p { text-align: justify; margin-top: 0; margin-bottom: 15px; color: var(--body-text); }
 
         /* --- DASHBOARD WRAPPER --- */
@@ -149,7 +151,7 @@ body.doc { margin-left: auto; margin-right: auto; }
         /* Custom Checkboxes */
         .layer-toggle { display: flex; align-items: center; margin-bottom: 12px; cursor: pointer; min-height: 32px; }
         .layer-toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-        .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: transparent; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; border: 2px solid #555;}
+        .custom-checkbox { width: 16px; height: 16px; border-radius: 4px; background: transparent; margin-right: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; border: 2px solid var(--panel-border);}
         .layer-toggle input:checked + .custom-checkbox::after { content: "✓"; color: white; font-size: 12px; font-weight: bold; }
         .layer-toggle input:focus-visible + .custom-checkbox { outline: 2px solid var(--signal); outline-offset: 2px; }
 
@@ -171,7 +173,7 @@ body.doc { margin-left: auto; margin-right: auto; }
         .theme-bg-main { background-color: var(--panel-bg); }
         .theme-text-main { color: var(--panel-bright); }
         .theme-text-muted { color: var(--panel-muted); }
-        .theme-border { border-color: var(--body-text); }
+        .theme-border { border-color: var(--panel-border); }
         .theme-card { background-color: rgba(255,255,255,0.05); }
 
         body.light-mode .theme-bg-main { background-color: var(--surface-alt); }
@@ -335,7 +337,27 @@ body.doc { margin-left: auto; margin-right: auto; }
             .next-step-box.next-step-box p { color: #000; }
             .project-navigation { display: none !important; }
         }
-    </style>
+
+        /* Panel text inheritance. The bare element rules above set page-ground colours,
+           which go dark in light mode, and they match elements inside the permanently
+           dark panels directly - beating the colour those panels inherit down. In light
+           mode that put --body-text at 1.69 and --ink-surface at 1.01 on a dark panel.
+
+           :where() contributes no specificity, so each of these resolves to 0,0,1 - the
+           same as the bare rule it corrects, winning only on source order. Every
+           class-based rule inside a panel (.k-green, .val-readout, .code-keyword and the
+           rest) is 0,1,0 and still wins, which a higher-specificity fix would have
+           flattened. */
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) p,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) li,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) td,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ul,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) ol { color: var(--panel-text); }
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h1,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h2,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h3,
+        :where(.chart-container,.chart-section,.code-annotation,.dash-main,.dash-sidebar,.dashboard-container,.dna-level,.dna-panel,.hit-section,.kpi-card,.log-section,.match-section,.next-step-box,.por,.sim-container,.sim-main,.sim-sidebar,.theme-bg-main) h4 { color: var(--panel-bright); }
+</style>
 <script>
 /* Chart.js needs literal colours, so read the token when the chart is built. */
 function tokenColor(name){
@@ -350,7 +372,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 
 </head>
-<body class="doc">
+<body class="doc tw">
 
     <a class="skip-link" href="#analysis">Skip to written analysis</a>
 
@@ -377,7 +399,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr>
                 <td class="meta-cell">
                     <span class="meta-label">Principal Engineer</span>
-                    <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; MDM Analyst</span>
+                    <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
                 </td>
                 <td class="meta-cell">
                     <span class="meta-label">Core Competencies</span>
@@ -399,8 +421,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <p>Nobody assigned this. The twenty-mile radius was accepted practice and it was not generating complaints, which is the condition under which a bad assumption survives longest. I went looking for what it was costing, and the answer needed a dataset the company did not have.</p>
 
     <h2 id="analysis">1. The Problem: From Geometric Guesswork to Predictive Capture</h2>
-        <p>A twenty-mile radius is a straight line drawn on a map. It is not a market. A 20-mile delivery in gridlocked downtown Atlanta destroys logistics profitability, while a 20-mile route in rural Iowa represents a highly profitable, captive market. I replaced the fixed radius with a <span class="jargon-tooltip" data-tip="An automated architecture that merges physical map coordinates with financial data to visualize market threats and opportunities."><strong>Geospatial Intelligence Engine</strong></span>.</p>
-        <p>By programmatically harvesting and mapping thousands of competitor locations against our internal <span class="jargon-tooltip" data-tip="A centralized distribution model where a main 'Hub' stores heavy inventory and supplies smaller surrounding 'Spoke' branches or direct accounts."><strong>Hub&nbsp;&amp; Spoke network</strong></span>, the engine exposed our exact territorial blind spots. This allowed operations leadership to instantly visualize market friction, showing which routes sat inside <span class="jargon-tooltip" data-tip="When an overlapping competitor location actively steals sales volume from an existing branch's established territory."><strong>competitor cannibalization</strong></span>, and which had enough distance around them to carry an increase.</p>
+        <p>A twenty-mile radius is a straight line drawn on a map. It is not a market. A 20-mile delivery in gridlocked downtown Atlanta destroys logistics profitability, while a 20-mile <span class="jargon-tooltip" data-tip="A delivery run from a branch to the accounts it serves." tabindex="0">route</span> in rural Iowa represents a highly profitable, captive market. I replaced the fixed radius with a <span class="jargon-tooltip" data-tip="An automated architecture that merges physical map coordinates with financial data to visualize market threats and opportunities." tabindex="0"><strong>Geospatial Intelligence Engine</strong></span>.</p>
+        <p>By programmatically harvesting and mapping thousands of competitor locations against our internal <span class="jargon-tooltip" data-tip="A centralized distribution model where a main 'Hub' stores heavy inventory and supplies smaller surrounding 'Spoke' branches or direct accounts." tabindex="0"><strong>Hub&nbsp;&amp; Spoke network</strong></span>, the engine exposed our exact territorial blind spots. This allowed operations leadership to instantly visualize market friction, showing which routes sat inside <span class="jargon-tooltip" data-tip="When an overlapping competitor location actively steals sales volume from an existing branch's established territory." tabindex="0"><strong>competitor cannibalization</strong></span>, and which had enough distance around them to carry an increase.</p>
 
         <!-- DEMO BUTTONS SECTION -->
         <div class="pulse-instruction flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -408,9 +430,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="inline-block text-[var(--signal)] mr-1 mb-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <strong>INTERACTIVE DEMO:</strong> Click "Start Guided Tour" to follow an automated walk-through of the ML clustering, or explore the dashboard freely by clicking the hubs and layers yourself.
             </div>
             <div class="flex flex-wrap gap-2 mt-2 md:mt-0 shrink-0">
-                <button id="demo-start-btn" onclick="startGuidedTour()" class="bg-[var(--panel-bg)] text-[var(--panel-bright)] hover:bg-[var(--signal-dark)] border-[var(--panel-bg)] hover:border-[var(--signal-dark)] transition-colors font-black uppercase tracking-widest text-xs px-4 py-2 rounded shadow-sm border flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" class="inline-block"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Start Guided Tour
-                </button>
+                <button id="demo-start-btn" type="button" onclick="startGuidedTour()" class="tour-btn">&#9654; Guided walkthrough</button>
+                <span class="tour-hint">Eleven steps. Drives the map for you.</span>
             </div>
         </div>
     </div>
@@ -559,18 +580,18 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="portfolio-content">
         <h2>2. Machine Learning: Translating Maps into Margin</h2>
-        <p>A map is just a picture until you attach revenue to it. To translate this geography into an actionable pricing strategy, I built a <span class="jargon-tooltip" data-tip="A custom Python algorithm that measures how point-of-sale (POS) revenue mathematically drops off as the distance from the store increases."><strong>POS&nbsp;Gravity Engine</strong></span>. By extracting 12 months of <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations."><strong>ERP</strong></span> invoice data and geocoding thousands of Customer Ship-To addresses, the Python engine calculated the distance decay of revenue for each location, how far customers actually travelled, or waited, before the volume fell away.</p>
-        <p>A rule written by hand would have sorted on geography, because geography is what the analyst is thinking about. I wanted the grouping to come from the revenue shape instead, so I clustered the <span class="jargon-tooltip" data-tip="Mathematical models representing how fast revenue drops off as drive-time increases."><strong>decay curves</strong></span> with an unsupervised <span class="jargon-tooltip" data-tip="An unsupervised AI algorithm that automatically groups data points into distinct clusters based on their underlying similarities."><strong>K-Means Machine Learning Algorithm</strong></span> (via <code><span class="jargon-tooltip" data-tip="The industry-standard machine learning library for Python, used for complex predictive data analysis."><strong>scikit-learn</strong></span></code>). Instead of relying on subjective opinions from regional managers, the algorithm mathematically clustered the branch network into 5 distinct <em>Strategic Topology Tiers</em> based on their actual friction profiles.</p>
+        <p>A map is just a picture until you attach revenue to it. To translate this geography into an actionable pricing strategy, I built a <span class="jargon-tooltip" data-tip="A custom Python algorithm that measures how point-of-sale (POS) revenue mathematically drops off as the distance from the store increases." tabindex="0"><strong>POS&nbsp;Gravity Engine</strong></span>. By extracting 12 months of <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> invoice data and <span class="jargon-tooltip" data-tip="Turning a written address into map coordinates, so distance can be measured rather than assumed." tabindex="0">geocoding</span> thousands of Customer <span class="jargon-tooltip" data-tip="The address an order is delivered to — often not the address the account is billed at, and the one that matters for routing." tabindex="0">Ship-To</span> addresses, the Python engine calculated the distance decay of revenue for each location, how far customers actually travelled, or waited, before the volume fell away.</p>
+        <p>A rule written by hand would have sorted on geography, because geography is what the analyst is thinking about. I wanted the grouping to come from the revenue shape instead, so I clustered the <span class="jargon-tooltip" data-tip="Mathematical models representing how fast revenue drops off as drive-time increases." tabindex="0"><strong>decay curves</strong></span> with an unsupervised <span class="jargon-tooltip" data-tip="An unsupervised AI algorithm that automatically groups data points into distinct clusters based on their underlying similarities." tabindex="0"><strong>K-Means Machine Learning Algorithm</strong></span> (via <code><span class="jargon-tooltip" data-tip="The industry-standard machine learning library for Python, used for complex predictive data analysis." tabindex="0"><strong>scikit-learn</strong></span></code>). Instead of relying on subjective opinions from regional managers, the algorithm mathematically clustered the <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> network into 5 distinct <em>Strategic Topology Tiers</em> based on their actual friction profiles.</p>
 
         <div class="scenario-box">
-            <strong>What the tier model covers, and what it deliberately does not</strong>
-            Seventy of eighty locations produce a decay profile, and the ten that do not are almost all excluded on purpose. A trade-area model describes how revenue falls away with drive time from a retail counter, which is a meaningless question to ask of a distribution centre, a machine shop doing engine rebuilds, or a specialty division selling industrial coatings to a national account list. Those locations sit in the same field as the branches and are structurally different businesses, so the filtering that keeps them out is a modelling decision rather than a gap.
-            One location in that set is a genuine miss: a retail branch whose name is transposed between the location directory and the transaction extract, so an exact-match join never finds it. That is a single small branch rather than an eighth of the network, and the normalisation work built to catch that class of failure is the subject of a <a href="legacy-silo-resolution.html">separate case study</a>.
+            <strong>What the <span class="jargon-tooltip" data-tip="One rung of the price ladder — a customer class with its own standing discount." tabindex="0">tier</span> model covers, and what it deliberately does not</strong>
+            Seventy of eighty locations produce a decay profile, and the ten that do not are almost all excluded on purpose. A trade-area model describes how revenue falls away with <span class="jargon-tooltip" data-tip="How long it actually takes to reach a customer by road, as opposed to the straight-line distance." tabindex="0">drive time</span> from a retail counter, which is a meaningless question to ask of a <span class="jargon-tooltip" data-tip="The central warehouse that buys in bulk from vendors and resupplies the branches." tabindex="0">distribution centre</span>, a machine shop doing engine rebuilds, or a specialty division selling industrial coatings to a national account list. Those locations sit in the same field as the branches and are structurally different businesses, so the filtering that keeps them out is a modelling decision rather than a gap.
+            One location in that set is a genuine miss: a retail branch whose name is transposed between the location directory and the transaction extract, so an exact-match join never finds it. That is a single small branch rather than an eighth of the network, and the <span class="jargon-tooltip" data-tip="Standardising a name before comparing it — case, punctuation, company prefixes, facility suffixes — so two spellings of one customer can be recognised as one." tabindex="0">normalisation</span> work built to catch that class of failure is the subject of a <a href="legacy-silo-resolution.html">separate case study</a>.
         </div>
         <p>The output is a defensible ordering rather than a verdict. Two ends of it carry most of the pricing consequence:</p>
         <ul>
             <li><strong>Tier&nbsp;1, low local dependency.</strong> Revenue does not hinge on the customers nearest the counter, so these branches have room to carry a network-funding increase without putting volume at risk.</li>
-            <li><strong>Tier&nbsp;5, high local dependency, dense competition.</strong> Revenue concentrates close in, with rivals inside the same few miles. These need a defended margin floor, because a price move here is visible to the customer within a day.</li>
+            <li><strong>Tier&nbsp;5, high local dependency, dense competition.</strong> Revenue concentrates close in, with rivals inside the same few miles. These need a defended <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> floor, because a price move here is visible to the customer within a day.</li>
         </ul>
         <p>What the tiering does <em>not</em> do is tell anyone what to charge. It says which branches can absorb a move and which cannot, which is a different and smaller claim than it first appears.</p>
 
@@ -625,12 +646,12 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <p>The interactive model above runs this same calculation. The confidence figure in each hub popup is computed from that hub's own decay profile against the cluster centres, not attached as decoration, which is why some hubs report a borderline status and why a hub occasionally classifies into a neighbouring tier rather than the one its geography would suggest.</p>
 
         <h2>3. Enterprise Ecosystem: Scaling the Architecture</h2>
-        <p>This geospatial engine was not a single-use script; it was architected as a foundational data ecosystem. Using this exact <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture."><strong>Python</strong></span> &amp; <span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases."><strong>SQL</strong></span> extract and the same geocoded address set answer four more questions, which is why the pipeline was worth building once rather than rerunning by hand:</p>
+        <p>This geospatial engine was not a single-use script; it was architected as a foundational data ecosystem. Using this exact <span class="jargon-tooltip" data-tip="A high-level programming language used extensively for data science, automation, and backend system architecture." tabindex="0"><strong>Python</strong></span> &amp; <span class="jargon-tooltip" data-tip="Structured Query Language. The standard language used to extract and manipulate raw data stored in relational databases." tabindex="0"><strong>SQL</strong></span> extract and the same geocoded address set answer four more questions, which is why the pipeline was worth building once rather than rerunning by hand:</p>
         <ul style="margin-top: 15px; margin-bottom: 25px; color: var(--body-text); padding-left: 20px; line-height: 1.6;">
             <li style="margin-bottom: 10px;"><strong>M&amp;A Poaching &amp; Cannibalization:</strong> Modeled regional overlaps between merging competitors to identify "cross-street" store closures, allowing our outside sales reps to preemptively target and poach abandoned commercial accounts.</li>
-            <li style="margin-bottom: 10px;"><strong>Greenfield Expansion (Whitespace):</strong> Identified high-density <span class="jargon-tooltip" data-tip="Vehicles in Operation. Geographic strips with a high density of registered vehicles, indicating strong potential market demand."><strong>VIO&nbsp;corridors</strong></span> completely void of our distribution hubs, generating data-backed expansion targets for executive leadership.</li>
+            <li style="margin-bottom: 10px;"><strong><span class="jargon-tooltip" data-tip="A location where the business has no presence yet, assessed on whether it could support one." tabindex="0">Greenfield</span> Expansion (<span class="jargon-tooltip" data-tip="Demand in a geography that nobody is currently serving, or that we are not serving." tabindex="0">Whitespace</span>):</strong> Identified high-density <span class="jargon-tooltip" data-tip="Vehicles in Operation. Geographic strips with a high density of registered vehicles, indicating strong potential market demand." tabindex="0"><strong>VIO&nbsp;corridors</strong></span> completely void of our distribution hubs, generating data-backed expansion targets for executive leadership.</li>
             <li style="margin-bottom: 10px;"><strong>Logistics &amp; Fleet Optimization:</strong> Modified the engine to map physical delivery vectors, identifying overlapping territories where fuel, driver hours and fleet wear were being spent twice.</li>
-            <li><strong>Sales Territory Calibration:</strong> Visualized actual <span class="jargon-tooltip" data-tip="Directional lines mapping exact Point-of-Sale invoice dollars from the fulfillment hub to the customer's physical delivery address."><strong>POS&nbsp;revenue vectors</strong></span> against assigned salesman routes to expose under-serviced regions and rebalance rep workloads.</li>
+            <li><strong>Sales <span class="jargon-tooltip" data-tip="The set of accounts assigned to one salesperson, and the geography that goes with it." tabindex="0">Territory</span> Calibration:</strong> Visualized actual <span class="jargon-tooltip" data-tip="Directional lines mapping exact Point-of-Sale invoice dollars from the fulfillment hub to the customer's physical delivery address." tabindex="0"><strong>POS&nbsp;revenue vectors</strong></span> against assigned salesman routes to expose under-serviced regions and rebalance rep workloads.</li>
         </ul>
 
         <div class="impact-box">
@@ -641,6 +662,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <div class="next-step-box">
             <h3>Ecosystem Step 2: Strategy Execution</h3>
             <p>With our vulnerable territories mapped and our market anchors identified, the next problem is defending those margins against cost movement. The next study moves from intelligence to execution with an algorithmic cross-subsidization engine.</p>
+            </div>
+
             <nav class="project-navigation" aria-label="Case study navigation">
                 <a href="index.html" class="nav-btn prev">
                     <span class="nav-label">&larr; Return Home</span>
@@ -651,9 +674,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     <span class="nav-title">Step 2: Algorithmic Margin Defense</span>
                 </a>
             </nav>
-        </div>
 
-        <div class="nda-note">
+            <div class="nda-note">
             <strong>Data Governance Note:</strong> No employer data appears in this dashboard. Branch coordinates, revenue figures and account records are <strong>synthetic</strong>, generated, not anonymised, because anonymised records can be re-identified and generated ones cannot. What is real is the architecture: the extract pipeline, the clustering, the marker aggregation and the nested drill-down all behave exactly as the production versions do.
         </div>
 
@@ -1379,7 +1401,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     <label class="layer-toggle" id="layer-toggle-${safeCat.replace(/[^A-Za-z]/g, '')}">
                         <input type="checkbox" class="category-checkbox" data-category="${safeCat}" checked onchange="toggleCategory('${safeCat}', this.checked)">
                         <div class="custom-checkbox border-2 ${lightColors.includes(catColor) ? 'theme-border' : 'border-[var(--panel-border)]'}"></div>
-                        <div class="w-3 h-3 rounded-full mr-3 shadow-[0_0_6px_${catColor}] border" style="background-color: ${catColor}; border-color: ${pinBorderColor}; flex-shrink: 0;"></div>
+                        <div class="w-3 h-3 rounded-full mr-3 border" style="background-color: ${catColor}; border-color: ${pinBorderColor}; box-shadow: 0 0 6px ${catColor}; flex-shrink: 0;"></div>
                         <span class="text-sm font-semibold theme-text-main truncate">${category} <span class="opacity-50 text-xs ml-1">(${items.length})</span></span>
                     </label>
                 `;
