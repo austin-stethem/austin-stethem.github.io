@@ -1,0 +1,2290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Amazon 1P Vendor Profitability · a working model</title>
+<meta name="description" content="A working model of Amazon 1P vendor profitability: what the vendor keeps, what Amazon keeps, and which listings fall below the line where Amazon stops wanting to sell them. Fictional catalog, generated data, adjustable terms.">
+<meta name="author" content="Austin Sonny Stethem">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Amazon 1P Vendor Profitability">
+<meta property="og:description" content="Both sides of the ledger on 13 listings: what the vendor keeps, what Amazon keeps, and which items sit below Amazon's comfort line. Fictional catalog, generated data, adjustable terms.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  color-scheme: light only;
+  --navy:#104868; --navy-d:#002855; --gold:#F8B010; --cyan:#00A3E0; --cyan-d:#00739E;
+  --canvas:#EEF2F6; --tile:#FFFFFF; --tile-b:#DCE3EA; --ink:#12263A; --body:#34495E; --muted:#6B7C8D; --faint:#A3B1BE;
+  --pos:#2E9B6A; --neg:#D2433C;
+  --c-med:#104868; --c-ear:#00A3E0; --c-eye:#F8B010; --c-per:#7C9DB8;
+  --sans:"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--canvas)!important;color:var(--body)}
+body{font-family:var(--sans);font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;padding-bottom:58px}
+button{font-family:inherit}
+
+/* ---------- title bar ---------- */
+.bar{background:var(--navy-d);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 20px;position:sticky;top:0;z-index:50;box-shadow:0 2px 6px rgba(0,20,50,.25)}
+.bar img{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:#fff}
+.bar .tt{font-family:var(--sans);font-weight:600;font-size:17px;line-height:1.15;letter-spacing:.005em}
+.bar .st{font-size:11.5px;color:#9FC3DB;margin-top:2px}
+.bar .sp{margin-left:auto}
+.bar .meta{text-align:right;font-size:11px;color:#9FC3DB;line-height:1.35}
+.bar .meta b{color:#fff;font-weight:600}
+.pill{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:99px;background:var(--gold);color:var(--navy-d);font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;vertical-align:1px}
+.present{background:var(--cyan);color:#fff;border:none;border-radius:4px;padding:9px 14px;font-weight:600;font-size:12.5px;cursor:pointer;margin-left:14px;white-space:nowrap}
+.present:hover{background:#0092C9}
+
+/* ---------- layout ---------- */
+.wrap{display:grid;grid-template-columns:232px 1fr;gap:0;min-height:calc(100vh - 114px)}
+.pane{background:#fff;border-right:1px solid var(--tile-b);padding:16px 16px 24px}
+.pane h4{margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+.pane .grp{margin-bottom:22px}
+.slbtns{display:grid;gap:5px}
+.slbtns button{text-align:left;border:1px solid var(--tile-b);background:#fff;color:var(--body);padding:7px 10px;border-radius:3px;cursor:pointer;font-size:12.5px;display:flex;justify-content:space-between;align-items:center}
+.slbtns button i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:8px;vertical-align:0}
+.slbtns button span.c{font-size:11px;color:var(--muted)}
+.slbtns button:hover{border-color:var(--cyan)}
+.slbtns button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.slbtns button.on span.c{color:#BFD6E6}
+.slbtns button.on i{box-shadow:0 0 0 1.5px #fff}
+.wi{margin-bottom:14px}
+.wi .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.wi label{font-size:12px;font-weight:600;color:var(--ink)}
+.wi .v{font-size:12px;font-weight:700;color:var(--navy);background:#EEF4F9;padding:1px 7px;border-radius:3px}
+.wi small{display:block;color:var(--muted);font-size:10.5px;margin-top:2px;line-height:1.35}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:18px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:#D5DFE8;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:-5px;border-radius:50%;background:var(--navy);border:2px solid #fff;box-shadow:0 0 0 1px var(--navy)}
+input[type=range]::-moz-range-track{height:4px;background:#D5DFE8;border-radius:2px}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--navy);border:2px solid #fff}
+.pbtn{display:block;width:100%;text-align:center;border:1px solid var(--tile-b);background:#fff;color:var(--ink);padding:7px 10px;border-radius:3px;cursor:pointer;font-size:12px;font-weight:600;margin-bottom:6px;text-decoration:none}
+.pbtn:hover{border-color:var(--cyan);color:var(--cyan-d)}
+.pbtn.pri{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.pbtn.pri:hover{background:#0092C9;color:#fff}
+#fileIn{display:none}
+.srcnote{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}
+.srcnote b{color:var(--ink)}
+
+.canvas{padding:16px 18px 20px;min-width:0}
+.page{display:none}
+.page.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.tile{background:var(--tile);border:1px solid var(--tile-b);border-radius:4px;padding:12px 14px;min-width:0;box-shadow:0 1px 2px rgba(16,40,70,.05)}
+.tile .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.tile .h .t{font-size:13px;font-weight:600;color:var(--ink)}
+.tile .h .s{font-size:11px;color:var(--muted);white-space:nowrap}
+.s12{grid-column:span 12}.s8{grid-column:span 8}.s7{grid-column:span 7}.s6{grid-column:span 6}.s5{grid-column:span 5}.s4{grid-column:span 4}
+
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:12px}
+.kpi{background:var(--tile);border:1px solid var(--tile-b);border-radius:4px;padding:14px 14px 12px;border-top:3px solid var(--navy)}
+.kpi .v{font-size:25px;font-weight:600;color:var(--ink);line-height:1.1;letter-spacing:-.01em}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:4px}
+.kpi.g{border-top-color:var(--pos)}.kpi.g .v{color:var(--pos)}
+.kpi.r{border-top-color:var(--neg)}.kpi.r .v{color:var(--neg)}
+.kpi.y{border-top-color:var(--gold)}
+
+/* dollar bar */
+.dollar{display:flex;height:38px;border-radius:3px;overflow:hidden}
+.dollar span{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;white-space:nowrap;overflow:hidden;transition:flex-basis .25s ease}
+.dollar span.lt{color:var(--navy-d)}
+.lg{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:9px;font-size:11.5px;color:var(--body)}
+.lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.lg b{margin-left:3px;color:var(--ink)}
+
+.cw{position:relative;height:290px}
+.cw.sm{height:210px}
+.cfb{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);text-align:center;font-size:12px;padding:12px}
+
+/* smart narrative */
+.narr{font-size:13.5px;line-height:1.6;color:var(--body)}
+.narr b{color:var(--ink)}
+.narr .neg{color:var(--neg);font-weight:700}
+.narr .pos{color:var(--pos);font-weight:700}
+.narr .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan-d);margin-bottom:6px}
+
+/* table */
+.tw{overflow-x:auto}
+table.pb{width:100%;border-collapse:collapse;font-size:12px}
+table.pb th{text-align:right;font-weight:600;color:var(--ink);padding:8px 6px;border-bottom:2px solid var(--navy);background:#F5F8FB;white-space:nowrap;font-size:11.5px}
+table.pb th:first-child,table.pb td:first-child{text-align:left}
+table.pb td{padding:7px 6px;border-bottom:1px solid #E6ECF1;text-align:right;white-space:nowrap}
+table.pb td:first-child{font-weight:600;color:var(--ink);white-space:normal;min-width:148px}
+table.pb tbody tr{cursor:pointer}
+table.pb tbody tr:hover{background:#F2F7FB}
+table.pb tbody tr.sel{background:#E3F2FA;box-shadow:inset 3px 0 0 var(--cyan)}
+table.pb tbody tr.dim{opacity:.45}
+table.pb tfoot td{font-weight:700;color:var(--ink);border-top:2px solid var(--navy);border-bottom:none;background:#F5F8FB}
+.neg{color:var(--neg)}.pos{color:var(--pos)}
+.flag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:3px;background:#FBE4E3;color:var(--neg);font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;vertical-align:1px}
+.dbar{position:relative;min-width:92px}
+.dbar .fill{position:absolute;top:3px;bottom:3px;border-radius:2px;opacity:.28}
+.dbar .val{position:relative}
+.catdot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+
+.whatif{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px;padding:10px 12px;background:#F5F8FB;border:1px solid var(--tile-b);border-radius:4px}
+.whatif label{font-weight:600;color:var(--ink);font-size:12px}
+.whatif input{flex:1;min-width:140px}
+.whatif .v{font-weight:700;color:var(--navy);min-width:44px;text-align:right}
+.whatif .note{width:100%;font-size:12px;color:var(--body)}
+.whatif .note b{color:var(--ink)}
+
+/* pipeline */
+.pipe{display:flex;align-items:stretch;gap:0}
+.ps{flex:1;display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--tile-b);border-radius:4px;background:#fff;min-width:0;font:inherit;text-align:left;color:inherit}
+.ps .n{flex-shrink:0;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11.5px;background:#E6EEF5;color:var(--navy)}
+.ps .pt{font-weight:700;color:var(--ink);font-size:13px;line-height:1.2}
+.ps .pd{font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:3px}
+.ps.ok .n{background:var(--pos);color:#fff}
+.ps.warn .n{background:var(--gold);color:var(--navy-d)}
+.ps.go{cursor:pointer;border-color:var(--cyan)}
+.ps.go .n{background:var(--cyan);color:#fff}
+.ps.go .pd{color:var(--cyan-d);font-weight:600}
+.ps.go:hover{box-shadow:0 4px 12px rgba(0,110,160,.15)}
+.arr{flex:0 0 16px;align-self:center;height:2px;background:var(--faint);position:relative}
+.arr::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left-color:var(--faint);border-right:0}
+.checks{list-style:none;margin:0;padding:0}
+.checks li{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #EEF2F6;font-size:12.5px}
+.checks .ic{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff}
+.checks .ic.ok{background:var(--pos)}.checks .ic.bad{background:var(--neg)}.checks .ic.info{background:var(--gold);color:var(--navy-d)}
+.checks .d{font-size:11.5px;color:var(--muted)}
+.held td:first-child{min-width:0}
+.empty{color:var(--muted);font-size:12.5px;padding:10px 0}
+.howto{font-size:12.5px;line-height:1.6;color:var(--body)}
+.howto ol{margin:6px 0 0;padding-left:18px}
+.howto li{margin-bottom:4px}
+.howto code{background:#EEF4F9;padding:1px 5px;border-radius:3px;font-size:11.5px;color:var(--navy-d)}
+
+/* scorecard: gauges */
+.gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gauge{text-align:center;padding:4px 4px 2px}
+.gauge svg{width:100%;max-width:230px;height:auto;display:block;margin:0 auto}
+.gauge .gtrack{fill:none;stroke:#E1EAF3;stroke-width:13}
+.gauge .gfill{fill:none;stroke-width:13;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1),stroke .4s}
+.gauge .gtick{stroke:var(--navy-d);stroke-width:2.5}
+.gauge .gneedle{transition:transform 1s cubic-bezier(.2,.8,.2,1);transform-box:view-box;transform-origin:60px 62px}
+.gauge .gval{font:700 17px "Segoe UI",sans-serif;fill:var(--ink);text-anchor:middle}
+.gauge .gmin,.gauge .gmax{font:500 7px "Segoe UI",sans-serif;fill:var(--muted)}
+.gauge .gl{font-size:12.5px;font-weight:600;color:var(--ink);margin-top:2px}
+.gauge .gt{font-size:11px;color:var(--muted);margin-top:1px}
+.gauge .gs{display:inline-block;margin-top:5px;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;letter-spacing:.03em}
+.gs.ok{background:#E3F5EA;color:#1E7A50}.gs.mid{background:#FFF3D1;color:#8A6200}.gs.bad{background:#FCE4E2;color:#B23630}
+.gnote{font-size:11.5px;color:var(--muted);text-align:center;padding:28px 10px}
+
+/* scorecard: leaderboard */
+.lbctl{display:flex;gap:0;border:1px solid var(--tile-b);border-radius:3px;overflow:hidden}
+.lbctl button{border:none;background:#fff;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--body)}
+.lbctl button.on{background:var(--navy);color:#fff}
+.lb{display:grid;gap:4px}
+.lbh{display:grid;grid-template-columns:34px 44px 1fr 72px 70px;gap:8px;padding:0 10px 4px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lbh span:last-child{text-align:right}
+.lbr{display:grid;grid-template-columns:34px 44px 1fr 72px 70px;gap:8px;align-items:center;padding:6px 10px;border-radius:4px;border-left:4px solid transparent;cursor:pointer;transition:transform .12s ease}
+.lbr:hover{transform:translateX(2px)}
+.lbr.up{background:#E6F6EC;border-left-color:#2E9B6A}
+.lbr.down{background:#FCE8E6;border-left-color:#D2433C}
+.lbr.same{background:#FFF7DB;border-left-color:#E5A800}
+.lbr.sel{outline:2px solid var(--cyan);outline-offset:-2px}
+.lbr .pos{font:800 17px "Segoe UI",sans-serif;color:var(--navy-d);text-align:center;background:#fff;border-radius:3px;padding:2px 0;box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.lbr .mv{font-size:12px;font-weight:800;text-align:center;white-space:nowrap}
+.lbr.up .mv{color:#1E7A50}.lbr.down .mv{color:#B23630}.lbr.same .mv{color:#9A7200}
+.lbr .nm{min-width:0;font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbr .nm small{display:block;font-weight:400;font-size:10.5px;color:var(--muted)}
+.lbr .nm i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:0}
+.lbr svg{width:72px;height:22px;display:block}
+.lbr .val{font-size:12.5px;font-weight:700;color:var(--ink);text-align:right}
+.lbr .val.neg{color:var(--neg)}
+.lbkey{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:10.5px;color:var(--muted)}
+.lbkey b{font-weight:800}
+.row2{grid-row:span 2}
+
+/* page tabs (Power BI style) */
+.tabs{position:fixed;left:0;right:0;bottom:0;height:44px;background:#fff;border-top:1px solid var(--tile-b);display:flex;align-items:stretch;padding:0 14px;z-index:40;gap:2px;overflow-x:auto}
+.tabs button{border:none;background:none;padding:0 16px;font-size:12.5px;color:var(--muted);cursor:pointer;border-top:3px solid transparent;white-space:nowrap}
+.tabs button:hover{color:var(--ink);background:#F5F8FB}
+.tabs button.on{color:var(--ink);font-weight:600;border-top-color:var(--gold);background:#FFFBF0}
+.tabs .foot{margin-left:auto;align-self:center;font-size:10.5px;color:var(--faint);white-space:nowrap;padding-left:14px}
+
+/* ============ MEETING DECK ============ */
+#deck{position:fixed;inset:0;z-index:1000;background:#F9FCFF;color:var(--ink);display:flex;flex-direction:column}
+#deck[hidden]{display:none}
+.dk-top{display:flex;align-items:center;gap:12px;padding:12px 26px;background:var(--navy-d);color:#fff}
+.dk-top img{width:30px;height:30px;border-radius:50%;background:#fff}
+.dk-top .b{font-family:var(--sans);font-weight:600;font-size:14px}
+.dk-top .b small{display:block;font-weight:400;font-size:11px;color:#9FC3DB}
+.dk-top .sp{margin-left:auto}
+.dk-count{font-size:12px;color:#9FC3DB;font-weight:600;white-space:nowrap}
+.dk-btn{font-family:var(--sans);font-weight:600;font-size:12.5px;padding:9px 14px;border-radius:4px;border:1px solid #C9D5E0;background:#fff;color:var(--ink);cursor:pointer}
+.dk-btn.x{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+.dk-btn.go{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.dk-btn:disabled{opacity:.35;cursor:default}
+.dk-stage{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:26px 30px}
+.slide{width:100%;max-width:1100px}
+.sk{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);padding-bottom:6px;border-bottom:3px solid var(--gold);margin-bottom:22px}
+.sh{font-family:var(--sans);font-weight:700;font-size:clamp(30px,4.6vw,56px);line-height:1.06;letter-spacing:-.015em;margin:0 0 26px;color:var(--navy-d);max-width:24ch}
+.sh .g{color:var(--pos)}.sh .r{color:var(--neg)}.sh .y{color:#C98A00}
+.ssub{font-size:clamp(16px,1.6vw,20px);line-height:1.5;color:var(--body);max-width:56ch;margin:24px 0 0}
+.bigbar{display:flex;height:clamp(52px,8vh,76px);border-radius:5px;overflow:hidden}
+.bigbar span{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:clamp(12px,1.35vw,17px);color:#fff;white-space:nowrap;overflow:hidden}
+.bigbar span.lt{color:var(--navy-d)}
+.biglg{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:14px;font-size:clamp(13px,1.2vw,15px)}
+.biglg i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:7px;vertical-align:-1px}
+.biglg b{margin-left:4px}
+.lose{width:100%;border-collapse:collapse;font-size:clamp(14px,1.4vw,18px)}
+.lose th{text-align:right;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 12px 10px;border-bottom:3px solid var(--navy-d);white-space:nowrap}
+.lose th:first-child,.lose td:first-child{text-align:left;padding-left:0}
+.lose td{padding:13px 12px;border-bottom:1px solid #DCE3EA;text-align:right;color:var(--ink)}
+.lose td:first-child{font-weight:600}
+.lose td.r{color:var(--neg);font-weight:700}
+.gap2{display:grid;gap:18px;margin-top:6px}
+.gb .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:clamp(14px,1.4vw,18px);font-weight:600;color:var(--ink);margin-bottom:7px}
+.gb .lab b{font-family:var(--sans);font-size:clamp(22px,2.6vw,34px)}
+.gb .trk{height:clamp(30px,5vh,46px);background:#E9EEF3;border-radius:5px;overflow:hidden}
+.gb .fl{height:100%;border-radius:5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px}
+.chips .ct{font-size:clamp(13px,1.2vw,15px);color:var(--muted);margin-right:4px}
+.chip{display:inline-flex;align-items:baseline;gap:6px;padding:6px 12px;border-radius:99px;font-size:clamp(13px,1.2vw,15px);font-weight:600;color:#fff}
+.chip b{font-family:var(--sans)}
+.dgauges{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:6px}
+.dgauges .gauge .gl{font-size:clamp(14px,1.3vw,17px)}
+.dgauges .gauge .gt{font-size:clamp(12px,1.1vw,14px)}
+.dlb{display:grid;gap:5px;max-width:820px}
+.dlb .lbr{grid-template-columns:44px 56px 1fr 110px;padding:6px 14px;cursor:default}
+.dlb .lbr .pos{font-size:19px}
+.dlb .lbr .mv{font-size:16px}
+.dlb .lbr .nm{font-size:clamp(14px,1.35vw,17px)}
+.dlb .lbr .val{font-size:clamp(14px,1.35vw,17px)}
+.pairs{display:grid;gap:8px}
+.pr{display:grid;grid-template-columns:minmax(130px,230px) 1fr;gap:14px;align-items:center}
+.pr .nm{font-size:clamp(12px,1.15vw,15px);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pr .bars{display:grid;gap:3px}
+.pr .b{height:clamp(8px,1.1vh,12px);position:relative}
+.pr .b span{position:absolute;top:0;bottom:0;border-radius:2px}
+.pr .z{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--navy-d)}
+.pkey{display:flex;gap:22px;margin-bottom:14px;font-size:clamp(13px,1.15vw,15px)}
+.pkey i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:7px;vertical-align:-1px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{border:1px solid #DCE3EA;background:#fff;border-radius:6px;padding:22px 22px 20px;border-top:4px solid var(--cyan)}
+.card .n{font-weight:700;font-size:13px;color:var(--cyan-d);margin-bottom:10px}
+.card h3{font-family:var(--sans);font-size:clamp(20px,1.9vw,25px);margin:0 0 10px;line-height:1.15;color:var(--navy-d)}
+.card p{font-size:clamp(14px,1.2vw,16px);line-height:1.5;margin:0;color:var(--body)}
+.callstat{margin-top:22px;padding:16px 22px;border-left:5px solid var(--gold);background:#fff;border-radius:0 6px 6px 0;font-size:clamp(16px,1.55vw,20px);color:var(--ink)}
+.callstat b{color:var(--pos)}
+.dk-nav{display:flex;align-items:center;justify-content:center;gap:16px;padding:14px 26px;border-top:1px solid #DCE3EA;background:#fff}
+.dots{display:flex;gap:8px}
+.dots button{width:10px;height:10px;border-radius:50%;border:none;background:#C9D5E0;cursor:pointer;padding:0}
+.dots button.on{background:var(--navy-d)}
+.dk-hint{font-size:11px;color:var(--faint);margin-left:10px}
+
+/* ---------- responsive ---------- */
+@media(max-width:1180px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .s8,.s7,.s6,.s5,.s4{grid-column:span 12}
+  .row2{grid-row:auto}
+}
+@media(max-width:820px){
+  .wrap{grid-template-columns:1fr}
+  .pane{border-right:none;border-bottom:1px solid var(--tile-b)}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .kpi:last-child{grid-column:span 2}
+  .bar{flex-wrap:wrap;padding:10px 14px}
+  .bar .meta{display:none}
+  .present{margin-left:auto}
+  .pipe{flex-direction:column}
+  .arr{flex:0 0 12px;width:2px;height:12px;align-self:flex-start;margin-left:23px}
+  .arr::after{right:-4px;top:auto;bottom:-1px;border:5px solid transparent;border-top-color:var(--faint);border-bottom:0}
+  .tabs .foot{display:none}
+  .cards{grid-template-columns:1fr}
+  .dk-top,.dk-nav{padding:10px 14px}.dk-stage{padding:18px 14px;align-items:flex-start}.dk-hint{display:none}
+  .lose th:nth-child(2),.lose td:nth-child(2){display:none}.lose th{white-space:normal}
+  .gauges,.dgauges{grid-template-columns:1fr}
+  .dlb .lbr{grid-template-columns:40px 52px 1fr 80px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.asin{display:block;font-size:10px;font-weight:400;color:var(--muted);font-family:ui-monospace,Menlo,monospace;letter-spacing:.02em}
+.amz{display:grid;gap:0}
+.amz .r{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid #EEF2F6;font-size:13px}
+.amz .r span{color:var(--body)}.amz .r b{color:var(--ink);font-size:14px}
+.amz .r.tot{border-top:2px solid var(--navy);border-bottom:none;margin-top:2px}
+.amz .r.tot span{font-weight:700;color:var(--ink)}
+.amz .badge{display:inline-block;margin:12px 0 8px;padding:5px 12px;border-radius:99px;font-size:11.5px;font-weight:700;letter-spacing:.03em}
+.amz .badge.bad{background:#FCE4E2;color:#B23630}.amz .badge.ok{background:#E3F5EA;color:#1E7A50}.amz .badge.mid{background:#FFF3D1;color:#8A6200}
+.amz p{font-size:12.5px;line-height:1.55;color:var(--body);margin:0}
+.amz p b{color:var(--ink)}
+.src{font-size:12.5px;line-height:1.6;color:var(--body)}
+.src dl{display:grid;grid-template-columns:170px 1fr;gap:6px 14px;margin:6px 0 0}
+.src dt{font-weight:700;color:var(--ink)}
+.src dd{margin:0}
+.src .est{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;background:#FFF3D1;color:#8A6200;margin-left:4px;vertical-align:1px}
+.src .real{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;background:#E3F5EA;color:#1E7A50;margin-left:4px;vertical-align:1px}
+@media(max-width:820px){.src dl{grid-template-columns:1fr}}
+
+/* ---- slide balance: centered composition ---- */
+.slide{text-align:center}
+.slide{margin:auto 0}
+.slide .sh{margin-left:auto;margin-right:auto;max-width:24ch;text-wrap:balance}
+.slide .ssub{margin-left:auto;margin-right:auto;max-width:60ch;text-wrap:balance}
+.slide .biglg,.slide .pkey,.slide .chips{justify-content:center}
+.slide .dlb{margin-left:auto;margin-right:auto;text-align:left}
+.slide .lose{text-align:left}
+.slide .gap2{max-width:980px;margin-left:auto;margin-right:auto;text-align:left}
+.slide .gap2 .chips{margin-top:10px}
+.slide .cards{text-align:left}
+.slide .dgauges{max-width:980px;margin-left:auto;margin-right:auto}
+.slide .callstat{border-left:none;border-top:4px solid var(--gold);border-radius:0 0 6px 6px;text-align:center;max-width:900px;margin-left:auto;margin-right:auto}
+
+/* slides scale with screen height too, so they fit projectors */
+.slide .sh{font-size:clamp(28px,min(4.6vw,6.2vh),56px)}
+@media (max-height:820px){
+  .dk-stage{padding:18px 30px}
+  .sk{margin-bottom:12px}
+  .slide .sh{margin-bottom:16px}
+  .slide .ssub{margin-top:14px;font-size:clamp(15px,1.4vw,18px)}
+  .lose td{padding:8px 12px}
+  .lose th{padding-bottom:7px}
+  .dlb .lbr{padding:4px 14px}
+  .dlb .lbr .nm small{display:none}
+  .gap2{gap:12px}
+  .bigbar{height:clamp(44px,7vh,64px)}
+  .card{padding:16px 18px 14px}
+}
+/* ---- customer voice ---- */
+.stars{--p:0%;display:inline-block;font-size:13px;letter-spacing:1px;line-height:1;background:linear-gradient(90deg,#F8B010 var(--p),#D5DDE5 var(--p));-webkit-background-clip:text;background-clip:text;color:transparent;vertical-align:1px}
+.stars.big{font-size:clamp(24px,3.4vh,34px);letter-spacing:3px}
+.kpi .v .stars{font-size:15px;margin-left:4px;vertical-align:3px}
+.vlb .lbh.vh,.vlb .lbr{grid-template-columns:34px 1fr 108px 64px}
+.vlb .lbr .rt{display:flex;align-items:center;gap:6px;justify-content:flex-end}
+.vlb .lbr .rt b{font-size:13px;color:var(--ink)}
+.vlb .lbr .mo{text-align:right;line-height:1.15}
+.vlb .lbr .mo b{display:block;font-size:12.5px;color:var(--ink)}
+.vlb .lbr .mo .mv{font-size:10.5px;font-weight:800}
+.vlb .lbr.up .mo .mv{color:#1E7A50}.vlb .lbr.down .mo .mv{color:#B23630}.vlb .lbr.same .mo .mv{color:#9A7200}
+.src{display:inline-block;font-size:9.5px;font-weight:700;padding:0 5px;border-radius:3px;margin-left:4px;vertical-align:0}
+.src.obs{background:#E3F5EA;color:#1E7A50}.src.est{background:#FFF3D1;color:#8A6200}.src.file{background:#E3F2FA;color:#00739E}
+.mixw{display:grid;grid-template-columns:200px 1fr;gap:18px;align-items:center}
+.donut{position:relative;height:200px}
+.dc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.dc b{font-size:24px;color:var(--ink);line-height:1}.dc span{font-size:11px;color:var(--muted);margin-top:3px}
+.dlegend{display:grid;gap:4px}
+.dl{display:grid;grid-template-columns:12px 1fr 42px 18px;gap:8px;align-items:center;border:1px solid transparent;background:none;padding:5px 7px;border-radius:4px;cursor:pointer;font-size:12.5px;color:var(--body);text-align:left}
+.dl:hover{background:#F5F8FB}.dl.on{border-color:var(--cyan);background:#EEF8FD}
+.dl i{width:11px;height:11px;border-radius:2px}.dl b{text-align:right;color:var(--ink)}.dl em{font-style:normal;font-size:10.5px;font-weight:800;text-align:center;color:#9A7200}
+.dl em.neg{color:#B23630}.dl em.pos{color:#1E7A50}
+.probs{display:grid;gap:9px}
+.prob{display:grid;grid-template-columns:1fr 70px;gap:10px;align-items:end}
+.prob .t{font-size:12.5px;font-weight:600;color:var(--ink)}
+.prob .t small{font-weight:400;color:var(--muted);margin-left:6px;font-size:11px}
+.prob .bar{height:8px;border-radius:4px;background:#EEF2F6;position:relative;overflow:hidden;margin-top:5px}
+.prob .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.prob .n{text-align:right;font-weight:700;color:var(--ink);font-size:13px;line-height:1.2}
+.prob .n .tr{display:block;font-size:10px;font-weight:700;color:var(--muted)}
+.prob .n .tr.neg{color:#B23630}.prob .n .tr.pos{color:#1E7A50}
+.kd{display:inline-block;width:8px;height:8px;border-radius:2px;margin:0 3px 0 8px;vertical-align:0}
+.res{display:grid;gap:8px}
+.res .rw{display:grid;grid-template-columns:150px 1fr 82px;gap:10px;align-items:center;font-size:12px;cursor:pointer;padding:3px 4px;border-radius:4px}
+.res .rw:hover{background:#F5F8FB}.res .rw.on{background:#EEF8FD}
+.res .rl i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+.res .sb{display:flex;height:14px;border-radius:3px;overflow:hidden;background:#EEF2F6}
+.res .sb span{display:block;height:100%}
+.res .rt{text-align:right;font-size:11.5px;color:var(--muted)}.res .rt b{color:var(--ink)}
+.resnote{font-size:12px;color:var(--body);margin:10px 0 0}
+.clf textarea{width:100%;border:1px solid var(--tile-b);border-radius:4px;padding:9px 10px;font:inherit;font-size:13px;resize:vertical;color:var(--ink)}
+.clf textarea:focus{outline:2px solid var(--cyan);outline-offset:-1px}
+.exs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.exs button{border:1px dashed var(--tile-b);background:#F7FAFC;border-radius:99px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--body)}
+.exs button:hover{border-color:var(--cyan);color:var(--cyan-d)}
+.clf .out{min-height:70px;font-size:12.5px}
+.clfq{padding:8px 10px;background:#F7FAFC;border-radius:4px;margin-bottom:8px;line-height:1.5}
+.clfr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+.clf .ok{color:#1E7A50;font-weight:600}
+mark{background:#FFE9A8;color:inherit;padding:0 2px;border-radius:2px}
+.tagc{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.tagc.sm{font-size:10px;padding:2px 7px}
+.dim{color:var(--faint)}
+table.ex td.txt{white-space:normal;min-width:260px;color:var(--body)}
+table.ex td:nth-child(2){white-space:normal;min-width:140px;font-weight:600;color:var(--ink)}
+table.ex td:first-child{font-weight:400;min-width:0;color:var(--muted)}
+table.ex td:nth-child(3){color:#F8B010;letter-spacing:1px}
+table.ex th:nth-child(3),table.ex td:nth-child(3),table.ex th:nth-child(4),table.ex td:nth-child(4),table.ex th:nth-child(5),table.ex td:nth-child(5),table.ex th:nth-child(6),table.ex td:nth-child(6){text-align:left}
+.stp{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px}
+.stp.resolved{background:#E3F5EA;color:#1E7A50}.stp.progress{background:#FFF3D1;color:#8A6200}.stp.open{background:#FCE4E2;color:#B23630}
+.vdata{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.vdata .pbtn{width:auto;margin:0;padding:7px 14px}
+.vdata p{flex-basis:100%;margin:6px 0 0;font-size:12px;color:var(--body);line-height:1.55}
+.vdata code{background:#EEF4F9;padding:1px 5px;border-radius:3px;font-size:11.5px;color:var(--navy-d)}
+.vs{display:grid;grid-template-columns:280px 1fr;gap:44px;align-items:center;max-width:980px;margin:0 auto;text-align:left}
+.vs .bignum{font-family:var(--sans);font-size:clamp(56px,10vh,100px);font-weight:700;color:var(--navy-d);line-height:.95}
+.vs .cap{color:var(--muted);font-size:clamp(13px,1.2vw,15px);margin-top:10px;line-height:1.5}
+.vs .prob .t{font-size:clamp(14px,1.3vw,17px)}.vs .prob .bar{height:12px}.vs .prob .n{font-size:clamp(14px,1.3vw,17px)}
+@media(max-width:820px){.mixw{grid-template-columns:1fr}.vs{grid-template-columns:1fr;gap:20px;text-align:center}.res .rw{grid-template-columns:110px 1fr 70px}}
+
+/* ---- data provenance + disclaimer ---- */
+.prov{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.pv{background:#fff;border:1px solid var(--tile-b);border-left:4px solid;border-radius:4px;padding:9px 12px;font-size:12px;line-height:1.45;color:var(--body)}
+.pv b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:2px}
+.pv.pub{border-left-color:#2E9B6A}.pv.est{border-left-color:#F8B010}.pv.smp{border-left-color:#9AA8B6}
+.disc{font-size:10px;line-height:1.55;color:#8795A3;margin:26px 2px 6px;max-width:1100px}
+.dk-disc{font-size:10px;line-height:1.5;color:#8795A3;max-width:760px;margin:18px auto 0;text-align:center}
+@media(max-width:820px){.prov{grid-template-columns:1fr}}
+
+/* ---- author monogram (replaces any company logo) ---- */
+.mark{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:#fff;color:var(--navy-d);display:flex;align-items:center;justify-content:center;
+  font:700 14px/1 "Segoe UI",sans-serif;letter-spacing:.02em;box-shadow:inset 0 -3px 0 var(--gold)}
+.dk-top .mark{width:30px;height:30px;font-size:12px}
+
+/* disclaimer: pinned to the bottom of the page, centered */
+.canvas{display:flex;flex-direction:column}
+.canvas>.disc{margin:auto auto 4px;padding-top:36px;max-width:980px;text-align:center}
+
+/* ---- first-visit clarity pass ---- */
+/* headline with the key finding and where to go next */
+.hook{background:#fff;border:1px solid var(--tile-b);border-left:5px solid var(--navy-d);border-radius:4px;padding:14px 18px;margin-bottom:12px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.hook .msg{flex:1 1 520px;font-family:var(--sans);font-size:18px;line-height:1.35;color:var(--navy-d);font-weight:500}
+.hook .msg b{font-weight:700}.hook .msg .g{color:var(--pos)}.hook .msg .r{color:var(--neg)}
+.hook .go{display:flex;gap:8px;flex-wrap:wrap}
+.hook .go button{border:1px solid var(--tile-b);background:#F5F8FB;color:var(--navy-d);border-radius:99px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.hook .go button:hover{border-color:var(--cyan);background:#EEF8FD}
+.hook .go button.pri{background:var(--navy-d);border-color:var(--navy-d);color:#fff}
+/* page tabs: bigger and clearly navigation */
+.tabs{height:52px;border-top:2px solid var(--navy-d);box-shadow:0 -2px 8px rgba(0,30,60,.06)}
+.tabs button{font-size:14px;padding:0 20px;color:var(--body);font-weight:500}
+.tabs button.on{font-weight:700;color:var(--navy-d)}
+.tabs .lab{align-self:center;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 10px 0 4px;white-space:nowrap}
+body{padding-bottom:64px}
+/* text up about 10% */
+.tile .h .t{font-size:14.5px}.tile .h .s{font-size:11.5px}
+.lbr .nm{font-size:13.5px}.lbr .nm small{font-size:11px}.lbr .val{font-size:13.5px}.lbh{font-size:10.5px}
+.gauge .gl{font-size:13.5px}.gauge .gt{font-size:12px}.gauge .gs{font-size:11px}
+.pv{font-size:12.5px}.pv b{font-size:13px}
+.pane h4{font-size:11.5px}.wi label{font-size:12.5px}.wi .v{font-size:12.5px}.pane .wi small{font-size:11.5px}
+.slbtns button{font-size:13px}.lbkey{font-size:11.5px}
+.kpi .v{font-size:27px}.kpi .l{font-size:12px}
+/* collapsible filter pane */
+.pane{position:relative}
+.ptog{display:flex;align-items:center;justify-content:space-between;width:100%;border:1px solid var(--tile-b);background:#F5F8FB;color:var(--navy-d);border-radius:4px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:14px}
+.ptog:hover{border-color:var(--cyan)}
+.wrap.col{grid-template-columns:44px 1fr}
+.wrap.col .pane{padding:12px 6px}
+.wrap.col .pane>*:not(.ptog){display:none}
+.wrap.col .ptog{writing-mode:vertical-rl;transform:rotate(180deg);justify-content:center;gap:8px;padding:12px 4px;width:32px;margin:0 auto}
+
+/* mid-size screens: split the scorecard evenly so listing names fit */
+@media (min-width:1181px) and (max-width:1560px){
+  #pg-score .grid>.tile.s7{grid-column:span 6}
+  #pg-score .grid>.tile.s5{grid-column:span 6}
+}
+
+@media (max-width:1400px){
+  #lb .lbh,#lb .lbr{grid-template-columns:34px 44px 1fr 70px}
+  #lb .lbh span:nth-child(4),#lb .lbr svg{display:none}
+}
+
+/* ===== large monitors (27-32 inch, 2200px+ wide): same layout, everything about 25% larger ===== */
+@media (min-width:2200px){
+  body{font-size:15px;padding-bottom:76px}
+  .bar{padding:14px 28px;gap:16px}.mark{width:46px;height:46px;font-size:18px}.bar .tt{font-size:22px}.bar .st{font-size:14px}.bar .meta{font-size:13.5px}
+  .present{font-size:15.5px;padding:12px 20px}
+  .wrap{grid-template-columns:300px 1fr}.wrap.col{grid-template-columns:52px 1fr}
+  .pane{padding:22px 22px 30px}.pane h4{font-size:13px;margin-bottom:12px}.pane .grp{margin-bottom:26px}
+  .wi label,.wi .v{font-size:14.5px}.pane .wi small{font-size:13px}.wi{margin-bottom:18px}
+  .slbtns button{font-size:15px;padding:9px 12px}.slbtns button span.c{font-size:13px}
+  .pbtn{font-size:14.5px;padding:10px 12px}.ptog{font-size:14px;padding:9px 12px}.srcnote{font-size:13px}
+  .canvas{padding:22px 26px 26px}.grid,.kpis{gap:16px}
+  .tile{padding:18px 20px}.tile .h{margin-bottom:12px}.tile .h .t{font-size:18px}.tile .h .s{font-size:13.5px}
+  .hook{padding:20px 24px;margin-bottom:16px}.hook .msg{font-size:24px}.hook .go button{font-size:15px;padding:10px 17px}
+  .prov{gap:16px;margin-bottom:16px}.pv{font-size:15px;padding:13px 16px}.pv b{font-size:15.5px}
+  .kpi{padding:18px 18px 16px}.kpi .v{font-size:35px}.kpi .l{font-size:14.5px}
+  .gauge svg{max-width:310px}.gauge .gl{font-size:17px}.gauge .gt{font-size:14.5px}.gauge .gs{font-size:13.5px;padding:3px 10px}
+  .lbh{font-size:12.5px}.lb{gap:6px}.lbr{padding:9px 12px}
+  #lb .lbh,#lb .lbr{grid-template-columns:44px 58px 1fr 96px 90px}
+  .lbr .pos{font-size:22px}.lbr .mv{font-size:14.5px}.lbr .nm{font-size:16.5px}.lbr .nm small{font-size:13px}.lbr .val{font-size:16.5px}
+  .lbr svg{width:96px;height:28px}.lbkey{font-size:13.5px}.lbctl button{font-size:13.5px;padding:6px 13px}
+  .cw{height:420px}.cw.sm{height:300px}
+  .dollar{height:50px}.dollar span{font-size:15px}.lg{font-size:14.5px;gap:6px 20px}
+  .narr{font-size:17px}.narr .tag{font-size:12px}
+  table.pb{font-size:15px}table.pb th{font-size:14px;padding:10px 8px}table.pb td{padding:10px 8px}.flag{font-size:11px}.asin{font-size:12px}
+  .amz .r{font-size:15.5px}.amz .r b{font-size:16.5px}.amz p{font-size:14.5px}.amz .badge{font-size:13px}
+  .whatif,.checks li,.howto,.src{font-size:15px}.ps .pt{font-size:15px}.ps .pd{font-size:13.5px}
+  .vlb .lbh.vh,.vlb .lbr{grid-template-columns:44px 1fr 136px 80px}.vlb .lbr .rt b,.vlb .lbr .mo b{font-size:15px}.stars{font-size:15px}
+  .mixw{grid-template-columns:260px 1fr}.donut{height:260px}.dc b{font-size:30px}.dc span{font-size:13px}.dl{font-size:15px}
+  .prob .t{font-size:15px}.prob .t small{font-size:13px}.prob .n{font-size:15px}.prob .bar{height:10px}
+  .res .rw{font-size:14.5px;grid-template-columns:190px 1fr 100px}.res .sb{height:18px}.resnote{font-size:14px}
+  .clf textarea{font-size:15px}.exs button{font-size:13px;padding:6px 12px}.clf .out{font-size:14.5px}.tagc{font-size:13px}
+  .vdata p{font-size:14px}.vdata .pbtn{font-size:14.5px}
+  .tabs{height:64px}.tabs button{font-size:17px;padding:0 28px}.tabs .lab{font-size:12.5px}.tabs .foot{font-size:13px}
+  .disc{font-size:12.5px}.canvas>.disc{max-width:1200px}
+}
+
+/* ===== guided tour ===== */
+.tourbtn{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:4px;padding:8px 13px;font-weight:600;font-size:12.5px;cursor:pointer;margin-left:14px;white-space:nowrap}
+.tourbtn:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.tblock{position:fixed;inset:0;z-index:1200;background:transparent}
+.tspot{position:fixed;z-index:1201;border-radius:8px;box-shadow:0 0 0 9999px rgba(0,22,45,.58),0 0 0 3px var(--gold);pointer-events:none;transition:all .35s cubic-bezier(.2,.8,.2,1)}
+.tspot.none{box-shadow:0 0 0 9999px rgba(0,22,45,.58);width:0!important;height:0!important}
+.tcard{position:fixed;z-index:1202;width:min(380px,calc(100vw - 24px));background:#fff;border-radius:8px;box-shadow:0 18px 50px rgba(0,20,45,.35);padding:18px 20px 14px;
+  border-top:4px solid var(--gold);transition:top .35s cubic-bezier(.2,.8,.2,1),left .35s cubic-bezier(.2,.8,.2,1)}
+.tcard .tn{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan-d);margin-bottom:6px}
+.tcard h3{font-family:var(--sans);font-size:19px;line-height:1.2;color:var(--navy-d);margin:0 0 8px}
+.tcard p{font-size:13.5px;line-height:1.55;color:var(--body);margin:0 0 14px}
+.tcard .tf{display:flex;align-items:center;gap:8px}
+.tcard .tdots{display:flex;gap:5px;margin-right:auto}
+.tcard .tdots i{width:7px;height:7px;border-radius:50%;background:#D5DDE5}
+.tcard .tdots i.on{background:var(--navy-d)}
+.tcard button{border:1px solid var(--tile-b);background:#fff;color:var(--ink);border-radius:4px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+.tcard button.go{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.tcard button.go:hover{background:#0092C9}
+.tcard .tskip{border:none;background:none;color:var(--muted);padding:7px 4px;font-weight:500}
+.tcard .tskip:hover{color:var(--ink)}
+.ttoast{position:fixed;right:20px;bottom:78px;z-index:1100;background:#fff;border:1px solid var(--tile-b);border-left:4px solid var(--gold);border-radius:6px;
+  box-shadow:0 10px 30px rgba(0,20,45,.18);padding:13px 16px;display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--ink);max-width:calc(100vw - 40px)}
+.ttoast b{color:var(--navy-d)}
+.ttoast button{border:1px solid var(--tile-b);background:#fff;border-radius:4px;padding:6px 11px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink);white-space:nowrap}
+.ttoast button.go{background:var(--navy-d);border-color:var(--navy-d);color:#fff}
+@media(max-width:820px){.tourbtn{margin-left:auto}.ttoast{left:12px;right:12px;bottom:70px;flex-wrap:wrap}}
+@media (min-width:2200px){.tcard{width:460px;padding:22px 24px 16px}.tcard h3{font-size:23px}.tcard p{font-size:16px}.tcard .tn{font-size:12.5px}
+  .tcard button{font-size:14.5px;padding:9px 15px}.tourbtn{font-size:15px;padding:11px 17px}.ttoast{font-size:15.5px;bottom:92px}}
+
+.ttoast[hidden],#tour[hidden]{display:none!important}
+
+/* ===== navigation at the top ===== */
+.top{position:sticky;top:0;z-index:60;box-shadow:0 2px 8px rgba(0,20,50,.14)}
+.top .bar{position:static;box-shadow:none}
+.tabs{position:static;height:46px;background:#fff;border-top:none;border-bottom:1px solid var(--tile-b);box-shadow:none;padding:0 20px;gap:4px;align-items:stretch}
+.tabs button{display:flex;align-items:center;gap:7px;border:none;border-bottom:3px solid transparent;border-top:none;background:none;padding:0 18px;
+  font-size:14px;font-weight:500;color:var(--body);cursor:pointer;white-space:nowrap;border-radius:4px 4px 0 0;margin-top:5px}
+.tabs button:hover{background:#F2F6FA;color:var(--navy-d)}
+.tabs button.on{border-bottom-color:var(--gold);background:#FFF8E6;color:var(--navy-d);font-weight:700}
+.tabs button svg{flex-shrink:0;opacity:.85}
+body{padding-bottom:0}
+.wrap{min-height:calc(100vh - 106px)}
+.ttoast{bottom:20px}
+@media(max-width:820px){.tabs{padding:0 8px}.tabs button{padding:0 12px;font-size:13px}.ttoast{bottom:12px}}
+@media (min-width:2200px){body{padding-bottom:0}.tabs{height:56px;padding:0 28px}.tabs button{font-size:16.5px;padding:0 24px}.tabs button svg{width:18px;height:18px}
+  .wrap{min-height:calc(100vh - 136px)}.ttoast{bottom:28px}}
+
+/* tour: the tab being "clicked" on a hand-off step */
+#tabs button.tpress{background:#FFE7A8!important;color:var(--navy-d)!important;transform:translateY(1px) scale(.97);transition:transform .12s ease,background .12s ease}
+.tspot.via{box-shadow:0 0 0 9999px rgba(0,22,45,.58),0 0 0 3px var(--gold),0 0 18px 4px rgba(248,176,16,.55)}
+
+.tcard .tdots{display:none}
+.tcard .tf{justify-content:flex-end}
+.tcard button{white-space:nowrap}
+
+/* tour: parts instead of one long count */
+.tsecs{display:flex;gap:4px;margin:0 0 11px}
+.tsecs span{flex:1;height:4px;border-radius:2px;background:#E3E9EF;position:relative;overflow:hidden}
+.tsecs span i{position:absolute;left:0;top:0;bottom:0;background:var(--navy-d);border-radius:2px;transition:width .3s ease}
+.tsecs span.cur i{background:var(--gold)}
+.tcard .tn{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.tcard .tn .ts{color:var(--muted);letter-spacing:.04em;font-weight:600;text-transform:none;font-size:11.5px;white-space:nowrap}
+@media (min-width:2200px){.tsecs span{height:5px}.tcard .tn .ts{font-size:13px}}
+
+/* monthly tracking: say up front that it runs on filler */
+.sampbar{background:#F4F6F8;border:1px dashed #9AA8B6;border-left:4px solid #9AA8B6;border-radius:4px;padding:11px 14px;margin-bottom:12px;font-size:12.5px;line-height:1.5;color:var(--body)}
+.sampbar b{display:block;font-size:13px;color:var(--ink);margin-bottom:2px}
+.sampbar code{background:#E6ECF1;padding:0 4px;border-radius:3px;font-size:11.5px}
+@media (min-width:1181px) and (max-width:1560px){#pg-month .grid>.tile.s7{grid-column:span 6}#pg-month .grid>.tile.s5{grid-column:span 6}}
+@media (min-width:2200px){.sampbar{font-size:15px;padding:14px 18px}.sampbar b{font-size:15.5px}}
+#voiceBody .kpis{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+
+#probsTile.s12 .probs{grid-template-columns:1fr 1fr;column-gap:40px}
+@media(max-width:820px){#probsTile.s12 .probs{grid-template-columns:1fr}}
+table.ex th:nth-child(2),table.ex td:nth-child(2){text-align:left}
+
+/* ===== Home as the glance dashboard ===== */
+.tag-s{display:inline-block;margin-left:8px;padding:1px 7px;border-radius:99px;background:#EEF1F4;color:#6B7B8B;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;vertical-align:2px;border:1px dashed #B5C1CC}
+.row3{grid-row:span 3}
+@media(max-width:1180px){.row3{grid-row:auto}}
+.kclick{cursor:pointer;border-radius:6px;transition:box-shadow .15s ease}
+.kclick:hover,.kclick:focus-visible{box-shadow:0 0 0 2px var(--cyan);outline:none}
+.vsnapt{cursor:pointer}.vsnapt:hover,.vsnapt:focus-visible{box-shadow:0 0 0 2px var(--cyan);outline:none}
+.tile .h .s.more{color:var(--cyan-d);font-weight:600}
+.vsnap{display:grid;grid-template-columns:190px 1fr;gap:26px;align-items:center;padding:4px 2px}
+.vs1{text-align:center}.vs1 .bn{font-family:var(--sans);font-size:46px;font-weight:700;color:var(--navy-d);line-height:1}
+.vs1 .stars.big{font-size:22px;letter-spacing:2px}.vs1 .cp{font-size:11.5px;color:var(--muted);margin-top:6px}
+.vs2 .vh{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.vb{display:grid;grid-template-columns:150px 1fr 40px;gap:10px;align-items:center;font-size:12.5px;color:var(--ink);margin-bottom:7px}
+.vb i{display:block;height:9px;border-radius:5px;background:#EEF2F6;overflow:hidden}.vb i b{display:block;height:100%;border-radius:5px}
+.vb em{font-style:normal;font-weight:700;text-align:right}
+.vt{font-size:12.5px;color:var(--body);margin-top:6px}.vt b{color:var(--ink)}
+@media(max-width:820px){.vsnap{grid-template-columns:1fr}.vb{grid-template-columns:120px 1fr 36px}}
+@media (min-width:2200px){.tag-s{font-size:12px}.vsnap{grid-template-columns:240px 1fr}.vs1 .bn{font-size:58px}.vs1 .cp,.vt{font-size:14px}.vb{font-size:15px;grid-template-columns:190px 1fr 50px}.vb i{height:11px}.vs2 .vh{font-size:12.5px}}
+@media (min-width:1181px) and (max-width:1560px){#pg-score .grid>.tile.s7{grid-column:span 6}#pg-score .grid>.tile.s5{grid-column:span 6}}
+
+/* Home: glance sizing so all four summary tiles fit on one screen */
+.prov.compact{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin-bottom:10px}
+.prov.compact .pv{flex:1 1 260px;padding:7px 12px;font-size:12px;line-height:1.35;display:flex;align-items:center;gap:8px}
+.prov.compact .pv b{display:inline;margin:0;font-size:12px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.srclink{border:1px solid var(--tile-b);background:#fff;color:var(--cyan-d);border-radius:4px;padding:0 12px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.srclink:hover{border-color:var(--cyan)}
+#pg-score .kpis{margin-bottom:10px}
+#pg-score .kpi{padding:11px 14px 10px}
+#pg-score #trTile .cw{height:200px}
+#pg-score .gauge svg{max-width:196px}
+#pg-score #gTile .gauge .gs{margin-top:3px}
+@media (min-width:2200px){.prov.compact .pv,.prov.compact .pv b,.srclink{font-size:14.5px}.prov.compact .pv{padding:10px 14px}
+  #pg-score #trTile .cw{height:270px}#pg-score .gauge svg{max-width:250px}#pg-score .kpi{padding:14px 18px 12px}}
+
+/* Home layout: gauges + ranking on top, sales and customer opinions side by side below */
+#pg-score .grid>.tile.s4{grid-column:span 4}#pg-score .grid>.tile.s3{grid-column:span 3}
+#pg-score #trTile .cw{height:236px}
+#vsnapTile .vsnap{grid-template-columns:1fr;gap:12px;padding:0}
+#vsnapTile .vs1{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:center;text-align:left}
+#vsnapTile .vs1 .bn{grid-row:span 2;font-size:40px}
+#vsnapTile .vs1 .stars.big{font-size:18px;letter-spacing:1px}
+#vsnapTile .vs1 .cp{margin-top:2px;font-size:11px}
+#vsnapTile .vb{grid-template-columns:1fr 70px 34px;gap:8px;font-size:12px;margin-bottom:6px}
+#vsnapTile .vs2 .vh{margin-bottom:6px}
+#vsnapTile .vt{font-size:12px}
+#pg-score #lbTile .lbr{padding:5px 10px}
+#pg-score #lbTile .lb{gap:3px}
+@media (min-width:1181px) and (max-width:1560px){
+  #pg-score .grid>.tile.s7{grid-column:span 6}#pg-score .grid>.tile.s5{grid-column:span 6}
+  #pg-score .grid>.tile.s4{grid-column:span 3}#pg-score .grid>.tile.s3{grid-column:span 3}
+  #vsnapTile .vb{grid-template-columns:1fr 50px 32px}
+}
+@media(max-width:1180px){#pg-score .grid>.tile.s4,#pg-score .grid>.tile.s3{grid-column:span 12}}
+@media (min-width:2200px){#pg-score #trTile .cw{height:330px}#vsnapTile .vs1 .bn{font-size:52px}#vsnapTile .vs1 .stars.big{font-size:22px}
+  #vsnapTile .vb{grid-template-columns:1fr 100px 44px;font-size:14.5px}#vsnapTile .vt,#vsnapTile .vs1 .cp{font-size:13.5px}#pg-score #lbTile .lbr{padding:7px 12px}}
+
+/* Home ranking: one line per listing (the colored dot carries the category) */
+#pg-score #lbTile .lbr .nm small{display:none}
+#pg-score #lbTile .lbr{padding:4px 10px;min-height:0}
+#pg-score #lbTile .lbr .pos{font-size:15px;padding:1px 0}
+#pg-score #lbTile .lbr svg{height:18px}
+@media (min-width:2200px){#pg-score #lbTile .lbr{padding:6px 12px}#pg-score #lbTile .lbr .pos{font-size:19px}#pg-score #lbTile .lbr svg{height:24px}}
+
+button.pbtn{font-family:inherit;line-height:1.3;appearance:none;-webkit-appearance:none}
+.pane button.pbtn{width:100%}
+
+/* Monte Carlo ranges */
+.mcw{display:grid;grid-template-columns:1.3fr 1fr;gap:26px;align-items:center}
+.mcs{display:grid;gap:2px}
+.mhead{display:grid;grid-template-columns:150px 1fr 130px;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-bottom:4px}
+.mr{display:grid;grid-template-columns:150px 1fr 130px;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #EEF2F6}
+.ml{font-size:12.5px;font-weight:600;color:var(--ink)}
+.mv2 b{font-size:17px;color:var(--navy-d);margin-right:8px}.mv2 small{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.mnow{font-size:11px;color:var(--faint);text-align:right}
+.mcnote{font-size:12px;line-height:1.55;color:var(--body);margin:10px 0 0}.mcnote b{color:var(--ink)}
+@media(max-width:1180px){.mcw{grid-template-columns:1fr}}
+/* issue rates */
+.rates{display:grid;gap:4px}
+.rr{display:grid;grid-template-columns:minmax(0,1.3fr) 1fr 46px;gap:10px;align-items:center;font-size:12px;cursor:pointer;padding:2px 4px;border-radius:3px}
+.rr:hover,.rr.on{background:#EEF8FD}
+.rn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}.rn i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+.rb{height:8px;border-radius:4px;background:#EEF2F6;overflow:hidden}.rb b{display:block;height:100%;border-radius:4px}
+.rv{text-align:right;font-weight:700;color:var(--ink)}
+.ratenote{font-size:12px;line-height:1.55;color:var(--body);margin:10px 0 0}.ratenote b{color:var(--ink)}
+@media (min-width:2200px){.mr .ml,.rr,.mcnote,.ratenote{font-size:14.5px}.mv2 b{font-size:21px}.mv2 small,.mnow{font-size:13px}.mhead{font-size:12px}
+  .mhead,.mr{grid-template-columns:190px 1fr 160px}}
+
+/* trimmed Profitability */
+#narrTile .narr p{margin:0 0 10px;font-size:14px;line-height:1.55}
+#narrTile .narr p:last-child{margin-bottom:0}
+.mcnote{font-size:13px}
+.mcfoot{display:block;margin-top:4px;font-size:11px;color:var(--muted)}
+.mhead,.mr{grid-template-columns:140px 1fr}
+.mcw{grid-template-columns:1.5fr 1fr}
+@media (min-width:2200px){#narrTile .narr p{font-size:17px}.mcnote{font-size:15px}.mcfoot{font-size:13px}.mhead,.mr{grid-template-columns:180px 1fr}}
+
+/* short projector screens: keep the last slide on one screen */
+@media (max-height:800px){
+  .cards{gap:12px}.card{padding:13px 16px 12px}.card h3{font-size:16px;margin-bottom:6px}.card p{font-size:13px;line-height:1.45}
+  .callstat{padding:10px 16px;font-size:14.5px;margin-top:12px}.dk-disc{margin-top:8px}
+}
+
+/* standings key: bottom of the tile, centered */
+#lbTile{display:flex;flex-direction:column}
+#lbTile>#lb{flex:1;display:flex;flex-direction:column}
+#lbTile .lbkey{margin-top:auto;margin-bottom:auto;padding-top:0;justify-content:center}
+/* review data note sits under the title */
+.vnote{margin:-4px 0 12px;font-size:12.5px;color:var(--body);line-height:1.5}
+.vnote b{color:var(--ink)}
+@media (min-width:2200px){.vnote{font-size:15px}}
+
+/* customer opinions: fill the tile's height */
+#vsnapTile{display:flex;flex-direction:column}
+#vsnapTile .vsnap{flex:1;display:flex;flex-direction:column;align-items:stretch;gap:14px}
+#vsnapTile .vs1 .bn{font-size:46px}
+#vsnapTile .vs1 .stars.big{font-size:20px}
+#vsnapTile .vs1 .cp{font-size:11.5px}
+#vsnapTile .vs2{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:8px}
+#vsnapTile .vs2 .vh{margin-bottom:2px}
+#vsnapTile .vb{margin:0;font-size:13px}
+#vsnapTile .vb i{height:10px}
+#vsnapTile .vt{margin-top:4px;padding-top:10px;border-top:1px solid #EEF2F6;font-size:12.5px}
+@media (min-width:2200px){#vsnapTile .vs1 .bn{font-size:60px}#vsnapTile .vs1 .stars.big{font-size:25px}#vsnapTile .vs1 .cp{font-size:14px}
+  #vsnapTile .vb{font-size:15.5px}#vsnapTile .vb i{height:12px}#vsnapTile .vt{font-size:15px}}
+
+/* customer opinions: bars start right after the labels and fill the width */
+#vsnapTile .vb{grid-template-columns:150px 1fr 40px;gap:12px}
+@media (min-width:1181px) and (max-width:1560px){#vsnapTile .vb{grid-template-columns:132px 1fr 36px;gap:10px}}
+@media (min-width:2200px){#vsnapTile .vb{grid-template-columns:185px 1fr 52px;gap:14px}}
+
+/* Key finding as three blocks */
+#narrTile{display:flex;flex-direction:column}
+#narrTile .narr{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.kf{border-left:4px solid var(--pos);padding:6px 0 6px 14px}
+.kf.r{border-left-color:var(--neg)}.kf.y{border-left-color:var(--gold)}
+.kf .kl{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.kf .kv{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--ink);line-height:1.2}
+.kf .kv small{font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--muted);margin-left:8px}
+.kf p{margin:3px 0 0;font-size:13px;line-height:1.45;color:var(--body)}
+/* Ranges: label | middle case | range */
+.mhead,.mr{grid-template-columns:150px 1fr auto;gap:12px}
+.mhead .mrg,.mr .mrg{text-align:right}
+.mr .mrg{font-size:13px;color:var(--body);white-space:nowrap}
+.mv2 b{font-size:18px}
+@media (min-width:2200px){.kf .kl{font-size:12.5px}.kf .kv{font-size:28px}.kf .kv small{font-size:15px}.kf p{font-size:15.5px}
+  .mhead,.mr{grid-template-columns:190px 1fr auto}.mr .mrg{font-size:15.5px}.mv2 b{font-size:22px}}
+
+/* ===== balance pass ===== */
+/* Data pipeline */
+.heldin{margin-top:12px;padding-top:10px;border-top:1px solid #EEF2F6}
+.heldin .hh{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.heldnone{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--body)}
+.heldnone .ic{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;background:var(--pos)}
+#refreshTile{display:flex;flex-direction:column}
+#refreshTile .howto{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+#refreshTile .howto ol{display:flex;flex-direction:column;gap:14px;margin:0;padding-left:20px}
+#refreshTile .howto li{line-height:1.55}
+.src dl{display:grid;grid-template-columns:1fr 1fr;gap:14px 34px;margin-top:4px}
+.srci{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;align-content:start;padding-bottom:12px;border-bottom:1px solid #F0F3F6}
+.srci dt{margin:0}.srci dd{margin:0;line-height:1.5}
+/* Customer voice */
+#clfIn{min-height:64px}
+.clf .out{min-height:0}
+.rdt{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
+.rdl .h{margin-bottom:4px}.rdl .vnote{margin:0 0 6px}
+.rcols{margin:0;font-size:12px;color:var(--muted);line-height:1.5}
+.rcols code{background:#EEF4F9;padding:1px 5px;border-radius:3px;font-size:11.5px;color:var(--navy-d)}
+.rdb{display:flex;gap:8px;align-items:center}
+.rdb .pbtn{width:auto;margin:0;padding:8px 14px}
+/* Listing detail: cost build fills its tile */
+.tile:has(#cWater){display:flex;flex-direction:column}
+.tile:has(#cWater) .cw{flex:1;height:auto;min-height:300px}
+@media(max-width:1180px){.src dl{grid-template-columns:1fr}.rdt{grid-template-columns:1fr}}
+@media (min-width:2200px){.srci{grid-template-columns:190px 1fr}.heldnone,.rcols{font-size:15px}.heldin .hh{font-size:12.5px}}
+
+/* refreshing: steps spread evenly, note at the foot */
+#refreshTile .howto ol{flex:1;justify-content:space-evenly;gap:10px}
+#refreshTile .howto>p{margin-top:12px!important;padding-top:10px;border-top:1px solid #EEF2F6}
+/* issue rates spread to match the explorer beside them */
+#rateTile{display:flex;flex-direction:column}
+#rateTile .rates{flex:1;align-content:space-between}
+
+/* listing table: steady column rhythm */
+#pg-detail table.pb{table-layout:fixed;width:100%}
+#pg-detail table.pb th:first-child,#pg-detail table.pb td:first-child{width:26%}
+#pg-detail table.pb td:first-child{white-space:normal}
+#pg-detail table.pb th:last-child,#pg-detail table.pb td:last-child{width:14%}
+@media(max-width:1400px){#pg-detail table.pb th:first-child,#pg-detail table.pb td:first-child{width:30%}}
+
+#pg-detail table.pb th{white-space:normal;line-height:1.25;vertical-align:bottom}
+
+/* ===== header notes sit beside their title, not pinned far right ===== */
+.tile .h{justify-content:flex-start;flex-wrap:wrap;row-gap:2px;column-gap:0}
+.tile .h .t{margin-right:0}
+.tile .h .s:not(.more){font-size:12.5px;white-space:normal;color:var(--muted)}
+.tile .h .s:not(.more):not(:empty)::before{content:"\00b7";margin:0 8px;color:var(--faint);font-weight:700}
+.tile .h>.lbctl,.tile .h>.s.more{margin-left:auto}
+@media (min-width:2200px){.tile .h .s:not(.more){font-size:14.5px}}
+
+/* ===================== quieter, report-like styling ===================== */
+:root{--sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+body,button,input,textarea,select,.tile,.slide,.tcard{font-family:var(--sans)!important}
+*:not(code):not(.asin){font-family:var(--sans)}
+code,.asin{font-family:ui-monospace,Consolas,Menlo,monospace!important}
+body{font-variant-numeric:tabular-nums}
+/* square, flat visuals with thin borders */
+.tile,.kpi,.hook,.prov.compact .pv,.tcard,.ttoast,.card,.callstat,.amz,.pipe .ps{box-shadow:none!important;border-radius:3px!important}
+.tile,.kpi,.hook,.prov.compact .pv{border:1px solid #D8DFE6!important}
+.kpi{border-top:1px solid #D8DFE6!important}
+.kpi::before,.kpi::after{display:none!important}
+.hook{border-left:1px solid #D8DFE6!important;padding:12px 16px!important}
+.hook .msg{font-weight:400!important;font-size:17px!important;color:var(--ink)!important}
+.hook .msg b{font-weight:600}
+/* data key: small colour squares instead of accent stripes */
+.prov.compact .pv{border-left:1px solid #D8DFE6!important;padding:7px 11px!important}
+.prov.compact .pv b{text-transform:none!important;letter-spacing:0!important;font-size:12.5px!important;display:inline-flex;align-items:center;gap:6px}
+.prov.compact .pv b::before{content:"";width:9px;height:9px;border-radius:1px;display:inline-block}
+.prov.compact .pv.pub b::before{background:#2E9B6A}.prov.compact .pv.est b::before{background:#E0A500}.prov.compact .pv.smp b::before{background:#9AA8B6}
+/* sentence case, normal tracking, everywhere */
+.pane h4,.lbh,.kf .kl,.vs2 .vh,.mhead,.heldin .hh,.tcard .tn,.sk,.narr .tag,table.pb th,.dk-hint,.src dt,.vdata p,.pill,.tag-s,.gs,.flag,.stp,.tagc,.real,.est,.src .real,.src .est{text-transform:none!important;letter-spacing:0!important}
+.pane h4{font-size:13px!important;color:var(--ink)!important;font-weight:600!important}
+.lbh{font-size:11.5px!important;font-weight:600!important}
+.vs2 .vh,.kf .kl,.mhead,.heldin .hh{font-size:12px!important;font-weight:600!important;color:var(--muted)!important}
+table.pb th{font-weight:600!important;font-size:12px!important}
+/* badges become plain text */
+.pill{background:none!important;border:1px solid rgba(255,255,255,.4)!important;color:#D5E1EC!important;border-radius:2px!important;font-weight:500!important;font-size:11.5px!important;padding:1px 7px!important}
+.tag-s{background:none!important;border:none!important;padding:0!important;margin-left:8px!important;font-size:12px!important;font-weight:400!important;color:var(--muted)!important;vertical-align:0!important;font-style:italic}
+.gs{background:none!important;padding:0!important;font-size:12px!important;font-weight:600!important}
+.gs.ok{color:#1E7A50!important}.gs.mid{color:#9A6B00!important}.gs.bad{color:#B23630!important}
+.flag{background:none!important;padding:0!important;margin-left:8px!important;color:#B23630!important;font-size:11px!important;font-weight:600!important}
+.stp{background:none!important;padding:0!important;font-weight:600!important}
+.stp.resolved{color:#1E7A50!important}.stp.progress{color:#9A6B00!important}.stp.open{color:#B23630!important}
+.tagc{border-radius:2px!important}
+.src .real,.src .est,.src span.real,.src span.est{background:none!important;padding:0 0 0 6px!important;font-weight:600!important;font-size:11.5px!important}
+.src .real{color:#1E7A50!important}.src .est{color:#9A6B00!important}
+.amz .badge{border-radius:2px!important;background:none!important;padding:0!important;font-size:12.5px!important}
+/* key finding: plain rows, no accent bars */
+.kf{border-left:none!important;padding:10px 0!important;border-bottom:1px solid #EEF2F6}
+.kf:last-child{border-bottom:none}
+.kf .kv{font-family:var(--sans)!important;font-weight:600!important;font-size:21px!important}
+/* controls: square, solid */
+.exs button,.ttoast button,.tcard button,.srclink,.pbtn,.present,.tourbtn,.lbctl,.lbctl button,.dk-btn,.dl,.rr{border-radius:2px!important}
+.exs button{border-style:solid!important;background:#fff!important}
+/* page tabs: plain, active tab underlined in navy */
+.tabs button{border-radius:0!important;margin-top:0!important}
+.tabs button.on{background:#fff!important;border-bottom-color:var(--navy-d)!important}
+/* numbers and headings in the report font */
+.kpi .v,.gauge .gval,.lbr .pos,.vs1 .bn,.dc b,.bignum,.sh,.tcard h3,.bar .tt{font-family:var(--sans)!important}
+.kpi .v{font-weight:600!important}
+.lbr .pos{font-weight:600!important}
+.vs1 .bn{font-weight:600!important}
+/* tour: plain ring, no glow */
+.tspot,.tspot.via{box-shadow:0 0 0 9999px rgba(0,22,45,.55),0 0 0 2px #F8B010!important;border-radius:3px!important}
+.tcard{border-top:1px solid #D8DFE6!important}
+.tsecs span{border-radius:0!important}
+/* deck: plain headlines and cards */
+.sk{border-bottom:none!important;padding-bottom:0!important;color:var(--muted)!important;font-weight:600!important;font-size:clamp(13px,1.1vw,15px)!important}
+.sk::after{display:none!important}
+.sh{font-weight:600!important;letter-spacing:-.01em}
+.sh .g,.sh .r,.sh .y{color:inherit!important}
+.card{border-top:1px solid #D8DFE6!important}
+.callstat{border-top:1px solid #D8DFE6!important;border-left:none!important;background:#F6F8FA!important}
+.chip{border-radius:2px!important}
+.bigbar,.bigbar span,.dollar,.dollar span{border-radius:0!important}
+
+.lose th,.slide th,.slide .kl,.dk-top small,.card .n{text-transform:none!important;letter-spacing:0!important}
+.lose th{font-size:clamp(12px,1vw,14px)!important;font-weight:600!important}
+
+/* =====================================================================
+   Dispensary ledger: design system
+   Colour means one thing each. Type: Plex Sans to read, Plex Sans Condensed
+   for fine print (labels, headers, axes). One bold move: the headline.
+   Radii by hierarchy: panels 6px, controls 4px, tags and bars 2-3px.
+   ===================================================================== */
+:root{--ink:#13263A;--navy-d:#0E3B5C;--navy:#0E3B5C;--field:#E6ECF0;--rule:#E3E9EE;--muted:#5B6E80;--faint:#8797A7;
+  --pos:#2E8B57;--neg:#C0392B;--gold:#D9A21B;--cyan:#1F6FA0;--cyan-d:#1B5F8A;--tile-b:#E3E9EE;
+  --sans:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;--cond:"IBM Plex Sans Condensed","IBM Plex Sans","Segoe UI",sans-serif}
+body{background:var(--field)!important;color:var(--ink)}
+.canvas{background:var(--field)!important}
+/* fine print in the condensed cut */
+table.pb th,.lbh,.kpi .l,.gauge .gt,.gauge .gmin,.gauge .gmax,.gs,.tag-s,.flag,.stp,.tagc,.mhead,.vs2 .vh,.kf .kl,.heldin .hh,.asin,.lbkey,.tcard .tn,.sk,.prov.compact .pv,.vs1 .cp,.mr .mrg,.rcols,.dk-hint,.src dt,.ts{font-family:var(--cond)!important}
+.asin{letter-spacing:.03em!important;font-size:11px!important;color:var(--faint)!important}
+code{font-family:ui-monospace,Consolas,Menlo,monospace!important}
+/* ---------- header and tabs ---------- */
+.bar{background:#0B2E48!important}
+.bar .tt{font-size:18px!important;font-weight:600!important;letter-spacing:-.005em}
+.bar .st{font-size:12.5px!important;color:#AFC2D3!important}
+.pill{border-color:rgba(255,255,255,.3)!important;color:#C9D6E2!important;border-radius:3px!important}
+.present{background:var(--gold)!important;color:var(--ink)!important;border-radius:4px!important;font-weight:600!important}
+.present:hover{background:#E6B23A!important}
+.tourbtn{border-radius:4px!important}
+.tabs{background:#fff!important;border-bottom:1px solid var(--rule)!important}
+.tabs button{font-size:14px!important;font-weight:500!important;color:var(--muted)!important;border-bottom:2px solid transparent!important}
+.tabs button.on{color:var(--ink)!important;font-weight:600!important;border-bottom-color:var(--ink)!important;background:transparent!important}
+.tabs button:hover{background:#F3F6F8!important}
+/* ---------- panels: calm white on the field, no borders or shadows ---------- */
+.tile{background:#fff!important;border:none!important;border-radius:6px!important;box-shadow:none!important}
+.tile .h .t{font-weight:600!important;font-size:15px!important;letter-spacing:-.005em;color:var(--ink)!important}
+.tile .h .s:not(.more):not(:empty)::before{content:none!important}
+.tile .h .s:not(.more){margin-left:10px}
+.grid,.kpis{gap:14px}
+/* ---------- the hero: a sentence set on the page ---------- */
+#pg-score .hook{background:transparent!important;border:none!important;padding:4px 2px 2px!important;margin-bottom:10px!important;box-shadow:none!important}
+#pg-score .hook .msg{font-size:24px!important;line-height:1.32!important;font-weight:500!important;letter-spacing:-.014em;color:var(--ink)!important;max-width:74ch}
+/* data key: one quiet line, no boxes */
+.prov.compact{gap:6px 26px!important;margin-bottom:14px!important;align-items:center!important}
+.prov.compact .pv{background:transparent!important;border:none!important;padding:0!important;flex:0 1 auto!important;font-size:13px!important;color:var(--muted)!important}
+.prov.compact .pv b{color:var(--ink)!important;font-weight:600!important;font-size:13px!important}
+.srclink{border:none!important;background:none!important;padding:0!important;color:var(--cyan)!important;font-weight:500!important;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(31,111,160,.35)}
+.srclink:hover{text-decoration-color:var(--cyan)}
+/* ---------- the ledger: one band, divided like compartments ---------- */
+.kpis{background:#fff;border-radius:6px;gap:0!important;overflow:hidden}
+.kpis .kpi{background:transparent!important;border:none!important;border-radius:0!important;box-shadow:none!important;border-left:1px solid var(--rule)!important;padding:14px 20px 13px!important}
+.kpis .kpi:first-child{border-left:none!important}
+.kpi .v{font-size:28px!important;font-weight:500!important;letter-spacing:-.015em;line-height:1.1}
+.kpi .l{font-size:12.5px!important;color:var(--muted)!important;margin-top:5px!important;line-height:1.3}
+.kpi .l .l2{display:block;color:var(--faint)}
+.kpi.g .v{color:var(--pos)!important}.kpi.r .v{color:var(--neg)!important}.kpi.y .v,.kpi:not(.g):not(.r) .v{color:var(--ink)}
+/* ---------- standings: softened tints in the palette ---------- */
+.lbr.up{background:#EEF6F1!important;border-left-color:var(--pos)!important}
+.lbr.down{background:#FBEFEE!important;border-left-color:var(--neg)!important}
+.lbr.same{background:#F8F4E6!important;border-left-color:var(--gold)!important}
+.lbr{border-left-width:3px!important;border-radius:3px!important}
+.lbr .pos{font-weight:600!important;border-radius:3px!important;box-shadow:none!important;border:1px solid var(--rule)}
+.lbr.up .mv{color:#1F6B42!important}.lbr.down .mv{color:#A5301F!important}.lbr.same .mv{color:#8A6A12!important}
+/* ---------- gauges ---------- */
+.gauge .gval{font-family:var(--sans)!important;font-weight:600!important}
+.gauge .gl{font-weight:600!important}
+.gs.ok{color:#1F6B42!important}.gs.mid{color:#8A6A12!important}.gs.bad{color:#A5301F!important}
+/* ---------- controls: one radius ---------- */
+.pbtn,.slbtns button,.lbctl,.exs button,.ttoast button,.tcard button,.dk-btn,.ptog{border-radius:4px!important}
+.lbctl button:first-child{border-radius:4px 0 0 4px!important}.lbctl button:last-child{border-radius:0 4px 4px 0!important}
+.slbtns button.on,.lbctl button.on{background:var(--navy)!important;border-color:var(--navy)!important}
+.pbtn.pri{background:var(--navy)!important;border-color:var(--navy)!important}
+.tagc,.stp{border-radius:3px!important}
+/* ---------- key finding ---------- */
+.kf .kv{font-weight:500!important;letter-spacing:-.012em}
+.kf .kl{font-size:12.5px!important}
+/* ---------- tour ---------- */
+.tcard{border-radius:6px!important;border:none!important}
+.tcard h3{font-weight:600!important;letter-spacing:-.01em}
+.tcard button.go,#tNext{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important}
+.ttoast{border-radius:6px!important;border:none!important;box-shadow:0 6px 24px rgba(19,38,58,.16)!important}
+.ttoast button.go{background:var(--navy)!important;border-color:var(--navy)!important}
+/* ---------- meeting deck ---------- */
+.dk-top{background:#0B2E48!important}
+.slide .sh{font-weight:500!important;letter-spacing:-.018em!important;color:var(--ink)!important}
+.slide .sk{font-size:clamp(13px,1.1vw,15px)!important;color:var(--muted)!important;font-weight:500!important}
+.card{background:#fff!important;border:1px solid var(--rule)!important;border-radius:6px!important}
+.card h3{font-weight:600!important;letter-spacing:-.008em}
+.callstat{background:#fff!important;border:1px solid var(--rule)!important;border-radius:6px!important}
+.bigbar{border-radius:3px!important;overflow:hidden}
+.chip{border-radius:3px!important}
+.dk-btn.go{background:var(--navy)!important;border-color:var(--navy)!important}
+@media (min-width:2200px){#pg-score .hook .msg{font-size:30px!important}.kpi .v{font-size:34px!important}.kpi .l,.prov.compact .pv,.prov.compact .pv b{font-size:15px!important}.tile .h .t{font-size:18px!important}.bar .tt{font-size:22px!important}}
+
+/* source tags follow the Home key: green public, gold estimated, gray sample */
+.src dt{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.src .real,.src .est,.src .smp,.src .def,.src span.real,.src span.est{display:inline-flex!important;align-items:center;gap:5px;background:none!important;padding:0!important;
+  font-family:var(--cond)!important;font-size:12px!important;font-weight:600!important;letter-spacing:0!important;text-transform:none!important}
+.src .real::before,.src .est::before,.src .smp::before{content:"";width:8px;height:8px;border-radius:1px;display:inline-block}
+.src .real{color:#1F6B42!important}.src .real::before{background:#2E8B57}
+.src .est{color:#8A6A12!important}.src .est::before{background:#D9A21B}
+.src .smp{color:#5B6E80!important}.src .smp::before{background:#9AA8B6}
+.src .def{color:var(--muted)!important;font-weight:500!important}
+.prov.compact .pv.pub b::before{background:#2E8B57!important}.prov.compact .pv.est b::before{background:#D9A21B!important}.prov.compact .pv.smp b::before{background:#9AA8B6!important}
+@media (min-width:2200px){.src .real,.src .est,.src .smp,.src .def{font-size:14px!important}}
+
+.src dt{font-family:var(--sans)!important;font-size:13.5px!important;font-weight:600!important;color:var(--ink)!important;line-height:1.35}
+.src dd{font-size:13px!important;line-height:1.55!important;color:var(--body,#34495E)}
+.src .real,.src .est,.src .smp,.src .def{font-size:12px!important}
+@media (min-width:2200px){.src dt{font-size:15.5px!important}.src dd{font-size:15px!important}.src .real,.src .est,.src .smp,.src .def{font-size:13.5px!important}}
+
+.src dt{flex-direction:column!important;align-items:flex-start!important;gap:4px!important}
+.src dt>span{margin:0!important}
+.src dd{font-weight:400!important}
+
+/* ===== warmth pass: brand navy and gold, blue-tinted neutrals ===== */
+:root{--field:#E2EAF2;--rule:#E1E9F1}
+body,.canvas{background:var(--field)!important}
+/* the ledger band: the one strong, saturated shape on the page */
+.kpis{background:#0E3B5C!important}
+.kpis .kpi{border-left-color:rgba(255,255,255,.12)!important}
+.kpis .kpi .v{color:#fff!important}
+.kpis .kpi.g .v{color:#7EE0A9!important}
+.kpis .kpi.r .v{color:#FF9C8F!important}
+.kpis .kpi .l{color:#C4D6E7!important}
+.kpis .kpi .l .l2{color:#8FB0CF!important}
+.kpis .kpi .v .stars{filter:none}
+#vAvg .stars{--p:90%}
+/* Customer voice numbers follow the same band */
+#voiceBody .kpis .kpi .l{color:#C4D6E7!important}
+/* gold for the active page, matching the Present button */
+.tabs button.on{border-bottom:3px solid var(--gold)!important;color:var(--ink)!important}
+/* ranking tints a touch warmer */
+.lbr.up{background:#EAF6EF!important}.lbr.down{background:#FCEDEB!important}.lbr.same{background:#FBF4E1!important}
+/* slicer selection in brand navy */
+.slbtns button.on{background:#0E3B5C!important}
+
+/* ledger compartments: figure and label centered */
+.kpis .kpi{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.kpis .kpi .l{margin-top:6px!important}
+#pg-score .hook .msg{max-width:none!important}
+
+/* ===== contrast pass: every text colour meets WCAG 2.1 AA ===== */
+:root{--muted:#596B7D;--faint:#5E6974;--pos:#287B4D}
+table.ex td:nth-child(3),.rstars{color:#C1890C!important}
+.rstars .dim{color:#C9D3DC!important}
+.bigbar span.lt,.dollar span.lt{color:#13263A!important}
+.tile .h .s,.tag-s{color:var(--muted)!important}
+.asin{color:var(--faint)!important}
+.pos,.kpi.g .v,td.pos{color:var(--pos)}
+
+.rstars .dim{color:#8E959C!important}
+.disc,.canvas>.disc,.dk-disc{color:var(--muted)!important}
+
+/* ledger figures chosen to stay distinct for every type of colour vision */
+.kpis .kpi.g .v{color:#9BEBBD!important}
+.kpis .kpi.r .v{color:#FF7A66!important}
+
+/* welcome card: on-brand and hard to miss */
+.ttoast{background:#0E3B5C!important;color:#fff!important;border:none!important;border-radius:8px!important;padding:16px 18px!important;
+  box-shadow:0 10px 30px rgba(11,46,72,.28)!important;display:flex;flex-direction:column;align-items:stretch!important;gap:12px!important;width:300px;right:24px!important;bottom:24px!important}
+.ttoast .tt-txt{display:flex;flex-direction:column;gap:3px}
+.ttoast .tt-txt b{font-size:16px;font-weight:600;color:#fff!important}
+.ttoast .tt-txt span{font-size:13px;color:#C4D6E7;line-height:1.45}
+.ttoast .tt-btns{display:flex;gap:8px}
+.ttoast button{border-radius:4px!important;padding:8px 14px!important;font-size:13px!important;font-weight:600!important;cursor:pointer}
+.ttoast button.go{background:var(--gold)!important;border:1px solid var(--gold)!important;color:var(--ink)!important;flex:1}
+.ttoast button.go:hover{background:#E6B23A!important}
+.ttoast button:not(.go){background:transparent!important;border:1px solid rgba(255,255,255,.35)!important;color:#fff!important}
+.ttoast button:not(.go):hover{border-color:#fff!important}
+.ttoast button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.ttoast[hidden]{display:none!important}
+@media (min-width:2200px){.ttoast{width:360px;padding:20px 22px!important}.ttoast .tt-txt b{font-size:19px}.ttoast .tt-txt span,.ttoast button{font-size:15px!important}}
+@media(max-width:820px){.ttoast{left:12px;right:12px!important;width:auto;bottom:12px!important}}
+
+/* ===== palette: navy #002855, gold #F8B010, cyan #00A3E0 ===== */
+:root{--navy:#002855;--navy-d:#002855;--gold-brand:#F8B010;--cyan:#00709A;--cyan-d:#005F83}
+.bar,.dk-top{background:#002855!important}
+.kpis{background:#002855!important}
+.slbtns button.on,.lbctl button.on,.pbtn.pri,.tcard button.go,#tNext,.dk-btn.go{background:#002855!important;border-color:#002855!important}
+/* brand gold on brand surfaces */
+.present,.ttoast button.go{background:#F8B010!important;border-color:#F8B010!important;color:#13263A!important}
+.present:hover,.ttoast button.go:hover{background:#FFC23D!important}
+.tabs button.on{border-bottom-color:#F8B010!important}
+.ttoast{background:#002855!important}
+/* brand cyan marks what is current or selected */
+#tb tr.sel td{background:#E6F6FC!important}
+#tb tr.sel td:first-child{box-shadow:inset 3px 0 0 #00A3E0}
+.lbr.sel{outline:2px solid #00A3E0!important;outline-offset:-2px}
+.rr.on,.dl.on,.res .rw.on{background:#E6F6FC!important}
+.dl.on{border-color:#00A3E0!important}
+a,.srclink,.more{color:#00709A!important}
+:focus-visible{outline:2px solid #00A3E0;outline-offset:2px}
+
+/* margin chart: about 30px per listing so each row reads on its own */
+.tile:has(#cMargin) .cw{height:440px!important}
+@media (min-width:2200px){.tile:has(#cMargin) .cw{height:600px!important}}
+@media (max-width:1180px){.tile:has(#cMargin) .cw{height:480px!important}}
+</style>
+</head>
+<body>
+
+<div class="top" id="top">
+<header class="bar">
+  <span class="mark" title="Austin Sonny Stethem" aria-hidden="true">AS</span>
+  <div>
+    <div class="tt">Amazon 1P Vendor Profitability<span class="pill">Model</span></div>
+    <div class="st">A working model by Austin Sonny Stethem of Amazon&rsquo;s 1P vendor economics, on a fictional consumer-products catalog</div>
+  </div>
+  <span class="sp"></span>
+  <div class="meta">Catalog: <b>Lakeshore Wellness (fictional)</b><span id="refreshed" hidden></span><br>Source: <b id="srcHead">Generated data + stated assumptions</b></div>
+  <button class="tourbtn" id="tourTop" type="button">Take the tour</button>
+  <button class="present" id="presentTop" type="button">Present &#9654;</button>
+</header>
+<nav class="tabs" id="tabs" aria-label="Pages">
+  <button type="button" data-p="score" class="on"><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M8 1.6 1.3 7.3l.9 1.1.9-.8V14h3.8v-4h2.2v4h3.8V7.6l.9.8.9-1.1Z" fill="currentColor"/></svg>Home</button>
+  <button type="button" data-p="overview">Profitability</button>
+  <button type="button" data-p="detail">Listing detail</button>
+  <button type="button" data-p="voice">Customer voice</button>
+  <button type="button" data-p="pipe">Data pipeline</button>
+</nav>
+</div>
+
+<div class="wrap">
+  <aside class="pane">
+    <button type="button" class="ptog" id="ptog" aria-expanded="true"><span>Filters &amp; what-ifs</span><span>&lsaquo; Hide</span></button>
+    <div class="grp">
+      <h4>Category</h4>
+      <div class="slbtns" id="catSlicer"></div>
+    </div>
+    <div class="grp">
+      <h4>Vendor terms (what-if)</h4>
+      <div class="wi"><div class="row"><label for="td">Amazon's trade discount</label><span class="v" id="tdV"></span></div>
+        <input type="range" id="td" min="20" max="60" step="1" value="40"><small>What Amazon pays us: its selling price less this.</small></div>
+      <div class="wi"><div class="row"><label for="alw">Co-op &amp; allowances</label><span class="v" id="alwV"></span></div>
+        <input type="range" id="alw" min="0" max="30" step="0.5" value="12"><small>Marketing co-op, damage and early-pay allowances, as a share of what Amazon pays us. Freight to Amazon is costed separately.</small></div>
+      <div class="wi"><div class="row"><label for="ads">Advertising</label><span class="v" id="adsV"></span></div>
+        <input type="range" id="ads" min="0" max="20" step="0.5" value="6"><small>Vendor-funded Amazon ads, as a share of shopper sales.</small></div>
+      <div class="wi"><div class="row"><label for="doh">Inventory on hand</label><span class="v" id="dohV"></span></div>
+        <input type="range" id="doh" min="15" max="180" step="5" value="75"><small>Days of stock before it sells. Carried at 25% a year of product cost.</small></div>
+    </div>
+    <div class="grp">
+      <h4>Targets <span style="font-weight:500;letter-spacing:0;text-transform:none;color:var(--faint)">for the Home gauges</span></h4>
+      <div class="wi"><div class="row"><label for="tMargin">Margin target</label><span class="v" id="tMarginV"></span></div>
+        <input type="range" id="tMargin" min="20" max="70" step="1" value="52"><small>Our contribution as a share of sales to Amazon.</small></div>
+      <div class="wi"><div class="row"><label for="tGrowth">Sales target</label><span class="v" id="tGrowthV"></span></div>
+        <input type="range" id="tGrowth" min="-10" max="30" step="1" value="5"><small>Monthly goal against the 12-month average.</small></div>
+    </div>
+    <div class="grp">
+      <h4>Data</h4>
+      <button type="button" class="pbtn pri" id="fileBtn" aria-disabled="true" title="Not active in this demo">Load a sales export</button>
+      <input type="file" id="fileIn" accept=".csv,text/csv">
+      <button type="button" class="pbtn" id="tplBtn" aria-disabled="true" title="Not active in this demo">Download template</button>
+      <button type="button" class="pbtn" id="resetBtn" title="Restore the sample data, default terms and targets, and clear filters">Reset to sample</button>
+      <div class="srcnote" id="srcNote"></div>
+    </div>
+  </aside>
+
+  <main class="canvas">
+
+    <!-- ========== SCORECARD ========== -->
+    <section class="page on" id="pg-score">
+      <div class="hook" aria-label="Key finding">
+        <div class="msg" id="hookMsg"></div>
+
+      </div>
+      <div class="prov compact" aria-label="Where this data comes from">
+        <span class="pv pub"><b>Generated</b>13 fictional listings, prices and ratings</span>
+        <span class="pv est"><b>Assumed</b>costs, volumes and vendor terms, adjustable</span>
+        <span class="pv smp"><b>Sample</b>monthly history and review text</span>
+        <button type="button" class="srclink" id="srcLink">Full sources</button>
+      </div>
+      <div class="kpis kclick" id="homeKpis" role="link" tabindex="0" title="Open Profitability for the detail">
+        <div class="kpi"><div class="v" id="kRetail"></div><div class="l">Shopper sales</div></div>
+        <div class="kpi y"><div class="v" id="kWh"></div><div class="l">Sales to Amazon</div></div>
+        <div class="kpi g" id="kConBox"><div class="v" id="kCon"></div><div class="l" id="kConL">Our contribution</div></div>
+        <div class="kpi r" id="kRiskBox"><div class="v" id="kRisk"></div><div class="l" title="CRaP: Amazon's label for items it can't realize a profit on">Listings at CRaP risk</div></div>
+        <div class="kpi r" id="kExpBox"><div class="v" id="kExp"></div><div class="l">Cost to make them healthy for Amazon</div></div>
+      </div>
+      <div class="grid">
+        <div class="tile s7" id="gTile">
+          <div class="h"><span class="t"><span id="gTitle">This month against target</span><span class="tag-s">sample data</span></span><span class="s" id="gSub"></span></div>
+          <div class="gauges" id="gauges"></div>
+        </div>
+        <div class="tile s5 row2" id="lbTile">
+          <div class="h"><span class="t"><span id="lbTitle">Listing standings</span><span class="tag-s">sample data</span></span>
+            <div class="lbctl" id="lbCtl"><button type="button" data-m="rev" class="on">Sales</button><button type="button" data-m="con">Contribution</button></div></div>
+          <div id="lb"></div>
+        </div>
+        <div class="tile s4" id="trTile">
+          <div class="h"><span class="t">Monthly sales<span class="tag-s">sample data</span></span></div>
+          <div class="cw"><canvas id="cTrend" role="img" aria-label="Monthly sales to Amazon as columns, our margin as a line, and a dashed sales target"></canvas></div>
+        </div>
+        <div class="tile s3 vsnapt" id="vsnapTile" role="link" tabindex="0" title="Open Customer voice">
+          <div class="h"><span class="t">Customer ratings<span class="tag-s">sample data</span></span><span class="s more">Details</span></div>
+          <div class="vsnap" id="vsnap"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PROFITABILITY ========== -->
+
+    <!-- ========== LISTING DETAIL ========== -->
+    <section class="page" id="pg-detail">
+      <div class="grid">
+        <div class="tile s12">
+          <div class="h"><span class="t">Every listing, per unit</span></div>
+          <div class="tw"><table class="pb">
+            <thead><tr><th>Listing</th><th>Amazon price</th><th>List price</th><th>Units (est.)</th><th>Amazon pays us</th><th>Our contribution / unit</th><th>Amazon keeps / unit</th><th>Total contribution</th></tr></thead>
+            <tbody id="tb"></tbody><tfoot id="tf"></tfoot>
+          </table></div>
+        </div>
+        <div class="tile s8">
+          <div class="h"><span class="t" id="wfTitle">Cost build</span></div>
+          <div class="cw"><canvas id="cWater" role="img" aria-label="Waterfall from list price through Amazon's margin, allowances, advertising, freight, materials, labor, packaging, plant and floor space and inventory carrying cost to our contribution"></canvas></div>
+        </div>
+        <div class="tile s4">
+          <div class="h"><span class="t">Amazon&rsquo;s side of this listing</span></div>
+          <div class="amz" id="amz"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CUSTOMER VOICE ========== -->
+    <section class="page" id="pg-voice">
+      <div class="tile s12" id="voiceEmpty" style="display:none">
+        <div class="h"><span class="t">Customer voice</span></div>
+        <div class="empty">Load a review export to see ratings, issue categories and resolution for these listings. Use <b>Review template</b> below for the columns.</div>
+      </div>
+      <div id="voiceBody">
+        <div class="kpis">
+          <div class="kpi y"><div class="v" id="vAvg"></div><div class="l" id="vAvgL">Average rating</div></div>
+          <div class="kpi"><div class="v" id="vCount"></div><div class="l" id="vCountL">Ratings on Amazon</div></div>
+          <div class="kpi"><div class="v" id="vFlag"></div><div class="l">Issues flagged</div></div>
+          <div class="kpi g" id="vResBox"><div class="v" id="vRes"></div><div class="l">Issues resolved</div></div>
+          <div class="kpi" id="vDaysBox"><div class="v" id="vDays"></div><div class="l">Median time to resolve</div></div>
+        </div>
+        <div class="grid">
+          <div class="tile s5">
+            <div class="h"><span class="t">Try the classifier</span></div>
+            <div class="clf">
+              <textarea id="clfIn" rows="3" placeholder="e.g. Box arrived crushed and the lid snapped off after a week."></textarea>
+              <div class="exs" id="clfEx">
+                <button type="button" data-t="Box arrived crushed and the lid snapped off after a week.">Two problems</button>
+                <button type="button" data-t="Hard to open with my arthritis, and way overpriced for plastic.">Ease + price</button>
+                <button type="button" data-t="Good quality rubber, no leaks at all. Streak-free wipes too.">Negation test</button>
+                <button type="button" data-t="Still hear my husband snoring, and they fall out overnight.">Ear plugs</button>
+              </div>
+              <div class="out" id="clfOut"></div>
+            </div>
+          </div>
+          <div class="tile s7">
+            <div class="h"><span class="t">Where complaints come from</span></div>
+            <div class="mixw">
+              <div class="donut"><canvas id="cDonut" role="img" aria-label="Donut of flagged issues by category"></canvas><div class="dc" id="dCenter"></div></div>
+              <div class="dlegend" id="dLegend"></div>
+            </div>
+          </div>
+          <div class="tile s5" id="rateTile">
+            <div class="h"><span class="t">Issues per 1,000 units sold</span></div>
+            <div class="rates" id="rates"></div>
+            <p class="ratenote" id="rateNote"></p>
+          </div>
+          <div class="tile s6" id="resTile">
+            <div class="h"><span class="t">Resolution by category</span><span class="s"><i class="kd" style="background:#2E9B6A"></i>resolved <i class="kd" style="background:#F8B010"></i>in progress <i class="kd" style="background:#D2433C"></i>open</span></div>
+            <div class="res" id="res"></div>
+            <p class="resnote" id="resNote"></p>
+          </div>
+          <div class="tile s7">
+            <div class="h"><span class="t">Review explorer</span><span class="s" id="exSub"></span></div>
+            <div class="tw"><table class="pb ex"><thead><tr><th>Month</th><th>Listing</th><th>Stars</th><th>Review</th><th>Category</th><th id="exStTh">Status</th></tr></thead><tbody id="ex"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+      <div class="tile s12 rdt" style="margin-top:12px">
+        <div class="rdl"><div class="h"><span class="t">Review data</span></div><p class="vnote" id="vSrcNote"></p><p class="rcols">Columns: <code>date</code>, <code>sku</code>, <code>stars</code>, <code>text</code>, optional <code>status</code>. Loading is switched off in this demo. In a 1P model Amazon owns the customer, so <b>resolved</b> means fixed at the source.</p></div>
+        <div class="rdb"><button type="button" class="pbtn pri" id="revBtn" aria-disabled="true" title="Not active in this demo">Load a review export</button><button type="button" class="pbtn" id="revTpl" aria-disabled="true" title="Not active in this demo">Review template</button><button type="button" class="pbtn" id="revReset" aria-disabled="true" title="Not active in this demo">Back to sample reviews</button><input type="file" id="revIn" accept=".csv,text/csv" style="display:none"></div>
+      </div>
+    </section>
+
+    <section class="page" id="pg-overview">
+      <div class="grid">
+        <div class="tile s12">
+          <div class="h"><span class="t">Where every dollar Amazon pays us goes</span><span class="s" id="dollarSub" hidden></span></div>
+          <div class="dollar" id="dollar"></div>
+          <div class="lg" id="dollarLg"></div>
+        </div>
+        <div class="tile s7">
+          <div class="h"><span class="t">Our margin and Amazon&rsquo;s, by listing</span></div>
+          <div class="cw"><canvas id="cMargin" role="img" aria-label="Paired bars comparing our margin with Amazon's estimated margin on each listing"></canvas></div>
+        </div>
+        <div class="tile s5" id="narrTile">
+          <div class="h"><span class="t">Key finding</span></div>
+          <div class="narr" id="narr"></div>
+        </div>
+        <div class="tile s12" id="mcTile">
+          <div class="h"><span class="t">Range across 2,000 simulated scenarios</span></div>
+          <div class="mcw">
+            <div><div class="cw sm"><canvas id="cMC" role="img" aria-label="Histogram of simulated annual contribution with the P10 to P90 range highlighted"></canvas></div></div>
+            <div class="mcs" id="mcStats"></div>
+          </div>
+          <p class="mcnote" id="mcNote"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== DATA PIPELINE ========== -->
+    <section class="page" id="pg-pipe">
+      <div class="grid">
+        <div class="tile s12">
+          <div class="h"><span class="t">How this report runs</span></div>
+          <div class="pipe">
+            <div class="ps ok" id="ps1"><span class="n">1</span><div><div class="pt">Source</div><div class="pd" id="pSrc"></div></div></div>
+            <div class="arr"></div>
+            <div class="ps" id="ps2"><span class="n">2</span><div><div class="pt">Automated checks</div><div class="pd" id="pChk"></div></div></div>
+            <div class="arr"></div>
+            <div class="ps ok" id="ps3"><span class="n">3</span><div><div class="pt">Model</div><div class="pd" id="pMod"></div></div></div>
+            <div class="arr"></div>
+            <div class="ps ok"><span class="n">4</span><div><div class="pt">Report</div><div class="pd">Home, profitability, listing detail, customer voice</div></div></div>
+            <div class="arr"></div>
+            <button class="ps go" id="psDeck" type="button"><span class="n">5</span><div><div class="pt">Meeting view</div><div class="pd">Open the slides</div></div></button>
+          </div>
+        </div>
+        <div class="tile s6">
+          <div class="h"><span class="t">Automated checks</span><span class="s" id="chkSub"></span></div>
+          <ul class="checks" id="checks"></ul>
+          <div class="heldin"><div class="hh">Rows held back</div><div id="held"></div></div>
+        </div>
+        <div class="tile s6" id="refreshTile">
+          <div class="h"><span class="t">Refreshing it</span></div>
+          <div class="howto">
+            <ol>
+              <li>Export sales into the template columns: <code>month</code> (YYYY-MM), <code>sku</code>, <code>name</code>, <code>category</code>, <code>amazon_price</code>, <code>list_price</code>, <code>units</code>, <code>cogs</code>, <code>freight</code>, <code>amz_fulfil</code>. One row per listing per month drives the trends and standings.</li>
+              <li>Load it with <b>Load a sales export</b> (switched off in this demo). The checks run first; bad rows are held back and listed here with the reason.</li>
+              <li>Every page and the meeting deck rebuild from the clean rows. Nobody copies numbers into slides.</li>
+            </ol>
+            <p style="margin:10px 0 0;color:var(--muted);font-size:11.5px">The file is read in the browser and never uploaded anywhere. In production this would run from Vendor Central reports on a schedule, or a Power BI dataflow, instead of a manual file.</p>
+          </div>
+        </div>
+        <div class="tile s12">
+          <div class="h"><span class="t">Where every number comes from</span></div>
+          <div class="src"><dl>
+            <div class="srci"><dt>Listings <span class="smp">generated</span></dt><dd>Thirteen listings for Lakeshore Wellness, a fictional consumer-products vendor, across four product families. The model treats Amazon as the seller on each, which is what a 1P vendor relationship looks like from the shopper side.</dd></div>
+            <div class="srci"><dt>Prices <span class="smp">generated</span></dt><dd>An Amazon price and a list price per listing, set to the shape real 1P catalogs show: most items a little under list, a few deep under it. Revenue applies that one price to the full year; a live version would use the realized average selling price from Vendor Central, since deals and Subscribe &amp; Save move it.</dd></div>
+            <div class="srci"><dt>What Amazon pays us <span class="est">estimate</span></dt><dd>The price each listing actually sells for, less the trade discount on the left. This assumes the cost price follows the shelf price; in a real 1P deal it is set by contract, so a deep Amazon discount would compress Amazon's margin rather than ours. Amazon's strikethrough list price is shown for context but not used, since on several listings it's a reference price well above where the item sells.</dd></div>
+            <div class="srci"><dt>CRaP risk line <span class="est">assumption</span></dt><dd>A listing counts as at risk when Amazon keeps under 15% of its price after its fulfillment cost. Amazon's real threshold isn't public.</dd></div>
+            <div class="srci"><dt>Unit volumes <span class="est">assumption</span></dt><dd>Set per listing so the catalog has a few fast movers and a long tail, the way a real one does. Adjustable in the left panel.</dd></div>
+            <div class="srci"><dt>Monthly history <span class="smp">sample</span></dt><dd>Twelve months shaped by each category's season, to show the trend and standings views. Replaced by any export with a month column.</dd></div>
+            <div class="srci"><dt>Ranges <span class="est">assumption</span></dt><dd>A Monte Carlo on the Profitability tab reruns the model 2,000 times, varying the trade discount, allowances, advertising, product cost, volume, fulfillment and freight. The spreads it uses are stated on the tile and are assumptions, not measured.</dd></div>
+            <div class="srci"><dt>What we keep <span class="def">definition</span></dt><dd>Fully loaded: after allowances, advertising, freight, product cost including allocated plant and floor space, and an inventory carrying charge. Plant and floor space is fixed, so for keep-or-cut decisions on a listing, look at the margin before that line in its cost build. Margins are shown on invoiced sales; on GAAP net sales, after allowances, they read higher.</dd></div>
+            <div class="srci"><dt>Product cost <span class="est">estimate</span></dt><dd>Assumed manufacturing costs for molded plastic, wipes and rubber goods, split into materials, labor, packaging, and plant and floor space. The ear plugs are costed as purchased goods, to show how a sourced line sits beside a manufactured one.</dd></div>
+            <div class="srci"><dt>Star ratings <span class="smp">generated</span></dt><dd>A rating and a rating count per listing, generated to track volume the way they do on real listings: the fast movers carry the big counts.</dd></div>
+            <div class="srci"><dt>Review text <span class="smp">sample</span></dt><dd>Written to exercise the classifier, not real customer reviews. The classifier itself is real and runs the same way on an actual review export.</dd></div>
+            <div class="srci"><dt>Amazon's fulfillment <span class="est">estimate</span></dt><dd>Amazon's incremental cost to pick, pack and ship each item, tiered by size, since small items usually ship in multi-item orders. Used only to judge whether a listing is profitable for Amazon, alongside the co-op and allowances Amazon receives.</dd></div>
+          </dl></div>
+        </div>
+      </div>
+    </section>
+    <p class="disc">A personal project by Austin Sonny Stethem, built to show the method. Lakeshore Wellness, its brands, listings, prices, ratings, costs, volumes, vendor terms, monthly history and review text are all fictional or generated for this demonstration. No employer, client or confidential data was used. Not affiliated with or endorsed by Amazon. Amazon and Vendor Central are trademarks of Amazon.com, Inc.</p>
+  </main>
+</div>
+
+
+
+<div id="tour" hidden>
+  <div class="tblock"></div>
+  <div class="tspot" id="tspot"></div>
+  <div class="tcard" id="tcard" role="dialog" aria-modal="true" aria-labelledby="tTitle">
+    <div class="tsecs" id="tSecs" aria-hidden="true"></div>
+    <div class="tn" id="tNum"></div>
+    <h3 id="tTitle"></h3>
+    <p id="tText"></p>
+    <div class="tf"><div class="tdots" id="tDots"></div>
+      <button type="button" class="tskip" id="tSkip">Skip</button>
+      <button type="button" id="tBack">Back</button>
+      <button type="button" class="go" id="tNext">Next</button></div>
+  </div>
+</div>
+<div class="ttoast" id="ttoast" hidden role="dialog" aria-labelledby="ttoastT">
+  <div class="tt-txt"><b id="ttoastT">New here?</b><span>A guided tour of every tab, about four minutes.</span></div>
+  <div class="tt-btns"><button type="button" class="go" id="toastGo">Start the tour</button><button type="button" id="toastNo">No thanks</button></div>
+</div>
+<div id="deck" hidden role="dialog" aria-modal="true" aria-label="Meeting view">
+  <div class="dk-top">
+    <span class="mark" aria-hidden="true">AS</span>
+    <div class="b">Amazon vendor profitability<small id="dkScope">Meeting view</small></div>
+    <span class="sp"></span>
+    <span class="dk-count" id="dkCount"></span>
+    <button class="dk-btn x" id="dkClose" type="button">Close</button>
+  </div>
+  <div class="dk-stage" id="dkStage"></div>
+  <div class="dk-nav">
+    <button class="dk-btn" id="dkPrev" type="button">&larr; Back</button>
+    <div class="dots" id="dkDots"></div>
+    <button class="dk-btn go" id="dkNext" type="button">Next &rarr;</button>
+    <span class="dk-hint">arrow keys work too</span>
+  </div>
+</div>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const money=v=>(v<0?'-':'')+'$'+Math.abs(v).toFixed(2);
+  const big=v=>{const a=Math.abs(v);const s=a>=1e6?(a/1e6).toFixed(2)+'M':a>=1e3?(a/1e3).toFixed(1)+'K':a.toFixed(0);return (v<0?'-':'')+'$'+s;};
+  const pct=(v,d=1)=>(v*100).toFixed(d)+'%';
+  const cents=v=>Math.round(v*100)+'\u00a2';
+
+  // Palette: each colour means one thing. Navy = primary data, slate = context,
+  // green = what we keep, red = risk, gold = targets. Everything else stays quiet.
+  const C={ink:'#13263A',navy:'#002855',cyan:'#00A3E0',slate:'#86A7C6',slateD:'#4C7599',slateL:'#C4D6E7',keep:'#2C8654',keepD:'#1F6B42',keepL:'#CFE5D8',risk:'#C0392B',gold:'#D9A21B'};
+  // product categories: muted, used only on the small dots beside listing names
+  const CATS=[{k:'Medication Management',c:'#0E3B5C'},{k:'Hearing Protection',c:'#4F8DB0'},{k:'Eye & Lens Care',c:'#3E8E86'},{k:'Personal Care',c:'#9AA9B8'}];
+  const catColor=k=>(CATS.find(c=>c.k===k)||{c:'#8A9BAB'}).c;
+
+  // Lakeshore Wellness (fictional) listings, modeled with Amazon as the seller (1P).
+  // amazon_price and list_price: as shown on the listing (2026 snapshot).
+  // units, cogs, freight, amz_fulfil: outside-in estimates. season and mix drive the sample's monthly shape and cost split.
+  // rating/ratings: generated star rating and count per listing.
+  // type drives the kinds of problems the sample reviews raise.
+  const SAMPLE=[
+    {sku:'LW-1101',name:'DoseMate Pill Crusher & Grinder',            category:'Medication Management',amazon_price:4.49, list_price:6.49, units:60000,cogs:0.62,freight:0.14,amz_fulfil:0.95,season:'med',   mix:'molded', rating:4.5,ratings:32400,rsrc:'est',type:'crusher'},
+    {sku:'LW-1102',name:'DoseMate Weekly 4-Times-a-Day Organizer',          category:'Medication Management',amazon_price:5.89, list_price:12.99,units:18000,cogs:1.30,freight:0.24,amz_fulfil:1.15,season:'med',   mix:'molded', rating:4.4,ratings:5900, rsrc:'est',type:'organizer'},
+    {sku:'LW-1103',name:'DoseMate 3-in-1 Crusher, Cutter & Grinder', category:'Medication Management',amazon_price:7.29, list_price:10.49,units:22000,cogs:1.10,freight:0.16,amz_fulfil:1.15,season:'med',   mix:'molded', rating:4.4,ratings:10900,rsrc:'est',type:'crusher'},
+    {sku:'LW-1104',name:'DoseMate Weekly Classic Pill Planner, Large',      category:'Medication Management',amazon_price:2.39, list_price:4.99, units:45000,cogs:0.45,freight:0.12,amz_fulfil:0.95,season:'med',   mix:'molded', rating:4.5,ratings:13300,rsrc:'est',type:'organizer'},
+    {sku:'LW-1105',name:'DoseMate Weekly AM/PM Organizer, Pop-Out',   category:'Medication Management',amazon_price:7.49, list_price:7.49, units:28000,cogs:1.25,freight:0.22,amz_fulfil:1.25,season:'med',   mix:'molded', rating:4.6,ratings:44800,rsrc:'est',type:'organizer'},
+    {sku:'LW-1106',name:'DoseMate Monthly 28-Day Pill Case',                category:'Medication Management',amazon_price:10.89,list_price:12.49,units:14000,cogs:1.65,freight:0.30,amz_fulfil:1.45,season:'med2',  mix:'molded', rating:4.4,ratings:4100, rsrc:'est',type:'organizer'},
+    {sku:'LW-1107',name:'DoseMate Weekly Pill Organizer, Medium',           category:'Medication Management',amazon_price:2.19, list_price:4.49, units:30000,cogs:0.40,freight:0.11,amz_fulfil:0.90,season:'med',   mix:'molded', rating:4.3,ratings:1900, rsrc:'est',type:'organizer'},
+    {sku:'LW-1108',name:'DoseMate Travel Pill Pouch, 2-Pack',          category:'Medication Management',amazon_price:5.29, list_price:5.29, units:12000,cogs:0.48,freight:0.10,amz_fulfil:0.85,season:'travel',mix:'molded', rating:4.4,ratings:4600, rsrc:'est',type:'organizer'},
+    {sku:'LW-2201',name:'HushPro Contour Foam Ear Plugs, 10 Pair', category:'Hearing Protection',   amazon_price:5.19, list_price:6.99, units:25000,cogs:0.55,freight:0.10,amz_fulfil:0.85,season:'ear',   mix:'sourced',rating:4.4,ratings:10200, rsrc:'est',type:'earplug'},
+    {sku:'LW-2202',name:'HushPro Quiet Night Ear Plugs, 50 Pair',    category:'Hearing Protection',   amazon_price:16.99,list_price:16.99,units:15000,cogs:1.70,freight:0.22,amz_fulfil:1.15,season:'ear',   mix:'sourced',rating:4.5,ratings:13100,rsrc:'est',type:'earplug'},
+    {sku:'LW-3301',name:'LensKind Pre-Moistened Lens Wipes, 150 Count',       category:'Eye & Lens Care',      amazon_price:12.49,list_price:13.49,units:16000,cogs:3.60,freight:0.45,amz_fulfil:1.60,season:'eye',   mix:'wipes',  rating:4.5,ratings:3300, rsrc:'est',type:'wipes'},
+    {sku:'LW-3302',name:'LensKind Pre-Moistened Lens Wipes, 20 Count',        category:'Eye & Lens Care',      amazon_price:5.49, list_price:5.49, units:20000,cogs:0.72,freight:0.09,amz_fulfil:0.85,season:'eye',   mix:'wipes',  rating:4.6,ratings:5600, rsrc:'est',type:'wipes'},
+    {sku:'LW-4401',name:'WarmHold Rubber Hot Water Bottle, 2 Quart',                 category:'Personal Care',        amazon_price:12.49,list_price:12.49,units:3000, cogs:3.40,freight:0.55,amz_fulfil:2.10,season:'hwb',   mix:'rubber', rating:4.1,ratings:650,  rsrc:'est',type:'bottle'}
+  ];
+  const MIX={sourced:{mat:.70,lab:.04,pack:.10,ovh:.16},molded:{mat:.34,lab:.18,pack:.22,ovh:.26},foam:{mat:.40,lab:.14,pack:.26,ovh:.20},wipes:{mat:.46,lab:.12,pack:.24,ovh:.18},rubber:{mat:.62,lab:.06,pack:.14,ovh:.18}};
+  const CARRY_RATE=.25;
+
+  // twelve months of sample history with each category's seasonality
+  // Twelve closed months, September 2025 to August 2026. September 2026 is still open, so it isn't reported.
+  const MKEYS=['2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'];
+  // index 0 = September ... 11 = August
+  const PROF={med:[1.06,1,1,.95,1.15,1.05,1,.98,.97,.95,.92,1.06], med2:[1.08,1,.98,.95,1.25,1.08,1,.97,.95,.93,.90,1.07],
+    travel:[.84,.9,.95,1.05,.85,.85,.95,1.05,1.15,1.25,1.34,.90], ear:[.84,.85,.8,.85,.8,.8,.9,1,1.15,1.35,1.42,.92],
+    eye:[1.08,1.05,1.1,1.15,1.15,1.05,1,.92,.9,.9,.84,1.06], hwb:[1.25,1.3,1.6,1.8,1.7,1.3,.9,.6,.45,.4,.4,.46]};
+  const hash=str=>{let h=2166136261;for(const ch of str){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;};
+  const rng=seed=>{let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};};
+  function genSeries(r){ const p=PROF[r.season]||PROF.med, R=rng(hash(r.sku)), w=p.map((v,i)=>v*(1+.009*i)*(.94+R()*.12)), sw=w.reduce((a,b)=>a+b,0);
+    const arr=w.map(v=>Math.round(r.units*v/sw)); arr[arr.length-1]+=r.units-arr.reduce((a,b)=>a+b,0); return arr; }
+  const sampleLong=()=>{ const out=[]; SAMPLE.forEach(r=>{ const sr=genSeries(r); MKEYS.forEach((k,i)=>out.push({month:k,sku:r.sku,name:r.name,category:r.category,
+    amazon_price:r.amazon_price,list_price:r.list_price,units:sr[i],cogs:r.cogs,freight:r.freight,amz_fulfil:r.amz_fulfil,mix:r.mix,
+    rating:r.rating,ratings:r.ratings,rsrc:r.rsrc,type:r.type})); }); return out; };
+  const monLabel=(k,long)=>{ const m=/^(\d{4})-(\d{2})/.exec(k||''); if(!m) return k||''; const d=new Date(+m[1],+m[2]-1,1);
+    return d.toLocaleString('en-US',{month:long?'long':'short'})+(long?' '+m[1]:" '"+m[1].slice(2)); };
+
+  let DATA=SAMPLE.map(r=>({...r})), MONTHS=[], SERIES=null, sel=null, cat='All', page='score', lbMetric='rev';
+  let CHK={checks:[],rejected:[]}, SRC={label:'Sample', rows:0}, refreshedAt=new Date();
+  const td=$('td'), alw=$('alw'), ads=$('ads'), doh=$('doh'), tMargin=$('tMargin'), tGrowth=$('tGrowth');
+
+  // ---------------- the 1P model ----------------
+  // Amazon's comfort line: a listing is at CRaP risk when Amazon keeps under this share of its price.
+  // Amazon's real threshold isn't public; 15% is an assumption, stated on the Data pipeline page.
+  const CRAP=0.15;
+  function calc(r){
+    // What Amazon pays us tracks where the item actually sells, not Amazon's strikethrough list price,
+    // which on several listings is a reference price well above the selling price.
+    const P=r.amazon_price, L=r.list_price||P, W=P*(1-(+td.value)/100);
+    const allow=W*(+alw.value)/100, adv=P*(+ads.value)/100, carry=r.cogs*CARRY_RATE*(+doh.value)/365;
+    const m=MIX[r.mix]||MIX.molded;
+    const contrib=W-allow-adv-r.freight-r.cogs-carry;
+    const amz=P-W+allow-r.amz_fulfil;   // front margin + back-end margin (co-op & allowances we pay Amazon) - its fulfillment cost
+    return {P,L,W,allow,adv,freight:r.freight,cogs:r.cogs,carry,contrib,amz,
+      mat:r.cogs*m.mat,lab:r.cogs*m.lab,pack:r.cogs*m.pack,ovh:r.cogs*m.ovh,
+      gm:W?(W-r.cogs)/W:0, cpct:W?contrib/W:0, apct:P?amz/P:0, risk:amz<CRAP*P, deep:P<=0.6*L, off:L?1-P/L:0,
+      floor:(()=>{ const k=(+td.value)/100+(+alw.value)/100*(1-(+td.value)/100)-CRAP; return k>0?r.amz_fulfil/k:Infinity; })()};
+  }
+  const inScope=()=>DATA.filter(r=>cat==='All'||r.category===cat);
+  const rowsOf=list=>list.map(r=>({r,c:calc(r)}));
+  function totals(rows){
+    const t={retail:0,rev:0,gp:0,allow:0,adv:0,freight:0,cogs:0,carry:0,contrib:0,exposure:0,risk:0,deep:0,dW:0,dC:0,oW:0,oC:0};
+    rows.forEach(({r,c})=>{ const u=r.units; t.retail+=c.P*u; t.rev+=c.W*u; t.gp+=(c.W-c.cogs)*u;
+      ['allow','adv','freight','cogs','carry','contrib'].forEach(k=>t[k]+=c[k]*u);
+      if(c.risk){ t.exposure+=(CRAP*c.P-c.amz)*u; t.risk++; }
+      if(c.deep){ t.deep++; t.dW+=c.W*u; t.dC+=c.contrib*u; } else { t.oW+=c.W*u; t.oC+=c.contrib*u; } });
+    return t;
+  }
+  const SEG=[['Making the product','cogs','#1F4E73',0],['Co-op & allowances','allow','#4C7599',0],['Advertising','adv','#7FA2C4',1],
+             ['Freight to Amazon','freight','#AFC7DD',1],['Inventory carrying','carry','#D5E3EF',1]];
+
+  // ---------------- slicer ----------------
+  function renderSlicer(){
+    const counts={}; DATA.forEach(r=>counts[r.category]=(counts[r.category]||0)+1);
+    const present=CATS.filter(c=>counts[c.k]).concat(Object.keys(counts).filter(k=>!CATS.find(c=>c.k===k)).map(k=>({k,c:'#8A9BAB'})));
+    $('catSlicer').innerHTML=[`<button type="button" data-c="All" class="${cat==='All'?'on':''}"><span>All categories</span><span class="c">${DATA.length}</span></button>`]
+      .concat(present.map(c=>`<button type="button" data-c="${esc(c.k)}" class="${cat===c.k?'on':''}"><span><i style="background:${c.c}"></i>${esc(c.k)}</span><span class="c">${counts[c.k]}</span></button>`)).join('');
+    $('catSlicer').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ cat=b.dataset.c; sel=null; renderAll(); }));
+  }
+
+  // ---------------- scorecard ----------------
+  function monthly(list){ if(!SERIES||!MONTHS.length) return null; const n=MONTHS.length, rev=Array(n).fill(0), con=Array(n).fill(0);
+    list.forEach(r=>{ const sr=SERIES[r.sku]; if(!sr) return; const c=calc(r); for(let i=0;i<n;i++){ const u=sr[i]||0; rev[i]+=u*c.W; con[i]+=u*c.contrib; } });
+    return {rev,con}; }
+  const GARC='M 10 62 A 50 50 0 0 1 110 62', GLEN=Math.PI*50;
+  const gaugeSVG=()=>`<svg viewBox="-12 0 144 92" aria-hidden="true"><path class="gtrack" d="${GARC}"/>
+    <path class="gfill" d="${GARC}" stroke-dasharray="${GLEN.toFixed(2)}" stroke-dashoffset="${GLEN.toFixed(2)}"/>
+    <line class="gtick" x1="60" y1="18" x2="60" y2="4"/>
+    <g class="gneedle" style="transform:rotate(-90deg)"><line x1="60" y1="62" x2="60" y2="22" stroke="#13263A" stroke-width="2.6" stroke-linecap="round"/><circle cx="60" cy="62" r="5" fill="#13263A"/><circle cx="60" cy="62" r="2" fill="#fff"/></g>
+    <text class="gmin" x="10" y="73" text-anchor="middle"></text><text class="gmax" x="110" y="73" text-anchor="middle"></text>
+    <text class="gval" x="60" y="88"></text></svg><div class="gl"></div><div class="gt"></div><span class="gs"></span>`;
+  function setGauge(el,g){
+    const f=Math.max(0,Math.min(1,g.val/g.max)), tt=Math.max(0,Math.min(1,g.target/g.max)), ratio=g.target>0?g.val/g.target:1, am=g.amber||.8;
+    const col=ratio>=1?C.keep:ratio>=am?C.gold:C.risk, fill=el.querySelector('.gfill'); fill.style.stroke=col;
+    const phi=Math.PI*(1-tt), tk=el.querySelector('.gtick');
+    tk.setAttribute('x1',(60+42*Math.cos(phi)).toFixed(1)); tk.setAttribute('y1',(62-42*Math.sin(phi)).toFixed(1));
+    tk.setAttribute('x2',(60+58*Math.cos(phi)).toFixed(1)); tk.setAttribute('y2',(62-58*Math.sin(phi)).toFixed(1));
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ fill.setAttribute('stroke-dashoffset',(GLEN*(1-f)).toFixed(2));
+      el.querySelector('.gneedle').style.transform=`rotate(${(-90+180*f).toFixed(1)}deg)`; }));
+    el.querySelector('.gval').textContent=g.fmt(g.val); const fe=g.fmtEnd||g.fmt; el.querySelector('.gmin').textContent=fe(0); el.querySelector('.gmax').textContent=fe(g.max);
+    el.querySelector('.gl').textContent=g.label; el.querySelector('.gt').textContent=g.sub;
+    const gs=el.querySelector('.gs'); gs.className='gs '+(ratio>=1?'ok':ratio>=am?'mid':'bad'); gs.textContent=ratio>=1?'On target':ratio>=am?'Close to target':'Below target';
+  }
+  const niceCeil=v=>{ if(v<=0) return 1; const st=Math.pow(10,Math.floor(Math.log10(v))-1); return Math.ceil(v/st)*st; };
+  function gaugeSpecs(list){
+    const rows=rowsOf(list), t=totals(rows), m=monthly(list), mon=!!m, L=mon?MONTHS.length-1:-1, N=rows.length, ok=N-t.risk;
+    const out={mon,L,specs:[]};
+    if(mon){ const avg=m.rev.reduce((a,b)=>a+b,0)/m.rev.length, target=avg*(1+ +tGrowth.value/100);
+      out.target=target; out.revL=m.rev[L];
+      out.specs.push({k:'rev',val:m.rev[L],target,max:niceCeil(target*1.4),fmt:big,fmtEnd:v=>v<=0?'$0':v>=1e6?'$'+(v/1e6).toFixed(1)+'M':'$'+Math.round(v/1e3)+'K',label:'Sales to Amazon this month',sub:'Target '+big(target)}); }
+    const mv=mon?(m.rev[L]?m.con[L]/m.rev[L]*100:0):(t.rev?t.contrib/t.rev*100:0), mt=+tMargin.value;
+    out.specs.push({k:'mar',val:mv,target:mt,max:Math.ceil(Math.max(mt*1.6,40)/10)*10,fmt:v=>v.toFixed(1)+'%',fmtEnd:v=>Math.round(v)+'%',label:mon?'Our margin this month':'Our margin',sub:'Target '+mt+'%'+(mon&&t.rev?', 12-month '+pct(t.contrib/t.rev):'')});
+    out.specs.push({k:'be',amber:N>1?(N-1)/N-1e-9:1,val:ok,target:N,max:Math.max(N,1),fmt:v=>String(Math.round(v)),label:'Listings healthy for Amazon',sub:(N-ok)?`${N-ok} at CRaP risk, target all ${N}`:`Target: all ${N}`});
+    return out;
+  }
+  let gMode=null;
+  function renderHook(){
+    const rows=rowsOf(inScope()), t=totals(rows), keep=t.rev?t.contrib/t.rev:0;
+    $('hookMsg').innerHTML=t.risk
+      ?`We keep ${cents(keep)} of every dollar Amazon pays us, and ${t.risk} of our ${rows.length} listings are at risk.`
+      :`We keep ${cents(keep)} of every dollar Amazon pays us, and every listing is healthy for Amazon.`;
+  }
+  function renderScore(){
+    const list=inScope(), G=gaugeSpecs(list);
+    $('gTitle').textContent=(G.mon?`${monLabel(MONTHS[G.L],true)} against target`:'Against target')+(cat==='All'?'':`, ${cat}`);
+    $('gSub').textContent='';
+    const mode=G.mon?'m':'n';
+    if(gMode!==mode){ gMode=mode;
+      $('gauges').innerHTML=(G.mon?'':'<div class="gnote">Sales against target needs monthly data. Add a <b>month</b> column to the export.</div>')
+        +G.specs.map(g=>`<div class="gauge" data-g="${g.k}">${gaugeSVG()}</div>`).join(''); }
+    G.specs.forEach(g=>setGauge($('gauges').querySelector(`.gauge[data-g="${g.k}"]`),g));
+    renderBoard(list); renderTrend(list);
+  }
+  const spark=(v,cls)=>{ const w=72,h=22,p=2,mn=Math.min(...v),mx=Math.max(...v),sp=(mx-mn)||1;
+    const pts=v.map((y,i)=>[p+i*(w-2*p)/((v.length-1)||1),h-p-(y-mn)/sp*(h-2*p)]), last=pts[pts.length-1];
+    const col=cls==='up'?C.keep:cls==='down'?C.risk:C.gold;
+    return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="none" stroke="#7F9AB0" stroke-width="1.3"/><circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="2.6" fill="${col}"/></svg>`; };
+  const shortName=n=>n.replace(/^(DoseMate|HushPro|LensKind|WarmHold)\s+/,'');
+  function standings(list){
+    if(!SERIES||MONTHS.length<2) return null; const L=MONTHS.length-1;
+    const items=list.map(r=>{ const sr=SERIES[r.sku]||[], c=calc(r), k=lbMetric==='rev'?c.W:c.contrib;
+      return {r,c,cur:(sr[L]||0)*k,prev:(sr[L-1]||0)*k,spark:MONTHS.map((_,i)=>(sr[i]||0)*k)}; });
+    [['prev','pr'],['cur','cr']].forEach(([key,rk])=>[...items].sort((a,b)=>b[key]-a[key]).forEach((x,i)=>x[rk]=i+1));
+    items.forEach(x=>{ x.d=x.pr-x.cr; x.cls=x.d>0?'up':x.d<0?'down':'same'; x.mv=x.d>0?'\u25B2'+x.d:x.d<0?'\u25BC'+(-x.d):'\u2013'; });
+    return {L,items:items.sort((a,b)=>a.cr-b.cr)};
+  }
+  function renderBoard(list){
+    const el=$('lb'), st=standings(list);
+    $('lbTitle').textContent=st?`Listing standings, ${monLabel(MONTHS[st.L],true)}`:'Listing standings';
+    if(!st){ el.innerHTML='<div class="gnote">Rank movement needs at least two months of data. Add a <b>month</b> column to the export.</div>'; return; }
+    el.innerHTML=`<div class="lbh"><span>Pos</span><span>Move</span><span>Listing</span><span>12 months</span><span>${lbMetric==='rev'?'Sales':'Contrib.'}</span></div><div class="lb">`
+      +st.items.map(x=>`<div class="lbr ${x.cls}${x.r.sku===sel?' sel':''}" data-sku="${esc(x.r.sku)}" title="${esc(x.r.name)}: P${x.pr} last month, P${x.cr} now">
+        <div class="pos">${x.cr}</div><div class="mv">${x.mv}</div>
+        <div class="nm"><i style="background:${catColor(x.r.category)}"></i>${esc(shortName(x.r.name))}<small>${esc(x.r.category)}</small></div>
+        ${spark(x.spark,x.cls)}<div class="val${x.cur<0?' neg':''}">${big(x.cur)}</div></div>`).join('')+'</div>'
+      +`<div class="lbkey"><span><b style="color:#1E7A50">\u25B2</b> gained places vs ${monLabel(MONTHS[st.L-1],true)}</span><span><b style="color:#B23630">\u25BC</b> lost places</span><span><b style="color:#9A7200">\u2013</b> held position</span><span>click a row to open it</span></div>`;
+    el.querySelectorAll('.lbr').forEach(row=>row.addEventListener('click',()=>{ sel=row.dataset.sku; setPage('detail'); }));
+  }
+  let chT;
+  function renderTrend(list){
+    const cv=$('cTrend'); if(!cv) return; const wrap=cv.parentElement; let note=wrap.querySelector('.cfb');
+    const m=monthly(list);
+    if(!m||!hasChart()){ cv.style.display='none'; if(!note){ note=document.createElement('div'); note.className='cfb'; wrap.appendChild(note); }
+      note.innerHTML=!m?'Monthly tracking needs a <b>month</b> column in the export.':'Charts need an internet connection to load.'; note.style.display='flex'; return; }
+    cv.style.display=''; if(note) note.style.display='none';
+    const L=MONTHS.length-1, avg=m.rev.reduce((a,b)=>a+b,0)/m.rev.length, target=avg*(1+ +tGrowth.value/100);
+    const marg=m.rev.map((r,i)=>r?+(m.con[i]/r*100).toFixed(1):0), mt=+tMargin.value;
+    const data={labels:MONTHS.map((k,i)=>monTick(k,i)),datasets:[
+      {type:'line',label:'Our margin',data:marg,borderColor:C.keep,backgroundColor:C.keep,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.3,yAxisID:'y1',order:0,pointStyle:'circle'},
+      {type:'line',label:'Sales target',data:MONTHS.map(()=>Math.round(target)),borderColor:C.gold,backgroundColor:C.gold,borderDash:[6,4],borderWidth:2,pointRadius:0,yAxisID:'y',order:1,pointStyle:'line'},
+      {type:'bar',label:'Sales to Amazon',data:m.rev.map(v=>Math.round(v)),backgroundColor:m.rev.map((_,i)=>i===L?C.cyan:C.slateL),borderRadius:3,barPercentage:.72,yAxisID:'y',order:2,pointStyle:'rectRounded'}]};
+    const opt={responsive:true,maintainAspectRatio:false,animation:{duration:350},interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',align:'start',labels:{padding:14,generateLabels:ch=>[[2,'Sales to Amazon',C.slateL,'rectRounded',0],[2,'Latest month',C.cyan,'rectRounded',0],[1,'Sales target',C.gold,'line',2],[0,'Our margin',C.keep,'line',3]].map(([i,t,c,ps,lw])=>({text:t,fillStyle:c,strokeStyle:c,pointStyle:ps,lineWidth:lw,datasetIndex:i,hidden:!ch.isDatasetVisible(i)}))}},
+        tooltip:{callbacks:{title:c=>monLabel(MONTHS[c[0].dataIndex],true),label:c=>c.dataset.yAxisID==='y1'?` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}% (target ${mt}%)`:` ${c.dataset.label}: ${big(c.parsed.y)}`}}},
+      scales:{x:{grid:{display:false},ticks:{maxRotation:0,autoSkip:false}},y:{beginAtZero:true,grid:{color:'#E6ECF1'},border:{display:false},ticks:{maxTicksLimit:6,callback:v=>axisMoney(v)}},
+        y1:{position:'right',grid:{display:false},border:{display:false},suggestedMin:0,suggestedMax:Math.max(mt*1.4,60),ticks:{maxTicksLimit:6,callback:v=>v+'%'}}}};
+    if(chT){chT.data=data;chT.options=opt;chT.update();} else chT=new Chart(cv,{type:'bar',data,options:opt});
+  }
+
+  // ---------------- profitability ----------------
+  function renderKPIs(){
+    const rows=rowsOf(inScope()), t=totals(rows);
+    $('kRetail').textContent=big(t.retail); $('kWh').textContent=big(t.rev);
+    $('kCon').textContent=big(t.contrib); $('kConL').innerHTML='What we keep<span class="l2">'+pct(t.rev?t.contrib/t.rev:0)+' of sales, fully loaded</span>';
+    $('kConBox').className='kpi '+(t.contrib<0?'r':'g');
+    $('kRisk').textContent=t.risk+' of '+rows.length; $('kRiskBox').className='kpi '+(t.risk?'r':'g');
+    $('kExp').textContent=big(t.exposure); $('kExpBox').className='kpi '+(t.exposure>0?'r':'g');
+    $('kExpBox').querySelector('.l').innerHTML='Cost to fix'+(t.rev?'<span class="l2">'+pct(t.exposure/t.rev)+' of sales</span>':'');
+  }
+  function renderOverview(){
+    const rows=rowsOf(inScope()), t=totals(rows);
+    const parts=SEG.map(([lab,k,col,lt])=>({lab,v:t[k],col,lt})); if(t.contrib>0) parts.push({lab:'We keep',v:t.contrib,col:C.keep,lt:0});
+    const den=parts.reduce((a,p)=>a+p.v,0)||1;
+    $('dollar').innerHTML=parts.map(p=>{const w=p.v/den*100;return `<span class="${p.lt?'lt':''}" style="flex:0 0 ${w}%;background:${p.col}" title="${p.lab}: ${cents(p.v/t.rev)}">${w>=5.5?cents(p.v/t.rev):''}</span>`;}).join('');
+    $('dollarLg').innerHTML=parts.map(p=>`<span><i style="background:${p.col}"></i>${p.lab}<b>${cents(p.v/t.rev)}</b></span>`).join('')
+      +(t.contrib<=0?`<span class="neg">Costs exceed what Amazon pays us by <b class="neg">${cents(-t.contrib/t.rev)}</b> per dollar</span>`:'');
+    $('dollarSub').textContent=(cat==='All'?'all categories':cat)+' \u00b7 per $1 Amazon pays us';
+    const mc=renderMC(rows); renderNarrative(rows,t,mc); renderCharts(rows);
+  }
+  function renderNarrative(rows,t,mc){
+    const thin=rows.filter(x=>x.c.risk).sort((a,b)=>a.c.apct-b.c.apct);
+    let h=`<div class="kf g"><div class="kl">What we keep</div><div class="kv pos">${big(t.contrib)}<small>${pct(t.rev?t.contrib/t.rev:0)} fully loaded</small></div>
+      <p>of the ${big(t.rev)} Amazon pays us${mc?`, likely between ${big(mc.C.p10)} and ${big(mc.C.p90)}`:''}.</p></div>`;
+    if(thin.length){
+      h+=`<div class="kf r"><div class="kl">The risk</div><div class="kv neg">${thin.length} listing${thin.length===1?'':'s'} below Amazon\u2019s 15% line</div>
+        <p>${thin.slice(0,3).map(x=>`${esc(shortName(x.r.name))} (${cents(x.c.amz)} a unit)`).join(' and ')}. First in line for a CRaP flag.</p></div>`;
+      h+=`<div class="kf y"><div class="kl">The fix</div><div class="kv">${big(t.exposure)} a year<small>${pct(t.rev?t.exposure/t.rev:0)} of sales</small></div>
+        <p>to bring ${thin.length===1?'it':'them'} to a healthy margin for Amazon.</p></div>`;
+    } else h+=`<div class="kf g"><div class="kl">The risk</div><div class="kv pos">None at these terms</div><p>Every listing clears a healthy margin for Amazon.</p></div>`;
+    $('narr').innerHTML=h;
+  }
+
+  let chM,chS,chC,chW,mOrder=[];
+  const hasChart=()=>typeof Chart!=='undefined';
+  function noCharts(){ ['cMargin','cWater','cMC','cDonut','cTrend'].forEach(id=>{const e=$(id); if(e) e.parentElement.innerHTML='<div class="cfb">Charts need an internet connection to load. Every figure and table still works.</div>';}); }
+  const alpha=(hex,a)=>{const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;};
+  const shortN=s=>{const t=shortName(s),L=innerWidth<600?16:innerWidth<1600?28:44;return t.length>L?t.slice(0,L-1)+'\u2026':t;};
+  function renderCharts(rows){
+    if(!hasChart()){ noCharts(); return; }
+    chartDefaults();
+    const grid='#E6ECF1', has=!!sel, on=sku=>!has||sku===sel;
+    const srt=[...rows].sort((a,b)=>b.c.apct-a.c.apct); mOrder=srt.map(x=>x.r.sku);
+    const mn=Math.min(...srt.map(x=>x.c.apct*100),...srt.map(x=>x.c.cpct*100)), lo=mn>=0?0:Math.floor((mn-10)/20)*20;
+    const mData={labels:srt.map(x=>shortN(x.r.name)),datasets:[
+      {label:'Our margin',data:srt.map(x=>+(x.c.cpct*100).toFixed(1)),backgroundColor:srt.map(x=>alpha(C.navy,on(x.r.sku)?1:.3)),borderRadius:2,barPercentage:.92,categoryPercentage:.74,pointStyle:'rectRounded'},
+      {label:"Amazon's margin",data:srt.map(x=>+(x.c.apct*100).toFixed(1)),backgroundColor:srt.map(x=>alpha(x.c.risk?C.risk:C.slate,on(x.r.sku)?1:.3)),borderRadius:2,barPercentage:.92,categoryPercentage:.74,pointStyle:'rectRounded'}]};
+    const mOpt={indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:{duration:200},
+      plugins:{legend:{position:'top',align:'start',onClick:()=>{},labels:{padding:14,generateLabels:ch=>[{text:'Our margin',fillStyle:C.navy,strokeStyle:C.navy,pointStyle:'rectRounded',datasetIndex:0},{text:"Amazon's margin",fillStyle:C.slate,strokeStyle:C.slate,pointStyle:'rectRounded',datasetIndex:1},{text:'Amazon under 15%',fillStyle:C.risk,strokeStyle:C.risk,pointStyle:'rectRounded',datasetIndex:1}]}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.x.toFixed(1)}%`}}},
+      scales:{x:{min:lo,max:80,grid:{color:grid},border:{display:false},ticks:{stepSize:innerWidth<600?40:20,callback:v=>v+'%'}},y:{grid:{display:false},ticks:{color:'#34495E',font:{size:BIG()?14:11.5}}}},
+      onClick:(e,els)=>{ if(els.length){ const s=mOrder[els[0].index]; sel=(sel===s?null:s); renderAll(); } },
+      onHover:(e,els)=>{e.native.target.style.cursor=els.length?'pointer':'default';}};
+    if(chM){chM.data=mData;chM.options=mOpt;chM.update();} else chM=new Chart($('cMargin'),{type:'bar',data:mData,options:mOpt});
+
+
+
+
+  }
+
+
+  // ---------------- Monte Carlo ranges ----------------
+  // Seeded, so the same inputs always give the same ranges. Uncertainty is 1 standard deviation, stated on the tile.
+  const MC={n:2000, sd:{td:.03,alw:.02,ads:.015,cogsC:.08,cogsI:.10,unitsC:.12,unitsI:.15,ful:.15,fr:.12}};
+  function simulate(rows){
+    const R=rng(hash('mc|'+cat+'|'+rows.length)), N=()=>{ let u=0,v=0; while(!u)u=R(); while(!v)v=R(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+    const cl=(x,a,b)=>Math.max(a,Math.min(b,x)), T=+td.value/100, A=+alw.value/100, D=+ads.value/100, sd=MC.sd, out=[];
+    for(let k=0;k<MC.n;k++){
+      const td_=cl(T+N()*sd.td,0,.9), al_=cl(A+N()*sd.alw,0,.5), ad_=cl(D+N()*sd.ads,0,.5);
+      const cC=cl(1+N()*sd.cogsC,.5,1.8), cU=cl(1+N()*sd.unitsC,.3,2), cF=cl(1+N()*sd.ful,.4,2), cR=cl(1+N()*sd.fr,.4,2);
+      let C=0,Wt=0,risk=0,exp=0;
+      rows.forEach(({r})=>{ const P=r.amazon_price, W=P*(1-td_), allow=W*al_, adv=P*ad_;
+        const cogs=r.cogs*cC*cl(1+N()*sd.cogsI,.4,2), u=r.units*cU*cl(1+N()*sd.unitsI,0,3), fr=r.freight*cR, F=r.amz_fulfil*cF;
+        const carry=cogs*CARRY_RATE*(+doh.value)/365, con=W-allow-adv-fr-cogs-carry, amz=P-W+allow-F;
+        C+=con*u; Wt+=W*u; if(amz<CRAP*P){ risk++; exp+=(CRAP*P-amz)*u; } });
+      out.push({C,m:Wt?C/Wt:0,risk,exp});
+    }
+    const q=(key,p)=>{ const v=out.map(o=>o[key]).sort((x,y)=>x-y); return v[Math.min(v.length-1,Math.max(0,Math.round(p*(v.length-1))))]; };
+    const Q=key=>({p10:q(key,.1),p50:q(key,.5),p90:q(key,.9)});
+    return {out,C:Q('C'),m:Q('m'),risk:Q('risk'),exp:Q('exp')};
+  }
+  let chMC;
+  function renderMC(rows){
+    if(!$('mcStats')) return null;
+    const mc=simulate(rows), t=totals(rows);
+    const row=(lab,o,f)=>`<div class="mr"><span class="ml">${lab}</span><span class="mv2"><b>${f(o.p50)}</b></span><span class="mrg">${f(o.p10)} to ${f(o.p90)}</span></div>`;
+    const ri=v=>String(Math.round(v)), pp=v=>pct(v);
+    $('mcStats').innerHTML=`<div class="mhead"><span></span><span>Middle case</span><span class="mrg">P10 to P90</span></div>`
+      +row('What we keep',mc.C,big)+row('Our margin',mc.m,pp)+row('Listings at CRaP risk',mc.risk,ri)+row('Cost to fix',mc.exp,big);
+    const sd=MC.sd;
+    $('mcNote').innerHTML=`In 8 of 10 scenarios, what we keep lands between <b>${big(mc.C.p10)}</b> and <b>${big(mc.C.p90)}</b>.`
+      +`<span class="mcfoot">Assumed spreads, 1 standard deviation: trade discount &plusmn;${sd.td*100} pts, allowances &plusmn;${sd.alw*100}, ads &plusmn;${sd.ads*100}, product cost &plusmn;${Math.round(Math.hypot(sd.cogsC,sd.cogsI)*100)}%, volume &plusmn;${Math.round(Math.hypot(sd.unitsC,sd.unitsI)*100)}%, fulfillment &plusmn;${sd.ful*100}%, freight &plusmn;${sd.fr*100}%.</span>`;
+    if(!hasChart()) return mc;
+    const vals=mc.out.map(o=>o.C), lo=Math.min(...vals), hi=Math.max(...vals), B=28, w=(hi-lo)/B||1, bins=Array(B).fill(0);
+    vals.forEach(v=>bins[Math.min(B-1,Math.floor((v-lo)/w))]++);
+    const mid=i=>lo+(i+.5)*w, col=bins.map((_,i)=>{ const x=mid(i); return Math.abs(x-mc.C.p50)<=w/2?'#154D2F':(x>=mc.C.p10&&x<=mc.C.p90?C.keep:C.keepL); });
+    const lab=v=>v>=1e6?'$'+(v/1e6).toFixed(2)+'M':'$'+Math.round(v/1e4)*10+'K';
+    const d={labels:bins.map((_,i)=>lab(mid(i))),datasets:[{data:bins,backgroundColor:col,borderRadius:2,barPercentage:1,categoryPercentage:.92}]};
+    const o={responsive:true,maintainAspectRatio:false,animation:{duration:200},plugins:{legend:{display:false},
+      tooltip:{callbacks:{title:c=>'Around '+c[0].label,label:c=>` ${c.parsed.y} of ${MC.n} scenarios`}}},
+      scales:{x:{grid:{display:false},ticks:{maxTicksLimit:7,maxRotation:0},title:{display:true,text:'What we keep in a year, by scenario',color:'#5A6B7B'}},y:{grid:{color:'#E6ECF1'},border:{display:false},ticks:{maxTicksLimit:5},title:{display:true,text:'Scenarios',color:'#5A6B7B'}}}};
+    if(chMC){chMC.data=d;chMC.options=o;chMC.update();} else chMC=new Chart($('cMC'),{type:'bar',data:d,options:o});
+    return mc;
+  }
+
+  // ---------------- listing detail ----------------
+  function focusSku(rows){ if(sel && rows.find(x=>x.r.sku===sel)) return sel; const w=[...rows].sort((a,b)=>a.c.amz-b.c.amz)[0]; return w?w.r.sku:null; }
+  function renderDetail(){
+    const rows=rowsOf(inScope()), t=totals(rows), f=focusSku(rows);
+    const srt=[...rows].sort((a,b)=>b.c.contrib*b.r.units-a.c.contrib*a.r.units);
+    const maxAbs=Math.max(...srt.map(x=>Math.abs(x.c.contrib*x.r.units)),1);
+    $('tb').innerHTML=srt.map(({r,c})=>{ const tot=c.contrib*r.units, w=Math.abs(tot)/maxAbs*50;
+      const bar=tot>=0?`left:50%;width:${w}%;background:#2E9B6A`:`right:50%;width:${w}%;background:#D2433C`;
+      return `<tr data-sku="${esc(r.sku)}" class="${r.sku===f?'sel':''}">
+        <td><span class="catdot" style="background:${catColor(r.category)}" title="${esc(r.category)}"></span>${esc(shortName(r.name))}${c.risk?'<span class="flag">CRaP risk</span>':''}<span class="asin">ASIN ${esc(r.sku)}</span></td>
+        <td class="${c.deep?'neg':''}" title="${c.deep?pct(c.off,0)+' below list':''}">${money(c.P)}</td><td>${money(c.L)}</td><td>${r.units.toLocaleString()}</td><td>${money(c.W)}</td>
+        <td class="${c.contrib<0?'neg':'pos'}">${money(c.contrib)}</td>
+        <td class="${c.risk?'neg':'pos'}">${money(c.amz)}</td>
+        <td class="dbar"><span class="fill" style="${bar}"></span><span class="val ${tot<0?'neg':'pos'}">${big(tot)}</span></td></tr>`; }).join('');
+    $('tf').innerHTML=`<tr><td>Total</td><td>${big(t.retail)}</td><td></td><td>${srt.reduce((a,x)=>a+x.r.units,0).toLocaleString()}</td><td>${big(t.rev)}</td><td></td><td class="${t.risk?'neg':''}">${t.risk} at risk</td><td class="${t.contrib<0?'neg':'pos'}">${big(t.contrib)}</td></tr>`;
+    document.querySelectorAll('#tb tr').forEach(tr=>tr.addEventListener('click',()=>{ sel=tr.dataset.sku; renderAll(); }));
+    renderWaterfall(f); renderAmazonSide(f);
+  }
+  function renderWaterfall(sku){
+    const r=DATA.find(x=>x.sku===sku); if(!r) return; const c=calc(r);
+    $('wfTitle').textContent='Cost build per unit: '+shortName(r.name);
+    const steps=[[["Amazon's",'price'],c.P,C.navy,1],[["Amazon's",'margin'],-(c.P-c.W),C.slate,0],[['Co-op &','allowances'],-c.allow,'#4C7599'],['Advertising',-c.adv,'#4C7599'],
+      ['Freight',-c.freight,'#4C7599'],['Materials',-c.mat,'#8FB0CF'],['Labor',-c.lab,'#8FB0CF'],['Packaging',-c.pack,'#8FB0CF'],[['Plant & space','(fixed)'],-c.ovh,'#1F4E73'],[['Inventory','carrying'],-c.carry,'#C4D6E7']];
+    let run=0; const labels=[],data=[],cols=[],vals=[];
+    steps.forEach(([l,v,col,start])=>{ labels.push(l); vals.push(v); cols.push(col); if(start){data.push([0,v]);run=v;} else {data.push([run+v,run]);run+=v;} });
+    labels.push('We keep'); data.push([0,c.contrib]); cols.push(c.contrib<0?C.risk:C.keep); vals.push(c.contrib);
+    if(hasChart()){
+      const top=Math.max(c.P,c.contrib), raw=top*1.15/5, mag=Math.pow(10,Math.floor(Math.log10(raw))), step=[1,2,2.5,5,10].map(k=>k*mag).find(v=>v>=raw), wfTop={step,max:Math.ceil(top*1.12/step)*step};
+      const wData={labels,datasets:[{data,backgroundColor:cols,borderRadius:2,barPercentage:.74,vals}]};
+      const wOpt={responsive:true,maintainAspectRatio:false,animation:{duration:200},plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>[].concat(c[0].label).join(' '),label:ctx=>' '+money(vals[ctx.dataIndex])}}},
+        scales:{x:{grid:{display:false},ticks:{color:'#34495E',font:{size:BIG()?13.5:11},maxRotation:0,autoSkip:false}},y:{min:0,max:wfTop.max,grid:{color:'#E6ECF1'},border:{display:false},ticks:{stepSize:wfTop.step,callback:v=>'$'+(+v).toFixed(2)}}}};
+      if(chW){chW.data=wData;chW.options=wOpt;chW.update();} else chW=new Chart($('cWater'),{type:'bar',data:wData,options:wOpt,plugins:[WF_LABELS]});
+    }
+  }
+  // prints each step's value just above its bar, so the build reads without hovering
+  const WF_LABELS={id:'wfLabels',afterDatasetsDraw(chart){
+    const ds=chart.data.datasets[0]; if(!ds||!ds.vals) return; const meta=chart.getDatasetMeta(0), ctx=chart.ctx, last=ds.vals.length-1;
+    ctx.save(); ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.font=`600 ${innerWidth>=2200?13.5:11.5}px "Segoe UI",sans-serif`;
+    meta.data.forEach((bar,i)=>{ const v=ds.vals[i]; const top=Math.min(bar.y,bar.base);
+      const t=(i===0||i===last)?(v<0?'-':'')+'$'+Math.abs(v).toFixed(2):'\u2212$'+Math.abs(v).toFixed(2);
+      // the axis leaves headroom above the price, so every value sits above its bar
+      ctx.fillStyle=i===0?C.ink:i===last?(v<0?C.risk:C.keepD):'#5A6B7B';
+      ctx.fillText(t,bar.x,top-4); });
+    ctx.restore(); }};
+  function renderAmazonSide(sku){
+    const r=DATA.find(x=>x.sku===sku); if(!r){ $('amz').innerHTML=''; return; } const c=calc(r);
+    const st=c.amz<0?['bad','Underwater for Amazon']:c.risk?['bad','Below the 15% line: CRaP risk']:['ok','Healthy for Amazon'];
+    const note=c.risk
+      ?`Amazon keeps about <b>${money(c.amz)}</b> a unit, ${pct(c.apct,0)} of its price, under the 15% line used here. Listings that thin are the first flagged CRaP: add-on status, a margin-support request, or fewer purchase orders.${isFinite(c.floor)?` At these terms it would take a price of about <b>${money(c.floor)}</b> to clear the line.`:''}`
+      :`Amazon keeps about <b>${money(c.amz)}</b> a unit here, ${pct(c.apct,0)} of its price, comfortably above the 15% line, so this listing isn't likely to be flagged CRaP.`;
+    $('amz').innerHTML=`<div class="r"><span>Amazon's price</span><b>${money(c.P)}</b></div>
+      <div class="r"><span>List price${c.off>0.005?` <span style="color:var(--muted)">(today's price is ${pct(c.off,0)} below)</span>`:''}</span><b>${money(c.L)}</b></div>
+      <div class="r"><span>What Amazon pays us (est.)</span><b>&minus;${money(c.W)}</b></div>
+      <div class="r"><span>Co-op &amp; allowances we pay Amazon</span><b>+${money(c.allow)}</b></div>
+      <div class="r"><span>Amazon's cost to fulfill (est.)</span><b>&minus;${money(r.amz_fulfil)}</b></div>
+      <div class="r tot"><span>Amazon keeps</span><b class="${c.risk?'neg':'pos'}">${money(c.amz)}</b></div>
+      <span class="badge ${st[0]}">${st[1]}</span><p>${note}</p>`;
+  }
+
+  // ================= CUSTOMER VOICE =================
+  // Issue categories, and the keyword rules that sort review text into specific problems.
+  const ICATS=[
+    {k:'quality',label:'Product quality',     c:'#7A4FA3',fix:'Replacement sent through our support line',med:3},
+    {k:'effect', label:'Product performance',         c:'#56B4E9',fix:'Usage guidance published',med:6},
+    {k:'ease',   label:'Ease of use',         c:'#E69F00',fix:'How-to content added to the listing',med:5},
+    {k:'ship',   label:'Shipping & packaging',c:'#CC79A7',fix:'Raised with Amazon; packaging reviewed',med:9},
+    {k:'listing',label:'Listing accuracy',    c:'#F0E442',fix:'Listing content corrected',med:2},
+    {k:'value',  label:'Price & value',       c:'#A9CCE8',fix:'Price position reviewed',med:12},
+    {k:'service',label:'Customer service',    c:'#1F4E73',fix:'Case closed',med:4}];
+  const icat=k=>ICATS.find(c=>c.k===k)||{k,label:k,c:'#8A9BAB',fix:'',med:5};
+  // readable text on a coloured tag: white or ink, whichever has the higher contrast
+  const textOn=hex=>{ const h=hex.replace('#',''), v=[0,2,4].map(i=>{let x=parseInt(h.substr(i,2),16)/255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)}), L=.2126*v[0]+.7152*v[1]+.0722*v[2];
+    return (1.05/(L+.05))>=((L+.05)/(0.0209+.05))?'#FFFFFF':'#13263A'; };
+  const RESOLVE={quality:.78,effect:.62,ease:.70,ship:.52,listing:.93,value:.35,service:.88};
+  const PROBLEMS=[
+    {id:'broke', cat:'quality',label:'Broke or cracked',          kw:['broke','broken','snapped','cracked','fell apart','came apart','shattered']},
+    {id:'lid',   cat:'quality',label:"Lid won't stay closed",     kw:["won't stay closed","wont stay closed",'pops open','pop open','popped open',"doesn't close",'does not close']},
+    {id:'leak',  cat:'quality',label:'Leaks',                     kw:['leak','leaks','leaked','leaking']},
+    {id:'smell', cat:'quality',label:'Strong smell',              kw:['smell','smells','odor']},
+    {id:'crush', cat:'effect', label:'Uneven crush or cut',       kw:['uneven','unevenly','chunks','crumbles','crumble',"doesn't cut",'does not cut',"won't crush",'does not crush']},
+    {id:'fit',   cat:'effect', label:'Too big or falls out',      kw:['too big','falls out','fall out','fell out',"won't stay in",'uncomfortable','hurts my ears']},
+    {id:'noise', cat:'effect', label:"Doesn't block enough noise",kw:["doesn't block",'does not block','still hear','noise still']},
+    {id:'dry',   cat:'effect', label:'Wipes dried out',           kw:['dried out','dry out','were dry','bone dry']},
+    {id:'streak',cat:'effect', label:'Leaves streaks',            kw:['streak','streaks','smear','smears','smudges']},
+    {id:'hard',  cat:'ease',   label:'Hard to open',              kw:['hard to open','difficult to open',"can't open",'cant open','too tight','arthritis','stiff']},
+    {id:'small', cat:'ease',   label:'Compartments too small',    kw:['too small','tiny','not big enough']},
+    {id:'dmg',   cat:'ship',   label:'Arrived damaged',           kw:['arrived damaged','arrived broken','arrived crushed','box was crushed','damaged box','box was damaged','dented']},
+    {id:'late',  cat:'ship',   label:'Late or missing',           kw:['late','never arrived','package missing','missing package','lost package','took weeks']},
+    {id:'used',  cat:'ship',   label:'Opened or used item',       kw:['already opened','looked used','used item','resealed']},
+    {id:'pic',   cat:'listing',label:'Not as pictured',           kw:['not as pictured','not as described','different color','wrong color','smaller than','looks different','misleading']},
+    {id:'price', cat:'value',  label:'Overpriced',                kw:['overpriced','too expensive','not worth','cheaper elsewhere','rip off','waste of money','pricey']},
+    {id:'svc',   cat:'service',label:'No response from support',  kw:['no response','customer service','never heard back','no reply','refund']}];
+  const esre=x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  PROBLEMS.forEach(p=>p.re=p.kw.map(k=>({k,re:new RegExp('(^|[^a-z])'+esre(k)+'($|[^a-z])','i')})));
+  const CAT_PRI=['quality','effect','ship','ease','listing','service','value'];
+  // A keyword counts unless it is negated: "no leaks", "not cracked", "streak-free".
+  function matchKw(text,x){ const m=x.re.exec(text); if(!m) return false; const st=m.index+m[1].length;
+    const pre=text.slice(Math.max(0,st-12),st).toLowerCase(), post=text.slice(st+x.k.length,st+x.k.length+6).toLowerCase();
+    if(/(^|[^a-z])(no|not|never|without|zero)\s+$/.test(pre)) return false;
+    if(/^[\s-]?free/.test(post)) return false; return true; }
+  function classify(text){
+    const hits=[], probs=[];
+    PROBLEMS.forEach(p=>{ const m=p.re.filter(x=>matchKw(text,x)); if(m.length){ probs.push(p.id); m.forEach(x=>hits.push({k:x.k,cat:p.cat,p:p.id})); } });
+    const score={}; probs.forEach(id=>{ const c=PROBLEMS.find(p=>p.id===id).cat; score[c]=(score[c]||0)+1; });
+    const cats=Object.keys(score).sort((a,b)=>score[b]-score[a]||CAT_PRI.indexOf(a)-CAT_PRI.indexOf(b));
+    return {probs,cats,primary:cats[0]||null,hits};
+  }
+
+  // Sample review text: written to exercise the classifier. Not real customer reviews.
+  const TPL={
+    broke:['The lid snapped off after two weeks.','Cracked the first time I dropped it.','Hinge broke within a month.','Fell apart after a few uses.'],
+    lid:['The lids pop open in my purse.',"Lids won't stay closed, pills end up everywhere.",'Friday lid pops open on its own.'],
+    leak:['Leaked the first time I filled it.','It leaks around the stopper.'],
+    smell:['Strong rubber smell out of the box.','Still smells after a week of airing out.'],
+    crush:['Crushes unevenly and leaves chunks.',"Doesn't cut small pills cleanly. The pill crumbles.",'Blade does not cut evenly anymore.'],
+    fit:['Too big for my ears and they fall out overnight.','Uncomfortable after an hour.','They fell out while I slept.'],
+    noise:['Still hear my partner snoring.',"Doesn't block traffic noise like I hoped."],
+    dry:['Half the wipes were dried out.','Opened a new box and they were dry.','Wipes dried out in the pouch.'],
+    streak:['Leaves streaks on my glasses.','Smears more than it cleans.'],
+    hard:['Hard to open with arthritis in my hands.','The buttons are stiff and difficult to open.',"My mom can't open the lids."],
+    small:['Compartments are too small for my vitamins.','Too small for fish oil capsules.'],
+    dmg:['Box was crushed when it arrived.','Arrived damaged, two compartments cracked.','Package arrived crushed.'],
+    late:['Order was a week late.','Never arrived, had to reorder.','Took weeks to show up.'],
+    used:['Package was already opened.','Looked used, scuff marks on the lid.'],
+    pic:['Different color than the picture.','Much smaller than it looks in the photos.','Not as described in the listing.'],
+    price:['Overpriced for plastic.','Found it cheaper elsewhere.','Not worth the price.'],
+    svc:['Contacted support twice, no response.','Asked for a refund, never heard back.']};
+  const POS={
+    organizer:['Easy to fill and easy to open.','Exactly what my dad needed.','Love the pop-out days for travel.','Sturdy and the labels are easy to read.','Best pill box I have owned.'],
+    crusher:['Crushes pills to powder in seconds.','Makes giving my mom her meds so much easier.','Sharp blade, clean cuts.','Works great for my dog\'s pills.'],
+    earplug:['Best earplugs I have used for sleep.','Blocks out my husband\'s snoring.','Soft and comfortable all night.','Great for concerts.'],
+    wipes:['Keeps my glasses spotless.','Perfect to keep in the car.','Streak-free and individually wrapped.'],
+    bottle:['Holds heat for hours.','Good quality rubber, no leaks.','Great for cramps.']};
+  const MINOR={organizer:['Wish the compartments were a bit bigger.','Lids are a little stiff at first.'],crusher:['Takes a few twists for big pills.'],
+    earplug:['A bit big for small ears.'],wipes:['Box could be sturdier.'],bottle:['Slight rubber smell at first.']};
+  const TYPE_W={organizer:{broke:3,lid:3,hard:3,small:2,pic:2,price:1,dmg:2,late:1,used:.5,svc:.4},
+    crusher:{crush:4,broke:2,hard:2,price:1,dmg:1.5,late:1,used:.4,svc:.4},
+    earplug:{fit:4,noise:3,price:1.5,dmg:.8,late:1,pic:.5,svc:.3},
+    wipes:{dry:4,streak:3,price:1.5,dmg:1,late:1,pic:.8,svc:.3},
+    bottle:{leak:4,smell:2,broke:1,dmg:1.5,late:1,svc:.5}};
+  const SEASON_W=(id,mi)=>{ // mi: 0=Sep ... 11=Aug
+    if(id==='dmg') return mi===2||mi===3?1.8:1; if(id==='late') return mi===3?2.2:mi===2?1.5:1;
+    if(id==='dry') return mi>=9&&mi<=11?2.1:1; if(id==='leak') return mi>=2&&mi<=4?1.3:1; return 1; };
+  const pickW=(R,w)=>{ const t=Object.values(w).reduce((a,b)=>a+b,0); let x=R()*t; for(const k in w){ x-=w[k]; if(x<=0) return k; } return Object.keys(w)[0]; };
+  const pickA=(R,a)=>a[Math.floor(R()*a.length)%a.length];
+
+  function genVoice(){
+    const recs=[], REVIEW_RATE=.009;
+    DATA.forEach(r=>{
+      const sr=SERIES&&SERIES[r.sku]; if(!sr) return;
+      const R=rng(hash('rv'+r.sku)), type=r.type||'organizer', base=TYPE_W[type]||TYPE_W.organizer;
+      const pNeg=Math.max(.02,Math.min(.45,(4.7-(r.rating||4.4))/2.7));
+      MONTHS.forEach((mk,mi)=>{
+        const w={}; let lift=0,tot=0; for(const k in base){ w[k]=base[k]*SEASON_W(k,mi); lift+=w[k]; tot+=base[k]; }
+        const pN=Math.min(.6,pNeg*(lift/tot)), n=Math.max(1,Math.round((sr[mi]||0)*REVIEW_RATE));
+        for(let i=0;i<n;i++){
+          let stars,text;
+          if(R()<pN){ stars=R()<.35?1:R()<.5?2:3;
+            const p1=pickW(R,w); text=pickA(R,TPL[p1]);
+            if(R()<.18){ const w2={...w}; delete w2[p1]; const p2=pickW(R,w2); text+=' '+pickA(R,TPL[p2]); } }
+          else { stars=R()<.72?5:4; text=pickA(R,POS[type]||POS.organizer); if(R()<.08) text+=' '+pickA(R,MINOR[type]||MINOR.organizer); }
+          const c=classify(text), issue=stars<=3&&!!c.primary;
+          let status=null,days=null;
+          if(issue){ const lag=mi===MONTHS.length-1?.45:mi===MONTHS.length-2?.8:1, pr=RESOLVE[c.primary]*lag, x=R();
+            status=x<pr?'resolved':x<pr+(1-pr)*.55?'progress':'open';
+            if(status==='resolved') days=Math.max(1,Math.round(icat(c.primary).med*(.45+R()*1.3))); }
+          recs.push({sku:r.sku,mi,stars,text,cats:c.cats,primary:c.primary,probs:c.probs,hits:c.hits,issue,status,days});
+        }
+      });
+    });
+    return {src:'sample',months:MONTHS.slice(),recs};
+  }
+  let VOICE={src:'none',months:[],recs:[]}, vCat=null, vSku=null;
+
+  function voiceScope(){ const skus=new Set(inScope().map(r=>r.sku)); return VOICE.recs.filter(x=>skus.has(x.sku)); }
+  const median=a=>{ if(!a.length) return 0; const s=[...a].sort((x,y)=>x-y), m=s.length>>1; return s.length%2?s[m]:(s[m-1]+s[m])/2; };
+  function voiceStats(recs){
+    const n=VOICE.months.length, L=n-1, issues=recs.filter(x=>x.issue);
+    const byCat={}; ICATS.forEach(c=>byCat[c.k]={n:0,cur:0,prev:0,res:0,prog:0,open:0,days:[]});
+    issues.forEach(x=>{ const b=byCat[x.primary]||(byCat[x.primary]={n:0,cur:0,prev:0,res:0,prog:0,open:0,days:[]}); b.n++;
+      if(x.mi===L) b.cur++; if(x.mi===L-1) b.prev++;
+      if(x.status==='resolved'){b.res++; b.days.push(x.days);} else if(x.status==='progress') b.prog++; else b.open++; });
+    const byProb={}; issues.forEach(x=>x.probs.forEach(p=>{ const b=byProb[p]||(byProb[p]={n:0,recent:0,prior:0}); b.n++;
+      if(x.mi>=n-3) b.recent++; else if(x.mi>=n-6) b.prior++; }));
+    const monthStars=Array(n).fill(0), monthN=Array(n).fill(0), monthCat=ICATS.map(()=>Array(n).fill(0));
+    recs.forEach(x=>{ monthStars[x.mi]+=x.stars; monthN[x.mi]++; if(x.issue){ const ci=ICATS.findIndex(c=>c.k===x.primary); if(ci>=0) monthCat[ci][x.mi]++; } });
+    const allDays=issues.filter(x=>x.status==='resolved').map(x=>x.days);
+    return {issues,byCat,byProb,monthAvg:monthStars.map((s,i)=>monthN[i]?s/monthN[i]:null),monthCat,
+      resolved:issues.filter(x=>x.status==='resolved').length,medDays:median(allDays),L};
+  }
+  function listingRatings(){
+    // overall rating per listing: from the listing data, or from the review file if one is loaded
+    return inScope().map(r=>{
+      const rs=VOICE.recs.filter(x=>x.sku===r.sku);
+      let rating=r.rating, count=r.ratings, src=r.rsrc||'est';
+      if(VOICE.src==='file'&&rs.length){ rating=rs.reduce((a,x)=>a+x.stars,0)/rs.length; count=rs.length; src='file'; }
+      const L=VOICE.months.length-1, cur=rs.filter(x=>x.mi===L), prev=rs.filter(x=>x.mi===L-1);
+      const avg=a=>a.length?a.reduce((s,x)=>s+x.stars,0)/a.length:null;
+      return {r,rating,count,src,cur:avg(cur),prev:avg(prev)};
+    }).filter(x=>x.rating!=null&&(VOICE.src!=='file'||x.src==='file'));
+  }
+
+  // ---------------- customer opinion snapshot (Home) ----------------
+  function renderVoiceSnap(){
+    const el=$('vsnap'); if(!el) return;
+    if(VOICE.src==='none'||!VOICE.recs.length){ el.innerHTML='<div class="empty">Load a review export on the Customer voice tab to see ratings and complaints here.</div>'; return; }
+    const recs=voiceScope(), st=voiceStats(recs), lr=listingRatings(), totR=lr.reduce((a,x)=>a+x.count,0), wAvg=totR?lr.reduce((a,x)=>a+x.rating*x.count,0)/totR:0;
+    const fl=st.issues.length, cats=ICATS.filter(c=>st.byCat[c.k]&&st.byCat[c.k].n).sort((a,b)=>st.byCat[b.k].n-st.byCat[a.k].n).slice(0,4);
+    const top=Object.entries(st.byProb).sort((a,b)=>b[1].n-a[1].n)[0], tp=top?PROBLEMS.find(p=>p.id===top[0]):null, mx=Math.max(1,...cats.map(c=>st.byCat[c.k].n));
+    el.innerHTML=`<div class="vs1"><div class="bn">${wAvg.toFixed(1)}</div>${starsHTML(wAvg,true)}<div class="cp">${totR.toLocaleString()} ratings${VOICE.src==='file'?' in the file':' across 13 listings'}</div></div>
+      <div class="vs2"><div class="vh">Top complaint categories</div>${cats.map(c=>`<div class="vb"><span>${esc(c.label)}</span><i><b style="width:${st.byCat[c.k].n/mx*100}%;background:${c.c}"></b></i><em>${pct(st.byCat[c.k].n/fl,0)}</em></div>`).join('')}
+        ${tp?`<div class="vt">Most common complaint: <b>${esc(tp.label)}</b></div>`:''}</div>`;
+  }
+
+  // ---------------- customer voice page ----------------
+  const starsHTML=(v,big)=>`<span class="stars${big?' big':''}" style="--p:${Math.max(0,Math.min(100,v/5*100)).toFixed(1)}%" aria-label="${v.toFixed(1)} out of 5 stars">\u2605\u2605\u2605\u2605\u2605</span>`;
+  let chV,chD;
+  function hardestText(st){
+    const rows=ICATS.map(c=>{ const b=st.byCat[c.k]; const t=b?b.res+b.prog+b.open:0; return {c,t,rr:t?b.res/t:1}; }).filter(x=>x.t>0).sort((a,b)=>a.rr-b.rr);
+    if(!rows.length) return '';
+    const why=k=>k==='ship'?', because Amazon owns fulfillment in a 1P model':'';
+    if(rows[0].c.k==='value'&&rows[1]) return `Hardest to close: <b>Price &amp; value</b>, which is a pricing decision rather than a fix. Among fixable issues, <b>${esc(rows[1].c.label)}</b> closes slowest${why(rows[1].c.k)}.`;
+    return `Hardest to close: <b>${esc(rows[0].c.label)}</b>${why(rows[0].c.k)}. Typical fix: ${esc(rows[0].c.fix.toLowerCase())}.`;
+  }
+  function renderVoice(){
+    const has=VOICE.src!=='none'&&VOICE.recs.length;
+    $('voiceEmpty').style.display=has?'none':'block'; $('voiceBody').style.display=has?'block':'none';
+    $('vSrcNote').innerHTML=VOICE.src==='file'?`Reviews from <b>${esc(VOICE.label||'your file')}</b>, classified in your browser.`
+      :VOICE.src==='sample'?'<b>Sample reviews</b> written to exercise the classifier. Star ratings and counts are generated with the catalog.':'';
+    if(!has) return;
+    const recs=voiceScope(), st=voiceStats(recs), lr=listingRatings();
+    const totR=lr.reduce((a,x)=>a+x.count,0), wAvg=totR?lr.reduce((a,x)=>a+x.rating*x.count,0)/totR:0;
+    const flagged=st.issues.length, resRate=flagged?st.resolved/flagged:0, Lm=VOICE.months[st.L];
+    $('vAvg').innerHTML=`${wAvg.toFixed(1)} ${starsHTML(wAvg)}`; $('vAvgL').textContent='Average rating';
+    $('vCount').textContent=totR.toLocaleString(); $('vCountL').textContent=VOICE.src==='file'?'Reviews in the file':'Ratings on Amazon';
+    $('vFlag').textContent=flagged.toLocaleString();
+    $('vRes').textContent=pct(resRate,0); $('vResBox').className='kpi '+(resRate>=.7?'g':resRate>=.5?'y':'r');
+    $('vDays').textContent=st.medDays?st.medDays+' days':'n/a';
+
+    // issue mix donut + top problems
+    const cats=ICATS.filter(c=>st.byCat[c.k]&&st.byCat[c.k].n).sort((a,b)=>st.byCat[b.k].n-st.byCat[a.k].n);
+    $('dCenter').innerHTML=`<b>${flagged.toLocaleString()}</b><span>issues flagged</span>`;
+    if(hasChart()){
+      const dData={labels:cats.map(c=>c.label),datasets:[{data:cats.map(c=>st.byCat[c.k].n),backgroundColor:cats.map(c=>vCat&&vCat!==c.k?alpha(c.c,.25):c.c),borderColor:'#fff',borderWidth:2,hoverOffset:6}]};
+      const dOpt={responsive:true,maintainAspectRatio:false,cutout:'62%',animation:{duration:250},plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed} (${pct(c.parsed/flagged,0)})`}}},
+        onClick:(e,els)=>{ if(els.length){ const k=cats[els[0].index].k; vCat=vCat===k?null:k; renderVoice(); } },
+        onHover:(e,els)=>{e.native.target.style.cursor=els.length?'pointer':'default';}};
+      const dKey=JSON.stringify([dData.labels,dData.datasets[0].data,dData.datasets[0].backgroundColor]);
+      if(chD){ if(chD._key!==dKey){ chD.data=dData;chD.options=dOpt;chD.update(); chD._key=dKey; } } else { chD=new Chart($('cDonut'),{type:'doughnut',data:dData,options:dOpt}); chD._key=dKey; }
+    }
+    $('dLegend').innerHTML=cats.map(c=>{ const b=st.byCat[c.k], d=b.cur-b.prev;
+      return `<button type="button" class="dl${vCat===c.k?' on':''}" data-k="${c.k}"><i style="background:${c.c}"></i><span>${c.label}</span><b>${pct(b.n/flagged,0)}</b><em class="${d>0?'neg':d<0?'pos':''}">${d>0?'\u25B2':d<0?'\u25BC':'\u2013'}</em></button>`; }).join('');
+    $('dLegend').querySelectorAll('.dl').forEach(b=>b.addEventListener('click',()=>{ vCat=vCat===b.dataset.k?null:b.dataset.k; renderVoice(); }));
+
+
+    // resolution by category
+    const anyStatus=VOICE.src==='file'&&st.issues.some(x=>x.status);
+    // resolution is unknowable from outside the company, so it only shows when a real review file carries status
+    $('resTile').style.display=anyStatus?'':'none'; $('resTile').className='tile s12';
+    $('vResBox').style.display=anyStatus?'':'none'; $('vDaysBox').style.display=anyStatus?'':'none'; $('exStTh').style.display=anyStatus?'':'none';
+    if(!anyStatus){ $('res').innerHTML='<div class="empty">This file has no status column, so resolution can\'t be tracked yet. Add <b>status</b> (resolved, in progress, open) and <b>days_to_resolve</b>.</div>'; $('resNote').innerHTML=''; }
+    else $('res').innerHTML=cats.map(c=>{ const b=st.byCat[c.k], t=b.res+b.prog+b.open||1, rr=b.res/t;
+      return `<div class="rw${vCat===c.k?' on':''}" data-k="${c.k}"><div class="rl"><i style="background:${c.c}"></i>${c.label}</div>
+        <div class="sb" title="${b.res} resolved, ${b.prog} in progress, ${b.open} open"><span style="width:${b.res/t*100}%;background:#2E9B6A"></span><span style="width:${b.prog/t*100}%;background:#F8B010"></span><span style="width:${b.open/t*100}%;background:#D2433C"></span></div>
+        <div class="rt"><b>${pct(rr,0)}</b> &middot; ${b.days.length?median(b.days)+'d':'n/a'}</div></div>`; }).join('');
+    $('res').querySelectorAll('.rw').forEach(r=>r.addEventListener('click',()=>{ vCat=vCat===r.dataset.k?null:r.dataset.k; renderVoice(); }));
+    if(anyStatus) $('resNote').innerHTML=hardestText(st);
+
+    // issue rate per 1,000 units: raw counts always make the best sellers look worst
+    { const units={}; inScope().forEach(r=>units[r.sku]=r.units);
+      const cnt={}; st.issues.forEach(x=>cnt[x.sku]=(cnt[x.sku]||0)+1);
+      const items=inScope().map(r=>({r,n:cnt[r.sku]||0,rate:units[r.sku]?(cnt[r.sku]||0)/units[r.sku]*1000:0})).sort((a,b)=>b.rate-a.rate);
+      const mx=Math.max(.01,...items.map(x=>x.rate)), byCount=[...items].sort((a,b)=>b.n-a.n)[0], byRate=items[0];
+      const shade=f=>{ const a=[190,211,230], z=[20,62,98], k=Math.max(0,Math.min(1,f)); return `rgb(${a.map((v,i)=>Math.round(v+(z[i]-v)*k)).join(',')})`; };
+      $('rates').innerHTML=items.map(x=>`<div class="rr${x.r.sku===vSku?' on':''}" data-sku="${esc(x.r.sku)}" title="${x.n} issues on ${x.r.units.toLocaleString()} units"><span class="rn"><i style="background:${catColor(x.r.category)}"></i>${esc(shortName(x.r.name))}</span><span class="rb"><b style="width:${x.rate/mx*100}%;background:${shade(x.rate/mx)}"></b></span><span class="rv">${x.rate.toFixed(2)}</span></div>`).join('');
+      $('rates').querySelectorAll('.rr').forEach(e=>e.addEventListener('click',()=>{ vSku=vSku===e.dataset.sku?null:e.dataset.sku; renderVoice(); }));
+      $('rateNote').innerHTML=byCount&&byRate&&byCount.r.sku!==byRate.r.sku
+        ?`By raw count, <b>${esc(shortName(byCount.r.name))}</b> draws the most complaints (${byCount.n}), but that's volume talking. Per unit sold, <b>${esc(shortName(byRate.r.name))}</b> runs highest, at ${byRate.rate.toFixed(2)} per 1,000.`
+        :byRate?`<b>${esc(shortName(byRate.r.name))}</b> leads both by raw count and per unit sold.`:''; }
+    // review explorer
+    let rows=recs.filter(x=>x.stars<=3);
+    if(vCat) rows=rows.filter(x=>x.primary===vCat); if(vSku) rows=rows.filter(x=>x.sku===vSku);
+    rows=rows.sort((a,b)=>b.mi-a.mi||a.stars-b.stars).slice(0,10);
+    const nameOf=sku=>{ const r=DATA.find(x=>x.sku===sku); return r?shortName(r.name):sku; };
+    const hl=(t,hits)=>{ let h=esc(t); [...new Set(hits.map(x=>x.k))].sort((a,b)=>b.length-a.length).forEach(k=>{ h=h.replace(new RegExp('('+esre(esc(k))+')','ig'),'<mark>$1</mark>'); }); return h; };
+    const filt=[vCat?icat(vCat).label:null, vSku?nameOf(vSku):null].filter(Boolean);
+    $('exSub').innerHTML=(filt.length?'Showing <b>'+filt.map(esc).join(', ')+'</b>. <a href="#" id="exClear">Show all</a>':'Most recent 1 to 3 star reviews')+(VOICE.src==='sample'?' (sample text)':'');
+    const cl=$('exClear'); if(cl) cl.addEventListener('click',e=>{e.preventDefault(); vCat=null; vSku=null; renderVoice();});
+    $('ex').innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(monLabel(VOICE.months[x.mi]))}</td><td>${esc(nameOf(x.sku))}</td><td class="rstars" aria-label="${x.stars} of 5 stars" title="${x.stars} of 5 stars">${'\u2605'.repeat(x.stars)}<span class="dim" aria-hidden="true">${'\u2605'.repeat(5-x.stars)}</span></td>
+      <td class="txt">${hl(x.text,x.hits)}</td>
+      <td>${x.primary?`<span class="tagc sm" style="background:${icat(x.primary).c};color:${textOn(icat(x.primary).c)}">${esc(icat(x.primary).label)}</span>`:'<span class="dim">Uncategorized</span>'}</td>
+      ${anyStatus?`<td>${x.status?`<span class="stp ${x.status}">${x.status==='resolved'?'Resolved':x.status==='progress'?'In progress':'Open'}</span>`:''}</td>`:''}</tr>`).join('')
+      :'<tr><td colspan="${anyStatus?6:5}" class="empty">No reviews match this selection.</td></tr>';
+    runTest();
+  }
+  function runTest(){
+    const t=$('clfIn').value.trim(), out=$('clfOut');
+    if(!t){ out.innerHTML='<div class="dim">Type a review above, or try an example.</div>'; return; }
+    const c=classify(t);
+    if(!c.primary){ out.innerHTML='<div class="ok">No problem keywords found. This would count as <b>no issue</b>.</div>'; return; }
+    const hl=esc(t).replace(new RegExp('('+[...new Set(c.hits.map(h=>h.k))].sort((a,b)=>b.length-a.length).map(k=>esre(esc(k))).join('|')+')','ig'),'<mark>$1</mark>');
+    out.innerHTML=`<div class="clfq">${hl}</div>`+c.cats.map((k,i)=>{ const cc=icat(k), ps=c.probs.map(id=>PROBLEMS.find(p=>p.id===id)).filter(p=>p.cat===k);
+      return `<div class="clfr"><span class="tagc" style="background:${cc.c};color:${textOn(cc.c)}">${i===0?'Primary: ':''}${esc(cc.label)}</span><span>${ps.map(p=>esc(p.label)).join(', ')}</span><span class="dim">Fix: ${esc(cc.fix)}</span></div>`; }).join('');
+  }
+
+  // Data buttons are display-only in this demo. Set to true to switch loading, templates and resets back on.
+  const DATA_BUTTONS_LIVE=false;
+  // ---------------- pipeline + checks ----------------
+  const COLS=['month','sku','name','category','amazon_price','list_price','units','cogs','freight','amz_fulfil'];
+  function splitLine(l){const o=[];let cur='',q=false;for(const ch of l){if(ch==='"'){q=!q;continue;}if(ch===','&&!q){o.push(cur);cur='';continue;}cur+=ch;}o.push(cur);return o.map(x=>x.trim());}
+  function parseCSV(text){
+    const lines=text.replace(/\r/g,'').split('\n').filter(l=>l.trim());
+    if(lines.length<2) return {raw:[],missing:['a header row and at least one listing'],hasMonth:false};
+    const head=splitLine(lines[0]).map(h=>h.toLowerCase()); const iP=head.indexOf('amazon_price')>=0?head.indexOf('amazon_price'):head.indexOf('price');
+    const missing=['sku','name','units','cogs'].filter(c=>!head.includes(c)); if(iP<0) missing.push('amazon_price');
+    if(missing.length) return {raw:[],missing,hasMonth:false};
+    const ix=c=>head.indexOf(c), hasMonth=ix('month')>=0;
+    const num=v=>{const x=parseFloat(String(v??'').replace(/[$,]/g,''));return isFinite(x)?x:NaN;};
+    const opt=(v,i,d)=>i>=0&&String(v[i]??'').trim()!==''?num(v[i]):d;
+    return {missing:[],hasMonth,raw:lines.slice(1).map(l=>{const v=splitLine(l); const P=num(v[iP]);
+      return {month:hasMonth?(v[ix('month')]||'').trim().slice(0,7):'',sku:(v[ix('sku')]||'').trim(),name:(v[ix('name')]||v[ix('sku')]||'').trim(),
+        category:ix('category')>=0&&v[ix('category')]?v[ix('category')].trim():'Uncategorized',amazon_price:P,list_price:opt(v,ix('list_price'),P),
+        units:num(v[ix('units')]),cogs:num(v[ix('cogs')]),freight:opt(v,ix('freight'),0.25),amz_fulfil:opt(v,ix('amz_fulfil'),1.20),mix:'molded'};})};
+  }
+  function runChecks(raw,missing,hasMonth){
+    if(missing&&missing.length) return {checks:[{ok:false,label:'Required columns present',detail:'Missing: '+missing.join(', ')}],rows:[],rejected:[],months:[],series:null};
+    const kept=[],rejected=[],seen=new Set();let bp=0,gap=0,over=0,dup=0,bm=0;
+    raw.forEach((r,i)=>{const why=[], key=r.sku+'|'+(hasMonth?r.month:'');
+      if(!r.sku) why.push('no SKU');
+      if(hasMonth&&!/^\d{4}-(0[1-9]|1[0-2])$/.test(r.month)){why.push('month not in YYYY-MM form');bm++;}
+      if(!(r.amazon_price>0)||!(r.list_price>0)){why.push('price missing or zero');bp++;}
+      if(!(r.cogs>=0)||!(r.units>=0)||!(r.freight>=0)||!(r.amz_fulfil>=0)){why.push('cost or units missing');gap++;}
+      if(r.amazon_price>0&&r.cogs>=r.amazon_price){why.push('cost at or above selling price');over++;}
+      if(r.sku&&seen.has(key)){why.push(hasMonth?'duplicate SKU for that month':'duplicate SKU');dup++;}
+      if(r.sku) seen.add(key);
+      if(why.length) rejected.push({sku:r.sku||('row '+(i+2)),name:(r.name||'')+(hasMonth&&r.month?' \u00b7 '+r.month:''),why:why.join(', '),units:r.units}); else kept.push(r);});
+    let rows=kept, months=[], series=null;
+    if(hasMonth&&kept.length){
+      months=[...new Set(kept.map(r=>r.month))].sort(); const bySku={};
+      kept.forEach(r=>{ const b=bySku[r.sku]||(bySku[r.sku]={latest:r,units:0,m:{}}); b.units+=r.units; b.m[r.month]=(b.m[r.month]||0)+r.units; if(r.month>=b.latest.month) b.latest=r; });
+      rows=Object.values(bySku).map(b=>({...b.latest,units:b.units})); series={};
+      Object.entries(bySku).forEach(([k,b])=>series[k]=months.map(mk=>b.m[mk]||0));
+    }
+    const U=v=>isFinite(v)?v:0, uIn=raw.reduce((a,r)=>a+U(r.units),0), uHeld=rejected.reduce((a,r)=>a+U(r.units),0), uMod=rows.reduce((a,r)=>a+U(r.units),0);
+    const recOk=Math.abs(uIn-uMod-uHeld)<0.5&&raw.length===kept.length+rejected.length, fmtU=v=>Math.round(v).toLocaleString();
+    const checks=[{ok:true,label:'Required columns present',detail:'all found'},
+      hasMonth?{ok:!bm,label:'Months are valid',detail:bm?bm+' row(s) held back':months.length+' months found'}:{ok:true,info:true,label:'Month column',detail:'not included, trend views off'},
+      {ok:!bp,label:'Every price is valid',detail:bp?bp+' row(s) held back':'all rows pass'},
+      {ok:!gap,label:'Costs and units present',detail:gap?gap+' row(s) held back':'all rows pass'},
+      {ok:!over,label:'Cost sits below selling price',detail:over?over+' row(s) held back':'all rows pass'},
+      {ok:!dup,label:hasMonth?'No duplicate listing-months':'No duplicate SKUs',detail:dup?dup+' duplicate(s) held back':'none found'},
+      {ok:recOk,label:'Totals reconcile to the export',detail:`${fmtU(uIn)} units in = ${fmtU(uMod)} modeled + ${fmtU(uHeld)} held`}];
+    return {checks,rows,rejected,months,series};
+  }
+  function renderPipe(){
+    const real=CHK.checks.filter(c=>!c.info), passed=real.filter(c=>c.ok).length, all=real.length, rj=CHK.rejected;
+    $('pSrc').textContent=`${SRC.label==='Sample'?'Sample data':SRC.label}, ${SRC.rows} row${SRC.rows===1?'':'s'}`;
+    $('pChk').textContent=`${passed} of ${all} checks passed`+(rj.length?`, ${rj.length} held back`:'');
+    $('ps2').className='ps '+(passed===all?'ok':'warn');
+    $('pMod').textContent=`${DATA.length} listing${DATA.length===1?'':'s'}`+(MONTHS.length?` \u00d7 ${MONTHS.length} month${MONTHS.length===1?'':'s'}`:'')+' modeled';
+    $('chkSub').textContent=`${passed} of ${all} passed`;
+    $('checks').innerHTML=CHK.checks.map(c=>`<li><span class="ic ${c.info?'info':c.ok?'ok':'bad'}">${c.info?'i':c.ok?'\u2713':'!'}</span><span>${esc(c.label)}</span><span class="d">${esc(c.detail)}</span></li>`).join('');
+    $('held').innerHTML=rj.length?`<div class="tw"><table class="pb held"><thead><tr><th>SKU</th><th>Listing</th><th style="text-align:left">Reason held back</th></tr></thead><tbody>${
+      rj.map(r=>`<tr><td>${esc(r.sku)}</td><td>${esc(r.name)}</td><td style="text-align:left" class="neg">${esc(r.why)}</td></tr>`).join('')}</tbody></table></div>`
+      :'<div class="heldnone"><span class="ic ok">\u2713</span>None. Every row in the current export passed every check.</div>';
+    const t=refreshedAt; $('refreshed').textContent=t.toLocaleDateString([], {month:'short',day:'numeric'})+', '+t.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+    $('srcHead').textContent=SRC.label==='Sample'?'Generated data + stated assumptions':SRC.label;
+    $('srcNote').innerHTML=SRC.label==='Sample'?'Showing <b>13 generated listings</b> for a fictional catalog. Costs, volumes and terms are assumptions you can change.':`Showing <b>${esc(SRC.label)}</b>, read in your browser. Nothing is uploaded.`;
+  }
+  function loadRows(p,label){
+    const res=runChecks(p.raw,p.missing,p.hasMonth); CHK=res; SRC={label,rows:p.raw.length}; refreshedAt=new Date();
+    if(res.rows.length){ DATA=res.rows; MONTHS=res.months; SERIES=res.series; sel=null; cat='All'; gMode=null; vCat=null; vSku=null;
+      VOICE=label==='Sample'?genVoice():{src:'none',months:[],recs:[]}; }
+    renderAll(); return res.rows.length>0;
+  }
+  $('fileBtn').addEventListener('click',()=>{ if(DATA_BUTTONS_LIVE) $('fileIn').click(); });
+  $('fileIn').addEventListener('change',e=>{const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+    rd.onload=()=>{ const ok=loadRows(parseCSV(rd.result),f.name); if(!ok||CHK.rejected.length) setPage('pipe'); }; rd.readAsText(f); e.target.value=''; });
+  $('tplBtn').addEventListener('click',e=>{e.preventDefault(); if(!DATA_BUTTONS_LIVE) return;
+    const csv=[COLS.join(','),...sampleLong().map(r=>COLS.map(c=>/[,&']/.test(String(r[c]))?`"${r[c]}"`:r[c]).join(','))].join('\n');
+    const u=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); const a=document.createElement('a'); a.href=u; a.download='amazon-vendor-template.csv';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1000); });
+  $('resetBtn').addEventListener('click',()=>{ td.value=40; alw.value=12; ads.value=6; doh.value=75; tMargin.value=52; tGrowth.value=5;
+    lbMetric='rev'; $('lbCtl').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.m==='rev'));
+    loadRows({raw:sampleLong(),missing:[],hasMonth:true},'Sample'); });
+
+  // ---------------- pages ----------------
+  const PAGES=['score','overview','detail','voice','pipe'], HASH={score:'home',overview:'profitability',detail:'listing-detail',voice:'customer-voice',pipe:'data-pipeline'};
+  const pageFromHash=()=>{ const h=location.hash.slice(1)==='monthly-tracking'?'home':location.hash.slice(1); const k=Object.keys(HASH).find(k=>HASH[k]===h); return k||'score'; };
+  function setPage(p,mode){ if(p==='deck'){ openDeck(); return; }
+    if(!PAGES.includes(p)) p='score';
+    const changed=p!==page; page=p; document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id==='pg-'+p));
+    document.querySelectorAll('#tabs button').forEach(b=>{ const on=b.dataset.p===p; b.classList.toggle('on',on); if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
+    try{ const url='#'+HASH[p];
+      if(mode==='replace') history.replaceState({p},'',url);
+      else if(mode!=='none'&&changed) history.pushState({p},'',url); }catch(e){}
+    renderAll(); scrollTo({top:0}); }
+  addEventListener('popstate',e=>{ setPage((e.state&&e.state.p)||pageFromHash(),'none'); });
+  document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.p)));
+  $('srcLink').addEventListener('click',e=>{ e.stopPropagation(); setPage('pipe'); setTimeout(()=>{ const t=document.querySelector('#pg-pipe .src'); if(t) scrollTo({top:Math.max(0,scrollY+t.getBoundingClientRect().top-140)}); },60); });
+  [['homeKpis','overview'],['vsnapTile','voice']].forEach(([id,p])=>{ const e=$(id); if(!e) return;
+    e.addEventListener('click',()=>setPage(p)); e.addEventListener('keydown',ev=>{ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); setPage(p); } }); });
+  $('ptog').addEventListener('click',()=>{ const w=document.querySelector('.wrap'), c=w.classList.toggle('col');
+    $('ptog').setAttribute('aria-expanded',String(!c)); $('ptog').lastElementChild.innerHTML=c?'Show &rsaquo;':'&lsaquo; Hide';
+    $('ptog').firstElementChild.textContent=c?'Filters':'Filters & what-ifs'; });
+  const BIG=()=>innerWidth>=2200;
+  function chartDefaults(){ if(typeof Chart==='undefined') return; Chart.defaults.font.family='"IBM Plex Sans Condensed","IBM Plex Sans","Segoe UI",sans-serif'; Chart.defaults.font.size=BIG()?14.5:(innerWidth<600?9.5:12); Chart.defaults.color='#5A6B7B';
+    Chart.defaults.plugins.legend.labels.color='#34495E'; Chart.defaults.plugins.legend.labels.usePointStyle=true; Chart.defaults.plugins.legend.labels.boxWidth=BIG()?11:9; Chart.defaults.plugins.legend.labels.boxHeight=BIG()?11:9; Chart.defaults.plugins.legend.labels.pointStyleWidth=undefined; }
+  // axis money: $0, $40K, $1.2M (no stray decimals)
+  const axisMoney=v=>{ const a=Math.abs(v); const t=a>=1e6?(a/1e6).toFixed(a%1e6?1:0)+'M':a>=1e3?Math.round(a/1e3)+'K':String(Math.round(a)); return (v<0?'-':'')+'$'+t; };
+  // month labels that lie flat: "Sep", with the year shown where it starts
+  const monTick=(k,i)=>{ const m=/^(\d{4})-(\d{2})/.exec(k); if(!m) return k; const mon=new Date(+m[1],+m[2]-1,1).toLocaleString('en-US',{month:'short'}); return (i===0||m[2]==='01')?[mon,m[1]]:mon; };
+  // reason 'terms' = a vendor-terms or target slider moved; review data doesn't depend on those
+  function renderAll(reason){
+    chartDefaults();
+    $('tdV').textContent=td.value+'%'; $('alwV').textContent=(+alw.value).toFixed(1)+'%'; $('adsV').textContent=(+ads.value).toFixed(1)+'%'; $('dohV').textContent=doh.value+' days';
+    $('tMarginV').textContent=tMargin.value+'%'; $('tGrowthV').textContent=(+tGrowth.value>0?'+':'')+tGrowth.value+'%';
+    renderSlicer(); renderPipe();
+    if(page==='score'){ renderHook(); renderKPIs(); renderScore(); if(reason!=='terms') renderVoiceSnap(); }
+    if(page==='overview') renderOverview();
+    if(page==='detail') renderDetail();
+    if(page==='voice'&&reason!=='terms') renderVoice();
+  }
+
+  // ---------------- meeting deck ----------------
+  let slide=0,SL=[];
+  function buildSlides(){
+    const list=inScope(), rows=rowsOf(list), t=totals(rows), keep=t.rev?t.contrib/t.rev:0, gm=t.rev?t.gp/t.rev:0;
+    const scope=cat==='All'?'all categories':cat, mc=rows.length?simulate(rows):null;
+    $('dkScope').textContent='Meeting view for '+scope+'. Generated catalog, stated assumptions.';
+    const out=[];
+    const names={cogs:'Making the product',allow:'Co-op and allowances',adv:'Advertising',freight:'Freight to Amazon',carry:'Inventory carrying'};
+    const biggest=['allow','adv','freight','carry'].sort((a,b)=>t[b]-t[a])[0];
+    const parts=SEG.map(([lab,k,col,lt])=>({lab,k,col,lt,v:t[k]})); if(t.contrib>0) parts.push({lab:'We keep',k:'contrib',col:C.keep,lt:0,v:t.contrib});
+    const den=parts.reduce((a,p)=>a+p.v,0)||1;
+    out.push({h:`<div class="slide"><div class="sk">Where every dollar Amazon pays us goes</div>
+      <h2 class="sh">${keep>0?`We keep <span class="g">${cents(keep)}</span> of every dollar Amazon pays us.`:`We lose <span class="r">${cents(-keep)}</span> on every dollar Amazon pays us.`}</h2>
+      <div class="bigbar">${parts.map(p=>{const w=p.v/den*100;return `<span class="${p.lt?'lt':''}" style="flex:0 0 ${w}%;background:${p.col}">${w>=6?cents(p.v/t.rev):''}</span>`;}).join('')}</div>
+      <div class="biglg">${parts.map(p=>`<span><i style="background:${p.col}"></i>${p.lab}<b>${cents(p.v/t.rev)}</b></span>`).join('')}</div>
+      <p class="ssub">Fully loaded, that's about ${big(t.contrib)} a year${mc?`, likely between ${big(mc.C.p10)} and ${big(mc.C.p90)}`:''}. Making the product takes ${cents(t.cogs/t.rev)}; after that, the biggest cost is ${names[biggest].toLowerCase()}, at ${cents(t[biggest]/t.rev)}.</p></div>`});
+    const under=rows.filter(x=>x.c.risk).sort((a,b)=>a.c.apct-b.c.apct);
+    out.push({h:under.length?`<div class="slide"><div class="sk">The risk on Amazon's side</div>
+      <h2 class="sh">${under.length} of our ${rows.length} listings fall below Amazon\u2019s 15% margin line.</h2>
+      <table class="lose"><thead><tr><th>Listing</th><th>Amazon's price</th><th>Below list</th><th>Amazon keeps per unit</th></tr></thead>
+      <tbody>${under.map(({r,c})=>`<tr><td>${esc(shortName(r.name))}</td><td>${money(c.P)}</td><td>${c.off>0.005?pct(c.off,0):'at list'}</td><td class="r">${money(c.amz)} <span style="color:var(--muted);font-size:.8em">(${pct(c.apct,0)})</span></td></tr>`).join('')}</tbody></table>
+      <p class="ssub">Amazon flags listings it can't make enough on as CRaP, "can't realize a profit," and fixes them at the vendor's expense: add-on status, margin-support requests, or fewer purchase orders. These are first in line.</p></div>`
+      :`<div class="slide"><div class="sk">The risk on Amazon's side</div><h2 class="sh">Every listing clears a <span class="g">healthy margin</span> for Amazon.</h2><p class="ssub">None look likely to be flagged CRaP at these terms.</p></div>`});
+    const gmP=Math.round(gm*100), kP=Math.round(keep*100);
+    const chips=[['Co-op & allowances','allow','#4C7599',0],['Advertising','adv','#7FA2C4',1],['Freight to Amazon','freight','#AFC7DD',1],['Inventory carrying','carry','#D5E3EF',1]]
+      .map(([l,k,c,lt])=>({l,c,lt,v:t.rev?t[k]/t.rev*100:0})).sort((a,b)=>b.v-a.v);
+    { const want=gmP-kP; chips.forEach(c=>{c.r=Math.floor(c.v);c.f=c.v-c.r;}); let left=want-chips.reduce((a,c)=>a+c.r,0);
+      [...chips].sort((a,b)=>b.f-a.f).forEach(c=>{ if(left>0){c.r++;left--;} else if(left<0&&c.r>0){c.r--;left++;} }); }
+    out.push({h:`<div class="slide"><div class="sk">Why the usual report misses it</div>
+      <h2 class="sh">Invoiced gross margin says ${gmP}%. We keep <span class="${kP<0?'r':'g'}">${kP}%</span>.</h2>
+      <div class="gap2">
+        <div class="gb"><div class="lab"><span>Gross margin on invoiced sales</span><b>${gmP}%</b></div><div class="trk"><div class="fl" style="width:${Math.max(0,gmP)}%;background:#9BB8D0"></div></div></div>
+        <div class="gb"><div class="lab"><span>What we keep, fully loaded</span><b style="color:${kP<0?'#D2433C':'#2E9B6A'}">${kP}%</b></div><div class="trk"><div class="fl" style="width:${Math.max(0,kP)}%;background:${kP<0?'#D2433C':'#2E9B6A'}"></div></div></div>
+        <div class="chips"><span class="ct">Where the ${gmP-kP} points went:</span>${chips.map(c=>`<span class="chip" style="background:${c.c};${c.lt?'color:#002855':''}">${c.l} <b>${c.r} pt${c.r===1?'':'s'}</b></span>`).join('')}</div>
+      </div>
+      <p class="ssub">A gross margin view on invoiced sales misses all of it. Allowances come out after the invoice as deductions, and advertising, freight and carrying cost sit below gross margin.</p></div>`});
+    out.push({h:`<div class="slide"><div class="sk">What we'd do next</div><h2 class="sh">Three moves to protect the Amazon business.</h2>
+      <div class="cards">
+        <div class="card"><h3>Multipack the cheapest items</h3><p>A 3-pack carries one fulfillment cost instead of three, which is often the difference between a listing Amazon profits on and one it flags.</p></div>
+        <div class="card"><h3>Watch Amazon's price, not just ours</h3><p>${t.deep?`${t.deep} listing${t.deep===1?' sells':'s sell'} 40% or more below list on Amazon. Depending on how the cost price is set, that discount squeezes either our margin or Amazon's, and a squeezed Amazon margin comes back as a margin-support request. `:''}Tracking Amazon's price against list flags it early.</p></div>
+        <div class="card"><h3>Choose 1P or 3P item by item</h3><p>Selling some items ourselves through Seller Central keeps control of price. Low-volume, high-cube items like the hot water bottle are the usual candidates.</p></div></div>
+      ${t.exposure>0?`<div class="callstat">Bringing the ${t.risk} thin listing${t.risk===1?'':'s'} to a healthy margin for Amazon would take about <b style="color:#D2433C">${big(t.exposure)}</b> a year, ${pct(t.rev?t.exposure/t.rev:0)} of sales, at current volume. That's the risk to size before Amazon sizes it for us.</div>`:''}
+      <p class="dk-disc">A personal project by Austin Sonny Stethem on a fictional catalog. Every listing, price, cost, volume and term is generated or assumed; nothing here is a real company\u2019s data. Not affiliated with or endorsed by Amazon.</p></div>`});
+    return out;
+  }
+  function show(i){ slide=Math.max(0,Math.min(SL.length-1,i)); const cur=SL[slide];
+    $('dkStage').innerHTML=cur.h; $('dkCount').textContent=`${slide+1} / ${SL.length}`;
+    if(cur.g) cur.g.forEach(g=>{ const el=$('dkStage').querySelector(`.gauge[data-g="${g.k}"]`); if(el) setGauge(el,g); });
+    $('dkPrev').disabled=slide===0; $('dkNext').disabled=slide===SL.length-1;
+    $('dkDots').innerHTML=SL.map((_,j)=>`<button type="button" class="${j===slide?'on':''}" aria-label="Slide ${j+1}" data-j="${j}"></button>`).join('');
+    $('dkDots').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>show(+b.dataset.j))); $('dkStage').scrollTop=0; }
+  function openDeck(){ SL=buildSlides(); $('deck').hidden=false; document.body.style.overflow='hidden'; show(0); $('dkNext').focus(); }
+  function closeDeck(){ $('deck').hidden=true; document.body.style.overflow=''; }
+  $('presentTop').addEventListener('click',openDeck); $('psDeck').addEventListener('click',openDeck);
+  $('dkClose').addEventListener('click',closeDeck); $('dkPrev').addEventListener('click',()=>show(slide-1)); $('dkNext').addEventListener('click',()=>show(slide+1));
+  document.addEventListener('keydown',e=>{ if($('deck').hidden) return;
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(slide+1);}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(slide-1);}
+    else if(e.key==='Escape') closeDeck(); });
+
+  // ---- review export loader ----
+  function loadReviews(text,label){
+    const lines=text.replace(/\r/g,'').split('\n').filter(l=>l.trim()); if(lines.length<2){ alert('That file has no reviews in it.'); return; }
+    const head=splitLine(lines[0]).map(h=>h.toLowerCase()), ix=c=>head.indexOf(c);
+    const miss=['sku','stars','text'].filter(c=>ix(c)<0); const dcol=ix('date')>=0?ix('date'):ix('month');
+    if(dcol<0) miss.push('date'); if(miss.length){ alert('Missing column(s): '+miss.join(', ')); return; }
+    const raw=lines.slice(1).map(l=>{ const v=splitLine(l); return {m:(v[dcol]||'').slice(0,7),sku:(v[ix('sku')]||'').trim(),stars:Math.round(+v[ix('stars')]),text:v[ix('text')]||'',
+      status:ix('status')>=0?String(v[ix('status')]||'').toLowerCase():'',days:ix('days_to_resolve')>=0?+v[ix('days_to_resolve')]:NaN}; })
+      .filter(x=>/^\d{4}-\d{2}$/.test(x.m)&&x.sku&&x.stars>=1&&x.stars<=5&&x.text);
+    if(!raw.length){ alert('No usable rows. Dates need YYYY-MM or YYYY-MM-DD, stars 1 to 5.'); return; }
+    const months=[...new Set(raw.map(x=>x.m))].sort();
+    const recs=raw.map(x=>{ const c=classify(x.text), issue=x.stars<=3&&!!c.primary;
+      const st=/resol|closed|done/.test(x.status)?'resolved':/progress|pending|working/.test(x.status)?'progress':x.status?'open':null;
+      return {sku:x.sku,mi:months.indexOf(x.m),stars:x.stars,text:x.text,cats:c.cats,primary:c.primary,probs:c.probs,hits:c.hits,issue,status:issue?st:null,days:isFinite(x.days)?x.days:null}; });
+    VOICE={src:'file',label,months,recs}; vCat=null; vSku=null; setPage('voice');
+  }
+  $('revBtn').addEventListener('click',()=>{ if(DATA_BUTTONS_LIVE) $('revIn').click(); });
+  $('revIn').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; const rd=new FileReader(); rd.onload=()=>loadReviews(rd.result,f.name); rd.readAsText(f); e.target.value=''; });
+  $('revTpl').addEventListener('click',e=>{ e.preventDefault(); if(!DATA_BUTTONS_LIVE) return;
+    const src=VOICE.src==='sample'&&VOICE.recs.length?VOICE:genVoice(), q=v=>/[,"]/.test(v)?'"'+String(v).replace(/"/g,'""')+'"':v;
+    const lines=['date,sku,stars,text,status,days_to_resolve'].concat(src.recs.filter(x=>x.stars<=3).slice(0,400).map(x=>
+      [src.months[x.mi]+'-15',x.sku,x.stars,q(x.text),x.status==='resolved'?'resolved':x.status==='progress'?'in progress':x.status?'open':'',x.days??''].join(',')));
+    const u=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'})); const a=document.createElement('a'); a.href=u; a.download='review-export-template.csv';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),1000); });
+  $('revReset').addEventListener('click',()=>{ if(!DATA_BUTTONS_LIVE) return; VOICE=SRC.label==='Sample'?genVoice():{src:'none',months:[],recs:[]}; vCat=null; vSku=null; renderVoice(); });
+  $('clfIn').value='Box arrived crushed and the lid snapped off after a week.';
+  $('clfIn').addEventListener('input',runTest);
+  document.querySelectorAll('#clfEx button').forEach(b=>b.addEventListener('click',()=>{ $('clfIn').value=b.dataset.t; runTest(); }));
+
+  [td,alw,ads,doh,tMargin,tGrowth].forEach(i=>i.addEventListener('input',()=>renderAll('terms')));
+  $('lbCtl').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ lbMetric=b.dataset.m;
+    $('lbCtl').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); renderAll(); }));
+
+  // ---------------- guided tour ----------------
+  const tabEl=p=>document.querySelector('#tabs button[data-p="'+p+'"]');
+  // 'via' steps are hand-offs: they spotlight the tab we're about to use, and pressing Next clicks it.
+  const tile=id=>()=>{ const e=$(id); return e?e.closest('.tile'):null; };
+  const q=sel=>()=>document.querySelector(sel);
+  const TOUR=[
+    // ---- Home: the glance ----
+    {t:'A quick walkthrough',x:"A working model of selling to Amazon as a 1P vendor, on a fictional catalog with every assumption out in the open. Home is the quick glance; each tab goes deeper. Six short parts, and you can Skip anytime."},
+    {page:'score',el:q('#pg-score .hook'),t:'The headline',x:'The one-line finding. It recalculates live whenever you change a filter or an assumption.'},
+    {page:'score',el:()=>$('tabs'),t:'The pages',x:"Home is the summary. Each tab goes deeper, and Home always brings you back. Your browser's Back button works too."},
+    {page:'score',el:q('#pg-score .prov'),t:"What's real, what's estimated",x:'Green is the generated catalog. Gold is the assumptions you can change. Gray is filler, and any tile built on it carries a sample tag.'},
+    {page:'score',el:()=>$('homeKpis'),t:'The five numbers',x:'Shopper spend and sales to Amazon are estimates. What we keep is fully loaded. At CRaP risk means Amazon keeps under 15% of its price, CRaP being Amazon\u2019s \u201ccan\u2019t realize a profit\u201d flag. Click them to open Profitability.'},
+    {page:'score',el:()=>$('gTile'),t:'Sales goal tracking',x:'The last closed month against target: sales, margin and listings healthy for Amazon. The gold ticks are the targets from the left panel.'},
+    {page:'score',el:()=>$('trTile'),t:'Sales',x:'Twelve closed months of sales to Amazon, the latest in bright blue, with the margin line and the dashed target.'},
+    {page:'score',el:()=>$('lbTile'),t:'Product ranking',x:'Listings ranked like a race for the latest closed month: green climbed since the month before, red dropped, yellow held. Click any row to open that listing.'},
+    {page:'score',el:()=>$('vsnapTile'),t:'Customer ratings',x:'The star rating and the top complaint categories at a glance. Click it to open Customer voice.'},
+    {page:'score',el:q('.pane'),pane:true,t:'Filters and what-ifs',x:"Narrow to one category, set real vendor terms, or move the targets. Every tile, tab and slide follows along."},
+    {page:'score',via:'overview',el:()=>tabEl('overview'),t:'Next: Profitability',x:'The deeper look at where the money goes, for us and for Amazon. Press Open it and the tour clicks the tab for you.'},
+    // ---- Profitability ----
+    {page:'overview',el:tile('dollar'),t:'Where every dollar goes',x:'Each dollar Amazon pays us, split into making the product, co-op and allowances, advertising, freight, carrying cost, and what we keep.'},
+    {page:'overview',el:tile('cMargin'),t:"Our margin against Amazon's",x:'Both sides of every listing. Red bars are where Amazon keeps under 15% of its price: the two cheapest items, where fulfillment eats the margin. Click a bar to highlight it.'},
+    {page:'overview',el:tile('narr'),t:'The finding, in words',x:'The answer in three parts: what we keep, the risk, and the fix. It is written from the numbers, so it stays accurate as filters and assumptions change.'},
+    {page:'overview',el:()=>$('mcTile'),t:'Scenario range',x:'The model reruns 2,000 times with the uncertain inputs varied, so every headline number comes with a P10 to P90 range instead of a single point. The assumed spreads are stated underneath.'},
+    {page:'overview',via:'detail',el:()=>tabEl('detail'),t:'Next: Listing detail',x:'From the big picture down to a single listing. Press Open it and the tour clicks the Listing detail tab.'},
+    // ---- Listing detail ----
+    {page:'detail',el:tile('tb'),t:'Every listing',x:"Each listing by ASIN: Amazon's price against list, what Amazon likely pays us, and what each side makes per unit. Red flags mark listings at CRaP risk. Click a row to load it below."},
+    {page:'detail',el:tile('cWater'),fb:'top',t:'Cost build',x:"The selected listing from Amazon's price down to what we keep: Amazon's margin, allowances, ads, freight, materials, labor, packaging, plant and floor space (the one fixed cost, shaded darker), and carrying cost."},
+    {page:'detail',el:tile('amz'),t:"Amazon's side",x:"The same listing from Amazon's seat: its price, what it pays us, the allowances it gets back, its fulfillment cost, and what it keeps."},
+    {page:'detail',via:'voice',el:()=>tabEl('voice'),t:'Next: Customer voice',x:'Money is half the story. Press Open it to see how customer reviews get sorted on the Customer voice tab.'},
+    // ---- Customer voice ----
+    {page:'voice',el:q('#voiceBody .kpis'),t:'Ratings and issues',x:'The average star rating across the listings, plus how many issues the classifier flagged in the review text.'},
+    {page:'voice',el:tile('clfIn'),demo:true,t:'Try the classifier',x:"The keyword classifier that tags every review, with matched words highlighted. It's filled in with an example; type any review to try it."},
+    {page:'voice',el:tile('cDonut'),t:'Where complaints come from',x:'Issues by category. The reviews are sample text, so this shows how the breakdown works rather than what their customers said. Click a category to filter the reviews.'},
+    {page:'voice',el:()=>$('rateTile'),t:'Issue rate by listing',x:'Complaints per 1,000 units sold. Raw counts always make the best sellers look worst, so this shows which listings have a real problem rather than just more customers.'},
+    {page:'voice',el:tile('ex'),t:'Review explorer',x:'The ten most recent low-star reviews behind the counts, each tagged by the classifier. With a real review export that includes status, resolution tracking appears here too.'},
+    {page:'voice',via:'pipe',el:()=>tabEl('pipe'),t:'Next: Data pipeline',x:'How real data would run through all of this. Press Open it and the tour clicks the Data pipeline tab.'},
+    // ---- Data pipeline ----
+    {page:'pipe',el:q('#pg-pipe .pipe'),t:'How the report runs',x:'Source, automated checks, model, report, meeting view. With a live export, every step reruns on its own.'},
+    {page:'pipe',el:tile('checks'),t:'Automated checks',x:'Each export is checked before it reaches the model, and the totals must reconcile: units in equal units modeled plus units held back. Bad rows are listed beside this, with the reason.'},
+    {page:'pipe',el:q('#pg-pipe .src'),t:'Where every number comes from',x:'The full source list, each marked generated, estimated, assumed or sample, so nothing here passes for real company data.'},
+    {page:'pipe',el:()=>$('fileBtn'),pane:true,t:'Swap in real data',x:"In a live version, a sales export loads here and every page rebuilds from it, read in the browser and never uploaded. Loading is switched off in this demo; Reset to sample restores the defaults anytime."},
+    // ---- Wrap-up ----
+    {page:'pipe',el:()=>$('presentTop'),t:'Present',x:'Opens the core story as a four-slide meeting deck, from any page.'},
+    {page:'pipe',via:'score',el:()=>tabEl('score'),t:'Back to Home',x:"That's the whole tour. Home brings you back to the glance view anytime. Press Finish and the tour takes you there."}];
+  // Parts of the tour: [name, number of steps], in order. A tab's hand-off step closes the part it leaves.
+  const SECS=[['Home',11],['Profitability',5],['Listing detail',4],['Customer voice',6],['Data pipeline',4],['Wrap-up',2]];
+  { let k=0; SECS.forEach(([nm,c],si)=>{ for(let j=0;j<c&&k<TOUR.length;j++,k++){ TOUR[k].sec=si; TOUR[k].sj=j; } });
+    for(;k<TOUR.length;k++){ TOUR[k].sec=SECS.length-1; TOUR[k].sj=k; } }
+  let tStep=0, tOn=false;
+  const topH=()=>$('top').getBoundingClientRect().height;
+  function tourPlace(){
+    const st=TOUR[tStep], spot=$('tspot'), card=$('tcard'), el=st.el?st.el():null, pad=8, vw=innerWidth, vh=innerHeight;
+    if(!el){ spot.classList.add('none'); spot.style.left=vw/2+'px'; spot.style.top=vh/2+'px';
+      card.style.left=Math.max(12,(vw-card.offsetWidth)/2)+'px'; card.style.top=Math.max(12,(vh-card.offsetHeight)/2)+'px'; return; }
+    spot.classList.remove('none'); spot.classList.toggle('via',!!st.via);
+    const pd=st.via?4:pad, r=el.getBoundingClientRect(), top=Math.max(2,r.top-pd), left=Math.max(4,r.left-pd),
+          w=Math.min(vw-8-left,r.width+pd*2), h=Math.min(vh-8-top,r.height+pd*2);
+    Object.assign(spot.style,{left:left+'px',top:top+'px',width:w+'px',height:h+'px'});
+    const cw=card.offsetWidth, ch=card.offsetHeight, gap=14;
+    let cx,cy;
+    if(vw<=820){ cx=12; cy=vh-ch-12; }
+    else if(left+w+gap+cw<vw-12){ cx=left+w+gap; cy=Math.min(Math.max(12,top),vh-ch-16); }          // right of target
+    else if(left-gap-cw>12){ cx=left-gap-cw; cy=Math.min(Math.max(12,top),vh-ch-16); }                // left of target
+    else if(top+h+gap+ch<vh-16){ cx=Math.min(Math.max(12,left),vw-cw-12); cy=top+h+gap; }          // below
+    else if(top-gap-ch>12){ cx=Math.min(Math.max(12,left),vw-cw-12); cy=top-gap-ch; }              // above
+    else if(st.fb==='top'){ cx=vw-cw-16; cy=Math.min(Math.max(topH()+8,top+44),vh-ch-16); }
+    else { cx=vw-cw-16; cy=vh-ch-16; }                             // no room: top-right, over the emptiest part
+    card.style.left=cx+'px'; card.style.top=cy+'px';
+  }
+  function tourShow(i){
+    tStep=Math.max(0,Math.min(TOUR.length-1,i)); const st=TOUR[tStep];
+    if(st.pane) document.querySelector('.wrap').classList.remove('col');
+    if(st.page&&st.page!==page) setPage(st.page,'replace');
+    if(st.demo){ $('clfIn').value='Box arrived crushed and the lid snapped off after a week.'; runTest(); }
+    const si=st.sec, sn=SECS[si][0], sc=SECS[si][1];
+    $('tNum').innerHTML=`<span>Part ${si+1} of ${SECS.length}: ${esc(sn)}</span><span class="ts">Step ${st.sj+1} of ${sc}</span>`;
+    $('tSecs').innerHTML=SECS.map(([nm,c],j)=>`<span class="${j===si?'cur':''}" title="${esc(nm)}"><i style="width:${j<si?100:j===si?((st.sj+1)/c*100).toFixed(1):0}%"></i></span>`).join(''); $('tTitle').textContent=st.t; $('tText').textContent=st.x;
+    $('tBack').style.visibility=tStep?'visible':'hidden'; $('tNext').textContent=tStep===TOUR.length-1?'Finish':tStep===0?'Start':st.via?'Open it':'Next';
+    $('tSkip').style.display=tStep===TOUR.length-1?'none':'';
+    $('tDots').innerHTML=TOUR.map((_,j)=>`<i class="${j===tStep?'on':''}"></i>`).join('');
+    const el=st.el?st.el():null;
+    if(el&&!el.closest('#top')){ const r=el.getBoundingClientRect(), tH=topH(); if(r.top<tH+8||r.bottom>innerHeight-12){ const y=scrollY+r.top-tH-16-(r.height<innerHeight-tH-40?(innerHeight-tH-r.height)/2-16:0); scrollTo({top:Math.max(0,y)}); } }
+    requestAnimationFrame(()=>requestAnimationFrame(tourPlace)); setTimeout(tourPlace,420);
+    $('tNext').focus();
+  }
+  function tourOpen(){ $('ttoast').hidden=true; try{localStorage.setItem('tourSeen','1');}catch(e){} if(!$('deck').hidden) closeDeck(); $('tour').hidden=false; tOn=true; tourShow(0); }
+  function tourClose(){ $('tour').hidden=true; tOn=false; if(page!=='score') setPage('score','replace'); else scrollTo({top:0}); }
+  $('tourTop').addEventListener('click',tourOpen); $('toastGo').addEventListener('click',tourOpen);
+  $('toastNo').addEventListener('click',()=>{ $('ttoast').hidden=true; try{localStorage.setItem('tourSeen','1');}catch(e){} });
+  let tBusy=false;
+  function tourNext(){ if(tBusy) return; const st=TOUR[tStep];
+    const go=()=>{ tBusy=false; if(tStep===TOUR.length-1) tourClose(); else tourShow(tStep+1); };
+    if(st.via){ const b=tabEl(st.via); if(b){ tBusy=true; b.classList.add('tpress'); setTimeout(()=>{ b.classList.remove('tpress'); go(); },320); return; } }
+    go(); }
+  $('tNext').addEventListener('click',tourNext);
+  $('tBack').addEventListener('click',()=>tourShow(tStep-1)); $('tSkip').addEventListener('click',tourClose);
+  document.addEventListener('keydown',e=>{ if(!tOn) return;
+    if(e.key==='ArrowRight'||e.key==='Enter'){ e.preventDefault(); tourNext(); }
+    else if(e.key==='ArrowLeft'){ e.preventDefault(); tourShow(tStep-1); }
+    else if(e.key==='Escape'){ e.preventDefault(); tourClose(); } });
+  addEventListener('resize',()=>{ if(tOn) tourPlace(); }); addEventListener('scroll',()=>{ if(tOn) tourPlace(); },{passive:true});
+  setTimeout(()=>{ let seen=false; try{seen=localStorage.getItem('tourSeen')==='1';}catch(e){} if(/[?&]tour\b/.test(location.search)) seen=false; if(!seen&&!tOn) $('ttoast').hidden=false; },800);
+
+  loadRows({raw:sampleLong(),missing:[],hasMonth:true},'Sample');
+  { const p0=pageFromHash(); try{ history.replaceState({p:p0},'','#'+HASH[p0]); }catch(e){} if(p0!=='score') setPage(p0,'none'); }
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(renderAll);
+  let wn=innerWidth<600, wb=BIG(); addEventListener('resize',()=>{const n=innerWidth<600, bb=BIG(); if(n!==wn||bb!==wb){wn=n;wb=bb;renderAll();}});
+})();
+</script>
+</body>
+</html>
