@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moving Lakeshirts from Cost-Plus to Value Pricing &mdash; Austin Stethem</title>
+<meta name="description" content="A worked model on sample data: where cost-plus leaves margin on the table for a premium-service apparel decorator, the cost side (landed cost, waterfall, cost to serve), and the price side (customer tiers, phased move to value, price corridor).">
+<meta name="author" content="Austin Sonny Stethem">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:title" content="Moving Lakeshirts from Cost-Plus to Value Pricing">
+<meta property="og:description" content="A worked pricing model on sample data, prepared by Austin Stethem.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://austin-stethem.github.io/lakeshirts-value-pricing.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=2">
+<style>html{margin:0}body{margin:0}img{max-width:100%}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: one plain column, report style. Tables and charts carry the content; one navy accent. Single light theme by request. */
+:root{
+  color-scheme:light;
+  --bg:#FFFFFF;
+  --fg:#1B1F24;
+  --dim:#5E6873;
+  --rule:#E2E6EA;
+  --rule-strong:#C4CCD4;
+  --navy:#0B436C;
+  --navy-soft:#9DB7CC;
+  --red:#A8392E;
+  --green:#2D6A4F;
+  --sans:"Public Sans",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+html,body{background:var(--bg);color:var(--fg)}
+body{font-family:var(--sans);font-size:16px;line-height:1.55;padding-inline:20px;padding-block:40px 56px}
+.wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:48px}
+header{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+header p.lead,header p:not(.by):not(.lead){text-align:left;align-self:stretch}
+header p.note{text-align:center}
+header{border-bottom:1px solid var(--rule-strong);padding-bottom:24px}
+h1{font-size:28px;line-height:1.2;font-weight:700;margin:0;text-wrap:balance}
+.by{color:var(--dim);font-size:13px;margin:0}
+p{margin:0}
+.lead{font-size:16px}
+.note{color:var(--dim);font-size:13px}
+section{display:flex;flex-direction:column;gap:16px}
+h2{font-size:20px;font-weight:700;margin:0;text-wrap:balance}
+.part{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);font-weight:600;margin:0 0 -8px}
+dfn{font-style:normal;font-weight:600}
+h2 span{color:var(--dim);font-weight:400;margin-right:6px}
+.figs{display:grid;grid-template-columns:repeat(3,1fr);gap:0;text-align:center;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.fig{padding:14px 12px;min-width:0}
+.fig+.fig{border-left:1px solid var(--rule)}
+.fig .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.fig .l{font-size:12.5px;color:var(--dim)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 8px;text-align:center;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-weight:600;color:var(--dim);font-size:12px;border-bottom:1px solid var(--rule-strong);vertical-align:bottom;white-space:normal}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+td .sub{font-size:11.5px;color:var(--dim);font-weight:400}
+td:first-child{white-space:normal;min-width:150px}
+tfoot td{font-weight:700;border-top:1px solid var(--rule-strong);border-bottom:none}
+.pos{color:var(--green)} .neg{color:var(--red)}
+.inputs{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 28px;font-size:14px;color:var(--dim);align-items:center;padding:12px 0}
+.inputs label{display:flex;align-items:center;gap:10px}
+.inputs select{font:inherit;font-size:15px;color:var(--fg);padding:7px 10px;border:1px solid var(--rule-strong);border-radius:6px;background:var(--bg)}
+.inputs input[type=number]{width:6em;font:inherit;font-size:15px;font-variant-numeric:tabular-nums;color:var(--fg);padding:7px 10px;border:1px solid var(--rule-strong);border-radius:6px;background:var(--bg)}
+.inputs input[type=range]{-webkit-appearance:none;appearance:none;width:170px;height:26px;margin:0;background:transparent;cursor:pointer}
+.inputs input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--rule-strong)}
+.inputs input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--navy);border:3px solid var(--bg);box-shadow:0 0 0 1.5px var(--navy);margin-top:-8px}
+.inputs input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--rule-strong)}
+.inputs input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--navy);border:3px solid var(--bg);box-shadow:0 0 0 1.5px var(--navy)}
+.inputs input[type=range]:focus-visible{outline:none}
+.inputs input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 1.5px var(--navy),0 0 0 5px var(--navy-soft)}
+.inputs .step{width:30px;height:30px;border-radius:50%;border:1px solid var(--rule-strong);background:var(--bg);color:var(--navy);font:inherit;font-size:18px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.inputs .step:hover{background:var(--navy-soft)}
+.inputs .step:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+.inputs output{color:var(--fg);font-weight:600;font-size:15px;min-width:3.4em;font-variant-numeric:tabular-nums}
+input:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+.chart svg{display:block;width:100%;height:auto}
+.chart{overflow-x:auto}
+.chart svg.w{min-width:460px}
+ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+ol b{font-weight:600}
+footer{border-top:1px solid var(--rule-strong);padding-top:16px;text-align:center}
+@media (max-width:520px){h1{font-size:23px}.fig{padding:12px 6px}.fig .v{font-size:19px}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <h1>Moving Lakeshirts from cost-plus to value pricing</h1>
+  <p class="by">Austin Stethem · prepared for Matt Hugdahl and Lakeshirts | Blue 84 · October 2026</p>
+  <p class="lead">Lakeshirts customers pay for speed, quality and service. Cost-plus pricing can't see that. It prices every shirt from what it costs to make, so a rush reorder that saves a resort shop its July season and a core tee a bookstore shops against three catalogs end up with the same markup. Where customers would gladly pay more, the difference goes uncollected and never shows up in a report. Below is how I would find that margin, phase it in safely, and keep it.</p>
+  <p><b>How to read it.</b> Section 1 sizes the problem: what cost-plus leaves on the table. Sections 2 to 4 are the cost side: where the unit cost in section 1 comes from, what a shirt really earns once every deduction is taken, and how much an order's size and destination change that cost. Sections 5 to 7 are the price side: tiering customers on how they buy, moving prices from cost-plus toward value a step at a time, and holding the new prices once they're in. Every table pulls from the same four product lines and the same costs. Change the markup or the daily volume in section 1 and every section follows.</p>
+  <p class="note">Sample data throughout, built to show the method. The only Lakeshirts figure is the 35,000 garments a day from the job posting. On real invoice and cost data, the same models run in Python.</p>
+</header>
+
+<section id="gap">
+  <p class="part">The problem</p>
+  <h2><span>1.</span>Where cost-plus leaves margin on the table</h2>
+  <p>Today's price is <dfn>cost-plus</dfn>: unit cost times a markup. A <dfn>value price</dfn> starts instead from the <dfn>market reference</dfn>, the price a customer would compare against (a competitor's quote or a catalog), adds a <dfn>service premium</dfn> for what speed, quality and reliability are worth on that program, and never drops below unit cost. The gap between the two is what cost-plus leaves on the table, or, on K-12, where it overprices.</p>
+  <div class="inputs">
+    <label for="mk">Cost-plus markup <input type="number" id="mk" value="40" min="0" max="150" step="1">%</label>
+    <label for="daily">Garments a day <input type="number" id="daily" value="35000" min="1000" step="1000"></label>
+    <label for="days">Production days <input type="number" id="days" value="250" min="50" max="365" step="5"></label>
+  </div>
+  <div class="figs">
+    <div class="fig"><div class="v" id="f-cp">–</div><div class="l">Revenue a year at cost-plus</div></div>
+    <div class="fig"><div class="v" id="f-vb">–</div><div class="l">Revenue a year at value price</div></div>
+    <div class="fig"><div class="v pos" id="f-gap">–</div><div class="l">Left on the table a year, at today's volume</div></div>
+  </div>
+  <div class="tbl"><table id="t-gap">
+    <thead><tr><th>Program</th><th>Share of volume</th><th>Unit cost (section 2)</th><th>Cost-plus price</th><th>Market reference</th><th>Service premium</th><th>Value price</th><th>Gap per unit</th><th>Gap per year</th></tr></thead>
+    <tbody></tbody><tfoot></tfoot>
+  </table></div>
+  <p class="note">The label under each program is the pricing stance it earns: carry the premium where service decides the order, defend with service or hold near market where customers shop harder, match the market where they compare piece for piece. K-12 comes out the other way: cost-plus prices it above what that market carries. Value pricing finds both.</p>
+</section>
+
+<section id="landed">
+  <p class="part">The cost side</p>
+  <h2><span>2.</span>The cost floor: from landed blank to unit cost</h2>
+  <p>Before any price is set, the floor itself should be as low as it can honestly go. The <dfn>landed blank</dfn> is what a blank garment costs once it reaches Detroit Lakes: the supplier's price, less what shopping suppliers against each other and collecting vendor rebates wins back, plus tariffs and inbound freight. Putting those last two into the landed cost means they get recovered in the price instead of quietly eating margin.</p>
+  <div class="tbl"><table id="t-landed">
+    <thead><tr><th>Program</th><th>Supplier price</th><th>Shopped discount</th><th>Tariff</th><th>Inbound freight (to Detroit Lakes)</th><th>Vendor rebate</th><th>Landed blank</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <p class="note" id="landed-note"></p>
+  <p>The landed blank is the first line of the <dfn>unit cost</dfn>. Ink, labor and overhead are added per piece, then two allowances: an average setup cost per piece (the press time lost changing jobs) and an average outbound freight cost per piece (shipping the finished order to the customer), both figured at a 640-piece order shipped to Zone 3. That unit cost, times the markup, is today's cost-plus price in section 1.</p>
+  <div class="tbl"><table id="t-build">
+    <thead><tr><th>Program</th><th>Landed blank</th><th>Ink and print</th><th>Labor</th><th>Overhead</th><th>Setup allowance (avg)</th><th>Outbound freight allowance (avg)</th><th>Unit cost</th><th>Cost-plus price</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <p class="note">The two allowances are averages. Section 4 shows how far a real order strays from them.</p>
+</section>
+
+<section id="waterfall">
+  <h2><span>3.</span>What a shirt actually earns after the waterfall</h2>
+  <p>The list price is only the start. Between it and the money that lands sits the <dfn>price waterfall</dfn>: the volume break for order size, program terms (the discount written into a customer's contract), a freight credit given back to the customer, co-op (marketing money given to the customer) and returns. What is left is the <dfn>pocket price</dfn>, and margin should be judged on that. The volume break here is the average across the order-size ladder in section 4. The freight credit is separate from the two freights Lakeshirts pays itself: bringing blanks in (section 2) and shipping orders out (section 4).</p>
+  <div class="tbl"><table id="t-wf">
+    <thead><tr><th>Program</th><th>List price (cost-plus)</th><th>Volume break (avg)</th><th>Program terms</th><th>Freight credit to customer</th><th>Co-op</th><th>Returns</th><th>Pocket price</th><th>Unit cost</th><th>Pocket margin</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <div class="chart"><div id="c-wf"></div></div>
+</section>
+
+<section id="serve">
+  <h2><span>4.</span>What it costs to fill an order: setup and freight</h2>
+  <p>The unit cost in section 2 carries setup and freight as averages. This section shows what those averages hide. Every job stops the press: changing blanks, burning and mounting screens, mixing ink and registering the press all cost money while nothing prints. Spread across a 10,000-piece run, that changeover is pennies a shirt. On a 24-piece order it can cost more than the shirt itself. Freight works the same way, so I would zone customers in belts by distance from Detroit Lakes, the way the postal service does, and price from each zone's average freight.</p>
+  <div class="tbl"><table id="t-zones">
+    <thead><tr><th>Zone</th><th>Miles from Detroit Lakes</th><th>Example destinations</th><th>Per shipment</th><th>Per piece</th><th>Per piece on a 144-piece order</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <div class="inputs">
+    <label for="sv-zone">Ship to <select id="sv-zone"></select></label>
+    <label for="sv-rate">Press cost per hour while down <input type="number" id="sv-rate" value="180" min="0" step="10"></label>
+    <label for="sv-min">Changeover minutes <input type="number" id="sv-min" value="45" min="0" step="5"></label>
+  </div>
+  <div class="figs">
+    <div class="fig"><div class="v" id="sv-be">–</div><div class="l">Smallest order that breaks even</div></div>
+    <div class="fig"><div class="v neg" id="sv-small">–</div><div class="l" id="sv-small-l">Lost on a 24-piece order</div></div>
+    <div class="fig"><div class="v neg" id="sv-over">–</div><div class="l" id="sv-over-l">Over-discounted on a 10,000-piece order</div></div>
+  </div>
+  <div class="tbl"><table id="t-serve">
+    <thead><tr><th>Order size</th><th>Press time spent on setup</th><th>Setup per piece</th><th>Outbound freight per piece</th><th>True cost (run + setup + freight)</th><th>Size break (today's ladder)</th><th>Price today</th><th>Margin per piece</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <p class="note" id="sv-note"></p>
+</section>
+
+<section id="tiers">
+  <p class="part">The price side</p>
+  <h2><span>5.</span>Tiering customers by how they buy</h2>
+  <p>Once the cost to serve an order is visible, customers can be tiered on what actually drives it: annual volume, how often they order, how big each order runs, where it ships and what they buy. The tier sets the terms. Volume is rewarded with a rebate paid after it's earned rather than a discount given up front. Small orders carry their own setup through a small-order fee. Distant zones carry their own freight. Fleece, where the margin dollars per piece are largest, gets a little extra push.</p>
+  <div class="tbl"><table id="t-rules">
+    <thead><tr><th>Tier</th><th>Qualifies with</th><th>Quarterly rebate</th><th>Fleece bonus</th></tr></thead>
+    <tbody>
+      <tr><td>Contract</td><td>Signed annual program, 25,000+ pieces</td><td>3%</td><td>+2% on fleece</td></tr>
+      <tr><td>A</td><td>15,000+ pieces a year</td><td>2%</td><td>+2% on fleece</td></tr>
+      <tr><td>B</td><td>3,000+ pieces a year</td><td>1%</td><td>+2% on fleece</td></tr>
+      <tr><td>C</td><td>Under 3,000 pieces a year</td><td>None</td><td>None</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Sample accounts buy the resort tee and the fleece hoodie from section 1, priced at today's cost-plus list, with setup and outbound freight figured per order from section 4. Applies to every tier: size breaks rebuilt to match real setup savings (0% under 144, then 4%, 8%, 11% and 13% at 144, 500, 2,000 and 10,000 pieces). A $95 small-order fee under 72 pieces. Freight included through Zone 2, with the zone difference added beyond that.</p>
+  <div class="figs">
+    <div class="fig"><div class="v" id="tr-today">–</div><div class="l">Margin on these 10 accounts today</div></div>
+    <div class="fig"><div class="v" id="tr-new">–</div><div class="l">Under the tiered model</div></div>
+    <div class="fig"><div class="v neg" id="tr-under">–</div><div class="l">Accounts losing money today</div></div>
+  </div>
+  <div class="tbl"><table id="t-accts">
+    <thead><tr><th>Sample account</th><th>Zone</th><th>Orders a year</th><th>Avg order</th><th>Pieces a year</th><th>Fleece share</th><th>Tier</th><th>Margin per piece today</th><th>Margin per piece tiered</th><th>Change a year</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+</section>
+
+<section id="phase">
+  <h2><span>6.</span>Phasing it in, with cost as the floor</h2>
+  <p>Prices move from today's cost-plus price toward the value price in section 1, a step at a time, capped each quarter so no customer sees a jump, and never below unit cost. Volume responds by program: at a sensitivity of 1.0x, a 1% price increase costs about 1% of volume on the college tee, less than half that on the resort tee, where service decides the order. The sensitivity is an assumption to be replaced by what the pilot shows.</p>
+  <div class="inputs">
+    <label for="ph-step">Gap closed per quarter <input type="range" id="ph-step" min="10" max="100" step="5" value="25"><output id="ph-step-v">25%</output></label>
+    <label for="ph-cap">Max move per quarter <input type="range" id="ph-cap" min="1" max="10" step="0.5" value="4"><output id="ph-cap-v">4%</output></label>
+    <label for="ph-sens">Customer sensitivity <input type="range" id="ph-sens" min="0" max="2.5" step="0.1" value="1"><output id="ph-sens-v">1.0x</output></label>
+  </div>
+  <div class="figs">
+    <div class="fig"><div class="v" id="ph-gain">–</div><div class="l">Margin gained in year two</div></div>
+    <div class="fig"><div class="v" id="ph-vol">–</div><div class="l">Volume change by Q8</div></div>
+    <div class="fig"><div class="v" id="ph-q">–</div><div class="l">Every program at target by</div></div>
+  </div>
+  <div class="chart"><div id="c-ph"></div></div>
+  <div class="tbl"><table id="t-ph">
+    <thead><tr><th>Program</th><th>Today</th><th>Target</th><th>Price at Q8</th><th>Volume change</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+</section>
+
+<section id="corridor">
+  <h2><span>7.</span>Keeping the gains with a price corridor</h2>
+  <p>A new price only counts if customers actually pay something close to it. Left alone, one-off quotes pull it down a deal at a time. A <dfn>price corridor</dfn> is a floor set a few percent under each tier price: inside it, a rep can quote freely; below it, the quote needs a sign-off and a reason code. At Arnold, one high-volume part had more than 400 distinct transacted prices against an eight-tier ladder. Below is a sample of 1,200 invoices for the resort tee, each with a quantity, against its four-tier ladder from section 4 (<span id="c-ladder"></span> at 1, 72, 144 and 500 pieces), with a floor set under each tier.</p>
+  <div class="inputs">
+    <label for="c-width">Corridor floor, below tier price <input type="range" id="c-width" min="2" max="20" step="1" value="6"><output id="c-width-v">6%</output></label>
+  </div>
+  <div class="figs">
+    <div class="fig"><div class="v" id="c-distinct">–</div><div class="l">Distinct prices charged</div></div>
+    <div class="fig"><div class="v" id="c-inside">–</div><div class="l">Invoices inside the corridor</div></div>
+    <div class="fig"><div class="v neg" id="c-leak">–</div><div class="l" id="c-leak-l">Below the floor</div></div>
+  </div>
+  <div class="chart"><div id="c-hist"></div></div>
+</section>
+
+<section id="plan">
+  <h2>The first 90 days</h2>
+  <ol>
+    <li><b>Baseline.</b> Rebuild landed cost, the waterfall and pocket margin by program and customer from 12 months of invoices.</li>
+    <li><b>Cost to serve.</b> Measure changeover time by job type and set freight zones from actual shipping spend.</li>
+    <li><b>Segment.</b> Tier accounts by volume, order size, frequency, zone and garment mix, with Sales and Customer Service in the room.</li>
+    <li><b>Pilot one program.</b> Move one program toward value, watch volume and reorders weekly, and adjust.</li>
+    <li><b>Govern and expand.</b> Set corridors and an approval path below the floor, then roll out program by program.</li>
+  </ol>
+</section>
+
+<footer><p class="note">Prepared by Austin Stethem for Lakeshirts | Blue 84. More of my work is at <a href="https://austin-stethem.github.io/" style="color:var(--navy)">austin-stethem.github.io</a>. No Lakeshirts internal data was used. Costs, prices, mix, premiums and invoices are sample figures chosen to show the method.</p></footer>
+</div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const money=(v,d=2)=>'$'+v.toFixed(d);
+const big=v=>{const a=Math.abs(v),s=v<0?'−':'';if(a>=1e6)return s+'$'+(a/1e6).toFixed(1)+'M';if(a>=1e3)return s+'$'+Math.round(a/1e3)+'K';return s+'$'+Math.round(a)};
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a,x)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(x!=null)e.textContent=x;return e};
+const F='Public Sans, Helvetica, Arial, sans-serif';
+const txt=(svg,x,y,s,o={})=>svg.appendChild(el('text',Object.assign({x,y,'font-family':F,'font-size':11,fill:css('--dim')},o),s));
+
+/* Sample programs */
+/* One cost chain for the whole page. cc = unit cost build-up: landed blank + ink and print + labor + overhead,
+   plus two allowances (setup, outbound freight) averaged at a 640-piece order shipped to Zone 3. Section 4 shows what that average hides. */
+const P=[
+ {id:'resort',name:'Resort souvenir tee',mix:35,cc:{blank:4.10,print:1.15,labor:0.95,oh:1.25,setup:0.25,frt:0.30},ref:10.50,prem:12,sens:0.4,approach:'Carry the premium',wf:[5,5,3,2,2],bl:{sup:4.30,disc:0.30,tar:0.22,inb:0.08,reb:0.20}},
+ {id:'college',name:'College bookstore tee',mix:40,cc:{blank:3.80,print:1.05,labor:0.90,oh:1.05,setup:0.25,frt:0.30},ref:10.00,prem:6,sens:1.0,approach:'Defend with service',wf:[6,4,2.5,3,2.5],bl:{sup:4.00,disc:0.28,tar:0.20,inb:0.08,reb:0.20}},
+ {id:'k12',name:'K-12 spirit tee',mix:15,cc:{blank:2.90,print:0.95,labor:0.85,oh:0.90,setup:0.25,frt:0.30},ref:8.25,prem:3,sens:0.7,approach:'Match the market',wf:[8,3,2,0.5,1],bl:{sup:3.05,disc:0.21,tar:0.15,inb:0.07,reb:0.16}},
+ {id:'hood',name:'Fleece hoodie',mix:10,cc:{blank:11.50,print:1.60,labor:1.30,oh:2.65,setup:0.25,frt:0.60},ref:23.00,prem:10,sens:0.9,approach:'Hold near market',wf:[5,4,2,2,3],bl:{sup:12.10,disc:0.85,tar:0.60,inb:0.20,reb:0.55}}
+];
+const landed=p=>p.bl.sup-p.bl.disc+p.bl.tar+p.bl.inb-p.bl.reb;
+const runCost=p=>p.cc.blank+p.cc.print+p.cc.labor+p.cc.oh;
+P.forEach(p=>{p.cc.blank=Math.round(landed(p)*100)/100;p.cost=runCost(p)+p.cc.setup+p.cc.frt});
+const cpOf=p=>p.cost*(1+(+$('mk').value||0)/100);
+const vbOf=p=>Math.max(p.cost,p.ref*(1+p.prem/100));
+const annual=()=>(+$('daily').value||0)*(+$('days').value||0);
+
+function drawGap(){
+  const V=annual();let cpR=0,vbR=0;
+  const tb=document.querySelector('#t-gap tbody');tb.replaceChildren();
+  P.forEach(p=>{
+    const cp=cpOf(p),vb=vbOf(p),g=vb-cp,units=V*p.mix/100;
+    cpR+=cp*units;vbR+=vb*units;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.name}<div class="sub">${p.approach}</div></td><td>${p.mix}%</td><td>${money(p.cost)}</td><td>${money(cp)}</td><td>${money(p.ref)}</td><td>${p.prem}%</td><td>${money(vb)}</td><td class="${g>=0?'pos':'neg'}">${g>=0?'+':'−'}${money(Math.abs(g))}</td><td class="${g>=0?'pos':'neg'}">${g>=0?'+':''}${big(g*units)}</td>`;
+    tb.appendChild(tr);
+  });
+  const gap=vbR-cpR;
+  document.querySelector('#t-gap tfoot').innerHTML=`<tr><td>All programs</td><td>100%</td><td></td><td></td><td></td><td></td><td></td><td></td><td class="${gap>=0?'pos':'neg'}">${gap>=0?'+':''}${big(gap)}</td></tr>`;
+  $('f-cp').textContent=big(cpR);$('f-vb').textContent=big(vbR);
+  $('f-gap').textContent=(gap>=0?'+':'')+big(gap);$('f-gap').className='v '+(gap>=0?'pos':'neg');
+}
+
+function drawWF(){
+  const mk=+$('mk').value||0;
+  const tb=document.querySelector('#t-wf tbody');tb.replaceChildren();
+  const rows=P.map(p=>{
+    const list=cpOf(p);let run=list;const cells=p.wf.map(v=>{const d=list*v/100;run-=d;return '−'+money(d)});
+    const m=run-p.cost;const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.name}</td><td>${money(list)}</td>${cells.map(c=>`<td>${c}</td>`).join('')}<td><b>${money(run)}</b></td><td>${money(p.cost)}</td><td class="${m>=0?'':'neg'}">${money(m)}</td>`;
+    tb.appendChild(tr);
+    return {name:p.name,paper:mk,pocket:m/p.cost*100};
+  });
+  // chart: markup on paper vs in the pocket
+  const W=640,rowH=44,mt=30,ml=170,mr=40,H=mt+rows.length*rowH+30;
+  const max=Math.max(10,Math.ceil(Math.max(mk,...rows.map(r=>r.pocket))/10)*10);
+  const x=v=>ml+(W-ml-mr)*Math.max(0,v)/max;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,class:'w',role:'img','aria-label':'Markup on paper versus markup in the pocket by program'});
+  for(let t=0;t<=max;t+=10){svg.appendChild(el('line',{x1:x(t),x2:x(t),y1:mt-6,y2:H-26,stroke:css('--rule')}));txt(svg,x(t),H-10,t+'%',{'text-anchor':'middle'})}
+  svg.appendChild(el('rect',{x:ml,y:6,width:10,height:10,fill:css('--navy-soft')}));txt(svg,ml+15,15,'Markup on paper');
+  svg.appendChild(el('rect',{x:ml+130,y:6,width:10,height:10,fill:css('--navy')}));txt(svg,ml+145,15,'Markup in the pocket');
+  rows.forEach((r,i)=>{
+    const y0=mt+i*rowH;
+    txt(svg,ml-10,y0+19,r.name,{'text-anchor':'end','font-size':12.5,fill:css('--fg')});
+    svg.appendChild(el('rect',{x:ml,y:y0+2,width:x(r.paper)-ml,height:12,fill:css('--navy-soft')}));
+    svg.appendChild(el('rect',{x:ml,y:y0+16,width:Math.max(1,x(r.pocket)-ml),height:12,fill:css(r.pocket>=0?'--navy':'--red')}));
+    txt(svg,x(r.paper)+5,y0+12,r.paper.toFixed(0)+'%');
+    txt(svg,x(r.pocket)+5,y0+26,r.pocket.toFixed(1)+'%',{fill:css('--fg'),'font-weight':600});
+  });
+  $('c-wf').replaceChildren(svg);
+}
+
+function drawPhase(){
+  const step=+$('ph-step').value/100,cap=+$('ph-cap').value/100,sens=+$('ph-sens').value;
+  $('ph-step-v').textContent=Math.round(step*100)+'%';$('ph-cap-v').textContent=(cap*100).toFixed(1).replace(/\.0$/,'')+'%';$('ph-sens-v').textContent=sens.toFixed(1)+'x';
+  const Vq=annual()/4,Q=8,lift=Array(Q).fill(0),volIdx=Array(Q).fill(0);let full=null;
+  const st=P.map(p=>({p,c:p.cost,cp:cpOf(p),vb:vbOf(p),price:cpOf(p),vol:1}));
+  for(let q=1;q<=Q;q++){
+    let all=true;
+    st.forEach(s=>{
+      const target=s.cp+(s.vb-s.cp)*Math.min(1,q*step);
+      let mv=target-s.price;const lim=s.price*cap;if(Math.abs(mv)>lim)mv=Math.sign(mv)*lim;
+      s.price=Math.max(s.c,s.price+mv);
+      s.vol=Math.max(0.2,1-s.p.sens*sens*(s.price/s.cp-1));
+      const m=s.p.mix/100;
+      lift[q-1]+=((s.price-s.c)*s.vol-(s.cp-s.c))*Vq*m;
+      volIdx[q-1]+=s.vol*m;
+      if(Math.abs(s.price-s.vb)>0.005*s.vb)all=false;
+    });
+    if(all&&full===null)full=q;
+  }
+  const y2=lift.slice(4).reduce((a,b)=>a+b,0),v8=(volIdx[Q-1]-1)*100;
+  $('ph-gain').textContent=(y2>=0?'+':'')+big(y2);$('ph-gain').className='v '+(y2>=0?'pos':'neg');
+  $('ph-vol').textContent=(v8>=0?'+':'')+v8.toFixed(1)+'%';
+  $('ph-q').textContent=full?'Q'+full:'After Q8';
+  const tb=document.querySelector('#t-ph tbody');tb.replaceChildren();
+  st.forEach(s=>{let dv=(s.vol-1)*100;if(Math.abs(dv)<0.05)dv=0;const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.p.name}</td><td>${money(s.cp)}</td><td>${money(s.vb)}</td><td>${money(s.price)}</td><td class="${dv<-0.05?'neg':''}">${dv>0?'+':''}${dv.toFixed(1)}%</td>`;tb.appendChild(tr)});
+  // chart
+  const W=640,H=250,ml=56,mr=10,mt=24,mb=44;
+  const mx=Math.max(...lift,0),mn=Math.min(...lift,0),span=(mx-mn)||1;
+  const raw=span/4,pw=Math.pow(10,Math.floor(Math.log10(raw))),n=raw/pw,stp=(n<=1?1:n<=2?2:n<=5?5:10)*pw;
+  const top=Math.ceil(mx/stp)*stp||stp,bot=Math.floor(mn/stp)*stp;
+  const y=v=>mt+(H-mt-mb)*(top-v)/(top-bot);
+  const bw=(W-ml-mr)/Q;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,class:'w',role:'img','aria-label':'Margin gained versus cost-plus by quarter'});
+  txt(svg,0,12,'Margin gained vs cost-plus, by quarter',{fill:css('--fg'),'font-weight':600,'font-size':12});
+  for(let t=bot;t<=top+1e-6;t+=stp){svg.appendChild(el('line',{x1:ml,x2:W-mr,y1:y(t),y2:y(t),stroke:css(Math.abs(t)<1e-6?'--rule-strong':'--rule')}));txt(svg,ml-8,y(t)+4,big(t),{'text-anchor':'end'})}
+  lift.forEach((v,i)=>{const x=ml+i*bw+bw*0.2,w=bw*0.6,y0=y(0),y1=y(v);
+    svg.appendChild(el('rect',{x,y:Math.min(y0,y1),width:w,height:Math.max(1,Math.abs(y1-y0)),fill:css(v>=0?'--navy':'--red')}));
+    txt(svg,x+w/2,v>=0?y1-5:y1+13,(v>=0?'+':'')+big(v),{'text-anchor':'middle',fill:css('--fg'),'font-size':10.5});
+    txt(svg,x+w/2,H-mb+17,'Q'+(i+1),{'text-anchor':'middle',fill:css('--fg')});
+    const dv=(volIdx[i]-1)*100;txt(svg,x+w/2,H-mb+32,'vol '+(dv>=0?'+':'')+dv.toFixed(1)+'%',{'text-anchor':'middle','font-size':10});
+  });
+  $('c-ph').replaceChildren(svg);
+}
+
+/* Sample invoices for the corridor */
+function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+const INV0=(()=>{const r=rng(84),drift=10,out=[];
+  for(let i=0;i<1200;i++){const ti=Math.floor(r()*4);const u=r(),v=r();const z=Math.sqrt(-2*Math.log(u+1e-9))*Math.cos(2*Math.PI*v);
+    const legacy=r()<0.12?-(r()*drift*0.9):0;let off=-(Math.abs(z)*drift*0.45)+legacy+(r()<0.5?0:r()*1.2);off=Math.max(-40,Math.min(4,off));const lo=[12,72,144,500][ti],hi=[71,143,499,2000][ti];const qty=Math.round(lo+r()*(hi-lo));out.push({ti,off,qty})}return out})();
+const LADDER=[0,3,6,10];
+function drawCorr(){
+  const w=+$('c-width').value;$('c-width-v').textContent=w+'%';
+  const list=cpOf(P[0]),tiers=LADDER.map(b=>list*(1-b/100));
+  const INV=INV0.map(o=>{const t=tiers[o.ti],price=Math.round(t*(1+o.off/100)*100)/100;return{t,price,off:(price/t-1)*100,qty:o.qty}});
+  $('c-ladder').textContent=tiers.map(t=>money(t)).join(', ');
+  const inside=INV.filter(p=>p.off>=-w).length,below=INV.filter(p=>p.off<-w);
+  const leak=below.reduce((a,p)=>a+(p.t*(1-w/100)-p.price)*p.qty,0);const pcs=below.reduce((a,p)=>a+p.qty,0);const rev=INV.reduce((a,p)=>a+p.price*p.qty,0);
+  $('c-distinct').textContent=new Set(INV.map(p=>p.price.toFixed(2))).size;
+  $('c-inside').textContent=(inside/INV.length*100).toFixed(1)+'%';
+  $('c-leak').textContent=big(leak);$('c-leak-l').textContent='Given up below the floor on '+below.length+' invoices ('+Math.round(pcs/1000)+'K pieces), '+(leak/rev*100).toFixed(1)+'% of this item\'s revenue';
+  const lo=-30,hi=5,n=hi-lo,counts=Array(n).fill(0);
+  INV.forEach(p=>{counts[Math.floor(Math.max(lo,Math.min(hi-0.001,p.off))-lo)]++});
+  const W=640,H=240,ml=40,mr=10,mt=14,mb=42,cm=Math.max(...counts),top=Math.ceil(cm/50)*50;
+  const x=v=>ml+(W-ml-mr)*(v-lo)/(hi-lo),y=c=>mt+(H-mt-mb)*(1-c/top);
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,class:'w',role:'img','aria-label':'Histogram of invoice price versus tier price'});
+  for(let t=0;t<=top;t+=top/4){svg.appendChild(el('line',{x1:ml,x2:W-mr,y1:y(t),y2:y(t),stroke:css('--rule')}));txt(svg,ml-6,y(t)+4,Math.round(t),{'text-anchor':'end','font-size':10})}
+  counts.forEach((c,k)=>{const v0=lo+k;svg.appendChild(el('rect',{x:x(v0)+0.5,y:y(c),width:Math.max(1,x(v0+1)-x(v0)-1),height:y(0)-y(c),fill:css(v0>=-w?'--navy':'--red')}))});
+  [-30,-25,-20,-15,-10,-5,0,5].forEach(t=>txt(svg,x(t),H-mb+16,(t>0?'+':'')+t+'%',{'text-anchor':'middle','font-size':10}));
+  txt(svg,(ml+W-mr)/2,H-6,'Invoice price vs tier price (count of invoices)',{'text-anchor':'middle'});
+  svg.appendChild(el('line',{x1:x(-w),x2:x(-w),y1:mt,y2:H-mb,stroke:css('--fg'),'stroke-width':1.25,'stroke-dasharray':'4 3'}));
+  txt(svg,x(-w)-5,mt+11,'floor',{'text-anchor':'end',fill:css('--fg')});
+  $('c-hist').replaceChildren(svg);
+}
+
+/* Landed blank cost */
+function drawLanded(){
+  const tb=document.querySelector('#t-landed tbody');tb.replaceChildren();let spend=0;
+  P.forEach(p=>{const b=p.bl,l=landed(p);spend+=l*p.mix/100;const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.name}</td><td>${money(b.sup)}</td><td>−${money(b.disc)}</td><td>+${money(b.tar)}</td><td>+${money(b.inb)}</td><td>−${money(b.reb)}</td><td><b>${money(l)}</b></td>`;tb.appendChild(tr)});
+  const yr=spend*annual();
+  $('landed-note').textContent=`At this mix, blanks run about ${big(yr)} a year, so every 1% won back through shopping or rebates is roughly ${big(yr*0.01)} straight to margin.`;
+  const tb2=document.querySelector('#t-build tbody');tb2.replaceChildren();
+  P.forEach(p=>{const c=p.cc;const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${p.name}</td><td>${money(c.blank)}</td><td>+${money(c.print)}</td><td>+${money(c.labor)}</td><td>+${money(c.oh)}</td><td>+${money(c.setup)}</td><td>+${money(c.frt)}</td><td><b>${money(p.cost)}</b></td><td>${money(p.cost*(1+(+$('mk').value||0)/100))}</td>`;tb2.appendChild(tr)});
+}
+
+/* Freight zones and setup */
+const Z=[
+ {z:1,mi:'0 to 150',ex:'Fargo, Brainerd, Bemidji',base:18,pp:0.10},
+ {z:2,mi:'150 to 300',ex:'Twin Cities, Duluth, Sioux Falls',base:24,pp:0.16},
+ {z:3,mi:'300 to 600',ex:'Des Moines, Omaha, Milwaukee',base:32,pp:0.24},
+ {z:4,mi:'600 to 1,000',ex:'Chicago, Denver, St. Louis',base:42,pp:0.34},
+ {z:5,mi:'1,000 to 1,500',ex:'Dallas, Atlanta, Seattle',base:55,pp:0.46},
+ {z:6,mi:'1,500+',ex:'Florida, California',base:70,pp:0.60}
+];
+const SV=P[0],PPH=400,ADMIN=25;
+const BREAK_TODAY=q=>q>=10000?20:q>=2000?15:q>=500?10:q>=144?6:q>=72?3:0;
+const BREAK_NEW=q=>q>=10000?13:q>=2000?11:q>=500?8:q>=144?4:0;
+const zsel=$('sv-zone');Z.forEach(z=>{const o=document.createElement('option');o.value=z.z;o.textContent='Zone '+z.z+' ('+z.ex.split(',')[0]+')';zsel.appendChild(o)});zsel.value='3';
+const zone=n=>Z[n-1];
+const frPP=(z,q)=>z.base/q+z.pp;
+const setupCost=()=>(+$('sv-rate').value||0)*(+$('sv-min').value||0)/60+ADMIN;
+function drawZones(){
+  const tb=document.querySelector('#t-zones tbody');tb.replaceChildren();
+  Z.forEach(z=>{const tr=document.createElement('tr');tr.innerHTML=`<td>Zone ${z.z}</td><td>${z.mi}</td><td>${z.ex}</td><td>${money(z.base)}</td><td>${money(z.pp)}</td><td>${money(frPP(z,144))}</td>`;tb.appendChild(tr)});
+}
+function drawServe(){
+  const z=zone(+zsel.value),S=setupCost(),mins=+$('sv-min').value||0;
+  const RUN=runCost(SV),LIST=cpOf(SV);
+  const tc=q=>RUN+S/q+frPP(z,q),pr=q=>LIST*(1-BREAK_TODAY(q)/100);
+  $('sv-note').textContent=`${SV.name} shown: run cost of ${money(RUN)} a piece before setup and freight, ${money(LIST)} list at today's markup, ${PPH} pieces an hour, $${ADMIN} to process each order. The unit cost in sections 1 and 3 carries ${money(SV.cc.setup)} for setup and ${money(SV.cc.frt)} for freight as averages; here they vary with the order. Margin peaks in the middle. Small orders don't cover their setup, and the deepest breaks give away more than big runs actually save.`;
+  const tb=document.querySelector('#t-serve tbody');tb.replaceChildren();
+  [24,72,144,500,2000,10000].forEach(q=>{const run=q/PPH*60,share=mins/(mins+run)*100,m=pr(q)-tc(q);const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${q.toLocaleString()}</td><td>${share.toFixed(0)}%</td><td>${money(S/q)}</td><td>${money(frPP(z,q))}</td><td>${money(tc(q))}</td><td>${BREAK_TODAY(q)}%</td><td>${money(pr(q))}</td><td class="${m>=0?'pos':'neg'}">${m>=0?'':'−'}${money(Math.abs(m))}</td>`;tb.appendChild(tr)});
+  let be=null;for(let q=1;q<=10000;q++){if(pr(q)-tc(q)>=0){be=q;break}}
+  $('sv-be').textContent=be?be+' pieces':'None';
+  const l24=(pr(24)-tc(24))*24;$('sv-small').textContent=l24<0?big(-l24):'+'+big(l24);$('sv-small').className='v '+(l24<0?'neg':'pos');
+  $('sv-small-l').textContent=l24<0?'Lost on a 24-piece order':'Earned on a 24-piece order';
+  const give=(BREAK_TODAY(10000)-BREAK_TODAY(144))/100*LIST,save=tc(144)-tc(10000),over=(give-save)*10000;
+  $('sv-over').textContent=big(Math.abs(over));$('sv-over').className='v '+(over>0?'neg':'pos');
+  $('sv-over-l').textContent=over>0?'Over-discounted on a 10,000-piece order':'Under-discounted on a 10,000-piece order';
+  drawTiers();
+}
+
+/* Tiers on sample accounts */
+const G={tee:{p:P[0],fr:1},fleece:{p:P[3],fr:2}};
+const AC=[
+ {n:'Lake resort shop, MN',z:1,o:6,q:1200,f:15},
+ {n:'Big Ten bookstore, WI',z:3,o:10,q:4000,f:25,c:true},
+ {n:'SEC bookstore, GA',z:5,o:8,q:6000,f:10,c:true},
+ {n:'Park gift shop, WY',z:4,o:4,q:800,f:20},
+ {n:'Gulf resort, FL',z:6,o:12,q:300,f:5},
+ {n:'Booster club, ND',z:1,o:9,q:24,f:10},
+ {n:'School district, MN',z:2,o:5,q:600,f:30},
+ {n:'Ski resort, CO',z:4,o:3,q:2500,f:45},
+ {n:'College bookstore, TX',z:5,o:20,q:150,f:20},
+ {n:'Lake town gift shop, MI',z:3,o:16,q:36,f:5}
+];
+const tierOf=a=>{const y=a.o*a.q;return a.c&&y>=25000?'Contract':y>=15000?'A':y>=3000?'B':'C'};
+const REB={Contract:3,A:2,B:1,C:0};
+function acctMargin(a,mode){
+  const z=zone(a.z),S=setupCost(),fs=a.f/100,q=a.q,t=tierOf(a);
+  const brk=(mode==='new'?BREAK_NEW(q):BREAK_TODAY(q))/100;
+  const tl=cpOf(G.tee.p),fl=cpOf(G.fleece.p);
+  const fpp=frPP(z,q),cost=(1-fs)*(runCost(G.tee.p)+fpp*G.tee.fr)+fs*(runCost(G.fleece.p)+fpp*G.fleece.fr)+S/q;
+  let price=(1-fs)*tl*(1-brk)+fs*fl*(1-brk);
+  if(mode==='new'){
+    const reb=REB[t]/100,fb=t==='C'?0:0.02;
+    price-=price*reb+fs*fl*(1-brk)*fb;
+    if(q<72)price+=95/q;
+    if(a.z>2){const extra=frPP(z,q)-frPP(zone(2),q);price+=(1-fs)*extra*G.tee.fr+fs*extra*G.fleece.fr}
+  }
+  return price-cost;
+}
+function drawTiers(){
+  const tb=document.querySelector('#t-accts tbody');tb.replaceChildren();let T0=0,T1=0,under=0;
+  AC.forEach(a=>{const y=a.o*a.q,m0=acctMargin(a,'today'),m1=acctMargin(a,'new'),d=(m1-m0)*y;T0+=m0*y;T1+=m1*y;if(m0<0)under++;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${a.n}</td><td>${a.z}</td><td>${a.o}</td><td>${a.q.toLocaleString()}</td><td>${y.toLocaleString()}</td><td>${a.f}%</td><td>${tierOf(a)}</td><td class="${m0<0?'neg':''}">${m0<0?'−':''}${money(Math.abs(m0))}</td><td class="${m1<0?'neg':''}">${m1<0?'−':''}${money(Math.abs(m1))}</td><td class="${d>=0?'pos':'neg'}">${d>=0?'+':'−'}${big(Math.abs(d)).replace('−','')}</td>`;tb.appendChild(tr)});
+  $('tr-today').textContent=big(T0);$('tr-new').textContent=big(T1);$('tr-new').className='v '+(T1>=T0?'pos':'neg');
+  $('tr-under').textContent=under+' of 10';
+}
+
+document.querySelectorAll('.inputs input[type=range]').forEach(r=>{
+  const mk=(sym,dir)=>{const b=document.createElement('button');b.type='button';b.className='step';b.textContent=sym;b.setAttribute('aria-label',(dir>0?'Increase ':'Decrease ')+r.id);
+    b.addEventListener('click',()=>{const st=+r.step||1;let v=+r.value+dir*st;v=Math.max(+r.min,Math.min(+r.max,v));r.value=Math.round(v*100)/100;r.dispatchEvent(new Event('input',{bubbles:true}))});return b};
+  r.before(mk('−',-1));r.after(mk('+',1));
+});
+const all=()=>{drawGap();drawWF();drawLanded();drawZones();drawServe();drawPhase()};
+['mk','daily','days'].forEach(id=>$(id).addEventListener('input',all));
+['ph-step','ph-cap','ph-sens'].forEach(id=>$(id).addEventListener('input',drawPhase));
+$('c-width').addEventListener('input',drawCorr);
+['mk'].forEach(id=>$(id).addEventListener('input',drawCorr));
+['sv-zone','sv-rate','sv-min'].forEach(id=>$(id).addEventListener('input',drawServe));
+all();drawCorr();
+})();
+</script>
+
+</body>
+</html>
