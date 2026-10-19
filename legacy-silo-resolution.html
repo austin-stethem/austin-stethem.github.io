@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Data Reconciliation | Austin Sonny Stethem</title>
-    <meta name="description" content="Two systems that never agreed on a name. Resolving branch and account identity across a legacy extract and a location master — and why a failed join deletes.">
+    <meta name="description" content="Two systems that never agreed on a name. Resolving branch and account identity across a legacy extract and a location master, and why a failed join deletes.">
     <meta name="author" content="Austin Sonny Stethem">
     <meta name="theme-color" content="#14171a">
 
-    <meta property="og:title" content="Master Data Reconciliation — Entity Resolution Across Legacy Systems">
+    <meta property="og:title" content="Master Data Reconciliation: Entity Resolution Across Legacy Systems">
     <meta property="og:description" content="An exact-match join silently removed 12.5% of an 80-branch network from the model. Nothing errored. The output looked complete.">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Austin Sonny Stethem">
@@ -213,12 +213,12 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
         <tr>
             <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-label">Built by</span>
                 <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Entity Resolution, Key Normalisation, Alias Governance, Non-Destructive Merge, Join Integrity Auditing</span>
+                <span class="meta-value">Entity Resolution, Key Normalization, Alias Governance, Non-Destructive Merge, Join Integrity Auditing</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Context</span>
@@ -232,12 +232,12 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="scenario-box">
         <strong>Where this sits</strong>
-        Every model elsewhere in this portfolio: the <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span> tiers, the trade-area decay, the merger overlap, begins with a join between a transaction extract and a location master. This is the page about that join, and about what happens when it quietly fails.
+        Every model elsewhere in this portfolio: the <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span> tiers, the trade-area decay, the merger overlap, begins with a join between a transaction extract and a location master. This is the page about that join, and about what happens when it quietly fails. The same problem shows up anywhere a business has grown across sites and systems: one plant's kettle is another's vat, one catalog's part number is another's SKU, and the records only look like they agree.
     </div>
 
     <p>A distribution network that has grown by acquisition, and that carried a mainframe-era system for decades, does not have one name for anything. The location directory calls a site by its division prefix and its facility role. The transaction extract calls it whatever a <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> manager typed into a terminal in 1998. Both are correct inside their own system, and neither knows the other exists.</p>
 
-    <p>Joining them with an exact string match produced a file that looked complete. It was not. <strong>Ten&nbsp;of eighty branches &mdash; twelve and a half percent of the network &mdash; silently failed to match and were dropped from the analysis entirely.</strong> No exception was raised. No row count looked wrong, because the row count was never compared against anything. The <span class="jargon-tooltip" data-tip="One rung of the price ladder — a customer class with its own standing discount." tabindex="0">tier</span> model that followed was trained on a network with a hole in it.</p>
+    <p>I met this gap while building the geospatial tools elsewhere in this portfolio, where every map starts by joining the location master to a transaction extract. The names and revenue figures on this page are substitutes; the failure is the one that happened. Joining the two systems with an exact string match produced a file that looked complete. It was not. <strong>Ten&nbsp;of eighty branches, twelve and a half percent of the network, silently failed to match and dropped out of the analysis entirely.</strong> No exception was raised. No row count looked wrong, because the row count was never compared against anything. Any model built on top of it would have been trained on a network with a hole in it.</p>
 
     <div class="alert-box">
         <strong>The&nbsp;reason this class of bug is dangerous</strong>
@@ -246,7 +246,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>2. The Taxonomy of a Name Mismatch</h2>
 
-    <p>The ten failures were not random noise. Sorted, they fall into six recognisable patterns; and knowing which pattern you are looking at determines which normalisation will fix it.</p>
+    <p>The ten failures were not random noise. Sorted, they fall into six recognisable patterns; and knowing which pattern you are looking at determines which normalization will fix it.</p>
 
     <table class="data-table">
         <thead>
@@ -262,13 +262,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <td data-label="Pattern">Division prefix</td>
                 <td data-label="Master" class="mono">AMS Fairview</td>
                 <td data-label="Extract" class="mono">Fairview</td>
-                <td data-label="Why">The directory qualifies the site by operating division; the terminal never did. Fixed by stripping a known prefix set &mdash; not by fuzzy matching, which would also happily match a different town.</td>
+                <td data-label="Why">The directory qualifies the site by operating division; the terminal never did. Fixed by stripping a known prefix set, not by fuzzy matching, which would also happily match a different town.</td>
             </tr>
             <tr>
                 <td data-label="Pattern">Facility suffix</td>
                 <td data-label="Master" class="mono">Northgate DC</td>
                 <td data-label="Extract" class="mono">Northgate</td>
-                <td data-label="Why">A role marker distinguishing a <span class="jargon-tooltip" data-tip="The central warehouse that buys in bulk from vendors and resupplies the branches." tabindex="0">distribution centre</span> from a retail branch, present in one system only. Fixed by a controlled suffix list.</td>
+                <td data-label="Why">A role marker distinguishing a <span class="jargon-tooltip" data-tip="The central warehouse that buys in bulk from vendors and resupplies the branches." tabindex="0">distribution center</span> from a retail branch, present in one system only. Fixed by a controlled suffix list.</td>
             </tr>
             <tr>
                 <td data-label="Pattern">Token transposition</td>
@@ -280,13 +280,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <td data-label="Pattern">Punctuation</td>
                 <td data-label="Master" class="mono">IPD-Sutton</td>
                 <td data-label="Extract" class="mono">IPD Sutton</td>
-                <td data-label="Why">One hyphen. An exact join fails on a single character that no human reader would notice. Fixed by normalising to alphanumerics and single spaces before comparison.</td>
+                <td data-label="Why">One hyphen. An exact join fails on a single character that no human reader would notice. Fixed by normalizing to alphanumerics and single spaces before comparison.</td>
             </tr>
             <tr>
                 <td data-label="Pattern">Opposing convention</td>
                 <td data-label="Master" class="mono">Orchard DC</td>
                 <td data-label="Extract" class="mono">APW Orchard</td>
-                <td data-label="Why">One system marks the facility with a suffix, the other with a division prefix. Requires both normalisations to run before either match succeeds &mdash; which is why the order of operations matters.</td>
+                <td data-label="Why">One system marks the facility with a suffix, the other with a division prefix. Requires both normalizations to run before either match succeeds, which is why the order of operations matters.</td>
             </tr>
             <tr>
                 <td data-label="Pattern">Genuinely absent</td>
@@ -297,13 +297,18 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
     </table>
 
+    <div class="scenario-box">
+        <strong>The pattern that is not in this table</strong>
+        Every row above is the same name wearing a different costume. The harder case is two different words for the same thing: the vessel one plant logs as a kettle and another as a vat, the product one acquisition called a part and another called a SKU. No string rule resolves that, because there is nothing in the strings to resolve. It takes a curated alias table, which is a dictionary by another name, and someone who knows the business to write it. That is the control described in section 4 as alias sets, and it is the reason a reconciliation project starts with definitions before it touches a single join.
+    </div>
+
     <h2 id="dashboard">3. Resolution, One Rule at a Time</h2>
 
-    <p>The failed joins were on nobody's list, because a failed join does not surface as an error. It surfaces as a slightly smaller number. I found them by counting what the join dropped instead of trusting what it returned, and then owned the resolution rules instead of handing the problem to IT with a ticket attached.</p>
+    <p>A failed join is on nobody's list, because it does not surface as an error. It surfaces as a slightly smaller number. So the first control is to count what the join dropped instead of trusting what it returned. That is how these surfaced on the mapping work, and the rules that follow are the ones I wrote to resolve them; the same patterns turn up in vendor files and acquired-store records, where one side of every join was typed by someone who never saw the other.</p>
 
-    <p>The decision that shaped every rule below was <strong>which&nbsp;kind of error to prefer</strong>. Fuzzy matching at a loose threshold catches more pairs and occasionally fuses two real customers into a record belonging to neither &mdash; a wrong merge that a branch manager then has to unpick from live invoices. A strict rule misses pairs, and a miss is visible: the account simply does not appear. I chose narrow, curated rules over a similarity score for that reason. A rule that can only make one kind of mistake is one you can reason about; a threshold can make both and tells you which only in hindsight.</p>
+    <p>The decision that shaped every rule below was <strong>which&nbsp;kind of error to prefer</strong>. Fuzzy matching at a loose threshold catches more pairs and occasionally fuses two real customers into a record belonging to neither: a wrong merge that a branch manager then has to unpick from live invoices. A strict rule misses pairs, and a miss is visible: the account simply does not appear. I chose narrow, curated rules over a similarity score for that reason. A rule that can only make one kind of mistake is one you can reason about; a threshold can make both and tells you which only in hindsight.</p>
 
-    <p><em>Enable the normalisation stages in order and watch the match rate climb. Each rule is deliberately narrow &mdash; a controlled list, not a similarity threshold; because a rule that can only make one kind of mistake is a rule you can reason about. Turn off the geospatial veto to see what a purely textual match does when two different places share a name.</em></p>
+    <p><em>Enable the normalization stages in order and watch the match rate climb. Then turn off the geospatial veto to see what a purely textual match does when two different places share a name.</em></p>
 
     <p class="tour-launch"><button type="button" data-tour-start class="tour-btn">&#9654; Guided walkthrough</button> <span class="tour-hint">Five steps. Moves the controls for you.</span></p>
 
@@ -311,7 +316,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <div class="dash-sidebar">
             <div class="dash-header">
                 <div class="dash-title">Entity <span>Resolution</span></div>
-                <p>Normalisation Pipeline</p>
+                <p>Normalization Pipeline</p>
             </div>
 
             <ul class="stage-list">
@@ -323,7 +328,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     </li>
                 <li>
                     <label class="stage-toggle" for="stage2">
-                        <input type="checkbox" id="stage2" aria-label="Normalise case and punctuation">
+                        <input type="checkbox" id="stage2" aria-label="Normalize case and punctuation">
                         <span>Case &amp; punctuation
                             <span class="rule">lower, strip non-alphanumeric</span>
                         </span>
@@ -369,7 +374,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
             <div class="logic-box">
                 <strong>Why&nbsp;a veto and not a score</strong>
-                Text similarity cannot tell two towns of the same name apart, and no threshold setting will. Coordinates can. The veto is a hard constraint, not another weighted signal, because a wrong merge is far more expensive than a missed one &mdash; it fuses two real customers into a record that belongs to neither.
+                Text similarity cannot tell two towns of the same name apart, and no threshold setting will. Coordinates can. The veto is a hard constraint, not another weighted signal, because a wrong merge is far more expensive than a missed one; it fuses two real customers into a record that belongs to neither.
             </div>
         </div>
 
@@ -388,7 +393,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <div class="kpi-card k-amb">
                     <div class="kpi-card-header">Ambiguous</div>
                     <div class="kpi-value" id="kpi-amb">--</div>
-                    <div class="kpi-sub" id="kpi-amb-sub">Multiple candidates &mdash; needs a human</div>
+                    <div class="kpi-sub" id="kpi-amb-sub">Multiple candidates: needs a human</div>
                 </div>
                 <div class="kpi-card k-unr">
                     <div class="kpi-card-header">Unresolved</div>
@@ -400,7 +405,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <div class="chart-section">
                 <div class="chart-header">Revenue Reconciled, Credited to the Rule That Resolved It</div>
                 <div class="chart-box">
-                    <canvas id="ruleChart" role="img" aria-label="Bar chart of revenue reconciled, attributed to the normalisation rule that first produced a match"></canvas>
+                    <canvas id="ruleChart" role="img" aria-label="Bar chart of revenue reconciled, attributed to the normalization rule that first produced a match"></canvas>
                 </div>
             </div>
 
@@ -428,13 +433,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>The dashboard above is the reasoning; the pipeline is the implementation. Six controls carry it, and each exists because a specific failure happened first.</p>
 
-    <h3>A normalised key, computed before any join</h3>
+    <h3>A normalized key, computed before any join</h3>
 
     <p>Branch identifiers arrive in different shapes. One system carries an alphabetic prefix and zero-padding; the other carries neither. So both sides reduce to a canonical key before anything joins: prefix stripped, leading zeros removed, case folded. The join runs on the key. Never on the display name, because the display name is the thing that disagrees.</p>
 
     <h3>Alias sets, not similarity scores</h3>
 
-    <p>The location census spans ten brand families, and brand identity does not map to a single string. A regional co-operative trades under its own name while operating another banner's stores. An acquired chain keeps old signage for years. A distributor runs several internal divisions that are one competitor for footprint purposes. Each family therefore has a multi-alias signature set, and membership is a lookup against curated aliases, not a distance calculation &mdash; because the relationship between a co-op's trading name and its banner is not a string-similarity fact. It is a fact about the industry.</p>
+    <p>The location census spans ten brand families, and brand identity does not map to a single string. A regional co-operative trades under its own name while operating another banner's stores. An acquired chain keeps old signage for years. A distributor runs several internal divisions that are one competitor for footprint purposes. Each family therefore has a multi-alias signature set, and membership is a lookup against curated aliases, not a distance calculation, because the relationship between a co-op's trading name and its banner is not a string-similarity fact. It is a fact about the industry.</p>
 
     <h3>An authoritative source per entity class</h3>
 
@@ -446,7 +451,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h3>Disambiguation instead of deletion</h3>
 
-    <p>Genuine near-duplicates &mdash; several operations at one physical address &mdash; are separated by a small coordinate offset so all of them remain visible and selectable on the map. The instinct to collapse coincident records is what erases real locations. Dedupe requires the name, the classification <em>and</em> the rounded coordinates to agree before anything is removed.</p>
+    <p>Genuine near-duplicates, several operations at one physical address, are separated by a small coordinate offset so all of them remain visible and selectable on the map. The instinct to collapse coincident records is what erases real locations. Dedupe requires the name, the classification <em>and</em> the rounded coordinates to agree before anything is removed.</p>
 
     <h3>Bidirectional geocoding</h3>
 
@@ -456,14 +461,14 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>One of the ten failures is not a matching problem at all, and it is the one worth ending on.</p>
 
-    <p>Two separate master records &mdash; two operating divisions, physically co-located in the same town, both normalise to the same single name in the transaction extract. Every rule in the pipeline resolves them to the identical counterpart. The pipeline has not failed; it has correctly identified that <strong>the&nbsp;transaction stream does not distinguish between two businesses that the directory does.</strong></p>
+    <p>Two separate master records, two operating divisions physically co-located in the same town, both normalize to the same single name in the transaction extract. Every rule in the pipeline resolves them to the identical counterpart. The pipeline has not failed; it has correctly identified that <strong>the&nbsp;transaction stream does not distinguish between two businesses that the directory does.</strong></p>
 
-    <p>No threshold setting resolves that. No library resolves it. Answering it requires knowing that one division sells parts over a counter and the other serves industrial accounts, that they share a lot, and which of them a given class of invoice belongs to. The correct engineering response is to stop, flag the record as ambiguous, and <span class="jargon-tooltip" data-tip="A delivery run from a branch to the accounts it serves." tabindex="0">route</span> it to somebody who knows the business &mdash; which is precisely why the dashboard reports an ambiguous count as a first-class outcome instead of folding it into a match rate.</p>
+    <p>No threshold setting resolves that. No library resolves it. Answering it requires knowing that one division sells parts over a counter and the other serves industrial accounts, that they share a lot, and which of them a given class of invoice belongs to. The correct engineering response is to stop, flag the record as ambiguous, and <span class="jargon-tooltip" data-tip="A delivery run from a branch to the accounts it serves." tabindex="0">route</span> it to somebody who knows the business, which is precisely why the dashboard reports an ambiguous count as a first-class outcome instead of folding it into a match rate.</p>
 
     <div class="impact-box">
         <h3>What This Case Study Is Actually About</h3>
         <p>Not fuzzy matching. The algorithms are the easy part and they are all in libraries. The work is knowing that an inner join is a filter in disguise, that a transposed pair of words defeats edit distance while looking obvious to a human, that a co-op's trading name is a fact about the industry, not about strings, and that the honest output of a resolution pipeline includes a column for the records it could not resolve.</p>
-        <p>Every predictive model in this portfolio rests on this layer being right. A <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> cascade computed across a network missing twelve percent of its branches produces confident, presentable, wrong numbers &mdash; and nothing in the output would tell you.</p>
+        <p>Every predictive model in this portfolio rests on this layer being right. A <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> cascade computed across a network missing twelve percent of its branches produces confident, presentable, wrong numbers, and nothing in the output would tell you.</p>
     </div>
 
     <div class="next-step-box">
@@ -483,7 +488,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </nav>
 
             <div class="nda-note">
-        <strong>Data Governance Note:</strong> Branch names, division prefixes and revenue figures on this page are anonymised substitutes. Each one preserves the exact string-mismatch pattern found in production: the transposition, the dropped prefix, the single hyphen; because the patterns are the subject. The failure taxonomy, the resolution order, and the consequence are real.
+        <strong>Data Governance Note:</strong> The branch names, division prefixes and revenue figures on this page are substitutes, and the interactive model runs on generated data. The failure is real: it surfaced while joining the location master to transaction data for the geospatial builds, and each pattern shown here, the transposition, the dropped prefix, the single hyphen, is one that had to be resolved. The failure taxonomy, the resolution order and the consequence are the subject.
     </div>
 
     <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
@@ -619,7 +624,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             el('kpi-amb').innerText = ambiguous.length;
             el('kpi-amb-sub').innerText = ambiguous.length
                 ? 'Two candidates the extract cannot separate'
-                : 'None &mdash; every match is unique';
+                : 'None: every match is unique';
 
             el('kpi-unr').innerText = unresolved.length;
             el('kpi-unr-sub').innerText = unresolved.length
@@ -634,7 +639,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             const tags = { resolved: 't-res', ambiguous: 't-amb', unresolved: 't-unr' };
             const labels = { resolved: 'Resolved', ambiguous: 'Ambiguous', unresolved: 'Unresolved' };
             el('ledger-body').innerHTML = rows.map(r => {
-                const ruleName = r.rule ? RULES[r.rule - 1].label : '&mdash;';
+                const ruleName = r.rule ? RULES[r.rule - 1].label : '\u2013';
                 let target;
                 if (r.status === 'resolved') target = r.match.name;
                 else if (r.status === 'ambiguous') target = r.candidates.map(c => c.name + ' (' + c.region + ')').join(' / ');
@@ -746,10 +751,10 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 /* ── guided walkthrough ─────────────────────────────────────────────────────── */
 window.TOUR = [
   { el: '#kpi-resolved',
-    text: 'Two systems, one network, no agreement on what anything is called. An exact string match resolves a fraction of it — and produces a file that looks complete.',
+    text: 'Two systems, one network, no agreement on what anything is called. An exact string match resolves a fraction of it, and produces a file that looks complete.',
     before: function(){ ['stage2','stage3','stage4','stage5'].forEach(function(id){ var e=el(id); if(e) e.checked=false; }); var g=el('geoVeto'); if(g) g.checked=true; update(); } },
   { el: '#stage3',
-    text: 'Each normalisation is deliberately narrow — a curated list rather than a similarity threshold, because a rule that can only make one kind of mistake is one you can reason about.',
+    text: 'Each normalization is deliberately narrow, a curated list rather than a similarity threshold, because a rule that can only make one kind of mistake is one you can reason about.',
     action: function(){ el('stage2').checked=true; el('stage3').checked=true; update(); }, settle: 700 },
   { el: '#stage5',
     text: 'Token-set comparison catches the transpositions. <b>“Riverton West”</b> and <b>“West Riverton”</b> are the same place, and edit distance scores that pair badly despite it being obvious to a human.',
@@ -758,7 +763,7 @@ window.TOUR = [
     text: 'Now turn off the geospatial veto. Text similarity cannot tell two towns of the same name apart, and no threshold setting will. Coordinates can.',
     action: function(){ el('geoVeto').checked=false; update(); }, settle: 700 },
   { el: '#kpi-amb',
-    text: 'A wrong merge fuses two real customers into a record belonging to neither — far more expensive than a missed one. So the veto is a hard constraint, and <b>ambiguous</b> is reported as a first-class outcome rather than folded into a match rate.',
+    text: 'A wrong merge fuses two real customers into a record belonging to neither, far more expensive than a missed one. So the veto is a hard constraint, and <b>ambiguous</b> is reported as a first-class outcome rather than folded into a match rate.',
     action: function(){ el('geoVeto').checked=true; update(); } }
 ];
 </script>

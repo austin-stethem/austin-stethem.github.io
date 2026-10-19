@@ -204,7 +204,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Workload Distribution Analysis, Radius Discipline, Coverage Conflict Detection, Assignment Modelling</span>
+                <span class="meta-value">Workload Distribution Analysis, Radius Discipline, Coverage Conflict Detection, Assignment Modeling</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Deployment</span>
@@ -264,7 +264,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2 id="dashboard">3. Setting a Target and Seeing Who Falls Outside It</h2>
 
-    <p><em>Set the target book size and the tolerance you are willing to accept around it. The model reports how many representatives fall outside the band and how many accounts would need to move to bring everybody inside it, which is the number that determines whether a rebalance is a conversation or a reorganisation.</em></p>
+    <p><em>Set the target book size and the tolerance you are willing to accept around it. The model reports how many representatives fall outside the band and how many accounts would need to move to bring everybody inside it, which is the number that determines whether a rebalance is a conversation or a reorganization.</em></p>
 
     <p class="tour-launch"><button type="button" data-tour-start class="tour-btn">▶ Guided walkthrough</button> <span class="tour-hint">Five steps. Moves the controls for you.</span></p>
 
@@ -362,7 +362,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         At eight calls a day on a six-week cycle, one representative can see 240 accounts once each. A book of 285 is not a stretch target &mdash; it is 45 accounts that will not be visited in the cycle, and the arithmetic says so before anyone looks at performance.
     </div>
 
-    <p>Run that across the field and the output is not a judgement about any individual. It is a count of <strong>accounts that sit beyond anyone's capacity to service on the stated cycle</strong>; and those accounts are where revenue quietly decays, because nothing in the reporting distinguishes an account nobody visited from an account that simply bought less.</p>
+    <p>Run that across the field and the output is not a judgment about any individual. It is a count of <strong>accounts that sit beyond anyone's capacity to service on the stated cycle</strong>; and those accounts are where revenue quietly decays, because nothing in the reporting distinguishes an account nobody visited from an account that simply bought less.</p>
 
     <table class="data-table">
         <thead>
@@ -383,13 +383,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
     </table>
 
-    <p>The table is the argument. Whether the field is fully covered is not a matter of effort or intent &mdash; it is a function of two numbers that leadership sets, often without realising they are setting them. Decide that every account deserves a visit every four weeks and a fifth of the book becomes uncoverable overnight. Decide on six weeks and the problem nearly disappears. Neither decision is currently being made explicitly, which is how a coverage policy ends up being an accident.</p>
+    <p>The table is the argument. Whether the field is fully covered is not a matter of effort or intent &mdash; it is a function of two numbers that leadership sets, often without realizing they are setting them. Decide that every account deserves a visit every four weeks and a fifth of the book becomes uncoverable overnight. Decide on six weeks and the problem nearly disappears. Neither decision is currently being made explicitly, which is how a coverage policy ends up being an accident.</p>
 
     <div class="impact-box">
         <h3>Why Hand-Managed Assignment Degrades on Its Own</h3>
         <p>No individual assignment causes this. Each one is made for a good reason: a representative knows the owner, covers a vacancy, inherits a retiring colleague's book, or picks up an account that was small at the time. What no single decision can account for is the aggregate, because the aggregate is not visible to anyone making the decisions.</p>
-        <p>Left alone, the drift has three predictable outputs. <strong>Representatives become frustrated</strong>, because carrying twice a peer's book for the same expectations is legible to the person carrying it long before it is legible to management. <strong>Accounts go unserved</strong>, invisibly, at the bottom of the largest books. And <strong>geographic coverage frays</strong>, because assignments made one at a time never optimise for travel, so two representatives end up crossing each other's paths in the same town on different days.</p>
-        <p>All three are consequences of process rather than of people, and all three are measurable the moment the assignments are rendered against geography instead of listed as rows. That is the whole intervention, not a reorganisation, but a report that did not previously exist.</p>
+        <p>Left alone, the drift has three predictable outputs. <strong>Representatives become frustrated</strong>, because carrying twice a peer's book for the same expectations is legible to the person carrying it long before it is legible to management. <strong>Accounts go unserved</strong>, invisibly, at the bottom of the largest books. And <strong>geographic coverage frays</strong>, because assignments made one at a time never optimize for travel, so two representatives end up crossing each other's paths in the same town on different days.</p>
+        <p>All three are consequences of process rather than of people, and all three are measurable the moment the assignments are rendered against geography instead of listed as rows. That is the whole intervention, not a reorganization, but a report that did not previously exist.</p>
     </div>
 
     <h2>5. Coverage Conflict, and Why It Is Not Automatically Wrong</h2>
@@ -398,7 +398,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>Roughly a thousand towns in the mapped book have accounts held by more than one representative. The distribution has a long tail: most have two, a substantial number have three or four, and a handful have nine or more.</p>
 
-    <p>Two representatives in one town is usually correct. Accounts differ &mdash; a heavy-duty fleet and a two-bay independent are different sales conversations, and specialisation beats geography. The signal is not the existence of overlap but its depth. When a town reaches five or six representatives, the assignments have almost certainly stopped tracking any deliberate segmentation and started reflecting the order in which accounts happened to be picked up.</p>
+    <p>Two representatives in one town is usually correct. Accounts differ &mdash; a heavy-duty fleet and a two-bay independent are different sales conversations, and specialization beats geography. The signal is not the existence of overlap but its depth. When a town reaches five or six representatives, the assignments have almost certainly stopped tracking any deliberate segmentation and started reflecting the order in which accounts happened to be picked up.</p>
 
     <p>The output is therefore ranked by depth rather than flagged by existence, and the towns at the top of that list are worth an hour of a sales manager's attention each. Not to be reassigned automatically &mdash; to be explained, and reassigned only where no explanation exists.</p>
 
@@ -521,7 +521,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             const node = el('loadChart');
             if (!node || typeof Chart === 'undefined') return;
             if (chart) chart.destroy();
-            const colour = r => r.accts > hi ? '#ef4444' : (r.accts < lo ? '#7dd3fc' : '#10b981');
+            const color = r => r.accts > hi ? '#ef4444' : (r.accts < lo ? '#7dd3fc' : '#10b981');
             Chart.defaults.font.family = "'Archivo', 'Inter', sans-serif";
             chart = new Chart(node.getContext('2d'), {
                 type: 'bar',
@@ -530,8 +530,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     datasets: [{
                         label: 'Accounts',
                         data: reps.map(r => r.accts),
-                        backgroundColor: reps.map(r => colour(r) + 'cc'),
-                        borderColor: reps.map(colour),
+                        backgroundColor: reps.map(r => color(r) + 'cc'),
+                        borderColor: reps.map(color),
                         borderWidth: 0.5
                     }]
                 },
@@ -601,7 +601,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 })();
 
 /* ── guided walkthrough ─────────────────────────────────────────────────────────
-   Shows that coverage is set by two numbers leadership rarely realises it is
+   Shows that coverage is set by two numbers leadership rarely realizes it is
    choosing, and that the middle of the distribution is the real finding. */
 window.TOUR = [
   { el: '#loadChart',

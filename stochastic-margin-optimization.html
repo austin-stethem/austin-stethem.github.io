@@ -287,7 +287,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>3. Action: The Monte Carlo Random Walk Engine</h2>
     <p>Instead of feeding the engine flat variables, the algorithm generates a geometric <span class="jargon-tooltip" data-tip="A mathematical formalization of a path that consists of a succession of random steps." tabindex="0">random walk</span>. Over a 12-month timeline, it injects stochastic noise at every step. In each of the 5,000 simulated realities, cost fluctuates based on logistics volatility curves, and market demand fluctuates based on our defined price elasticity.</p>
-    <p><strong>From risk to optimisation:</strong> simulating one price tells you the risk of that price, not whether it is the right one. So the engine sweeps the entire viable band under identical market assumptions and reports the point that maximises median twelve-month E[P]. That optimum is rarely the highest price on the slider. Past a threshold, elasticity destroys demand faster than the extra margin accrues, and the curve rolls over.</p>
+    <p><strong>From risk to optimization:</strong> simulating one price tells you the risk of that price, not whether it is the right one. So the engine sweeps the entire viable band under identical market assumptions and reports the point that maximizes median twelve-month E[P]. That optimum is rarely the highest price on the slider. Past a threshold, elasticity destroys demand faster than the extra margin accrues, and the curve rolls over.</p>
 
     <p><strong>Two&nbsp;details make that sweep trustworthy, and both were corrections.</strong> First, near its peak an expected-profit curve is almost flat, at standard elasticity, pricing a dollar away from the optimum costs roughly $92 of annual profit, while the sampling error on a 400-path median is about $820. Comparing independently simulated price points therefore selects the maximum out of noise nine times larger than the signal, and the recommendation wanders by several dollars on every run. The engine now applies <span class="jargon-tooltip" data-tip="A variance-reduction technique: the same set of random shocks is replayed at every price point, so the noise is common to all of them and cancels out of the comparisons between them." tabindex="0"><strong>common random numbers</strong></span>, one matrix of shocks, replayed at every price, which cuts the run-to-run spread in the reported optimum from about $5 to about $1.</p>
 
@@ -352,7 +352,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     <div class="kpi-sub">95th Percentile Windfall</div>
                 </div>
                 <div class="kpi-card" id="card-optimal" style="border-top-color: var(--panel-warning);">
-                    <div class="kpi-card-header" style="color: var(--panel-warning);">Profit-Maximising Price</div>
+                    <div class="kpi-card-header" style="color: var(--panel-warning);">Profit-Maximizing Price</div>
                     <div class="kpi-value" id="out-optimal" style="color: var(--panel-warning);">$--</div>
                     <div class="kpi-sub" id="out-optimal-sub">Swept across the full price range</div>
                 </div>
@@ -368,9 +368,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </div>
 
             <div class="chart-section" style="margin-top: 25px;">
-                <div class="chart-header">Expected Profit by Price Point (Optimisation Curve)</div>
+                <div class="chart-header">Expected Profit by Price Point (Optimization Curve)</div>
                 <div class="chart-wrapper" style="height: 300px;">
-                    <canvas id="sweepChart" role="img" aria-label="Line chart of median twelve-month expected profit across the target price range, marking the profit-maximising price"></canvas>
+                    <canvas id="sweepChart" role="img" aria-label="Line chart of median twelve-month expected profit across the target price range, marking the profit-maximizing price"></canvas>
                 </div>
             </div>
         </div>
@@ -623,10 +623,10 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             return best;
         }
 
-        /* --- THE OPTIMISATION STEP -------------------------------------------
+        /* --- THE OPTIMIzATION STEP -------------------------------------------
            A single price point tells you the risk of that price; it does not find
            the best one. This sweeps the whole slider range under the same market
-           assumptions and reports the price that maximises median 12-month E[P].
+           assumptions and reports the price that maximizes median 12-month E[P].
            Note the optimum is not simply the highest price: elasticity destroys
            demand faster than margin accrues past a certain point.               */
         function runPriceSweep(currentPrice, volatility, elasticity) {

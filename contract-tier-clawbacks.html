@@ -247,7 +247,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr>
                 <td data-label="Test">Earned tier</td>
                 <td data-label="Rule" class="mono">trailing 12-month units &rarr; tier</td>
-                <td data-label="Why">Trailing volume has to be measured on the same basis as the original commitment. An account committing on units and measured on dollars will drift purely with price changes, and the audit will fire on inflation rather than behaviour.</td>
+                <td data-label="Why">Trailing volume has to be measured on the same basis as the original commitment. An account committing on units and measured on dollars will drift purely with price changes, and the audit will fire on inflation rather than behavior.</td>
             </tr>
             <tr>
                 <td data-label="Test">Entitlement gap</td>
@@ -257,7 +257,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr>
                 <td data-label="Test">Grace period</td>
                 <td data-label="Rule" class="mono">months below threshold</td>
-                <td data-label="Why">One soft quarter is not a tier change. Without a minimum sustained period the audit fires on seasonality and destroys its own credibility with the sales organisation.</td>
+                <td data-label="Why">One soft quarter is not a tier change. Without a minimum sustained period the audit fires on seasonality and destroys its own credibility with the sales organization.</td>
             </tr>
             <tr>
                 <td data-label="Test">Materiality floor</td>
@@ -585,7 +585,7 @@ window.TOUR = [
     text: 'Volume tiers are negotiated on a forecast and almost never revisited. This finds accounts holding a discount their trailing volume no longer earns.',
     before: function(){ el('s-grace').value=6; el('s-floor').value=5; el('s-risk').value=1; model(); } },
   { el: '#s-grace',
-    text: 'The grace period matters more than it looks. Drop it to zero and accounts enter the list on a single soft quarter — one of which is a seasonal customer that will recover on its own. Being wrong once destroys the audit&rsquo;s credibility with the sales organisation.',
+    text: 'The grace period matters more than it looks. Drop it to zero and accounts enter the list on a single soft quarter — one of which is a seasonal customer that will recover on its own. Being wrong once destroys the audit&rsquo;s credibility with the sales organization.',
     action: function(){ el('s-grace').value=0; model(); }, settle: 700 },
   { el: '#k-act',
     text: 'Restore a sensible period and the list becomes short enough to work. Every row is money currently being given away.',

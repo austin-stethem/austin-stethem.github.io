@@ -1365,7 +1365,7 @@ a,.srclink,.more{color:#00709A!important}
   const pct=(v,d=1)=>(v*100).toFixed(d)+'%';
   const cents=v=>Math.round(v*100)+'\u00a2';
 
-  // Palette: each colour means one thing. Navy = primary data, slate = context,
+  // Palette: each color means one thing. Navy = primary data, slate = context,
   // green = what we keep, red = risk, gold = targets. Everything else stays quiet.
   const C={ink:'#13263A',navy:'#002855',cyan:'#00A3E0',slate:'#86A7C6',slateD:'#4C7599',slateL:'#C4D6E7',keep:'#2C8654',keepD:'#1F6B42',keepL:'#CFE5D8',risk:'#C0392B',gold:'#D9A21B'};
   // product categories: muted, used only on the small dots beside listing names
@@ -1729,7 +1729,7 @@ a,.srclink,.more{color:#00709A!important}
     {k:'value',  label:'Price & value',       c:'#A9CCE8',fix:'Price position reviewed',med:12},
     {k:'service',label:'Customer service',    c:'#1F4E73',fix:'Case closed',med:4}];
   const icat=k=>ICATS.find(c=>c.k===k)||{k,label:k,c:'#8A9BAB',fix:'',med:5};
-  // readable text on a coloured tag: white or ink, whichever has the higher contrast
+  // readable text on a colored tag: white or ink, whichever has the higher contrast
   const textOn=hex=>{ const h=hex.replace('#',''), v=[0,2,4].map(i=>{let x=parseInt(h.substr(i,2),16)/255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)}), L=.2126*v[0]+.7152*v[1]+.0722*v[2];
     return (1.05/(L+.05))>=((L+.05)/(0.0209+.05))?'#FFFFFF':'#13263A'; };
   const RESOLVE={quality:.78,effect:.62,ease:.70,ship:.52,listing:.93,value:.35,service:.88};

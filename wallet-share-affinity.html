@@ -234,7 +234,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Association Rule Mining, Support &amp; Lift, Basket Gap Detection, Cross-Sell Prioritisation</span>
+                <span class="meta-value">Association Rule Mining, Support &amp; Lift, Basket Gap Detection, Cross-Sell Prioritization</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Position In Track</span>
@@ -259,7 +259,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>The three metrics are the easy part. The decision that shaped this engine was <strong>what&nbsp;counts as a category</strong>, and I settled it before writing any of the analysis, because getting it wrong does not throw an error. It produces a call list that sends a representative after something the account already buys. A representative sent on that call twice stops opening the list, and the engine is worth nothing after that.</p>
 
-    <p>A line item carries a part number, not a product group, so the lines resolve to a category through the manufacturer hierarchy. Two things break that. Parts sit in different groups depending on which vendor catalogue you read, so I set a precedence order instead of letting the join pick one at random. Others carry no group at all. Left alone they would drop out of every basket they belong to, so they are reported as their own figure. A category that looks absent from an account may only be absent from the mapping. The person making the call needs to know which.</p>
+    <p>A line item carries a part number, not a product group, so the lines resolve to a category through the manufacturer hierarchy. Two things break that. Parts sit in different groups depending on which vendor catalog you read, so I set a precedence order instead of letting the join pick one at random. Others carry no group at all. Left alone they would drop out of every basket they belong to, so they are reported as their own figure. A category that looks absent from an account may only be absent from the mapping. The person making the call needs to know which.</p>
 
     <p>A rule of the form &ldquo;accounts buying A also buy B&rdquo; is scored on three quantities. The first two are routinely quoted and routinely mislead; the third is the one that decides whether a rule is worth acting on.</p>
 
@@ -424,7 +424,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>5. What Makes This Actionable Rather Than Interesting</h2>
 
-    <p>Association rule mining produces a lot of output, most of which is unusable. Three constraints turn it into something a sales organisation can work.</p>
+    <p>Association rule mining produces a lot of output, most of which is unusable. Three constraints turn it into something a sales organization can work.</p>
 
     <ul>
         <li><strong>Rules are filtered on lift and ranked on money.</strong> Lift decides whether a relationship is real; the size of the account decides whether it is worth a visit. Ranking on lift alone surfaces strong relationships between two categories nobody buys much of.</li>
@@ -434,7 +434,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="impact-box">
         <h3>The Honest Limitation</h3>
-        <p>A gap is not always a competitor. An account may not buy rotors because it sends brake work out, because it is contractually supplied by a fleet programme, or because the category simply does not apply to the vehicles it services. The model cannot distinguish those from a genuine opening.</p>
+        <p>A gap is not always a competitor. An account may not buy rotors because it sends brake work out, because it is contractually supplied by a fleet program, or because the category simply does not apply to the vehicles it services. The model cannot distinguish those from a genuine opening.</p>
         <p>What it does do is reduce thousands of accounts to a short, ordered list where the hit rate is high enough to justify the calls; and a representative disqualifies a bad row in one conversation. The measure of the tool is not precision, it is whether the list beats calling in account-number order. It does, comfortably.</p>
     </div>
 

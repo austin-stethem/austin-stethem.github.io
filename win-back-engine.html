@@ -204,7 +204,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
-                <span class="meta-value">Trend Classification, Derived Labelling, Recency Decay, Recoverable Margin Ranking</span>
+                <span class="meta-value">Trend Classification, Derived Labeling, Recency Decay, Recoverable Margin Ranking</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Position In Track</span>
@@ -223,7 +223,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>Business-to-business customers rarely announce a departure. There is no cancellation, no exit interview, no field in the system that flips from active to lost. Orders get smaller, then less frequent, then stop; and because nothing in the <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0">ERP</span> changes state, the account sits in the customer master looking exactly like an account that simply had a quiet quarter.</p>
 
-    <p>The consequence is that most organisations cannot answer the question &ldquo;who did we lose last year, and what were they worth?&rdquo; without somebody reconstructing it by hand. Which means the cheapest available growth: a customer who has already bought, already been onboarded, and already had their pricing set up &mdash; is invisible.</p>
+    <p>The consequence is that most organizations cannot answer the question &ldquo;who did we lose last year, and what were they worth?&rdquo; without somebody reconstructing it by hand. Which means the cheapest available growth: a customer who has already bought, already been onboarded, and already had their pricing set up &mdash; is invisible.</p>
 
     <h2>2. The Label Is Already in the Transaction History</h2>
 
@@ -251,7 +251,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
     </table>
 
-    <p>That last row matters more than it looks. A labelled set containing both churned and retained accounts is a <span class="jargon-tooltip" data-tip="A dataset where the outcome is already known, allowing a model's predictions to be scored against reality rather than assumed to be correct." tabindex="0"><strong>validation set</strong></span>, and it is the thing that lets the competitive-threat scoring in Step 1 be checked rather than believed. If accounts that actually left do not score higher on competitive exposure than accounts that stayed, the exposure weighting is wrong &mdash; and that is discoverable before anybody acts on it.</p>
+    <p>That last row matters more than it looks. A labeled set containing both churned and retained accounts is a <span class="jargon-tooltip" data-tip="A dataset where the outcome is already known, allowing a model's predictions to be scored against reality rather than assumed to be correct." tabindex="0"><strong>validation set</strong></span>, and it is the thing that lets the competitive-threat scoring in Step 1 be checked rather than believed. If accounts that actually left do not score higher on competitive exposure than accounts that stayed, the exposure weighting is wrong &mdash; and that is discoverable before anybody acts on it.</p>
 
     <h2 id="dashboard">3. Ranking the Recoverable</h2>
 
@@ -424,13 +424,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             // At-risk cannot be a deeper decline than soft churn, or the labels invert.
             if (risk >= soft) {
                 // Invalid: at-risk is a deeper decline than soft churn, so the two
-                // labels have inverted. Colour it as the fault it is.
+                // labels have inverted. Color it as the fault it is.
                 // The sidebar is dark in both themes, so this takes a fixed value rather
                 // than an inverting token whose light variant would be muddy here.
                 el('v-risk').style.color = '#f0705c';
                 el('v-risk').title = 'At-risk threshold has met or passed the soft-churn threshold';
             } else {
-                // Valid. Clearing the inline colour lets .val-readout's amber apply,
+                // Valid. Clearing the inline color lets .val-readout's amber apply,
                 // so it matches the two readouts beside it and follows the theme.
                 el('v-risk').style.color = '';
                 el('v-risk').title = '';
@@ -570,7 +570,7 @@ window.TOUR = [
     text: 'So the labels are <b>derived</b> rather than collected. Comparing an opening quarter against the most recent one classifies every account without anyone recording anything new.',
     settle: 500 },
   { el: '#s-halflife',
-    text: 'Now the part that changes behaviour. Recovery odds decay with time since the last order — shorten the half-life and watch the ranking reorder.',
+    text: 'Now the part that changes behavior. Recovery odds decay with time since the last order — shorten the half-life and watch the ranking reorder.',
     action: function(){ el('s-halflife').value=4; model(); }, settle: 700 },
   { el: '#winback-body',
     text: 'A list sorted by size sends a rep to the biggest name, usually the one gone longest and hardest to recover. Sorting on <b>value times odds</b> inverts that.',

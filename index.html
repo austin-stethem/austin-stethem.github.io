@@ -483,6 +483,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
       <a href="#record">The record</a>
       <a href="#story">How it unfolded</a>
       <a href="#build">Method</a>
+      <a href="services.html">Services</a>
       <span class="theme-switch">
         <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
         <label class="sw"><input type="checkbox" class="themeToggle" aria-label="Dark mode"><span class="track"></span></label>
@@ -608,7 +609,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
           <div class="ritem"><b>Landed-Cost Allocation</b><span>Weight against value against cube: the choice changes which items look profitable.</span></div>
           <div class="ritem"><b>Quote Win/Loss Capture</b><span>The expensive one: a process change, not a script.</span></div>
           <div class="ritem"><b>Competitor Delta Tracking</b><span>Monthly snapshot differencing. Impossible to backfill, so worth starting early.</span></div>
-          <div class="ritem"><b>Incentive Attainment Gauges</b><span>Spiff and quota progress per rep and network-wide. The pricing layer decides what they can sell at; nothing currently shows whether the incentive pulled the behaviour it paid for.</span></div>
+          <div class="ritem"><b>Incentive Attainment Gauges</b><span>Spiff and quota progress per rep and network-wide. The pricing layer decides what they can sell at; nothing currently shows whether the incentive pulled the behavior it paid for.</span></div>
         </div>
       </div>
     </div>
@@ -627,10 +628,10 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
           <div class="t-fig">1st</div>
           <div class="t-note">The only net-positive result among peer distributors. I played a direct role in securing it.</div>
         </div>
-        <p class="caveat">That last line is the only realised financial outcome on this site, and it is here because it was scored outside the company, against peers who faced the same market and the same vendor pressure, but not the same river. I do not sit in a function that sees realised profit and loss. Where a number would be invented instead of measured, there is none.</p>
+        <p class="caveat">That last line is the only realized financial outcome on this site, and it is here because it was scored outside the company, against peers who faced the same market and the same vendor pressure, but not the same river. I do not sit in a function that sees realized profit and loss. Where a number would be invented instead of measured, there is none.</p>
         <div class="record-note">
           <div class="rn-lab">What that year involved</div>
-          <p>The city went under. The distribution centre that supplied every branch flooded, and was eighteen days from serving them again. Holding margin through that, and through the cost movement of the years either side of it, is the reason any of the work above exists; and the reason it is framed as <em>defence</em> rather than optimisation.</p>
+          <p>The city went under. The distribution center that supplied every branch flooded, and was eighteen days from serving them again. Holding margin through that, and through the cost movement of the years either side of it, is the reason any of the work above exists; and the reason it is framed as <em>defense</em> rather than optimization.</p>
           <p class="rn-point">Eighty branches sell what the pricing layer lets them sell.</p>
           <p>A tier structure that quietly gives away margin is not an abstraction to the people working those counters. It is their commission, then their hours, and eventually their store.</p>
         </div>
@@ -643,7 +644,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
       <p class="lede">None of this was planned as a portfolio. Each piece answered what the last one exposed.</p>
       <div class="line">
         <div class="ev"><div class="yr">Arrival</div><h3>Twenty years of accumulated pricing logic</h3><p>This was the first job out of college, and it began in the supply-chain aftermath of the pandemic, with vendor costs moving faster than anyone could reprice against. What I was handed was root-level pricing access, 565+ manufacturer lines, and a tier structure two decades in the making: every decision sensible when it was made, none of it ever reviewed as a whole.</p></div>
-        <div class="ev"><div class="yr">The years since</div><h3>Cost shock as the normal condition</h3><p>Successive tariff rounds, and then their unwind. The unwind is the part people miss: <strong>a&nbsp;lifted tariff does not restore a cost</strong>. Supply has to catch up, freight has to renormalise, surcharges come off on their own schedule &mdash; so the shock keeps arriving for months or years after the policy that caused it has reversed. Every model in the Defense track exists because of that lag.</p></div>
+        <div class="ev"><div class="yr">The years since</div><h3>Cost shock as the normal condition</h3><p>Successive tariff rounds, and then their unwind. The unwind is the part people miss: <strong>a&nbsp;lifted tariff does not restore a cost</strong>. Supply has to catch up, freight has to renormalize, surcharges come off on their own schedule &mdash; so the shock keeps arriving for months or years after the policy that caused it has reversed. Every model in the Defense track exists because of that lag.</p></div>
         <div class="ev"><div class="yr">The flood</div><h3>The warehouse goes under, the database does not know</h3><p>Inventory records kept promising stock that was underwater. Reconciling physical reality against the ERP kept the network transacting through it.</p></div>
         <div class="ev"><div class="yr">Consequence</div><h3>The data could not answer basic questions</h3><p>Entities with two names, customers geocoded to post office boxes, accounts with several owners. Five failure modes, each producing a plausible number a competent analyst would build on.</p></div>
         <div class="ev"><div class="yr">The measurement</div><h3>Hundreds of prices for one part</h3><p>With the foundation trustworthy, dispersion became measurable for the first time. One part, twelve months, and a spread covering everything from near break-even to full retail.</p></div>
@@ -711,7 +712,7 @@ const peak=DISPERSION.indexOf(max);
 const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* The tallest bucket is picked out in the amber accent.
-   Deliberately not --signal: that colour means "interactive" everywhere else on
+   Deliberately not --signal: that color means "interactive" everywhere else on
    the page, and a chart bar is not a control. */
 document.getElementById('ticks').innerHTML = DISPERSION.map((v,i)=>{
   const hi = (i===peak);
