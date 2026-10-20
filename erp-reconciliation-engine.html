@@ -220,7 +220,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
         <tr>
             <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-label">Built by</span>
                 <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
@@ -229,7 +229,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Context</span>
-                <span class="meta-value">June 2024 &mdash; Little Sioux River flood, Spencer, Iowa. 80-branch distribution network.</span>
+                <span class="meta-value">June 2024. Little Sioux River flood, Spencer, Iowa. 80-branch distribution network.</span>
             </td>
         </tr>
         </tbody>
@@ -244,25 +244,25 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>The Little Sioux River crested at 22.2 feet in the middle of the night, with no usable warning. The Spencer headquarters and primary regional warehousing were submerged before the sirens sounded. Four of the five buildings were flooded. The fifth could not be reached by car for two weeks. FEMA representatives who toured the distribution center likened the damage to Hurricane Katrina and Hurricane Hugo.</p>
 
-    <p>The flood was local. Spencer and the counties around it went under; the rest of the network did not, and neither did its customers or our vendors. Tuesday was still Tuesday everywhere else &mdash; orders placed, quotes needed, vendor costs moving on their own schedule. The only thing underwater was the building all of it was priced from.</p>
+    <p>The flood was local. Spencer and the counties around it went under; the rest of the network did not, and neither did its customers or our vendors. Tuesday was still Tuesday everywhere else: orders placed, quotes needed, vendor costs moving on their own schedule. The only thing underwater was the building all of it was priced from.</p>
 
-    <p>What followed was done by hand. There was no electricity and no sewer, so the work happened by headlamp: destroyed product shovelled out of the aisles, floors slick enough that people walked as though on ice, pressure washers and scrubbers following behind the crews hauling inventory to the curb. Offices were emptied and gutted, and people carried what was left of their own out to their cars. No crew was brought in for it. The people who worked there did it, and a great many of them were doing it with their own houses underwater.</p>
+    <p>What followed was done by hand. There was no electricity and no sewer, so the work happened by headlamp: destroyed product shoveled out of the aisles, floors slick enough that people walked as though on ice, pressure washers and scrubbers following behind the crews hauling inventory to the curb. Offices were emptied and gutted, and people carried what was left of their own out to their cars. No crew was brought in for it. The people who worked there did it, and a great many of them were doing it with their own houses underwater.</p>
 
     <p>I was one of them. What we owned was boxed in a relative's basement when the wall cracked end to end and the room filled; most of it did not come back. The pricing matrices went out anyway, on the days they were due, because eighty branches were quoting against them and the flood had not changed that.</p>
 
     <p>The distribution point was serving the network again eighteen days after the crest.</p>
 
-    <p>That hand count is where the reconciliation started. The system's inventory position was not corrected from a report, because no report knew what had happened &mdash; it was corrected against what people could physically find and put a number to. I worked from off-site backups and whatever desk was dry, deploying pricing matrices and tariff adjustments out to the network while the building they normally ran from was being shovelled out. To the customer base and the eighty branches, the company kept answering.</p>
+    <p>The reconciliation started with a hand count. The system's inventory position was not corrected from a report, because no report knew what had happened. It was corrected against what people could physically find and put a number to. I worked from off-site backups and whatever desk was dry, deploying pricing matrices and tariff adjustments out to the network while the building they normally ran from was being shoveled out. To the customer base and the eighty branches, the company kept answering.</p>
 
     <h2>2. The Failure Mode: Phantom Fulfillment</h2>
 
-    <p>During those weeks I held the pricing layer. Not as an assignment, there was no process for a warehouse being underwater, and root access to the pricing matrices sat with three people, one of whom could work remotely. I decided what got trusted and what got quarantined, and I made those calls in the hour not in a meeting, because a <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> waiting on a quote does not have an afternoon.</p>
+    <p>During those weeks I held the pricing layer. Not as an assignment: there was no process for a warehouse being underwater, and root access to the pricing matrices sat with three people, one of whom could work remotely. I decided what got trusted and what got quarantined, and I made those calls in the hour, not in a meeting, because a <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> waiting on a quote does not have an afternoon.</p>
 
-    <p>The most critical threat during the flood was a database disconnect. The <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> inherently assumed the primary warehouse inventory was intact. Left uncorrected, branches would order destroyed SKUs, resulting in catastrophic unfulfilled <span class="jargon-tooltip" data-tip="An order the system accepts against inventory that no longer physically exists. It consumes a promise date, a customer expectation, and a reroute cost before anyone discovers the stock is gone." tabindex="0"><strong>phantom orders</strong></span>.</p>
+    <p>The most dangerous threat during the flood was a disconnect between the database and the building. The <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> inherently assumed the primary warehouse inventory was intact. Left uncorrected, branches would keep ordering destroyed SKUs, and every one of those orders would fail as a <span class="jargon-tooltip" data-tip="An order the system accepts against inventory that no longer physically exists. It consumes a promise date, a customer expectation, and a reroute cost before anyone discovers the stock is gone." tabindex="0">phantom order</span>.</p>
 
     <p>This is the part worth dwelling on, because it is counterintuitive. The flood did not break the ERP. The ERP kept working perfectly, confidently allocating stock that was under four feet of river mud. A system that fails loudly gets fixed in an hour. A system that keeps promising things it can no longer deliver compounds quietly, order by order, until the damage is spread across every branch and every customer promise in the network.</p>
 
-    <p>The scanning equipment was gone, so there was no way to do this except by hand. I ran and worked the wall-to-wall counts myself, cataloging mud-covered stock by headlamp. Getting that physical count into the system is what stopped the phantom orders, and it is what the vendor credit claims were later built on &mdash; a credit you cannot evidence is a credit you do not get.</p>
+    <p>The scanning equipment was gone, so there was no way to do this except by hand. I ran and worked the wall-to-wall counts myself, cataloging mud-covered stock by headlamp. Getting that physical count into the system is what stopped the phantom orders, and it is what the vendor credit claims were later built on: a credit you cannot evidence is a credit you do not get.</p>
 
     <h2 id="dashboard">3. Modeling the Cost of Delay</h2>
     <p><em>The single variable that mattered was reconciliation velocity, how many hours the ERP was allowed to keep selling inventory that no longer existed. Move the sliders to see how that hour count converts into failed fulfillment. The 48-hour mark is what actually happened, achieved by hand. Zero hours is what an automated kill-switch would deliver.</em></p>
@@ -330,13 +330,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>4. From Heroics to Architecture</h2>
 
-    <p>The decision that came out of this was not technical. It was that a reconciliation a person performs under pressure is a heroic act, and one the system performs on a schedule is architecture; and that the first kind cannot be relied on twice. During the flood the check was me, working from off-site backups, and it held. It also would not have held if I had been unavailable, which is the part worth saying out loud.</p>
+    <p>The decision that came out of this was not technical. It was that a reconciliation a person performs under pressure is a heroic act, and one the system performs on a schedule is architecture, and the first kind cannot be relied on twice. During the flood the check was me, working from off-site backups, and it held. It also would not have held if I had been unavailable, which is the part worth saying out loud.</p>
 
         <p>The people relying on it were the branch counters. Every quote written during those weeks came off a pricing matrix somebody had to keep current by hand, and the person at the counter had no way to know whether the number in front of them was trustworthy. That is who a reconciliation is for, not the ledger, and not the report. It goes to whoever has to give a customer a price and be right about it. What replaced it is scheduled, boring, and does not depend on anyone being awake.</p>
 
-    <p>While the manual reconciliation saved the network from immediate cascade failure, operational heroics are not a scalable enterprise strategy. It worked because a small number of people were willing to count mud-covered inventory by headlamp for two days. That is not a control; it is a coincidence of staffing. The definitive architectural solution to a zero-warning physical disaster is an automated kill-switch.</p>
+    <p>While the manual reconciliation saved the network from immediate cascade failure, heroics are not a strategy. It worked because a small number of people were willing to count mud-covered inventory by headlamp for two days. That is not a control; it is a coincidence of staffing. The durable answer to a zero-warning physical disaster is an automated kill-switch.</p>
 
-    <p>By linking the ERP's warehouse availability status directly to localized IoT water sensors or USGS river gauge APIs, the system can trip a "Quarantine Status" the moment flood thresholds are breached. That would cut off the phantom orders and push fulfilment to other hubs while the water is still rising, without waiting for somebody to notice or for a warning that may not come.</p>
+    <p>By linking the ERP's warehouse availability status directly to localized IoT water sensors or USGS river gauge APIs, the system can trip a "Quarantine Status" the moment flood thresholds are breached. That would cut off the phantom orders and push fulfillment to other hubs while the water is still rising, without waiting for somebody to notice or for a warning that may not come.</p>
 
     <table class="protocol-table">
         <thead>
@@ -348,7 +348,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </thead>
         <tbody>
             <tr>
-                <td data-label="Protocol">Phase 1 &mdash; Manual Reconciliation</td>
+                <td data-label="Protocol">Phase 1, Manual Reconciliation</td>
                 <td data-label="Execution">Wall-to-wall physical cycle counting by headlamp in an unpowered, flooded warehouse.</td>
                 <td data-label="Outcome">Zeroed out destroyed SKUs, severing the phantom fulfillment loop before it propagated across the network.</td>
             </tr>
@@ -358,7 +358,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <td data-label="Outcome">Network-facing operations stayed continuous; the 80 branches and the B2B customer base saw no interruption.</td>
             </tr>
             <tr>
-                <td data-label="Protocol">Phase 3, Architectural Evolution</td>
+                <td data-label="Protocol">Phase 3, Architectural Evolution (designed)</td>
                 <td data-label="Execution">ERP availability status bound to IoT water sensors and USGS river gauge APIs.</td>
                 <td data-label="Outcome">Converts a 48-hour manual response into a zero-hour automated quarantine, isolating the blast radius without human intervention.</td>
             </tr>
@@ -369,18 +369,18 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>Almost nothing in this portfolio carries a realized financial figure, for a reason worth stating plainly: I do not sit in a function that sees realized profit and loss, and that information is held closely. Where a number would be invented rather than measured, there is no number.</p>
 
-    <p>This case is the exception, because the result was scoped outside the company rather than inside it. Our network belongs to a national alliance of independently owned distributors, which means annual performance is compared against peers who faced the same market, the same freight environment and the same vendor cost pressure; but not the same river.</p>
+    <p>This case is the exception, because the result was scoped outside the company rather than inside it. Our network belongs to a national alliance of independently owned distributors, which means annual performance is compared against peers who faced the same market, the same freight environment and the same vendor cost pressure, but not the same river.</p>
 
     <div class="impact-box">
         <h3>The Year of the Flood</h3>
-        <p>In the year the warehouse was destroyed, this network posted <strong>the&nbsp;only net-positive annual growth within the alliance.</strong> I played a direct role in securing it.</p>
+        <p>In the year the warehouse was destroyed, this network posted <strong>the&nbsp;only net-positive annual growth within the alliance., and I had a direct hand in it.</strong></p>
         <p>That is not a claim that reconciling a database caused growth. Growth in distribution comes from branches, salespeople, vendors and customers. The credit belongs across all of them. What the reconciliation did was narrower, and load-bearing: it kept the network transacting while its physical center was underwater. Orders routed. Prices deployed. Eighty branches and their customers got continuity instead of a supplier that vanished for a fortnight.</p>
         <p>The counterfactual is the point. A network that spends two weeks quoting from a phantom inventory position does not merely lose those two weeks. It loses accounts to competitors who were available when it was not, and it does not get them back when the water recedes. Against a peer group that lost nothing to a flood, holding the top of that table is the closest thing to a measured outcome I have, and it is external enough to be verifiable by somebody other than me.</p>
     </div>
 
     <div class="impact-box">
         <h3>What This Case Study Is Actually About</h3>
-        <p>Not the flood. The flood is the forcing function. The transferable lesson is that a <span class="jargon-tooltip" data-tip="The shared reference records a business runs on: who the customers are, what the items are, where the branches are. If these disagree between systems, every report built on them is wrong." tabindex="0">master data</span> system's worst failure mode is not going down &mdash; it is staying up while being wrong, because nothing alerts on confident inaccuracy.</p>
+        <p>Not the flood. The flood is the forcing function. The transferable lesson is that a <span class="jargon-tooltip" data-tip="The shared reference records a business runs on: who the customers are, what the items are, where the branches are. If these disagree between systems, every report built on them is wrong." tabindex="0">master data</span> system's worst failure mode is not going down. It is staying up while being wrong, because nothing alerts on confident inaccuracy.</p>
         <p>Every predictive model elsewhere in this portfolio: the elasticity tiers, the <span class="jargon-tooltip" data-tip="A computational algorithm that relies on repeated random sampling to obtain numerical results." tabindex="0">Monte Carlo</span> risk cone, the <span class="jargon-tooltip" data-tip="Intentionally taking lower margins on highly visible items while aggressively raising prices on blind/rare items to protect overall profitability." tabindex="0">cross-subsidization</span> cascade, rests on the assumption that the underlying data reflects physical reality. This is the discipline that keeps that assumption true, and the reason I treat data governance as a prerequisite to modeling rather than a chore that precedes it.</p>
     </div>
 
@@ -497,7 +497,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             const rateSub = document.getElementById('kpi-rate-sub');
             rateEl.innerText = destPct === 0 ? money(0) : money(hourlyRate) + ' / hr';
             rateSub.innerText = destPct === 0
-                ? 'No inventory loss — the ERP and the shelf agree'
+                ? 'No inventory loss: the ERP and the shelf agree'
                 : `${Math.round(DRAW_RATE * (destPct / 100))} order lines/hr strike destroyed stock at ${money(COST_PER_PHANTOM)} each`;
 
             renderChart(destPct, recHours);
@@ -626,9 +626,9 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 /* ── guided walkthrough ─────────────────────────────────────────────────────── */
 window.TOUR = [
   { el: '#kpi-phantom',
-    text: 'A flood destroyed the warehouse. The ERP did not know — inventory records kept promising stock that was underwater, and every branch kept quoting from them.' },
+    text: 'A flood destroyed the warehouse. The ERP did not know: inventory records kept promising stock that was underwater, and every branch kept quoting from them.' },
   { el: '#kpi-phantom',
-    text: 'This is the failure mode: <b>phantom fulfilment</b>. Not an outage, which is obvious and gets escalated, but a system confidently selling something that no longer exists.',
+    text: 'This is the failure mode: <b>phantom fulfillment</b>. Not an outage, which is obvious and gets escalated, but a system confidently selling something that no longer exists.',
     settle: 500 },
   { el: '#kpi-averted',
     text: 'The cost of delay compounds, because it is not the lost orders. It is accounts discovering a competitor was available when we were not, and not coming back when the water recedes.',

@@ -17,7 +17,7 @@
     <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
+    <meta property="og:image:alt" content="Austin Sonny Stethem | Pricing and Master Data Analyst">
     <meta name="twitter:card" content="summary_large_image">
     <title>A/B Testing &amp; Statistical Validation | Austin Sonny Stethem</title>
 
@@ -276,8 +276,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tbody>
             <tr>
                 <td class="meta-cell">
-                    <span class="meta-label">Principal Engineer</span>
-                    <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & Master Data Analyst</span>
+                    <span class="meta-label">Built by</span>
+                    <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
                 </td>
                 <td class="meta-cell">
                     <span class="meta-label">Core Competencies</span>
@@ -293,14 +293,14 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="scenario-box">
             <strong>The&nbsp;Enterprise Scenario (Step 4 of 5)</strong>
-            Our deterministic algorithm (Step 2) successfully identified the price floors needed to defend our margins, and our <span class="jargon-tooltip" data-tip="A computational algorithm that relies on repeated random sampling to obtain numerical results." tabindex="0">Monte Carlo</span> models (Step 3) confirmed our risk boundaries. However, mathematical theory must be validated by actual market behavior. Before we fully commit, I ran a controlled A/B test on the live B2B portal to find out whether the higher prices are costing us quote-to-order conversion.
+            The engine in Step 2 set the floors and the <span class="jargon-tooltip" data-tip="A computational algorithm that relies on repeated random sampling to obtain numerical results." tabindex="0">Monte Carlo</span> simulation in Step 3 drew the risk around them. Neither is evidence of what customers do. Before the pricing was committed network-wide, I ran a controlled A/B test on the B2B portal to find out whether the higher prices were costing quote-to-order conversion.
         </div>
 
         <h2>1. The Problem: Testing Market Resistance</h2>
 
     <p>A price change and the volume that follows it are separated by weeks of ordinary variance, which is why nobody could say afterwards whether a change had worked: the signal was there and no method existed to pull it out of the noise. I built the method and put it in front of the people approving the increase beforehand, not after: a test designed once the result is in is not a test.</p>
-        <p>Before deploying the <em>Algorithmic <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">Margin</span> Defense</em> engine across the entire network, executive leadership needed empirical proof that dynamic pricing wouldn't erode B2B conversion rates. A mathematical model that protects margins is entirely useless if it causes customers to abandon their shopping carts in protest.</p>
-        <p>To validate the algorithm safely, I architected a randomized A/B test on our B2B E-Commerce portal. <strong>Group A (Control)</strong> received our legacy static pricing. <strong>Group B (Treatment)</strong> received the new dynamic, algorithmic pricing. To separate a real change in conversion from ordinary daily variance, I applied a <span class="jargon-tooltip" data-tip="A statistical method comparing two conversion rates to judge whether the difference is real or ordinary variance." tabindex="0"><strong>Two-Proportion Z-Test</strong></span> to the results.</p>
+        <p>Before the <em>Algorithmic <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">Margin</span> Defense</em> engine went across the whole network, leadership wanted proof, not a model, that dynamic pricing would not cost conversion on the portal. A model that protects margin and empties the cart has not protected anything.</p>
+        <p>So the test was randomized. <strong>Group A (Control)</strong> saw the legacy static prices; <strong>Group B (Treatment)</strong> saw the new algorithmic ones. A <span class="jargon-tooltip" data-tip="A statistical method comparing two conversion rates to judge whether the difference is real or ordinary variance." tabindex="0"><strong>Two-Proportion Z-Test</strong></span> on the results separated a real change in conversion from ordinary daily variance.</p>
     </div>
 
     <!-- INFOGRAPHIC DASHBOARD -->
@@ -322,7 +322,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <div class="logic-instruction-box">
             <strong>How&nbsp;to read this simulator:</strong>
             We just raised prices on the B2B portal. Naturally, we expect some customers to walk away (Conversion Rate drops). Use the green slider below to drop the <strong>Variant Conversion</strong> to simulate losing sales.<br><br>
-            If the <span style="color: var(--data-positive); font-weight: bold;">Green Curve (New Prices)</span> completely separates from the <span style="color: var(--data-series); font-weight: bold;">Blue Curve (Old Prices)</span>, the drop is mathematically real, meaning the prices are too high. <strong>However, if the curves overlap, the drop cannot be separated from random daily noise.</strong> That makes it defensible to hold the higher prices; but note the Minimum Detectable Effect below: an inconclusive test means the drop is smaller than this sample can resolve, not that it is zero.
+            If the <span style="color: var(--data-positive); font-weight: bold;">Green Curve (New Prices)</span> completely separates from the <span style="color: var(--data-series); font-weight: bold;">Blue Curve (Old Prices)</span>, the drop is mathematically real, meaning the prices are too high. <strong>However, if the curves overlap, the drop cannot be separated from random daily noise.</strong> That makes it defensible to hold the higher prices. But note the Minimum Detectable Effect below: an inconclusive test means the drop is smaller than this sample can resolve, not that it is zero.
         </div>
 
         <!-- Interactive Chart Section -->
@@ -335,7 +335,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <div class="chart-wrapper">
                 <canvas id="bellChart" role="img" aria-label="Overlaid sampling distributions for the control and variant conversion rates, with the 95 percent significance boundary marked"></canvas>
             </div>
-            <p style="margin: 14px 0 0 0; font-size: 0.75rem; line-height: 1.5; color: var(--panel-muted); text-align: left; font-style: italic;">Reading note: the two curves are the sampling distributions of each arm's conversion rate. The dashed boundary is drawn on the pooled standard error of the <em>difference</em>, which is &radic;2 wider; so it sits further out than 1.96&sigma; of either curve on its own. Significance is the Z-score and p-value above, not whether a curve visually clears the line.</p>
+            <p style="margin: 14px 0 0 0; font-size: 0.75rem; line-height: 1.5; color: var(--panel-muted); text-align: left; font-style: italic;">Reading note: the two curves are the sampling distributions of each arm's conversion rate. The dashed boundary is drawn on the pooled standard error of the <em>difference</em>, which is &radic;2 wider, so it sits further out than 1.96&sigma; of either curve on its own. Significance is the Z-score and p-value above, not whether a curve visually clears the line.</p>
             <p id="inference-caveat" role="status" aria-live="polite" style="margin: 14px 0 0 0; font-size: 0.8rem; line-height: 1.55; color: var(--panel-muted); text-align: left; border-left: 3px solid var(--panel-border); padding-left: 14px;"></p>
         </div>
 
@@ -389,21 +389,21 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <div class="portfolio-content">
         <h2>2. Translating Math to Business Strategy</h2>
 
-    <p>What this deliberately does not do is decide the price. It answers one question for the person who has to approve the change: <strong>would&nbsp;we be able to tell if this went wrong?</strong> A pilot too small to resolve the effect is worse than no pilot, because it returns a confident-looking number that cannot be distinguished from noise; and that number will end up in a deck. Establishing the threshold before the test runs is the difference between evidence and a story.</p>
+    <p>What this deliberately does not do is decide the price. It answers one question for the person who has to approve the change: <strong>would&nbsp;we be able to tell if this went wrong?</strong> A pilot too small to resolve the effect is worse than no pilot, because it returns a confident-looking number that cannot be distinguished from noise, and that number will end up in a deck. Establishing the threshold before the test runs is the difference between evidence and a story.</p>
 
         <div class="impact-box">
             <h3>The Power of "Inconclusive" Tests</h3>
-            <p>If you look at the simulator's default state, you will notice a massive business advantage hidden inside the math. We raised prices and conversion fell from 10.0% to 9.5%. Sales wanted the increase reverted, which was a fair reading of what they could see, they carry the volume number, and half a point is real money at their end of it.</p>
-            <p><strong>But&nbsp;the A/B test showed the drop was statistically inconclusive.</strong> Because the green curve still overlapped the blue baseline curve, the drop in volume could not be attributed to the price increase. It was within the normal bounds of daily random variance. That is what settled it, and it settled it without anyone having to win on seniority. Sales got something better than being overruled: a test that would have shown a real drop if there had been one. We held the higher prices firm. We generated substantial <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0"><strong>EBITDA</strong></span> without triggering a measurable exodus of customer volume.</p>
+            <p>The simulator's default state carries the useful case. We raised prices and conversion fell from 10.0% to 9.5%. Sales wanted the increase reverted, which was a fair reading of what they could see: they carry the volume number, and half a point is real money at their end of it.</p>
+            <p><strong>But&nbsp;the A/B test showed the drop was statistically inconclusive.</strong> Because the green curve still overlapped the blue baseline curve, the drop in volume could not be attributed to the price increase. It was within the normal bounds of daily random variance. That is what settled it, and it settled it without anyone having to win on seniority. Sales got something better than being overruled: a test that would have shown a real drop if there had been one. We held the higher prices, and no measurable volume left with them.</p>
             <p style="margin-bottom: 0;"><strong>The&nbsp;discipline that makes this defensible:</strong> a non-significant result is not proof of no effect, so the decision was paired with a power calculation. We sized the test to detect the smallest volume loss that would have made the price increase EBITDA-negative. Passing that bar is what justified holding; the p-value alone would not have.</p>
         </div>
 
-        <p>This strict adherence to statistical modeling acts as an organizational guardrail. It prevents knee-jerk price drops when sales are slightly sluggish, but it also instantly rings the alarm bell (flashing the "Volume Loss" warning) the moment a price increase actually crosses the mathematical threshold of destroying demand.</p>
+        <p>That is the guardrail. It stops a reflex price cut when sales are merely slow, and it flags a volume loss (the "Volume Loss" warning in the simulator) the moment a price increase actually crosses the threshold where demand is being destroyed.</p>
 
         <!-- NEXT STEP NAVIGATION -->
         <div class="next-step-box">
             <h3>Ecosystem Step 5: FIFO Inventory Revaluation</h3>
-            <p>With our algorithmic pricing changes statistically validated in the market, the last part of the cycle has the shortest window. Because we decoupled our retail logic from our physical receiving docks, we are now raising prices <em>today</em> on inventory we bought <em>yesterday</em> at the old, cheaper cost. The next model measures the resulting cash windfall.</p>
+            <p>With the price changes validated in the market, the last part of the cycle has the shortest window. Prices rose <em>today</em> on inventory bought <em>yesterday</em> at the old, cheaper cost. The next model measures the windfall that gap produces, and how long it lasts.</p>
             </div>
 
             <nav class="project-navigation" aria-label="Case study navigation">
@@ -418,7 +418,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </nav>
 
             <div class="nda-note">
-            <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live B2B conversion metrics, exact pricing adjustments, and true order volumes have been replaced with randomized abstractions. The statistical methodology, Two-Proportion Z-Test architecture, and hypothesis validation frameworks accurately reflect the mathematical rigor used in the production environment.
+            <strong>Data Governance Note:</strong> No employer data appears in this dashboard. Conversion rates, price adjustments and order volumes are synthetic, generated rather than anonymized, because anonymized records can be re-identified and generated ones cannot. The method is real: the two-proportion Z-test and the power calculation are the ones used in production.
         </div>
 
     </div> <!-- END PORTFOLIO CONTENT -->
@@ -495,7 +495,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                     caveat.innerHTML = `The ${observedDropPts.toFixed(1)}pt drop clears the 95% threshold. Treat it as a real demand response, not variance.`;
                 }
             } else {
-                badge.innerHTML = "INCONCLUSIVE — SAFE TO HOLD<br><span style='font-size: 0.65rem; font-weight: normal;'>Any drop in sales is statistically inconclusive.</span>";
+                badge.innerHTML = "INCONCLUSIVE: SAFE TO HOLD<br><span style='font-size: 0.65rem; font-weight: normal;'>Any drop in sales is statistically inconclusive.</span>";
                 badge.className = "status-badge status-safe";
                 caveat.innerHTML = `<strong>Read this carefully:</strong> inconclusive is not the same as "no effect." At N = ${n.toLocaleString()} per arm this test can only reliably detect a shift of about ${mdePts.toFixed(2)}pts. A real drop smaller than that would look exactly like this result. Holding the price is defensible; claiming zero impact is not.`;
             }
@@ -690,7 +690,7 @@ window.TOUR = [
     text: 'The engines upstream produce a recommended price. This page answers what has to come before deployment: <b>would we be able to tell whether it worked?</b>',
     before: function(){ document.getElementById('slider-n').value=1000; updateSimulation(); } },
   { el: '#slider-n',
-    text: 'At a thousand observations per arm the two distributions overlap almost entirely. A result here means nothing — and it would still arrive as a number somebody could put in a deck.',
+    text: 'At a thousand observations per arm the two distributions overlap almost entirely. A result here means nothing, and it would still arrive as a number somebody could put in a deck.',
     settle: 600 },
   { el: '#slider-n',
     text: 'Raise the sample and they separate. Where they stop overlapping is where the test can actually detect the effect we are looking for.',

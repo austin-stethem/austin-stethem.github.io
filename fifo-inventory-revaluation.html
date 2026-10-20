@@ -17,7 +17,7 @@
     <meta property="og:image" content="https://austin-stethem.github.io/og-preview.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Austin Sonny Stethem — Strategic Pricing and Master Data Analyst">
+    <meta property="og:image:alt" content="Austin Sonny Stethem | Pricing and Master Data Analyst">
     <meta name="twitter:card" content="summary_large_image">
     <title>FIFO Inventory Revaluation | Austin Sonny Stethem</title>
 
@@ -230,8 +230,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
         <tr>
             <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
-                <span class="meta-value">Austin Sonny Stethem<br>Strategic Pricing & Master Data Analyst</span>
+                <span class="meta-label">Built by</span>
+                <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Core Competencies</span>
@@ -239,7 +239,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             </td>
             <td class="meta-cell">
                 <span class="meta-label">Strategic Focus</span>
-                <span class="meta-value">Capitalizing on supply chain inflation to generate short-term EBITDA windfalls.</span>
+                <span class="meta-value">Pricing on replacement cost, and stating the windfall as avoided cost rather than earned profit.</span>
             </td>
         </tr>
     </tbody>
@@ -247,7 +247,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="scenario-box">
         <strong>The&nbsp;Enterprise Scenario (Step 5 of 5)</strong>
-        Our statistical A/B tracking (Step 4) confirms our new price points are holding firm in the market without sacrificing volume. The last part of the cycle is the one with the shortest window. Because our supply chain teams secured 60 days of inventory <em>before</em> the 15% cost spike hit, and we decoupled our retail price from our physical receiving docks, we are selling cheap stock at the newly elevated retail tiers. I modeled this <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0">EBITDA</span> windfall.
+        The A/B test in Step 4 showed the new prices holding without a measurable loss of volume. The last part of the cycle has the shortest window. The network holds roughly 60 days of stock bought <em>before</em> the 15% increase, and with the retail price keyed to replacement cost rather than the receiving dock, that stock is selling at the new tiers. This page measures the <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0">EBITDA</span> gap and how long it lasts.
     </div>
 
     <h2>1. Situation & Task: The Inflationary Lag</h2>
@@ -257,14 +257,14 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <h2>2. Action: Pricing on Replacement Cost</h2>
 
     <p>The decision here is <strong>which&nbsp;cost a price is allowed to reference</strong>, and it belongs to accounting as much as to pricing, which is why it needed agreeing rather than implementing. Average cost is the intuitive answer and the wrong one: it lags, so during a rising market every price it produces is anchored to inventory already sold. Replacement cost is forward-looking and harder to defend in a month when nothing moved. I argued for replacement cost and for stating the windfall as avoided cost, not earned profit, because the second framing is the one that survives a question from a controller.</p>
-    <p>I transitioned the organizational pricing mechanism away from <em><span class="jargon-tooltip" data-tip="Pricing based on the blended cost of all inventory in stock. Often delays price increases and leaks margin." tabindex="0">Average Cost</span></em> and strictly onto <em><span class="jargon-tooltip" data-tip="Pricing based on what it will cost to buy the next unit from the vendor. Generates immediate windfall on old stock." tabindex="0">Replacement Cost</span></em>. By architecting this business logic into the <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0">ERP</span>, the system instantly triggers a retail markup the moment a vendor price increase is announced &mdash; regardless of what is sitting on our shelves.</p>
+    <p>The pricing trigger moved off <em><span class="jargon-tooltip" data-tip="Pricing based on the blended cost of all inventory in stock. Often delays price increases and leaks margin." tabindex="0">Average Cost</span></em> and onto <em><span class="jargon-tooltip" data-tip="Pricing based on what it will cost to buy the next unit from the vendor. Generates immediate windfall on old stock." tabindex="0">Replacement Cost</span></em>, keyed in the <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0">ERP</span> to the vendor announcement instead of the receiving dock, so the markup fires the day the letter arrives, regardless of what is sitting on the shelf.</p>
 
-    <p><strong>Systems Integration (The Ecosystem):</strong> In reality, vendor cost increases are never a flat percentage across all SKUs. As demonstrated in my <em>Algorithmic Margin Defense</em> and <em><span class="jargon-tooltip" data-tip="Involving deliberate randomness. A stochastic model answers 'how bad could this get' rather than 'what is the expected number'." tabindex="0">Stochastic</span> Optimization</em> models, cost shocks vary wildly by item. Those engines handle the micro-level <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span>, protecting <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust." tabindex="0">KVIs</span> and finding margin on <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes. A price margin increase will likely destroy sales volume." tabindex="0">elastic items</span>, to ultimately calculate a <strong><span class="jargon-tooltip" data-tip="The calculated net cost increase across an entire product portfolio, weighted by the specific sales volume and elasticity of each affected item." tabindex="0">Weighted Average Cost Spike</span></strong> for the portfolio. It is that finalized, blended deficit that feeds into this macro-level FIFO model.</p>
+    <p><strong>Systems Integration (The Ecosystem):</strong> In reality, vendor cost increases are never a flat percentage across all SKUs. As demonstrated in my <em>Algorithmic Margin Defense</em> and <em><span class="jargon-tooltip" data-tip="Involving deliberate randomness. A stochastic model answers 'how bad could this get' rather than 'what is the expected number'." tabindex="0">Stochastic</span> Optimization</em> models, cost shocks differ sharply by item. Those engines handle the micro-level <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span>, protecting <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust." tabindex="0">KVIs</span> and finding margin on <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes. A price margin increase will likely destroy sales volume." tabindex="0">elastic items</span>, to arrive at a <strong><span class="jargon-tooltip" data-tip="The calculated net cost increase across an entire product portfolio, weighted by the specific sales volume and elasticity of each affected item." tabindex="0">Weighted Average Cost Spike</span></strong> for the portfolio. It is that finalized, blended deficit that feeds into this macro-level FIFO model.</p>
 
-    <p>Because accounting strictly follows FIFO (First-In, First-Out), we are now selling inventory that was bought cheaply, but charging the customer the new, inflated market rate. This gap between the old physical cost and the new retail price creates a temporary, massive spike in margin: <strong><span class="jargon-tooltip" data-tip="A sudden, significant increase in operational profit (EBITDA) generated by selling legacy, lower-cost inventory at newly inflated market prices." tabindex="0">The&nbsp;EBITDA Windfall.</span></strong></p>
+    <p>Because accounting strictly follows FIFO (First-In, First-Out), we are now selling inventory that was bought cheaply, but charging the customer the new, inflated market rate. This gap between the old physical cost and the new retail price creates a temporary lift in realized margin, which this page calls <strong><span class="jargon-tooltip" data-tip="A sudden, significant increase in operational profit (EBITDA) generated by selling legacy, lower-cost inventory at newly inflated market prices." tabindex="0">the&nbsp;EBITDA windfall</span></strong>. The last section says what that lift actually is.</p>
 
     <h2>3. Interactive FIFO Windfall Simulator</h2>
-    <p><em>Use the operational sliders below to simulate a vendor cost shock on a high-velocity product line. The engine will calculate the exact amount of "Free EBITDA" generated by executing the price increase immediately while bleeding through the existing physical inventory buffer.</em></p>
+    <p><em>Use the operational sliders below to simulate a vendor cost shock on a high-velocity product line. The engine calculates the cost avoided by raising the price immediately while the existing inventory bleeds through at the old cost.</em></p>
 
     <p class="tour-launch"><button type="button" data-tour-start class="tour-btn">&#9654; Guided walkthrough</button> <span class="tour-hint">Four steps. Moves the controls for you.</span></p>
 
@@ -312,7 +312,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <div class="kpi-card" style="border-top-color: var(--panel-positive);">
                     <div class="kpi-title">Total EBITDA Windfall</div>
                     <div class="kpi-value" id="out-windfall" style="color: var(--panel-positive);">$--</div>
-                    <div class="kpi-sub" id="out-windfall-sub">Pure P&amp;L Profit Generation</div>
+                    <div class="kpi-sub" id="out-windfall-sub">Cost avoided on legacy stock</div>
                 </div>
             </div>
 
@@ -335,7 +335,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="next-step-box">
         <h3>Ecosystem Architecture Complete</h3>
-        <p>This concludes the 5-step Enterprise Pricing Architecture scenario. We successfully identified the geospatial threat, probabilistically modeled the risk floor, deployed guardrail-constrained ERP updates, established the statistical feedback loop to validate the market, and ultimately captured the FIFO inventory windfall.</p>
+        <p>That closes the five-step cycle: the exposure mapped, the floors set and cross-subsidized, the risk around them simulated, the result tested against live conversion, and the inventory gap measured for what it is.</p>
             </div>
 
             <nav class="project-navigation" aria-label="Case study navigation">
@@ -350,7 +350,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </nav>
 
             <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live standard costs, actual vendor increase schedules, and specific SKU velocities have been replaced with randomized abstractions. The mathematical mechanism for capitalizing on FIFO (First-In, First-Out) inventory layers is the same logic that protected margin through the cost movement of the last several years.
+        <strong>Data Governance Note:</strong> No employer data appears in this dashboard. Standard costs, vendor increase schedules and SKU velocities are synthetic, generated rather than anonymized, because anonymized records can be re-identified and generated ones cannot. The mechanism, pricing against FIFO inventory layers, is the same logic that protected margin through the cost movement of the last several years.
     </div>
 
     <!-- Watermark for Portfolio Protection -->
@@ -427,7 +427,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             if (sub) {
                 sub.innerText = unitsOwned > 0
                     ? `${Math.round(unitsOwned).toLocaleString()} legacy units × $${windfallPerUnit.toFixed(2)} avoided cost`
-                    : 'No buffer — nothing to revalue';
+                    : 'No buffer: nothing to revalue';
             }
 
             renderChart(labels, baselineProfitData, windfallData);
@@ -577,7 +577,7 @@ window.TOUR = [
     text: 'And it is temporary. Raise turn velocity and the old stock depletes faster, so the same windfall arrives sooner and ends sooner.',
     action: function(){ document.getElementById('slider-velocity').value=4000; updateSimulation(); }, settle: 700 },
   { el: '#dashboard',
-    text: 'The measurement worth arguing about: this is not profit created by the price increase. It is <b>cost avoided</b> because the stock was bought early. Measuring it against the price rise instead of replacement cost overstates it — the same wrong-vintage error that makes a trailing price series look like below-cost selling.' }
+    text: 'The measurement worth arguing about: this is not profit created by the price increase. It is <b>cost avoided</b> because the stock was bought early. Measuring it against the price rise instead of replacement cost overstates it: the same wrong-vintage error that makes a trailing price series look like below-cost selling.' }
 ];
 </script>
 </body>

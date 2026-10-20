@@ -198,7 +198,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
         <tr>
             <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-label">Built by</span>
                 <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
@@ -222,13 +222,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>A distribution network runs on delivery. Every <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> sends vehicles out on routes, and the shape of those routes determines freight cost, driver hours and how quickly a customer gets a part. None of it appears in the <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0">ERP</span> as geography. It appears as a branch identifier and a customer identifier, and the physical relationship between the two is inferred rather than recorded.</p>
 
-    <p>Plotting that relationship: a line from every branch to every account it delivers to &mdash; produces a map that looks like overlapping spiders. The value is not the picture. It is that the picture makes two things visible that no report shows: how far the average delivery actually travels, and how often two branches are driving into the same town.</p>
+    <p>Plotting that relationship, a line from every branch to every account it delivers to, produces a map that looks like overlapping spiders. The value is not the picture. It is that the picture makes two things visible that no report shows: how far the average delivery actually travels, and how often two branches are driving into the same town.</p>
 
     <h2>2. The Input Problem, Stated Openly</h2>
 
     <p>Every branch knew its own routes exactly. What did not exist was the view across all of them, because building it needs every delivery address geocoded first, which is weeks of work to answer a question nobody had a reason to ask. I already had that address set from the competitor mapping, so the question cost a week instead of a budget line. I would rather bring an answer than a request.</p>
 
-    <p>The customer's physical location is not reliably recorded. Branches are not required to populate a <span class="jargon-tooltip" data-tip="The address an order is delivered to — often not the address the account is billed at, and the one that matters for routing." tabindex="0">ship-to</span> address distinct from the billing address, and in practice they frequently do not; because the drivers already know the routes. From an operational standpoint that is entirely rational. From a mapping standpoint it means a meaningful share of delivery points are geocoded from a billing address, and some of those are post office boxes or corporate accounts payable departments in another town.</p>
+    <p>The customer's physical location is not reliably recorded. Branches are not required to populate a <span class="jargon-tooltip" data-tip="The address an order is delivered to, often not the address the account is billed at, and the one that matters for routing." tabindex="0">ship-to</span> address distinct from the billing address, and in practice they frequently do not, because the drivers already know the routes. From an operational standpoint that is entirely rational. From a mapping standpoint it means a meaningful share of delivery points are geocoded from a billing address, and some of those are post office boxes or corporate accounts payable departments in another town.</p>
 
     <p>This cannot be fixed at source. Asking eighty branches to maintain a field that provides them no operational benefit is a request that will be complied with for about a fortnight. So the correct response is not to pretend the input is clean, but to bound the error and publish the bound.</p>
 
@@ -257,7 +257,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="impact-box">
         <h3>The Residual, Measured</h3>
-        <p>Across the surviving delivery set, <strong>57.6%</strong> of points sit within ten miles of their branch and <strong>88%</strong> within twenty-five. Only <strong>0.3%</strong> fall in the last five miles before the shield boundary; so the shield is clipping a handful of genuine outliers rather than truncating a long tail that would change the picture.</p>
+        <p>Across the surviving delivery set, <strong>57.6%</strong> of points sit within ten miles of their branch and <strong>88%</strong> within twenty-five. Only <strong>0.3%</strong> fall in the last five miles before the shield boundary, so the shield is clipping a handful of genuine outliers rather than truncating a long tail that would change the picture.</p>
         <p>Roughly <strong>4%</strong> of points are geocoded from a postal box. Those sit further out on every measure, with a median distance about three miles greater than street-addressed points. That is the size of the known distortion, and it is small enough that it does not move a conclusion about route overlap, which is what the map is for.</p>
         <p>Leadership was told this when the tool was delivered. A map presented as precise would have been wrong; a map presented as bounded, with the bound stated, is usable.</p>
     </div>
@@ -296,7 +296,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <div class="sidebar-subheader">Why the Threshold Matters</div>
             <div class="logic-box">
                 <strong>Most overlap is a long tail</strong>
-                A large share of branch-town pairs exist to serve a single customer, and together they carry a small fraction of revenue. Counting those as redundant routes inflates the finding by an order of magnitude and produces a number no operations manager will believe. Raise the threshold and the exposure falls sharply, what remains is routes that genuinely run.
+                A large share of branch-town pairs exist to serve a single customer, and together they carry a small fraction of revenue. Counting those as redundant routes inflates the finding by an order of magnitude and produces a number no operations manager will believe. Raise the threshold and the exposure falls sharply; what remains is routes that genuinely run.
             </div>
         </div>
 
@@ -352,7 +352,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>4. What the Map Is Allowed to Conclude</h2>
 
-    <p>The output of this goes to an operations manager who knows those routes better than the model does, and that shapes what it is allowed to say. A dollar figure for waste invites an argument he will win, because he knows why the second branch runs that town. A list of routes nobody can account for invites an answer. I built it to produce the second; and the threshold control exists because the difference between the two conclusions is a definitional choice about what counts as a route, not a finding, and the person reading it should be able to see that for himself.</p>
+    <p>The output of this goes to an operations manager who knows those routes better than the model does, and that shapes what it is allowed to say. A dollar figure for waste invites an argument he will win, because he knows why the second branch runs that town. A list of routes nobody can account for invites an answer. I built it to produce the second, and the threshold control exists because the difference between the two conclusions is a definitional choice about what counts as a route, not a finding, and the person reading it should be able to see that for himself.</p>
 
     <p>A redundant route is not proof of waste. The second branch may stock a product line the nearest one does not, in which case the extra miles buy something. It may serve an account with a contractual relationship to that specific location. It may be covering for a vehicle shortage that resolved months ago and was never revisited.</p>
 
@@ -570,13 +570,13 @@ window.TOUR = [
     text: 'Most towns receive deliveries from more than one branch. Whether that is redundancy or stocking depth is where the entire finding lives.',
     before: function(){ el('s-minacct').value=1; el('s-trips').value=3; update(); } },
   { el: '#k-cost',
-    text: 'Count every branch-town pair as a scheduled route and the exposure is enormous — and wrong. A large share of those pairs exist to serve a single customer.',
+    text: 'Count every branch-town pair as a scheduled route and the exposure is enormous, and wrong. A large share of those pairs exist to serve a single customer.',
     settle: 500 },
   { el: '#s-minacct',
     text: 'Raise the threshold so only pairs serving several accounts count as a route, and watch the number collapse.',
     action: function(){ el('s-minacct').value=12; update(); }, settle: 800 },
   { el: '#thresholdChart',
-    text: 'Same data, a conclusion <b>three and a half times smaller</b> — and only one of the two is defensible. Getting this unit wrong is how a logistics analysis produces a figure no operations manager will believe.',
+    text: 'Same data, a conclusion <b>three and a half times smaller</b>, and only one of the two is defensible. Getting this unit wrong is how a logistics analysis produces a figure no operations manager will believe.',
     settle: 500 },
   { el: '#dashboard-panel',
     text: 'What survives is a list of conversations, not a savings figure. <b>Here are eleven routes I cannot explain, and what each costs if the explanation turns out to be nothing</b> invites an answer; a dollar claim invites an argument.' }

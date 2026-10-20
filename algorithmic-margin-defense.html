@@ -339,7 +339,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
         <tr>
             <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-label">Built by</span>
                 <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
@@ -356,17 +356,17 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="scenario-box">
         <strong>The&nbsp;Enterprise Scenario (Step 2 of 5)</strong>
-        With our vulnerable territories securely mapped (Step 1), a 15% vendor cost increase is landing. Standard ERP systems apply blanket markups that blindly destroy volume on sensitive items. I built a deterministic algorithm to cross-subsidize our <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust." tabindex="0"><strong>Key&nbsp;Value Items (KVIs)</strong></span> and safely defend our blended <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> before we stress-test those thresholds against market noise.
+        With the vulnerable territories mapped in Step 1, a 15% vendor cost increase is landing. A standard ERP answers that with a blanket markup, which bleeds volume on the items customers price-check and leaves margin on the ones they do not. This page is the deterministic engine that cross-subsidizes the <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust." tabindex="0"><strong>Key&nbsp;Value Items (KVIs)</strong></span> and defends the blended <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span>, before the next step stress-tests those thresholds against market noise.
     </div>
 
     <h2>1. Initiative: Proactive Margin Defense</h2>
 
     <div class="impact-box" style="margin-top:20px;">
         <h3>One Part Number, 400+ Prices</h3>
-        <p>The <span class="jargon-tooltip" data-tip="The stack of prices for one item, one per customer type, each derived from the one below it. Eight tiers here, from warehouse cost up to retail list." tabindex="0">price ladder</span> described further down this page has eight tiers. It is supposed to produce eight prices for any given part &mdash; one per customer class, each derived from the one beneath it.</p>
-        <p>I pulled the rolling twelve-month transaction history for a single high-volume item, the sort of part that moves in every <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> every week. Across the network it had sold at <strong>400+ distinct prices</strong>, ranging from <strong>the&nbsp;lowest transacted price to the highest</strong>.</p>
-        <p>Not 400+ transactions. 400+ different <em>prices</em> for one part number, fifty-two times the number the <span class="jargon-tooltip" data-tip="One rung of the price ladder — a customer class with its own standing discount." tabindex="0">tier</span> structure was designed to produce, and a new distinct price roughly every twenty-one hours for a year. The customer at the top of that range paid <strong>104% more</strong> than the customer at the bottom for an identical item.</p>
-        <p>The obvious next move is to set that range against the cost, and it is worth being careful about how. Store intake on this part <em>today</em> is break-even, which would put the bottom of the observed range twelve dollars underneath break-even and imply units sold at a loss.</p>
+        <p>The <span class="jargon-tooltip" data-tip="The stack of prices for one item, one per customer type, each derived from the one below it. Eight tiers here, from warehouse cost up to retail list." tabindex="0">price ladder</span> described further down this page has eight tiers. It is supposed to produce eight prices for any given part: one per customer class, each derived from the one beneath it.</p>
+        <p>I pulled the rolling twelve-month transaction history for a single high-volume item, the sort of part that moves in every <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">branch</span> every week. Across the network it had sold at <strong>400+ distinct prices</strong>.</p>
+        <p>Not 400+ transactions. 400+ different <em>prices</em> for one part number, fifty-two times the number the <span class="jargon-tooltip" data-tip="One rung of the price ladder: a customer class with its own standing discount." tabindex="0">tier</span> structure was designed to produce, and a new distinct price roughly every twenty-one hours for a year. The customer at the top of that range paid <strong>104% more</strong> than the customer at the bottom for an identical item.</p>
+        <p>The obvious next move is to set that range against the cost, and it is worth being careful about how. Store intake on this part <em>today</em> is break-even, which would put the bottom of the observed range underneath break-even and imply units sold at a loss.</p>
 
         <div class="scenario-box">
             <strong>Why&nbsp;that comparison is not yet valid</strong>
@@ -374,25 +374,24 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             The defensible version joins every transaction to the cost effective on its own date and computes margin at the moment of sale. That is a harder query and the only one that settles whether anything sold below water.
         </div>
 
-        <p>What survives without a cost basis at all is the <span class="jargon-tooltip" data-tip="The spread of prices actually charged for one item. A ladder designed to produce eight prices producing hundreds is dispersion." tabindex="0">dispersion</span> itself, and it is enough. A ladder with eight rungs produced 400+ prices. The highest of them reached under 70% of list, so the top of the structure is theoretical &mdash; nobody pays it. The transacted band occupies roughly half the distance between store cost and list, scattered across four hundred points inside that half. Whatever the cost was on any given day, a spread of that width on one part number is not a pricing strategy being executed with local flexibility. It is the absence of one.</p>
+        <p>What survives without a cost basis at all is the <span class="jargon-tooltip" data-tip="The spread of prices actually charged for one item. A ladder designed to produce eight prices producing hundreds is dispersion." tabindex="0">dispersion</span> itself, and it is enough. A ladder with eight rungs produced 400+ prices. The highest of them reached under 70% of list, so the top of the structure is theoretical; nobody pays it. The transacted band occupies roughly half the distance between store cost and list, scattered across four hundred points inside that half. Whatever the cost was on any given day, a spread of that width on one part number is not a pricing strategy being executed with local flexibility. It is the absence of one.</p>
         <p>None of this was decided. It is a tier structure that accreted over decades, per-customer special terms layered on top of it, and discretion to <span class="jargon-tooltip" data-tip="A price set by hand at the counter, outside the rules the system would have applied." tabindex="0">override</span> at the counter, compounding transaction by transaction until a commodity part carried 400+ prices. Nobody had measured the dispersion, because no report existed that would show it. Every model on this page exists because of that number.</p>
     </div>
-    <p><strong>The&nbsp;Situation:</strong> In legacy distribution models, price updates are largely reactive. When a vendor issues a sudden price increase or global freight costs spike, standard <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> systems often trigger a blanket markup across the entire parts catalog. This creates massive business risk: it instantly bleeds volume on highly competitive, <span class="jargon-tooltip" data-tip="Products where customer demand is highly sensitive to price changes. A price margin increase will likely destroy sales volume." tabindex="0"><strong>elastic items</strong></span> while simultaneously leaving margin on the table for blind, <span class="jargon-tooltip" data-tip="Products (often rare or captive) where demand remains stable even if prices are raised." tabindex="0"><strong>inelastic parts</strong></span>.</p>
-    <p>The dispersion was measurable and invisible at the same time: every transaction was correct on its own terms, and no report aggregated them in a way that would show the spread. I wrote the report that surfaced it, then built the model that answers it. I designed this deterministic <span class="jargon-tooltip" data-tip="Intentionally taking lower margins on highly visible items while aggressively raising prices on blind/rare items to protect overall profitability." tabindex="0"><strong>cross-subsidization</strong></span> engine and took it to executive leadership: a way to absorb a vendor cost increase and recalculate targets across a catalog of hundreds of thousands of parts &mdash; without sacrificing volume on our most sensitive items.</p>
+    <p>The dispersion was measurable and invisible at the same time: every transaction was correct on its own terms, and no report aggregated them in a way that would show the spread. I wrote the report that surfaced it, then built the model that answers it. The model is a deterministic <span class="jargon-tooltip" data-tip="Intentionally taking lower margins on highly visible items while raising prices on blind or rare items to protect overall profitability." tabindex="0"><strong>cross-subsidization</strong></span> engine: a way to absorb a vendor cost increase and recalculate targets across a catalog of hundreds of thousands of parts without giving up volume on the items customers watch.</p>
 
     <h2>2. Action: Elasticity Stratification &amp; Cross-Subsidization</h2>
-    <p>Instead of evaluating SKUs in a vacuum, the system calculates the <span class="jargon-tooltip" data-tip="The total aggregate profit margin across the entire product catalog, balancing high and low-margin items." tabindex="0"><strong>Blended Portfolio Margin</strong></span> by processing raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> data through a <span class="jargon-tooltip" data-tip="A cascading pricing logic that applies different markup rules based on how sensitive a product category is to price changes." tabindex="0"><strong>multi-echelon Elasticity Waterfall</strong></span>. I structured the logic into three distinct groups:</p>
+    <p>Rather than pricing each SKU on its own, the engine works on the <span class="jargon-tooltip" data-tip="The total aggregate profit margin across the entire product catalog, balancing high and low-margin items." tabindex="0"><strong>blended portfolio margin</strong></span>: raw <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0"><strong>ERP</strong></span> data is sorted into three <span class="jargon-tooltip" data-tip="A cascading pricing logic that applies different markup rules based on how sensitive a product category is to price changes." tabindex="0"><strong>elasticity groups</strong></span>, and the cost shock is absorbed across them in a fixed order:</p>
     <ul>
-        <li><strong>Group A (10% Volume - High-Velocity KVIs):</strong> Ultra-sensitive Known Value Items. Because these items drive standard transactional volume, they are mathematically locked to a maximum 3% variance to defend market perception.</li>
-        <li><strong>Group B (40% Volume - Mid-Tier Core):</strong> Standard competitive parts. Allowed up to a 20% variance before the system hard-locks the price to prevent volume erosion.</li>
-        <li><strong>Group C (50% Volume - Highly Elastic Tail):</strong> Blind or captive items, often weighted toward Heavy <span class="jargon-tooltip" data-tip="A high-volume trade customer — typically a fleet or a large repair operation — who earns the deepest standing discount." tabindex="0">Jobber</span> accounts. Permitted up to 70% variance, this group acts as a shock absorber. It generates margin surplus to explicitly subsidize the defense of Group A.</li>
+        <li><strong>Group A (10% of volume, the KVIs):</strong> the items a customer prices against the store down the road. Held to a 3% ceiling, because the price on these is the store's reputation.</li>
+        <li><strong>Group B (40% of volume, the core):</strong> ordinary competitive parts. Allowed up to 20% before the cap holds, so the volume does not erode.</li>
+        <li><strong>Group C (50% of volume, the tail):</strong> blind or captive items, often weighted toward heavy <span class="jargon-tooltip" data-tip="A high-volume trade customer, typically a fleet or a large repair operation, who earns the deepest standing discount." tabindex="0">Jobber</span> accounts. Permitted up to 70%, this group is the shock absorber: the surplus it generates pays for the defense of Group A.</li>
     </ul>
 
     <h3>Markup Is Not Margin</h3>
     <p>One subtlety sinks most naive pricing models. A permitted <em>price markup</em> does not convert into an equal number of <em>margin points</em>. Raise price 70% on an item already at 48% margin and the margin reaches 69.4%: a gain of 21.4 points, not 70. So the engine converts every permitted markup into its true margin contribution before deciding what deficit a tier can absorb. Skip that step and the model reports Group C as able to swallow any shock. The cascade into B and A never fires.</p>
 
     <h3>The FIFO Inventory Shield</h3>
-    <p>This model uses physical <span class="jargon-tooltip" data-tip="Quantity On Hand: The physical inventory currently sitting in the warehouse." tabindex="0"><strong>Quantity on Hand (QOH)</strong></span> as a <span class="jargon-tooltip" data-tip="First-In, First-Out: Selling older, lower-cost inventory at newly elevated retail prices to generate an immediate profit buffer." tabindex="0"><strong>FIFO (First-In, First-Out) windfall shield</strong></span>. Before calculating necessary price increases, the algorithm measures how many days of inventory we hold at the old, cheaper cost. It then calculates the exact markups required on Group C and B to mathematically pay for the remaining cost deficit, ensuring enterprise <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0"><strong>EBITDA</strong></span> targets are protected without touching the <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust." tabindex="0"><strong>KVIs</strong></span>.</p>
+    <p>This model uses physical <span class="jargon-tooltip" data-tip="Quantity On Hand: The physical inventory currently sitting in the warehouse." tabindex="0"><strong>Quantity on Hand (QOH)</strong></span> as a <span class="jargon-tooltip" data-tip="First-In, First-Out: Selling older, lower-cost inventory at newly elevated retail prices to generate an immediate profit buffer." tabindex="0"><strong>FIFO (First-In, First-Out) windfall shield</strong></span>. Before it calculates any price increase, the algorithm measures how many days of inventory the network holds at the old, cheaper cost. It then works out the markups on Groups C and B that pay for the deficit left over, so the <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0"><strong>EBITDA</strong></span> target holds without touching the <span class="jargon-tooltip" data-tip="Key Value Items: High-visibility products where price determines customer trust." tabindex="0"><strong>KVIs</strong></span>.</p>
 
     <h2>3. The Price Ladder: What Actually Moves</h2>
 
@@ -400,7 +399,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>The <span class="jargon-tooltip" data-tip="How much demand moves when price moves. High elasticity means a small increase loses sales; low elasticity means it does not." tabindex="0">elasticity</span> groups above describe <em>products</em>. Cutting the other way is the customer ladder, and in a legacy distribution ERP that ladder is a compounding chain of divisors rather than a set of independent prices. Each tier is derived from the one beneath it, so a single cost movement at intake has to travel the whole chain before it reaches the prices that carry the volume.</p>
 
-    <p>The structure below is the real one. The divisors are illustrative proxies: the actual margins are proprietary &mdash; but the sequence, the audiences, and the gaps are exactly as the system is built.</p>
+    <p>The structure below is the real one. The divisors are illustrative proxies: the actual margins are proprietary, but the sequence, the audiences, and the gaps are exactly as the system is built.</p>
 
     <table class="ladder-table">
         <thead>
@@ -417,8 +416,8 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr class="cost-row"><td class="tier">P10</td><td>Store intake: the branch's own cost</td><td>&divide; 0.90</td><td class="num">$111.11</td><td class="num">10.0%</td></tr>
             <tr><td class="tier">P9</td><td>Employee purchase</td><td>&divide; 0.90</td><td class="num">$123.46</td><td class="num">19.0%</td></tr>
             <tr><td class="tier">P8</td><td>Special rate, category-specific (paint, chemicals)</td><td>&divide; 0.94</td><td class="num">$131.34</td><td class="num">23.9%</td></tr>
-            <tr class="volume-row"><td class="tier">P4</td><td>Jobber &mdash; fleets and top accounts, deepest loyalty discount</td><td>&divide; 0.88</td><td class="num">$149.25</td><td class="num">33.0%</td></tr>
-            <tr class="volume-row"><td class="tier">P3</td><td>Dealer / <span class="jargon-tooltip" data-tip="A repair shop that buys parts to fit them, rather than to resell them." tabindex="0">installer</span> &mdash; buys from us <em>and</em> from our jobbers</td><td>&divide; 0.94</td><td class="num">$158.77</td><td class="num">37.0%</td></tr>
+            <tr class="volume-row"><td class="tier">P4</td><td>Jobber: fleets and top accounts, deepest loyalty discount</td><td>&divide; 0.88</td><td class="num">$149.25</td><td class="num">33.0%</td></tr>
+            <tr class="volume-row"><td class="tier">P3</td><td>Dealer / <span class="jargon-tooltip" data-tip="A repair shop that buys parts to fit them, rather than to resell them." tabindex="0">installer</span>: buys from us <em>and</em> from our jobbers</td><td>&divide; 0.94</td><td class="num">$158.77</td><td class="num">37.0%</td></tr>
             <tr><td class="tier">P2</td><td>Good customers, small shops, frequent walk-ins</td><td>&divide; 0.88</td><td class="num">$180.42</td><td class="num">44.6%</td></tr>
             <tr><td class="tier">P1</td><td>Retail list</td><td>&divide; 0.80</td><td class="num">$225.53</td><td class="num">55.7%</td></tr>
         </tbody>
@@ -426,7 +425,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <p class="ladder-caption">P7, P6 and P5 are unused. Nobody designs a scheme with holes in it; they accrete. The two highlighted tiers carry the overwhelming majority of transaction volume, which is the only reason any of this matters financially.</p>
 
     <h3>Consequence 1: The Dollar Amplification</h3>
-    <p>Because every tier is derived from the one below it, the cumulative multiple from intake to list is roughly <strong>2.26&times;</strong>. A ten dollar movement in <span class="jargon-tooltip" data-tip="Vendor price plus freight, duty and handling — what the unit actually cost to get onto the shelf, not what the invoice said." tabindex="0">landed cost</span> does not require a ten dollar movement in <span class="jargon-tooltip" data-tip="The top of the ladder: what a walk-in customer pays with no discount applied." tabindex="0">list price</span> &mdash; it requires <strong>$22.55</strong>. Percentage-wise the increase passes through unchanged at every tier, which is precisely why the dollar figure surprises people who have only ever seen the percentage.</p>
+    <p>Because every tier is derived from the one below it, the cumulative multiple from intake to list is roughly <strong>2.26&times;</strong>. A ten dollar movement in <span class="jargon-tooltip" data-tip="Vendor price plus freight, duty and handling: what the unit actually cost to get onto the shelf, not what the invoice said." tabindex="0">landed cost</span> does not require a ten dollar movement in <span class="jargon-tooltip" data-tip="The top of the ladder: what a walk-in customer pays with no discount applied." tabindex="0">list price</span>; it requires <strong>$22.55</strong>. Percentage-wise the increase passes through unchanged at every tier, which is precisely why the dollar figure surprises people who have only ever seen the percentage.</p>
 
     <h3>Consequence 2: Sticky Pricing Bleeds Fastest Where the Volume Is</h3>
     <p>Leave the ladder untouched through a 10% cost increase and every tier loses margin, but not evenly. The tiers with the thinnest starting margin lose the most points:</p>
@@ -436,10 +435,10 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <li><strong>P3&nbsp;dealer:</strong> 37.0% &rarr; 30.7% &nbsp;(&minus;6.3 pts)</li>
         <li><strong>P1&nbsp;retail list:</strong> 55.7% &rarr; 51.2% &nbsp;(&minus;4.4 pts)</li>
     </ul>
-    <p>The tiers that hurt least are the ones nobody buys at. Six to seven points of margin evaporate precisely where the transactions are, which is what makes a delay of weeks &mdash; not months &mdash; financially material.</p>
+    <p>The tiers that hurt least are the ones nobody buys at. Six to seven points of margin evaporate precisely where the transactions are, which is what makes a delay of weeks, not months, financially material.</p>
 
     <h3>Consequence 3: Partial Re-Indexing Can Invert the Ladder</h3>
-    <p>This is the trap, and it is the reason the cascade in the dashboard below moves tiers in a defined order rather than opportunistically. The obvious political move under cost pressure is to re-index the tiers with the least resistance and leave the biggest accounts alone. Do that literally &mdash; re-index P4 to the new cost while holding P3 flat; and the arithmetic produces this:</p>
+    <p>This is the trap, and it is the reason the cascade in the dashboard below moves tiers in a defined order rather than opportunistically. The obvious political move under cost pressure is to re-index the tiers with the least resistance and leave the biggest accounts alone. Do that literally, re-indexing P4 to the new cost while holding P3 flat, and the arithmetic produces this:</p>
     <ul>
         <li>P4 jobber, re-indexed: <strong>$164.17</strong></li>
         <li>P3 dealer, held flat: <strong>$158.77</strong></li>
@@ -451,7 +450,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
     <h2 id="dashboard">4. Interactive Execution Dashboard</h2>
 
     <p class="tour-launch"><button type="button" data-tour-start class="tour-btn">▶ Guided walkthrough</button> <span class="tour-hint">Four steps. Moves the controls for you.</span></p>
-    <p><em>Adjust the market disruption sliders below to simulate a sudden cost spike. Click "Execute Margin Defense" to trigger the deterministic algorithm. It will apply your physical inventory shield and dynamically calculate the required cross-subsidization markups needed to defend the Blended Target Margin. Push freight past roughly 20% with a low inventory buffer and you will watch the cascade run out of elastic headroom.</em></p>
+    <p><em>Adjust the market disruption sliders below to simulate a sudden cost spike. Click "Execute Margin Defense" to trigger the deterministic algorithm. It applies the inventory shield and calculates the cross-subsidization markups needed to defend the Blended Target Margin. Push freight past roughly 20% with a low inventory buffer and you will watch the cascade run out of elastic headroom.</em></p>
 
     <div class="dashboard-container">
         <div class="dash-sidebar">
@@ -562,7 +561,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="code-annotation">
         <strong>Phase 1: <strong>Data Sanitization</strong> &amp; Mapping</strong>
-        We cannot run optimization math on dirty data. This function catches missing vendor costs to prevent division-by-zero errors, and automatically maps our raw ERP data into our new Elasticity Groups.
+        Optimization math does not survive dirty data. This function catches missing vendor costs before they become division-by-zero errors, and maps the raw ERP tiers onto the three elasticity groups.
     </div>
     <pre class="code-block" tabindex="0"><code><span class="code-comment"># Algorithmic Margin Defense &amp; Cross-Subsidization Engine</span>
 <span class="code-keyword">import</span> pandas <span class="code-keyword">as</span> pd
@@ -645,7 +644,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="next-step-box">
         <h3>Ecosystem Step 3: Risk Modeling</h3>
-        <p>We have our algorithmic guardrails built, but before we push these deterministic rules to the live ERP, we need to mathematically simulate the risk of these new price floors. The next model tests that strategy against chaotic market conditions.</p>
+        <p>The guardrails are built. Before they go to the live ERP, the new floors need testing against market conditions that do not hold still, which is the next model.</p>
             </div>
 
             <nav class="project-navigation" aria-label="Case study navigation">
@@ -660,7 +659,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </nav>
 
             <div class="nda-note">
-        <strong>Data Governance Note:</strong> To comply with Corporate NDA parameters, live transactional data, proprietary margin targets, and exact landed-cost arrays have been replaced with randomized proxies. The figures above are synthetic. The architecture is not: the elasticity stratification and the cross-subsidization cascade behave exactly as the production model does.
+        <strong>Data Governance Note:</strong> No employer data appears in this dashboard. Transaction data, margin targets and landed-cost arrays are synthetic, generated rather than anonymized, because anonymized records can be re-identified and generated ones cannot. The architecture is not: the elasticity stratification and the cross-subsidization cascade behave exactly as the production model does.
     </div>
 
     <footer class="watermark">&copy; 2026 Austin Sonny Stethem. All rights reserved.</footer>
@@ -785,7 +784,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                         badgeHTML = `<span class="badge-elastic">GENERATING SURPLUS</span>`;
                     }
                 } else {
-                    displayedAction = g.id === 'A' ? `0.0% \u2014 locked` : `0.0%`;
+                    displayedAction = g.id === 'A' ? `0.0% (locked)` : `0.0%`;
                     badgeHTML = g.id === 'A'
                         ? `<span class="badge-safe">SHIELDED</span>`
                         : `<span class="badge-safe">NO ACTION</span>`;
@@ -1028,7 +1027,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 /* ── guided walkthrough ─────────────────────────────────────────────────────── */
 window.TOUR = [
   { el: '#slider-comp',
-    text: 'A 15% vendor cost increase has landed. This control sets how much of it we try to pass through on the <b>competitive</b> items — the ones a shop prices against a rival down the road.',
+    text: 'A 15% vendor cost increase has landed. This control sets how much of it we try to pass through on the <b>competitive</b> items, the ones a shop prices against a rival down the road.',
     before: function(){ document.getElementById('slider-comp').value = 15; document.getElementById('slider-freight').value = 15; triggerSimulation(); } },
   { el: '#slider-comp',
     text: 'Pass the full increase through on those items and we hold margin on paper. Watch the blended result.',

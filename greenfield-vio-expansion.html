@@ -207,7 +207,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
         <tr>
             <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-label">Built by</span>
                 <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
@@ -226,7 +226,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="scenario-box">
         <strong>Where this sits in the track</strong>
-        Step 1 built the competitive footprint and used it defensively &mdash; who is near our accounts, and what happens when they consolidate. The same asset inverted answers a different question: where is there demand that <em>nobody</em> is serving.
+        Step 1 built the competitive footprint and used it defensively: who is near our accounts, and what happens when they consolidate. The same asset inverted answers a different question: where is there demand that <em>nobody</em> is serving.
     </div>
 
     <p><span class="jargon-tooltip" data-tip="Demand in a geography that nobody is currently serving, or that we are not serving." tabindex="0">Whitespace</span> analysis has an obvious first move. Take vehicle population by geography, subtract the areas already inside somebody's service coverage, and what remains is demand without a supplier. That produces a map with holes in it, and the holes look like opportunities.</p>
@@ -257,7 +257,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr><td data-label="Input">Vehicle population by geography</td><td data-label="Source">Registration data, aggregated to corridor</td><td data-label="Why">The demand denominator. Parts consumption tracks the installed vehicle base far more closely than it tracks population.</td></tr>
             <tr><td data-label="Input">Our service contours</td><td data-label="Source">Branch coordinates plus drive-time scaling</td><td data-label="Why">Defines what is already served, in time rather than miles.</td></tr>
             <tr><td data-label="Input">Competitor contours</td><td data-label="Source">The rooftop census from Step 1</td><td data-label="Why">Uncovered by us but covered by two rivals is not an opportunity.</td></tr>
-            <tr><td data-label="Input">Addressable spend per vehicle</td><td data-label="Source">Internal revenue against known trade-area vehicle counts</td><td data-label="Why">Converts a vehicle count into a revenue ceiling. This is the figure most whitespace analyzes get wrong by an order of magnitude, because it is not the retail price of a part &mdash; it is the distributor-channel spend attributable to a vehicle per year.</td></tr>
+            <tr><td data-label="Input">Addressable spend per vehicle</td><td data-label="Source">Internal revenue against known trade-area vehicle counts</td><td data-label="Why">Converts a vehicle count into a revenue ceiling. This is the figure most whitespace analyses get wrong by an order of magnitude, because it is not the retail price of a part but the distributor-channel spend attributable to a vehicle per year.</td></tr>
             <tr><td data-label="Input">Branch operating cost and buildout</td><td data-label="Source">Finance</td><td data-label="Why">Without it the model can only ever say yes.</td></tr>
         </tbody>
     </table>
@@ -266,7 +266,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2 id="dashboard">3. Testing a Corridor Against a Building</h2>
 
-    <p><em>Each corridor below is uncovered. Adjust the assumptions and watch which ones survive. The capture rate is the share of addressable spend a new location would win &mdash; higher in genuine whitespace, lower where a competitor is within reach.</em></p>
+    <p><em>Each corridor below is uncovered. Adjust the assumptions and watch which ones survive. The capture rate is the share of addressable spend a new location would win: higher in genuine whitespace, lower where a competitor is within reach.</em></p>
 
     <p class="tour-launch"><button type="button" data-tour-start class="tour-btn">&#9654; Guided walkthrough</button> <span class="tour-hint">Five steps. Moves the controls for you.</span></p>
 
@@ -360,16 +360,16 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>4. What the Model Is For</h2>
 
-    <p>The audience for this is whoever approves capital, and what they need is not a ranked list of opportunities. It is a defensible reason to say no to most of them. A whitespace map that recommends every corridor it finds is worse than no map, because it spends the credibility of the next proposal too. The sliders are here so the argument becomes a disagreement about one number: the capture rate &mdash; rather than a disagreement about the whole model.</p>
+    <p>The audience for this is whoever approves capital, and what they need is not a ranked list of opportunities. It is a defensible reason to say no to most of them. A whitespace map that recommends every corridor it finds is worse than no map, because it spends the credibility of the next proposal too. The sliders are here so the argument becomes a disagreement about one number, the capture rate, rather than a disagreement about the whole model.</p>
 
-    <p>The value is not the list of viable corridors. It is that the same tool produces the list of <em>rejected</em> ones, with a number attached to each rejection. A corridor carrying 9,500 uncovered vehicles looks like an opportunity on a map and fails on contribution at every realistic capture rate &mdash; and being able to show that in a sentence is worth more than another green pin.</p>
+    <p>The value is not the list of viable corridors. It is that the same tool produces the list of <em>rejected</em> ones, with a number attached to each rejection. A corridor carrying 9,500 uncovered vehicles looks like an opportunity on a map and fails on contribution at every realistic capture rate, and being able to show that in a sentence is worth more than another green pin.</p>
 
     <p>It also makes the assumptions arguable, which is the point of putting them on sliders. Nobody is going to agree with a single capture-rate estimate. What they can agree on is a threshold: at what capture rate does this corridor become fundable, and is that rate plausible given who else is nearby. That converts a forecast into a conversation about one number.</p>
 
     <div class="impact-box">
         <h3>The Honest Limitation</h3>
         <p>Vehicle population is a proxy for demand, not a measure of it. A corridor full of vehicles whose owners service them at dealerships, or a corridor whose shops are locked into a competitor's program agreement, will register as demand and deliver none. The model sizes the ceiling; it does not predict penetration.</p>
-        <p>The correction is to calibrate the capture rate against branches already open in comparable geographies rather than assuming one &mdash; which is possible, because the trade-area work in the defensive track already measures exactly that for every existing location.</p>
+        <p>The correction is to calibrate the capture rate against branches already open in comparable geographies rather than assuming one, which is possible, because the trade-area work in the defensive track already measures exactly that for every existing location.</p>
     </div>
 
     <div class="next-step-box">
@@ -543,7 +543,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 /* ── guided walkthrough ─────────────────────────────────────────────────────── */
 window.TOUR = [
   { el: '#s-capture',
-    text: 'Every corridor below is uncovered — no branch of ours within a reasonable drive. Finding them is the easy half.',
+    text: 'Every corridor below is uncovered: no branch of ours within a reasonable drive. Finding them is the easy half.',
     before: function(){ el('s-capture').value=45; el('s-spend').value=320; model(); } },
   { el: '#k-viable',
     text: 'The hard half is which of them pays for a building. At these assumptions <b>one of the six</b> clears a four-year payback.',
@@ -555,7 +555,7 @@ window.TOUR = [
     text: 'Note the rejections: a corridor that cannot cover the branch\'s own operating cost never pays back <b>at any horizon</b>, so no payback figure is shown at all.',
     settle: 500 },
   { el: '#dashboard-panel',
-    text: 'The assumptions sit on sliders deliberately. Nobody agrees with a single capture-rate estimate — but they can agree on the rate at which a corridor becomes fundable, which turns a forecast into an argument about one number.',
+    text: 'The assumptions sit on sliders deliberately. Nobody agrees with a single capture-rate estimate, but they can agree on the rate at which a corridor becomes fundable, which turns a forecast into an argument about one number.',
     action: function(){ el('s-capture').value=45; model(); } }
 ];
 </script>

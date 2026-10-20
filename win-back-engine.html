@@ -199,7 +199,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
         <tr>
             <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-label">Built by</span>
                 <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
@@ -221,13 +221,13 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         Step 2 costs a building. This step costs a phone call to somebody who already knows the company, already has an account number, and already knows how the delivery works.
     </div>
 
-    <p>Business-to-business customers rarely announce a departure. There is no cancellation, no exit interview, no field in the system that flips from active to lost. Orders get smaller, then less frequent, then stop; and because nothing in the <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0">ERP</span> changes state, the account sits in the customer master looking exactly like an account that simply had a quiet quarter.</p>
+    <p>Business-to-business customers rarely announce a departure. There is no cancellation, no exit interview, no field in the system that flips from active to lost. Orders get smaller, then less frequent, then stop, and because nothing in the <span class="jargon-tooltip" data-tip="Enterprise Resource Planning. The central software system a company uses to manage inventory, sales, and daily operations." tabindex="0">ERP</span> changes state, the account sits in the customer master looking exactly like an account that simply had a quiet quarter.</p>
 
-    <p>The consequence is that most organizations cannot answer the question &ldquo;who did we lose last year, and what were they worth?&rdquo; without somebody reconstructing it by hand. Which means the cheapest available growth: a customer who has already bought, already been onboarded, and already had their pricing set up &mdash; is invisible.</p>
+    <p>The consequence is that most organizations cannot answer the question &ldquo;who did we lose last year, and what were they worth?&rdquo; without somebody reconstructing it by hand. Which means the cheapest available growth, a customer who has already bought, already been onboarded, and already had their pricing set up, is invisible.</p>
 
     <h2>2. The Label Is Already in the Transaction History</h2>
 
-    <p>Leaving has a signature. An account that stopped buying has a revenue series that decays, and one that switched suppliers has a series that decays sharply and then flatlines. That signature is enough to classify accounts without collecting anything new &mdash; the only requirement is a transaction extract that reaches further back than the trailing twelve months most reports default to.</p>
+    <p>Leaving has a signature. An account that stopped buying has a revenue series that decays, and one that switched suppliers has a series that decays sharply and then flatlines. That signature is enough to classify accounts without collecting anything new. The only requirement is a transaction extract that reaches further back than the trailing twelve months most reports default to.</p>
 
         <p>The first decision was <strong>how&nbsp;far back the window has to reach</strong>. Standard reporting stops at twelve months, which is exactly long enough to hide the thing being looked for: an account that left fourteen months ago has no opening quarter to decline from, so it reads as a quiet small account rather than a loss. I went at the transaction tables directly to get a longer series.</p>
 
@@ -251,11 +251,11 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
     </table>
 
-    <p>That last row matters more than it looks. A labeled set containing both churned and retained accounts is a <span class="jargon-tooltip" data-tip="A dataset where the outcome is already known, allowing a model's predictions to be scored against reality rather than assumed to be correct." tabindex="0"><strong>validation set</strong></span>, and it is the thing that lets the competitive-threat scoring in Step 1 be checked rather than believed. If accounts that actually left do not score higher on competitive exposure than accounts that stayed, the exposure weighting is wrong &mdash; and that is discoverable before anybody acts on it.</p>
+    <p>That last row matters more than it looks. A labeled set containing both churned and retained accounts is a <span class="jargon-tooltip" data-tip="A dataset where the outcome is already known, allowing a model's predictions to be scored against reality rather than assumed to be correct." tabindex="0"><strong>validation set</strong></span>, and it is the thing that lets the competitive-threat scoring in Step 1 be checked rather than believed. If accounts that actually left do not score higher on competitive exposure than accounts that stayed, the exposure weighting is wrong, and that is discoverable before anybody acts on it.</p>
 
     <h2 id="dashboard">3. Ranking the Recoverable</h2>
 
-    <p>No one asked for a churn list, because the company did not know it was missing one &mdash; those accounts were still in the master and still looked active. I derived the labels instead of waiting for a system that was never going to record them.</p>
+    <p>No one asked for a churn list, because the company did not know it was missing one: those accounts were still in the master and still looked active. I derived the labels instead of waiting for a system that was never going to record them.</p>
 
     <p><em>Not every lost account is worth chasing. Recovery probability falls as the gap since the last order widens, so the ranking is expected recoverable <span class="jargon-tooltip" data-tip="Revenue minus what the goods cost, before any overhead. The dollars a sale actually contributes." tabindex="0">gross profit</span>, value multiplied by the odds, rather than raw value.</em></p>
 
@@ -289,7 +289,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <div class="sidebar-subheader">Ranking Logic</div>
             <div class="logic-box">
                 <strong>Value times odds, not value</strong>
-                A large account lost two years ago and a smaller one lost last quarter are not equivalent targets. Recovery probability decays exponentially with months since the last order, and the list is sorted on gross profit multiplied by that probability; so a rep's day goes to the calls most likely to land.
+                A large account lost two years ago and a smaller one lost last quarter are not equivalent targets. Recovery probability decays exponentially with months since the last order, and the list is sorted on gross profit multiplied by that probability, so a rep's day goes to the calls most likely to land.
             </div>
         </div>
 
@@ -308,7 +308,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
                 <div class="kpi-card k-blue">
                     <div class="kpi-card-header">Gross Profit Lost</div>
                     <div class="kpi-value" id="k-lost">--</div>
-                    <div class="kpi-sub">Annualised, churned accounts</div>
+                    <div class="kpi-sub">Annualized, churned accounts</div>
                 </div>
                 <div class="kpi-card k-green">
                     <div class="kpi-card-header">Expected Recoverable</div>
@@ -564,19 +564,19 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 /* ── guided walkthrough ─────────────────────────────────────────────────────── */
 window.TOUR = [
   { el: '#k-hard',
-    text: 'Nobody files a report when a business customer leaves. No cancellation, no status change — orders get smaller, then stop, and the account still looks active in the master.',
+    text: 'Nobody files a report when a business customer leaves. No cancellation, no status change; orders get smaller, then stop, and the account still looks active in the master.',
     before: function(){ el('s-soft').value=60; el('s-halflife').value=9; model(); } },
   { el: '#s-soft',
     text: 'So the labels are <b>derived</b> rather than collected. Comparing an opening quarter against the most recent one classifies every account without anyone recording anything new.',
     settle: 500 },
   { el: '#s-halflife',
-    text: 'Now the part that changes behavior. Recovery odds decay with time since the last order — shorten the half-life and watch the ranking reorder.',
+    text: 'Now the part that changes behavior. Recovery odds decay with time since the last order; shorten the half-life and watch the ranking reorder.',
     action: function(){ el('s-halflife').value=4; model(); }, settle: 700 },
   { el: '#winback-body',
     text: 'A list sorted by size sends a rep to the biggest name, usually the one gone longest and hardest to recover. Sorting on <b>value times odds</b> inverts that.',
     action: function(){ el('s-halflife').value=9; model(); }, settle: 500 },
   { el: '#dashboard-panel',
-    text: 'One more use for these labels: accounts that actually defected are a validation set. If they do not score higher on competitive exposure than accounts that stayed, the weighting is wrong — and that is discoverable before anyone acts on it.' }
+    text: 'One more use for these labels: accounts that actually defected are a validation set. If they do not score higher on competitive exposure than accounts that stayed, the weighting is wrong, and that is discoverable before anyone acts on it.' }
 ];
 </script>
 </body>

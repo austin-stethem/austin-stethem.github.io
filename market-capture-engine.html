@@ -253,7 +253,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <tbody>
         <tr>
             <td class="meta-cell">
-                <span class="meta-label">Principal Engineer</span>
+                <span class="meta-label">Built by</span>
                 <span class="meta-value">Austin Sonny Stethem<br>Pricing &amp; Master Data Analyst</span>
             </td>
             <td class="meta-cell">
@@ -272,16 +272,16 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <div class="scenario-box">
         <strong>The&nbsp;offensive half of the portfolio</strong>
-        The five-step pricing arc elsewhere on this site is defensive &mdash; it protects <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> against a cost shock. This is the other half. Every dollar it identifies is revenue we did not previously have, taken from a competitor at the moment they are least able to hold it.
+        The five-step pricing arc elsewhere on this site is defensive: it protects <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span> against a cost shock. This is the other half. Every dollar it identifies is revenue we did not previously have, taken from a competitor at the moment they are least able to hold it.
     </div>
 
-    <p>Competitor location data at <span class="jargon-tooltip" data-tip="A single physical building, located precisely, as opposed to a town or a postcode standing in for one." tabindex="0">rooftop</span> accuracy, across the operating footprint, for a fragmented industry of national chains, regional banners, co-op affiliates and independents, is not something you can buy. It has to be built. And the reason to build it is not curiosity about where competitors are &mdash; it is that consolidation in this industry is constant, and every consolidation event orphans customers who have to choose a new supplier under time pressure.</p>
+    <p>Competitor location data at <span class="jargon-tooltip" data-tip="A single physical building, located precisely, as opposed to a town or a postcode standing in for one." tabindex="0">rooftop</span> accuracy, across the operating footprint, for a fragmented industry of national chains, regional banners, co-op affiliates and independents, is not something you can buy. It has to be built. And the reason to build it is not curiosity about where competitors are. It is that consolidation in this industry is constant, and every consolidation event orphans customers who have to choose a new supplier under time pressure.</p>
 
     <p>When two chains merge, overlapping stores close. The customers of a closing store do not evaluate the market calmly; they need parts that week. Whoever is already in the door wins the account, and whoever arrives after the sign changes is negotiating against an incumbent. The entire value of this system is compressing the time between <em>a merger is announced</em> and <em>our representative is standing in the affected shop.</em></p>
 
     <h2>2. The Harvest: Building the Dataset That Doesn't Exist</h2>
 
-    <p>Locations are harvested per brand from mapping APIs using a coordinate grid across the operating footprint, supplemented by parsed location exports. Each brand runs as its own pipeline so that a failure in one does not contaminate the others, and results are filtered to the operating states using an anchored pattern on the state-and-postcode segment of the formatted address rather than a naive substring search &mdash; a distinction that matters when a state abbreviation also appears inside street names.</p>
+    <p>Locations are harvested per brand from mapping APIs using a coordinate grid across the operating footprint, supplemented by parsed location exports. Each brand runs as its own pipeline so that a failure in one does not contaminate the others, and results are filtered to the operating states using an anchored pattern on the state-and-postcode segment of the formatted address rather than a naive substring search, a distinction that matters when a state abbreviation also appears inside street names.</p>
 
     <h3>Four Passes to Rooftop Accuracy</h3>
 
@@ -291,7 +291,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <li><strong>Centroid and street</strong>, usable for regional density, useless for trade-area analysis.</li>
         <li><strong>Rooftop and street</strong>, better, but silently mixed precision levels in a single column.</li>
         <li><strong>Street within 100 feet</strong>, close enough to be dangerous; still placed some stores on the wrong side of a divided highway.</li>
-        <li><strong>Full rooftop</strong> &mdash; the current standard. <strong>3,768 competitor locations across ten brand families</strong>, alongside <strong>roughly 32,000 customer <span class="jargon-tooltip" data-tip="The address an order is delivered to — often not the address the account is billed at, and the one that matters for routing." tabindex="0">ship-to</span> points covering roughly 27,000 accounts</strong>, spanning eight states.</li>
+        <li><strong>Full rooftop</strong>, the current standard. <strong>3,768 competitor locations across ten brand families</strong>, alongside <strong>roughly 32,000 customer <span class="jargon-tooltip" data-tip="The address an order is delivered to, often not the address the account is billed at, and the one that matters for routing." tabindex="0">ship-to</span> points covering roughly 27,000 accounts</strong>, spanning eight states.</li>
     </ol>
 
     <p>A separate insight was required for the customer side. Business-to-business billing addresses are frequently post office boxes or corporate headquarters hundreds of miles from the shop that actually receives the parts. <span class="jargon-tooltip" data-tip="Turning a written address into map coordinates, so distance can be measured rather than assumed." tabindex="0">Geocoding</span> the billing street produces a confident, precise, entirely wrong coordinate. The pipeline therefore geocodes the <em>business name</em> plus city and state, deliberately discarding the street address, and then applies a <span class="jargon-tooltip" data-tip="Any account whose geocoded location falls more than 75 miles from its servicing branch is almost certainly a corporate billing address rather than a delivery point. The count blocked is reported on every run." tabindex="0"><strong>75-mile proximity shield</strong></span> to catch the ones that still resolve to a head office.</p>
@@ -315,7 +315,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </li>
         <li>
             <strong>Documented degradation</strong>
-            Records that survive every attempt fall back to a city centroid; but the fallback is recorded as such, so nobody downstream mistakes it for a rooftop coordinate. A known-bad-locality list exists because certain towns fail repeatedly.
+            Records that survive every attempt fall back to a city centroid, but the fallback is recorded as such, so nobody downstream mistakes it for a rooftop coordinate. A known-bad-locality list exists because certain towns fail repeatedly.
             <span class="artifact">city_center_fallbacks.csv &middot; problem_children_towns.csv</span>
         </li>
         <li>
@@ -330,7 +330,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </li>
         <li>
             <strong>Alias collisions with place names</strong>
-            Word-boundary matching stops a brand token firing inside a longer word, but it cannot stop an alias that is also the name of a town; and business listings routinely carry a city suffix. Any alias sharing a name with a locality in the footprint will match every rival store in that town, so those patterns are constrained rather than trusted, and the <span class="jargon-tooltip" data-tip="Comparing two records of the same thing and resolving where they disagree." tabindex="0">reconciliation</span> step above is what makes a false match survivable.
+            Word-boundary matching stops a brand token firing inside a longer word, but it cannot stop an alias that is also the name of a town, and business listings routinely carry a city suffix. Any alias sharing a name with a locality in the footprint will match every rival store in that town, so those patterns are constrained rather than trusted, and the <span class="jargon-tooltip" data-tip="Comparing two records of the same thing and resolving where they disagree." tabindex="0">reconciliation</span> step above is what makes a false match survivable.
             <span class="artifact">signature scoping</span>
         </li>
         <li>
@@ -346,7 +346,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <li>
             <strong><span class="jargon-tooltip" data-tip="Deciding whether two records that look different describe the same real customer." tabindex="0">Entity resolution</span> across systems</strong>
             <span class="jargon-tooltip" data-tip="A single physical location that holds stock and sells to local customers. Eighty of them in this network, each with its own trade area." tabindex="0">Branch</span> identifiers arrive in different shapes from the point-of-sale extract and the location master. Prefixes and leading zeros are normalized to a clean key before any join, because a silent join failure removes an entire branch from the map.
-            <span class="artifact">Clean_ID <span class="jargon-tooltip" data-tip="Standardizing a name before comparing it — case, punctuation, company prefixes, facility suffixes — so two spellings of one customer can be recognized as one." tabindex="0">normalization</span></span>
+            <span class="artifact">Clean_ID <span class="jargon-tooltip" data-tip="Standardizing a name before comparing it (case, punctuation, company prefixes, facility suffixes) so two spellings of one customer can be recognized as one." tabindex="0">normalization</span></span>
         </li>
     </ul>
 
@@ -355,7 +355,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         <p style="margin:0; color:var(--body-text);">A record that fails should cost you a line in a log file, not a row in the dataset. Silent deletion is the failure mode that makes a scraped dataset dangerous, because the output still looks complete. Every stage here reports what it removed and where it went.</p>
     </div>
 
-    <p>The dataset this runs on did not exist, and no vendor was going to sell it to us at a price anyone would approve. I built it, and I made the argument in those terms, not fund a data initiative, but <em>I can build this from data we already own, and what I need from you is a monthly snapshot and a decision about who acts on it.</em></p>
+    <p>The dataset this runs on did not exist, and no vendor was going to sell it to us at a price anyone would approve. I built it, and I made the argument in those terms: not <em>fund a data initiative</em>, but <em>I can build this from data we already own, and what I need from you is a monthly snapshot and a decision about who acts on it.</em></p>
 
     <h2 id="dashboard">4. One Application: Modeling a Consolidation Event</h2>
 
@@ -452,7 +452,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h3>What the Representative Actually Receives</h3>
 
-    <p>Field users do not get this dashboard. They get a stripped-down build that outputs the hitlist above and nothing else &mdash; ranked accounts, the market, the distance from their hub, and the reason the account is in play. That separation is deliberate: a rep needs a call list and a talking point, not a model. The same engine serves both audiences because the analysis is identical; only the surface differs.</p>
+    <p>Field users do not get this dashboard. They get a stripped-down build that outputs the hitlist above and nothing else: ranked accounts, the market, the distance from their hub, and the reason the account is in play. That separation is deliberate: a rep needs a call list and a talking point, not a model. The same engine serves both audiences because the analysis is identical; only the surface differs.</p>
 
     <h2>5. Four Functions, One Map</h2>
 
@@ -475,7 +475,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr>
                 <td data-label="Function">Sales management</td>
                 <td data-label="Question">Where should representatives be spending their time?</td>
-                <td data-label="Returns">Contested pockets ranked by exposure. An account with three rivals inside a ten-minute drive warrants a different call frequency to one with none, and that distinction is invisible in a customer list sorted by revenue.</td>
+                <td data-label="Returns">Contested pockets ranked by exposure. An account with three rivals inside a ten-minute drive warrants a different call frequency than one with none, and that distinction is invisible in a customer list sorted by revenue.</td>
             </tr>
             <tr>
                 <td data-label="Function">Marketing</td>
@@ -496,7 +496,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <p>Discounting is usually granted account by account, in response to pressure, by whoever is closest to the customer. That produces exactly the <span class="jargon-tooltip" data-tip="The spread of prices actually charged for one item. A ladder designed to produce eight prices producing hundreds is dispersion." tabindex="0">dispersion</span> documented in the defensive track, hundreds of prices for one part, none of them the product of a deliberate policy. The map converts that into something bounded. An account sitting inside a dense competitive pocket has real leverage, and a defensive concession there is a considered decision. An account with no competitor within a twenty-minute drive does not, and a discount granted there is margin handed over against a threat that does not exist.</p>
 
-    <p>The same figure therefore answers two questions in opposite directions. Read offensively, it says where somebody else's customers are reachable. Read defensively, it says where our own are exposed and what a concession is actually buying. That is why the <span class="jargon-tooltip" data-tip="The discount tier an account has actually earned under its contract, as opposed to the one it is currently being billed at. The gap between the two is the finding." tabindex="0">entitlement</span> audit in the final step of this track uses this score as a constraint rather than a target; and why a competitive map built to find opportunities ends up governing how much margin the business gives away.</p>
+    <p>The same figure therefore answers two questions in opposite directions. Read offensively, it says where somebody else's customers are reachable. Read defensively, it says where our own are exposed and what a concession is actually buying. That is why the <span class="jargon-tooltip" data-tip="The discount tier an account has actually earned under its contract, as opposed to the one it is currently being billed at. The gap between the two is the finding." tabindex="0">entitlement</span> audit in the final step of this track uses this score as a constraint rather than a target, and why a competitive map built to find opportunities ends up governing how much margin the business gives away.</p>
 
     <h3>Three Further Tools on the Same Foundation</h3>
 
@@ -510,7 +510,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 
     <h2>6. Phase 2: From Proximity To Revenue At Risk</h2>
 
-    <p>The deployed system answers <em>where is the competition</em>. The next question is <em>which of our accounts are most likely to leave, and what is that worth</em>; and this is design work, not shipped work. It is included because the constraint on building it is data collection rather than modeling, and knowing which is which is most of the job.</p>
+    <p>The deployed system answers <em>where is the competition</em>. The next question is <em>which of our accounts are most likely to leave, and what is that worth</em>. This is design work, not shipped work. It is included because the constraint on building it is data collection rather than modeling, and knowing which is which is most of the job.</p>
 
     <p>The scoring output should be denominated in <strong>gross profit at risk</strong>, not an abstract threat level. A dimensionless score cannot be prioritized, summed, or defended in a budget conversation. Dollars rank themselves.</p>
 
@@ -531,7 +531,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
             <tr><td data-label="Status" class="have">In hand</td><td data-label="Input">Customer ship-to rooftops</td><td data-label="Source">roughly 32,000 geocoded points, roughly 27,000 unique accounts</td></tr>
             <tr><td data-label="Status" class="have">In hand</td><td data-label="Input">Account revenue and true gross profit</td><td data-label="Source">Point-of-sale granular extract</td></tr>
             <tr><td data-label="Status" class="have">In hand</td><td data-label="Input">Geographic class and drive-time multiplier</td><td data-label="Source">Designed as part of this system</td></tr>
-            <tr><td data-label="Status" class="derive">Derivable</td><td data-label="Input"><span class="jargon-tooltip" data-tip="A customer who has stopped buying. Rarely announced, so it has to be inferred from the pattern of orders." tabindex="0">Churn</span> and at-risk labels</td><td data-label="Source">Extend the <span class="jargon-tooltip" data-tip="Point of Sale. The record of what was actually sold, at what price, to whom — as opposed to what the price list said it should have been." tabindex="0">POS</span> pull past the trailing year and classify each account's revenue trend</td></tr>
+            <tr><td data-label="Status" class="derive">Derivable</td><td data-label="Input"><span class="jargon-tooltip" data-tip="A customer who has stopped buying. Rarely announced, so it has to be inferred from the pattern of orders." tabindex="0">Churn</span> and at-risk labels</td><td data-label="Source">Extend the <span class="jargon-tooltip" data-tip="Point of Sale. The record of what was actually sold, at what price, to whom, as opposed to what the price list said it should have been." tabindex="0">POS</span> pull past the trailing year and classify each account's revenue trend</td></tr>
             <tr><td data-label="Status" class="derive">Derivable</td><td data-label="Input">Order recency and cadence</td><td data-label="Source">Same extract, last invoice date per account</td></tr>
             <tr><td data-label="Status" class="derive">Derivable</td><td data-label="Input">Brand weight</td><td data-label="Source">Regional footprint share, computed from our own harvest rather than assigned by feel</td></tr>
             <tr><td data-label="Status" class="newdata">New collection</td><td data-label="Input">Competitor openings and closings</td><td data-label="Source">Snapshot the harvest monthly and diff it. Near-zero cost, but impossible to backfill: every month not captured is permanently lost</td></tr>
@@ -540,11 +540,11 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
     </table>
 
-    <p>Twelve of fifteen inputs require no new collection at all. That changes the proposal from <em>fund a data initiative</em> to <em>I can build this from data we already own; what I need from you is a monthly snapshot and a two-field form</em>: a materially easier decision to approve, and an honest one.</p>
+    <p>Twelve of fifteen inputs require no new collection at all. That changes the proposal from <em>fund a data initiative</em> to <em>I can build this from data we already own, and what I need from you is a monthly snapshot and a two-field form</em>: a materially easier decision to approve, and an honest one.</p>
 
     <h3>How I Would Know If It Worked</h3>
 
-    <p>Churn labels derived from transaction history are the <span class="jargon-tooltip" data-tip="A dataset where the outcome is already known, allowing a model's predictions to be scored against reality rather than assumed to be correct." tabindex="0">validation set</span>. If accounts that actually defected do not score higher than accounts that stayed, the weights are wrong and that is discoverable before deployment not after. This also removes the dependence on field reports as ground truth, representatives report where they are losing and stay quiet where they are comfortable, so tip-offs are a biased channel. They corroborate; they should not calibrate.</p>
+    <p>Churn labels derived from transaction history are the <span class="jargon-tooltip" data-tip="A dataset where the outcome is already known, allowing a model's predictions to be scored against reality rather than assumed to be correct." tabindex="0">validation set</span>. If accounts that actually defected do not score higher than accounts that stayed, the weights are wrong and that is discoverable before deployment, not after. This also removes the dependence on field reports as ground truth: representatives report where they are losing and stay quiet where they are comfortable, so tip-offs are a biased channel. They corroborate; they should not calibrate.</p>
 
     <div class="impact-box">
         <h3>What This Case Study Is Actually About</h3>
@@ -876,7 +876,7 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 /* ── guided walkthrough ─────────────────────────────────────────────────────── */
 window.TOUR = [
   { el: '#select-merger',
-    text: 'Two chains announce a merger. Within eighteen months, stores sitting too close together consolidate — and every account attached to a closing location has to choose a new supplier.',
+    text: 'Two chains announce a merger. Within eighteen months, stores sitting too close together consolidate, and every account attached to a closing location has to choose a new supplier.',
     before: function(){ document.getElementById('slider-band').value=20; runModel(); } },
   { el: '#slider-band',
     text: 'The threshold is drive time, not miles. Twenty minutes covers very different ground in a metro than on open highway, so it is scaled by geography rather than applied flat.',
