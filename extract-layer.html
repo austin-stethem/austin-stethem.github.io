@@ -225,6 +225,14 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         </tbody>
     </table>
 
+    <div class="scenario-box bottom-line">
+        <strong>The bottom line</strong>
+        <p><strong>What it was costing.</strong> Labor lines with no parts cost read as pure margin, uncosted lines ranked most profitable, two corrupt rows turned an unguarded revenue sum negative. Nothing downstream caught it.</p>
+        <p><strong>The call I made.</strong> Margin on store-intake cost, not warehouse landed cost, defined once in SQL with uncosted revenue as its own column. Landed cost credits a branch with margin earned upstream.</p>
+        <p><strong>Who uses it, and what changed.</strong> Every downstream dashboard and model consumes this extract, so one population and one margin definition hold everywhere, and a branch manager gets a floor they can act on.</p>
+        <p><strong>Where it stands.</strong> In production as the extract beneath every model here; the exclusions, margin basis and schema handling are the live ones. Freight-allocation sensitivity testing is next.</p>
+    </div>
+
     <h2>1. Every Model Starts With a Query Nobody Reads</h2>
 
     <div class="scenario-box">

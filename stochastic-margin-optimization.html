@@ -276,6 +276,14 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
         The deterministic engine in Step 2 produced the cross-subsidized price floors that defend against the 15% cost spike. But freight and demand do not hold still, and a floor that is right on average can still be wrong in a bad quarter. Before those floors went anywhere near the live ERP, I simulated what they carry: how much volume a competitor takes under real volatility, and where the statistical boundaries sit.
     </div>
 
+    <div class="scenario-box bottom-line">
+        <strong>The bottom line</strong>
+        <p><strong>What it was costing.</strong> A floor tuned to average freight is wrong most quarters; one 30% spike held a quarter can erase a category&rsquo;s margin for the year.</p>
+        <p><strong>The call I made.</strong> Simulation over formula: a 5,000-path Monte Carlo sweep, seeded and using common random numbers, because a recommendation that moves on rerun cannot be approved.</p>
+        <p><strong>Who uses it, and what changed.</strong> Whoever approves a price floor sees the P5 worst case before the median, and a profit-maximizing price that is rarely the highest.</p>
+        <p><strong>Where it stands.</strong> The simulation is built and runs tens of thousands of SKUs in seconds; the supervised feedback loop around it is specified as the next step.</p>
+    </div>
+
     <h2>1. Situation: The Flaw of Averages</h2>
     <p>A single historical average is the usual basis for a target <span class="jargon-tooltip" data-tip="What is left of a sale after the cost of the goods, expressed as a percentage of the price. The number that decides whether volume is worth having." tabindex="0">margin</span>, and it is a poor one. Freight does not behave like an average. When you price a SKU based on the "average" freight cost and "average" demand, you fall victim to the Flaw of Averages: a plan tuned to average freight is wrong in every quarter freight is not average, which is most of them. One 30% freight spike held for a quarter is enough to erase a category's margin for the year under a static markup, measured in <span class="jargon-tooltip" data-tip="Earnings Before Interest, Taxes, Depreciation, and Amortization. A measure of core operational profitability." tabindex="0">EBITDA</span>.</p>
 
