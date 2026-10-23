@@ -90,28 +90,28 @@ a{color:inherit}
 
 /* Dark chrome in both modes: --panel-* stays dark when the page inverts, whereas
    --ink is the foreground colour and flips to light. */
-.rail{position:sticky;top:74px;background:var(--surface);color:var(--body-text);
-  border-radius:6px;padding:26px 22px;display:flex;flex-direction:column;gap:16px;align-items:center;border:1px solid var(--line)}
+.rail{position:sticky;top:calc(var(--mast-h,56px) + 18px);background:var(--surface);color:var(--body-text);
+  border-radius:6px;padding:22px 20px;display:flex;flex-direction:column;gap:13px;align-items:center;border:1px solid var(--line)}
 /* Identity block centred; the data blocks below stay left-aligned and full width
    so the label/value rows still line up. */
 .rail .idblock,.rail .pitch{text-align:center}
-.facts,.railprog,.rail .links{width:100%;align-self:stretch}
+.facts,.rail .links{width:100%;align-self:stretch}
 /* The initials are a fallback layer, not a sibling of the photo. As flex items the
    two shared the box, which pushed the photo off-centre and left the placeholder
    visible beside it. The image is now absolutely positioned over the top, so it
    covers the initials entirely and only appears if onerror has not removed it. */
-.por{position:relative;width:112px;height:112px;margin:0 auto;border-radius:50%;overflow:hidden;
+.por{position:relative;width:96px;height:96px;margin:0 auto;border-radius:50%;overflow:hidden;
   border:2px solid var(--panel-border);background:var(--panel-surface);
   display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .por img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.por .initials{font-family:'Archivo Narrow';font-weight:700;font-size:2rem;color:var(--panel-muted);letter-spacing:.02em}
+.por .initials{font-family:'Archivo Narrow';font-weight:700;font-size:1.9rem;color:var(--panel-muted);letter-spacing:.02em}
 .rail h1{font-family:'Archivo Narrow';font-weight:700;text-transform:uppercase;font-size:1.52rem;line-height:.98;letter-spacing:-.01em;color:var(--ink);margin:0}
 .rail .role{font:600 .66rem/1.55 'IBM Plex Mono';letter-spacing:.09em;text-transform:uppercase;
   color:var(--signal);margin-top:7px;text-wrap:balance}
 /* A pull quote rather than a caption: the opening mark is oversized and pulled into
    the left margin so the text block itself still aligns with the rail's centre. */
 .rail .pitch{margin:0}
-.rail .pitch p{font-size:.88rem;line-height:1.55;margin:0 0 9px;color:var(--body-text);
+.rail .pitch p{font-size:.87rem;line-height:1.52;margin:0 0 7px;color:var(--body-text);
   font-style:italic}
 /* Paired quotes, written out separately. A grouped selector here got mangled by an
    earlier edit and left ::before with no colour or size while ::after kept both, so
@@ -124,22 +124,39 @@ a{color:inherit}
 .rail .pitch cite{display:block;font:600 .66rem/1.4 'IBM Plex Mono';letter-spacing:.09em;
   text-transform:uppercase;font-style:normal;color:var(--muted)}
 .rail .pitch cite::before{content:'\2014\00a0'}
-.facts{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:8px}
-.fact{display:flex;justify-content:space-between;gap:10px;font-size:.78rem}
-/* Amber labels. Uses the gold, not the signal: at .78rem on this dark rail the
-   signal only reaches 3.3:1 in light mode, and small text needs 4.5. Uppercased and
-   tracked so they read as field labels against the mono values, matching the
-   SHIPPED label below them. */
+/* Scale reads at a glance: each fact is a figure first and a label second, in a
+   two-column grid, centred to match the identity block above, so the numbers are
+   what the eye lands on. Figures use --ink on
+   the inverting --surface card; labels keep the amber field-label style. The growth
+   figure spans the row in --data-positive (5.3:1 on the light card, above 9:1 dark). */
+.facts{border-top:1px solid var(--line);padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:11px 12px}
+.fact{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;min-width:0}
+.fact b{font-family:'Archivo Narrow';font-weight:700;font-size:1.42rem;line-height:1;letter-spacing:-.01em;
+  color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
 .fact span{color:var(--signal);text-transform:uppercase;letter-spacing:.07em;
-  font-size:.68rem;font-weight:600}
-.fact b{font-family:'IBM Plex Mono';font-weight:600;color:var(--ink);white-space:nowrap}
-.railprog{border-top:1px solid var(--line);padding-top:14px}
-.railprog .l{display:flex;justify-content:space-between;font:600 .64rem/1 'IBM Plex Mono';letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
-.railprog .t{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
-.railprog .t i{display:block;height:100%;width:100%;background:var(--data-positive)}
-.rail .links{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:7px;font-size:.82rem}
+  font-size:.68rem;font-weight:600;line-height:1.3;text-wrap:balance}
+.fact-growth{grid-column:1 / -1}
+.fact-growth{padding-bottom:10px;border-bottom:1px solid var(--line)}
+.fact-growth b{font-size:2.3rem;color:var(--data-positive)}
+.rail .links{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;font-size:.84rem}
 .rail .links a{color:var(--body-text);text-decoration:none;border-bottom:1px solid var(--line);width:fit-content;padding-bottom:1px}
 .rail .links a:hover{color:var(--ink);border-bottom-color:var(--signal)}
+/* The rail is sticky on desktop, so it has to fit the window or its bottom never
+   shows. It sits below the measured masthead, and if a window is too short
+   for it even in the compact sizing below, it scrolls inside itself rather than
+   running off the page. */
+@media(min-width:1081px){.rail{max-height:calc(100vh - var(--mast-h,56px) - 34px);overflow-y:auto;scrollbar-width:thin}}
+/* Shorter windows get a tighter rail so it still fits without scrolling inside. */
+@media(min-width:1081px) and (max-height:820px){
+  .rail{padding:18px 18px;gap:10px}
+  .por{width:72px;height:72px}
+  .rail .pitch p{font-size:.83rem;line-height:1.48;margin-bottom:5px}
+  .facts{gap:8px 12px}
+  .fact b{font-size:1.2rem}
+  .fact span{font-size:.65rem;line-height:1.25}
+  .fact-growth b{font-size:1.85rem}
+  .rail .links{gap:5px 12px;font-size:.78rem}
+}
 
 .eyebrow{font:600 .67rem/1 'IBM Plex Mono';letter-spacing:.21em;text-transform:uppercase;color:var(--signal);margin-bottom:16px;text-align:center}
 /* Centred across the full content column. text-wrap:balance is wanted here —
@@ -442,7 +459,7 @@ footer .fine{margin:0;font-size:.78rem;line-height:1.55;color:var(--panel-dim);
   .rail .idblock{flex:1;min-width:200px;text-align:left}
   .rail .pitch{text-align:left}
   .por{margin:0}
-  .facts,.railprog,.rail .links{flex:1;min-width:180px;width:auto;border-top:none;padding-top:0}
+  .facts,.rail .links{flex:1;min-width:180px;width:auto;border-top:none;padding-top:0}
   .rgrid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:760px){
@@ -510,24 +527,21 @@ document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
       <cite>Austin Sonny Stethem</cite>
     </blockquote>
     <div class="facts">
-      <div class="fact"><span>Network</span><b>80&nbsp;branches</b></div>
-      <div class="fact"><span>Footprint</span><b>8&nbsp;states</b></div>
-      <div class="fact"><span>Vendors</span><b>565+&nbsp;lines</b></div>
-                    <div class="fact"><span>SKUs managed</span><b>1M+</b></div>
-                    <div class="fact"><span>Accounts</span><b>~27,000</b></div>
-      <div class="fact"><span>Root pricing access</span><b>1&nbsp;of 3</b></div>
-      <div class="fact"><span>Tenure</span><b>5&nbsp;years, 1 employer</b></div>
-      <div class="fact"><span>Revenue growth since joining in 2021</span><b>+182%</b></div>
-    </div>
-    <div class="railprog">
-      <div class="l"><span>Shipped</span><span>15 / 15</span></div>
-      <div class="t"><i></i></div>
+      <div class="fact fact-growth"><b>+182%</b><span>Revenue growth since I joined</span></div>
+      <div class="fact"><b>80</b><span>Brick&nbsp;&amp;&nbsp;mortar locations</span></div>
+      <div class="fact"><b>8</b><span>States</span></div>
+      <div class="fact"><b>~27,000</b><span>B2B accounts</span></div>
+      <div class="fact"><b>1M+</b><span>SKUs managed</span></div>
+      <div class="fact"><b>565+</b><span>Vendor lines</span></div>
+      <div class="fact"><b>~20</b><span>Acquisitions integrated</span></div>
+      <div class="fact"><b>1&nbsp;of&nbsp;3</b><span>With root pricing access</span></div>
+      <div class="fact"><b>5&nbsp;years</b><span>One employer</span></div>
     </div>
     <div class="links">
       <a href="mailto:austinstethem1976@gmail.com">austinstethem1976@gmail.com</a>
       <a href="tel:+17122995267">712-299-5267</a>
       <a href="https://www.linkedin.com/in/austin-stethem-4503b4197/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href="Stethem_Austin_Resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)</a>
+      <a href="Stethem_Austin_Resume.pdf" target="_blank" rel="noopener noreferrer">Résumé</a>
     </div>
   </aside>
 
